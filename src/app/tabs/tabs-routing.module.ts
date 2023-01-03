@@ -16,8 +16,8 @@ const routes: Routes = [
         loadChildren: () => import('../add-recipy/add-recipy.module').then(m => m.AddRecipyPageModule)
       },
       {
-        path: 'tab3',
-        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+        path: 'planner',
+        loadChildren: () => import('../planner/planner.module').then(m => m.PlannerPageModule)
       },
       {
         path: '',
