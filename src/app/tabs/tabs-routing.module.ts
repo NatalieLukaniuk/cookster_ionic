@@ -12,8 +12,8 @@ const routes: Routes = [
         loadChildren: () => import('../recipies/recipies.module').then(m => m.RecipiesPageModule)
       },
       {
-        path: 'tab2',
-        loadChildren: () => import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+        path: 'add-recipy',
+        loadChildren: () => import('../tab2/add-recipy.module').then(m => m.AddRecipyPageModule)
       },
       {
         path: 'tab3',
@@ -21,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/recipies',
         pathMatch: 'full'
       }
     ]
