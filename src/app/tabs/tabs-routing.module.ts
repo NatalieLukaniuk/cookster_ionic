@@ -13,7 +13,7 @@ const routes: Routes = [
       },
       {
         path: 'add-recipy',
-        loadChildren: () => import('../tab2/add-recipy.module').then(m => m.AddRecipyPageModule)
+        loadChildren: () => import('../add-recipy/add-recipy.module').then(m => m.AddRecipyPageModule)
       },
       {
         path: 'tab3',
