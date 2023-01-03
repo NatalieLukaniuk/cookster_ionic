@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlannerPage } from './planner.page';
-import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
 import { PlannerPageRoutingModule } from './planner-routing.module';
 
@@ -13,7 +12,6 @@ import { PlannerPageRoutingModule } from './planner-routing.module';
     IonicModule,
     CommonModule,
     FormsModule,
-    ExploreContainerComponentModule,
     PlannerPageRoutingModule,
     SharedModule
   ],
