@@ -1,20 +1,20 @@
-import { SharedModule } from './../shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RecipiesContainer } from './recipies.page';
+import { AddRecipyPage } from './add-recipy.page';
 
-import { RecipiesPageRoutingModule } from './recipies-routing.module';
+import { AddRecipyPageRoutingModule } from './add-recipy-routing.module';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    RecipiesPageRoutingModule,
+    AddRecipyPageRoutingModule,
     SharedModule
   ],
-  declarations: [RecipiesContainer]
+  declarations: [AddRecipyPage]
 })
-export class RecipiesPageModule {}
+export class AddRecipyPageModule {}

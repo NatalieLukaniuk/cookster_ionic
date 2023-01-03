@@ -9,19 +9,19 @@ const routes: Routes = [
     children: [
       {
         path: 'recipies',
-        loadChildren: () => import('../recipies/recipies.module').then(m => m.RecipiesPageModule)
+        loadChildren: () => import('../pages/recipies/recipies.module').then(m => m.RecipiesPageModule)
       },
       {
         path: 'add-recipy',
-        loadChildren: () => import('../add-recipy/add-recipy.module').then(m => m.AddRecipyPageModule)
+        loadChildren: () => import('../pages/add-recipy/add-recipy.module').then(m => m.AddRecipyPageModule)
       },
       {
         path: 'planner',
-        loadChildren: () => import('../planner/planner.module').then(m => m.PlannerPageModule)
+        loadChildren: () => import('../pages/planner/planner.module').then(m => m.PlannerPageModule)
       },
       {
         path: 'shopping-list',
-        loadChildren: () => import('../shopping-list/shopping-list.module').then( m => m.ShoppingListPageModule)
+        loadChildren: () => import('../pages/shopping-list/shopping-list.module').then( m => m.ShoppingListPageModule)
       },
       {
         path: '',

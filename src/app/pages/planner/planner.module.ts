@@ -1,20 +1,20 @@
-import { SharedModule } from './../shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AddRecipyPage } from './add-recipy.page';
+import { PlannerPage } from './planner.page';
 
-import { AddRecipyPageRoutingModule } from './add-recipy-routing.module';
+import { PlannerPageRoutingModule } from './planner-routing.module';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    AddRecipyPageRoutingModule,
+    PlannerPageRoutingModule,
     SharedModule
   ],
-  declarations: [AddRecipyPage]
+  declarations: [PlannerPage]
 })
-export class AddRecipyPageModule {}
+export class PlannerPageModule {}
