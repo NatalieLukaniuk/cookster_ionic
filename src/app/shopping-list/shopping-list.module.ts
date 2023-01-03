@@ -1,3 +1,4 @@
+import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +14,8 @@ import { ShoppingListPage } from './shopping-list.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    ShoppingListPageRoutingModule
+    ShoppingListPageRoutingModule,
+    SharedModule
   ],
   declarations: [ShoppingListPage]
 })

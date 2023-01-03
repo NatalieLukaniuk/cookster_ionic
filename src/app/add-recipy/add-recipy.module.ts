@@ -1,3 +1,4 @@
+import { SharedModule } from './../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -13,7 +14,8 @@ import { AddRecipyPageRoutingModule } from './add-recipy-routing.module';
     CommonModule,
     FormsModule,
     ExploreContainerComponentModule,
-    AddRecipyPageRoutingModule
+    AddRecipyPageRoutingModule,
+    SharedModule
   ],
   declarations: [AddRecipyPage]
 })
