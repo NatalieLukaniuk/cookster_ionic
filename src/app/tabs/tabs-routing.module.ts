@@ -20,6 +20,10 @@ const routes: Routes = [
         loadChildren: () => import('../planner/planner.module').then(m => m.PlannerPageModule)
       },
       {
+        path: 'shopping-list',
+        loadChildren: () => import('../shopping-list/shopping-list.module').then( m => m.ShoppingListPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/recipies',
         pathMatch: 'full'
