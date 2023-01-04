@@ -13,7 +13,7 @@ export interface NewRecipy {
   isSplitIntoGroups: IngredientsGroup[];
   isBaseRecipy: boolean;
   notApproved?: boolean;
-  source: string;
+  source?: string;
   isCheckedAndApproved?: boolean;
 }
 
@@ -35,11 +35,11 @@ export interface Recipy extends NewRecipy {
   isSplitIntoGroups: IngredientsGroup[];
   isCheckedAndApproved?: boolean;
   calorificValue?: number;
-  source: string;
+  source?: string;
 }
 
 export interface Ingredient {
-  product: string; // product id in the firebase db
+  product: string; // product id in the firebase db // FIXME: rename to productID
   amount: number; // gramm
   defaultUnit: MeasuringUnit;
   group?: IngredientsGroup;
@@ -72,7 +72,7 @@ export interface PreparationStep {
   description: string;
   timeActive: number; // minutes
   timePassive: number; // minutes
-  group?: IngredientsGroup;
+  group?: IngredientsGroup; // FIXME: not needed, delete
 }
 
 export enum DishType {

@@ -13,6 +13,7 @@ import { User } from 'src/app/models/auth.models';
 import { UserService } from 'src/app/services/user.service';
 import { AuthApiService } from 'src/app/services/auth-api.service';
 
+// TODO: registration should be done in effects too
 @Injectable()
 export class UserEffects {
   updateUser$ = createEffect(() =>

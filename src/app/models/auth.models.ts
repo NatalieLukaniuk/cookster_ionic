@@ -7,8 +7,8 @@ export interface User {
   uid: string;
   details?: DayDetails[];
   id?: string;
-  shoppingLists?: ShoppingListItem[];
-  prepLists?: SuggestionList[];
+  shoppingLists?: ShoppingListItem[]; // FIXME: this is probably no longer used
+  prepLists?: SuggestionList[]; // FIXME: this is probably no longer used
   img?: string;
   role: Role;
   planner?: PlannerByDate[];
