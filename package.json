@@ -27,6 +27,7 @@
     "@ionic/angular": "^6.1.9",
     "@ngrx/effects": "^15.1.0",
     "@ngrx/store": "^15.1.0",
+    "@ngrx/store-devtools": "^15.1.0",
     "firebase": "^9.15.0",
     "ionicons": "^6.0.3",
     "lodash": "^4.17.21",

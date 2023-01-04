@@ -6,6 +6,8 @@ import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,10 +31,10 @@ import { reducers } from './store/reducers';
       CalendarEffects,
       PlannerEffects,
     ]),
-    // StoreDevtoolsModule.instrument({ FIXME: install module and uncomment
-    //   maxAge: 25,
-    //   logOnly: environment.production,
-    // }),
+    StoreDevtoolsModule.instrument({ 
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
