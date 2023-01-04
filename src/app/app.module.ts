@@ -29,7 +29,7 @@ import { reducers } from './store/reducers';
       CalendarEffects,
       PlannerEffects,
     ]),
-    // StoreDevtoolsModule.instrument({
+    // StoreDevtoolsModule.instrument({ FIXME: install module and uncomment
     //   maxAge: 25,
     //   logOnly: environment.production,
     // }),
