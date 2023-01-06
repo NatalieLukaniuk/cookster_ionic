@@ -4,6 +4,8 @@ import { NewRecipy, Product, Recipy } from 'src/app/models/recipies.models';
 export enum RecipiesActionTypes {
   RECIPIES_LOADED = '[RECIPIES] Recipies Loaded',
   GET_RECIPIES = '[RECIPIES] Get Recipies',
+  GET_PRODUCTS = '[PRODUCTS] Get Products',
+  PRODUCTS_LOADED = '[PRODUCTS] Products Loaded',
   ADD_RECIPY = '[RECIPIES] Add New Recipy',
   ADD_RECIPY_SUCCESS = '[RECIPIES] New Recipy Has Been Added',
   UPDATE_RECIPY = '[RECIPIES] Update Recipy',
@@ -15,6 +17,17 @@ export enum RecipiesActionTypes {
   UPDATE_PRODUCT = '[RECIPIES] Update Ingredient',
   UPDATE_PRODUCT_SUCCESS = '[RECIPIES] Ingredient Has Been Updated',
 }
+
+export class GetProductsAction implements Action {
+  readonly type = RecipiesActionTypes.GET_PRODUCTS;
+  constructor() {}
+}
+
+export class ProductsLoadedAction implements Action {
+  readonly type = RecipiesActionTypes.PRODUCTS_LOADED;
+  constructor(public products: Product[]) {}
+}
+
 export class UpdateProductAction implements Action {
   readonly type = RecipiesActionTypes.UPDATE_PRODUCT;
   constructor(public product: Product) {}
@@ -83,4 +96,6 @@ export type RecipiesActions =
   | LoadNewIngredientsAction
   | NewIngredientsLoadedAction
   | UpdateProductAction
-  | UpdateProductSuccessAction;
+  | UpdateProductSuccessAction
+  | GetProductsAction
+  | ProductsLoadedAction;

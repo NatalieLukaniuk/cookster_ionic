@@ -5,13 +5,15 @@ import { CalendarReducers, CalendarState, InitialCalendarState } from './calenda
 import { FiltersReducers, FiltersState, InitialFiltersState } from './filters.reducers';
 import { InitialUiState, UiReducers, UiState } from './ui.reducer';
 import { InitialUserState, IUserState, UserReducers } from './user.reducer';
+import { InitialRecipiesState, IRecipiesState, RecipiesReducers } from './recipies.reducer';
 
 export interface IAppState {
   ui: UiState,
   filters: FiltersState,
   calendar: CalendarState,
   planner: PlannerState,
-  user: IUserState
+  user: IUserState,
+  recipies: IRecipiesState
 }
 
 export const InitialAppState: IAppState = {
@@ -19,7 +21,8 @@ export const InitialAppState: IAppState = {
   filters: InitialFiltersState,
   calendar: InitialCalendarState,
   planner: InitialPlannerState,
-  user: InitialUserState
+  user: InitialUserState,
+  recipies: InitialRecipiesState
 }
 
 export const reducers: ActionReducerMap<IAppState, any> = {
@@ -27,5 +30,6 @@ export const reducers: ActionReducerMap<IAppState, any> = {
   filters: FiltersReducers,
   calendar: CalendarReducers,
   planner: PlannerReducers,
-  user: UserReducers
+  user: UserReducers,
+  recipies: RecipiesReducers
 };

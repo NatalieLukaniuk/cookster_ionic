@@ -10,7 +10,7 @@ import * as RecipiesActions from '../actions/recipies.actions';
 import * as UiActions from '../actions/ui.actions';
 import { Store } from '@ngrx/store';
 import { RecipiesApiService } from 'src/app/services/recipies-api.service';
-import { Recipy } from 'src/app/models/recipies.models';
+import { Product, Recipy } from 'src/app/models/recipies.models';
 import { ProductsApiService } from 'src/app/services/products-api.service';
 
 @Injectable()
@@ -35,9 +35,33 @@ export class RecipiesEffects {
           }),
           map((res: Recipy[]) => new RecipiesActions.RecipiesLoadedAction(res))
         )
-      )
+      ),
+      catchError((error) => of(new UiActions.ErrorAction(error)))
     )
   );
+
+  getProducts$ = createEffect(() => 
+  this.actions$.pipe(
+    ofType(RecipiesActionTypes.GET_PRODUCTS),
+    switchMap((action: RecipiesActions.GetProductsAction) => 
+    this.productsApiService.getProducts().pipe(
+      map((res: Object) => {
+        let array = Object.entries(res);
+            let products: any = [];
+            for (let entry of array) {
+              let product: any = {
+                id: entry[0],
+                ...entry[1],
+              };
+              products.push(product);
+            }
+            products.reverse();
+            return products;
+      }),
+      map((res: Product[]) => new RecipiesActions.ProductsLoadedAction(res))
+    )),
+    catchError((error) => of(new UiActions.ErrorAction(error)))
+  ))
 
   addNewRecipy$ = createEffect(() =>
     this.actions$.pipe(
