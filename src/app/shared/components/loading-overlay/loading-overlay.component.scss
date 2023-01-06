@@ -1,0 +1,12 @@
+:host {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--ion-color-light);
+    z-index: 100000;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

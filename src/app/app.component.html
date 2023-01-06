@@ -1,3 +1,4 @@
 <ion-app>
+  <app-loading-overlay *ngIf="isLoading$ | async"></app-loading-overlay>
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

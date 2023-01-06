@@ -1,3 +1,4 @@
+import { getIsLoading } from './store/selectors/ui.selectors';
 import {
   getAllProducts,
   getAllRecipies,
@@ -8,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 import * as RecipiesActions from './store/actions/recipies.actions';
 import * as UiActions from './store/actions/ui.actions';
 import { combineLatest } from 'rxjs';
+import { IAppState } from './store/reducers';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +27,9 @@ export class AppComponent implements OnInit {
     appId: '1:755799855022:web:506cb5221a72eff4cf023f',
   };
 
-  constructor(private store: Store) {}
+  isLoading$ = this.store.pipe(select(getIsLoading));
+
+  constructor(private store: Store<IAppState>) {}
   ngOnInit(): void {
     this.loadData();
   }
@@ -34,7 +38,7 @@ export class AppComponent implements OnInit {
     this.store.dispatch(new UiActions.SetIsLoadingAction());
     this.store.dispatch(new RecipiesActions.GetRecipiesAction());
     this.store.dispatch(new RecipiesActions.GetProductsAction());
-    
+
     combineLatest([
       this.store.pipe(select(getAllProducts)),
       this.store.pipe(select(getAllRecipies)),
