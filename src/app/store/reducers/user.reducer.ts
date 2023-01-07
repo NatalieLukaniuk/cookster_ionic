@@ -20,6 +20,14 @@ export function UserReducers(
         currentUser: action.user,
       };
     }
+
+    case UserActionTypes.USER_LOGGED_OUT: {
+      return {
+        ...state,
+        currentUser: null,
+      };
+    }
+    
     case UserActionTypes.UPDATE_USER_SUCCESSFUL: {
       return {
         ...state,

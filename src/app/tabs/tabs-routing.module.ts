@@ -24,6 +24,10 @@ const routes: Routes = [
         loadChildren: () => import('../pages/shopping-list/shopping-list.module').then( m => m.ShoppingListPageModule)
       },
       {
+        path: 'auth',
+        loadChildren: () => import('../pages/login/login.module').then(m => m.LoginPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/recipies',
         pathMatch: 'full'

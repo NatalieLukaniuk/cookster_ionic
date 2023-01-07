@@ -3,10 +3,16 @@ import { User } from 'src/app/models/auth.models';
 
 export enum UserActionTypes {
   USER_LOADED = '[USER] User Loaded',
+  USER_LOGGED_OUT = '[USER] Logged Out',
   GET_USER = '[USER] Get User',
   UPDATE_USER = '[USER] Update User',
   UPDATE_USER_SUCCESSFUL = '[USER] User Has Been Updated',
   CREATE_RECIPY_COLLECTION = '[USER] Create Recipy Collection',
+}
+
+export class UserLoggedOutAction implements Action {
+  readonly type = UserActionTypes.USER_LOGGED_OUT;
+  constructor() {}
 }
 
 export class CreateRecipyCollection implements Action {
@@ -39,4 +45,5 @@ export type UserActions =
   | UserLoadedAction
   | UpdateUserAction
   | UpdateUserSuccessfulAction
-  | CreateRecipyCollection;
+  | CreateRecipyCollection
+  | UserLoggedOutAction;

@@ -1,15 +1,18 @@
+import { getCurrentUser } from './store/selectors/user.selectors';
+import { AuthService } from './services/auth.service';
 import { getIsLoading } from './store/selectors/ui.selectors';
 import {
   getAllProducts,
   getAllRecipies,
 } from './store/selectors/recipies.selectors';
 import { Store, select } from '@ngrx/store';
-import { RecipiesApiService } from './services/recipies-api.service';
 import { Component, OnInit } from '@angular/core';
 import * as RecipiesActions from './store/actions/recipies.actions';
 import * as UiActions from './store/actions/ui.actions';
 import { combineLatest } from 'rxjs';
 import { IAppState } from './store/reducers';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 @Component({
   selector: 'app-root',
@@ -28,10 +31,18 @@ export class AppComponent implements OnInit {
   };
 
   isLoading$ = this.store.pipe(select(getIsLoading));
+  user$ = this.store.pipe(select(getCurrentUser));
 
-  constructor(private store: Store<IAppState>) {}
+  constructor(
+    private store: Store<IAppState>,
+    private authService: AuthService
+  ) {}
   ngOnInit(): void {
     this.loadData();
+
+    initializeApp(this.firebaseConfig);
+
+    this.subscribeIsLoggedIn();
   }
 
   loadData() {
@@ -46,6 +57,16 @@ export class AppComponent implements OnInit {
       let [products, recipies] = res;
       if (products.length && recipies.length) {
         this.store.dispatch(new UiActions.SetIsLoadingFalseAction());
+      }
+    });
+  }
+
+  subscribeIsLoggedIn() {
+    getAuth().onAuthStateChanged((user: { email: any; uid: any } | null) => {
+      if (user) {
+        this.authService.processIsLoggedIn(user);
+      } else {
+        this.authService.processIsNotLoggedIn();
       }
     });
   }
