@@ -17,7 +17,6 @@ import { UserService } from './user.service';
   providedIn: 'root',
 })
 export class AuthService {
-  isLoggedIn = new BehaviorSubject<boolean>(false);
 
   constructor(private userService: UserService, private store: Store) {}
 
@@ -25,8 +24,7 @@ export class AuthService {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential: { user: any }) => {
-        this.userService.userAtFirebaseAuth = userCredential.user;
-        this.isLoggedIn.next(true);
+        this.processIsLoggedIn(userCredential.user);
         this.userService.addUser(auth);
       })
       .catch((error: { code: any; message: any }) => {
@@ -74,11 +72,9 @@ export class AuthService {
     }
 
     this.userService.userAtFirebaseAuth = user;
-    this.isLoggedIn.next(true);
   }
 
   processIsNotLoggedIn() {
-    this.isLoggedIn.next(false);
     this.store.dispatch(new UserActions.UserLoggedOutAction());
   }
 }
