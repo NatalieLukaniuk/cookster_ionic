@@ -63,7 +63,7 @@
         <ion-icon slot="start" name="star"></ion-icon>
         Перейти до рецепту
       </ion-button>
-      <ion-button (click)="showCollections()">
+      <ion-button *ngIf="currentUser" (click)="showCollections()">
         <ion-icon slot="start" name="star"></ion-icon>
         Колекції
       </ion-button>

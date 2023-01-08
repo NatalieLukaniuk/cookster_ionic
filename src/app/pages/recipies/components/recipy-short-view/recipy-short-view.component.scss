@@ -1,12 +1,15 @@
 ion-card {
   position: relative;
-  min-height: 320px;
 }
 
 ion-card-subtitle {
   ion-icon {
     font-size: 16px;
   }
+}
+
+ion-card-content {
+    height: 250px;
 }
 
 .flex-container {
@@ -43,7 +46,7 @@ ion-card-subtitle {
   }
 
   &.visible {
-    height: 200px;
+    height: 260px;
     z-index: 2;
 
     & > div.actions-pane {
@@ -54,7 +57,7 @@ ion-card-subtitle {
 
 .collections {
   ion-list {
-    max-height: 180px;
+    max-height: 240px;
     overflow-y: auto;
   }
 }
