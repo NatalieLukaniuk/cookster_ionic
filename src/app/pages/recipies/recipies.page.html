@@ -1,5 +1,11 @@
 <app-header></app-header>
 
 <ion-content [fullscreen]="true">
-
+  <div>
+    <app-recipy-short-view
+      *ngFor="let recipy of (recipies$ |async)"
+      [currentUser]="user$ | async"
+      [recipy]="recipy"
+    ></app-recipy-short-view>
+  </div>
 </ion-content>

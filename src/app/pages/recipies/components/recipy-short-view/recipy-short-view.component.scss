@@ -1,0 +1,29 @@
+ion-card {
+  position: relative;
+  min-height: 320px;
+}
+
+ion-card-subtitle {
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  height: 0;
+  width: 100%;
+  z-index: -1;
+  transition: all 200ms ease-in-out;
+  background-color: var(--ion-color-light);
+  &.visible {
+    height: 200px;
+    z-index: 2;
+  }
+}

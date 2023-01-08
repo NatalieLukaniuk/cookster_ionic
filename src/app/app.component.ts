@@ -1,3 +1,4 @@
+import { DataMappingService } from './services/data-mapping.service';
 import { getCurrentUser } from './store/selectors/user.selectors';
 import { AuthService } from './services/auth.service';
 import { getIsLoading } from './store/selectors/ui.selectors';
@@ -35,7 +36,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private store: Store<IAppState>,
-    private authService: AuthService
+    private authService: AuthService,
+    private dataMappingService: DataMappingService
   ) {}
   ngOnInit(): void {
     this.loadData();
@@ -55,6 +57,9 @@ export class AppComponent implements OnInit {
       this.store.pipe(select(getAllRecipies)),
     ]).subscribe((res) => {
       let [products, recipies] = res;
+      if (products.length) {
+        this.dataMappingService.products$.next(products);
+      }
       if (products.length && recipies.length) {
         this.store.dispatch(new UiActions.SetIsLoadingFalseAction());
       }

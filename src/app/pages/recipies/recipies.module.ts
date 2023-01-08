@@ -1,3 +1,4 @@
+import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-short-view.component';
 import { SharedModule } from '../../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
@@ -13,8 +14,8 @@ import { RecipiesPageRoutingModule } from './recipies-routing.module';
     CommonModule,
     FormsModule,
     RecipiesPageRoutingModule,
-    SharedModule
+    SharedModule,
   ],
-  declarations: [RecipiesContainer]
+  declarations: [RecipiesContainer, RecipyShortViewComponent],
 })
 export class RecipiesPageModule {}

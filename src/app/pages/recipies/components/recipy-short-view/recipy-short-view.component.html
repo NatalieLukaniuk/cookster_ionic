@@ -1,0 +1,32 @@
+<ion-card (click)="onRecipyClicked()">
+  <ion-card-header>
+    <ion-card-title>{{ recipy.name }}</ion-card-title>
+    <ion-card-subtitle>
+      <div class="flex-container">
+        <div>
+          <div>{{ preparationTime | normalizeTime }}</div>
+        </div>
+        <div>
+          <ion-icon
+            name="alarm-outline"
+            *ngIf="isNeedsAdvancePreparation"
+          ></ion-icon>
+          <ion-icon name="bulb-outline" *ngIf="isPrepSuggestions"></ion-icon>
+          <ion-icon
+            name="checkmark-done-outline"
+            *ngIf="recipy.isCheckedAndApproved"
+          ></ion-icon>
+        </div>
+      </div>
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
+  </ion-card-content>
+
+  <div class="overlay once" [class.visible]="isRecipyClickedOnce">
+    
+  </div>
+  <div class="overlay twice" [class.visible]="isRecipyClickedTwice"></div>
+</ion-card>
