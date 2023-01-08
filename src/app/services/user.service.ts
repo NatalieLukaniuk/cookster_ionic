@@ -1,3 +1,4 @@
+import { Role } from './../models/auth.models';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -14,11 +15,11 @@ import { AuthApiService } from './auth-api.service';
 export class UserService {
   currentUser: User | undefined;
   allUsers: User[] | undefined;
-  userAtFirebaseAuth: any;
+  userAtFirebaseAuth: User | undefined;
 
   constructor(private authApiService: AuthApiService, private store: Store) {}
 
-  getAllUsers() {
+  getAllUsers() { // FIXME: might be not needed anymore
     this.authApiService
       .getUsers()
       .pipe(take(1))
@@ -35,6 +36,25 @@ export class UserService {
         this.allUsers = users;
         this.getCurrentUser(this.userAtFirebaseAuth);
       });
+  }
+
+  getUserData(user: User){
+    this.authApiService
+    .getUsers()
+    .pipe(take(1))
+    .subscribe((res) => {
+      let array = Object.entries(res);
+      let users: any = [];
+      for (let entry of array) {
+        let user: any = {
+          id: entry[0],
+          ...entry[1],
+        };
+        users.push(user);
+      }
+      this.allUsers = users;
+      this.getCurrentUser(user);
+    });
   }
 
   addUser(auth: any) {

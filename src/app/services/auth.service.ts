@@ -17,7 +17,6 @@ import { UserService } from './user.service';
   providedIn: 'root',
 })
 export class AuthService {
-
   constructor(private userService: UserService, private store: Store) {}
 
   registerUser(email: string, password: string) {
@@ -68,10 +67,9 @@ export class AuthService {
         uid: user.uid,
         role: Role.User,
       };
-      this.store.dispatch(new UserActions.UserLoadedAction(currentUser));
+      this.userService.userAtFirebaseAuth = currentUser;
+      this.userService.getUserData(currentUser);
     }
-
-    this.userService.userAtFirebaseAuth = user;
   }
 
   processIsNotLoggedIn() {

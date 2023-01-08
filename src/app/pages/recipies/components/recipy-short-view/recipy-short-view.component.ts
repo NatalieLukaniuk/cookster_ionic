@@ -1,7 +1,16 @@
+import { Store } from '@ngrx/store';
 import { DataMappingService } from './../../../../services/data-mapping.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/models/auth.models';
-import { DishType, Recipy } from 'src/app/models/recipies.models';
+import {
+  ComplexityDescription,
+  DishType,
+  Ingredient,
+  Recipy,
+} from 'src/app/models/recipies.models';
+import * as _ from 'lodash';
+import { IAppState } from 'src/app/store/reducers';
+import { UpdateUserAction } from 'src/app/store/actions/user.actions';
 
 @Component({
   selector: 'app-recipy-short-view',
@@ -17,8 +26,17 @@ export class RecipyShortViewComponent implements OnInit {
   isNeedsAdvancePreparation: boolean = false;
   isPrepSuggestions: boolean = false;
 
-  isRecipyClickedOnce: boolean = false;
-  isRecipyClickedTwice: boolean = false;
+  isRecipyClicked: boolean = false;
+  isShowCollections: boolean = false;
+
+  ingredientsToSkip = [
+    '-Mu5TNCG6N8Q_nwkPmNb',
+    '-Mu5UmO24kMVyKveKjah',
+    '-MuzaMFzts_yzcBtPRyt',
+    '-Muzb3OfJhqdsrleyz2a',
+  ];
+
+  Math = Math;
 
   get preparationTime() {
     let time = 0;
@@ -28,7 +46,42 @@ export class RecipyShortViewComponent implements OnInit {
     return time;
   }
 
-  constructor(private datamapping: DataMappingService) {}
+  get topIngredients() {
+    let sorted = this.recipy.ingrediends
+      .map((ingr) => ingr)
+      .sort((a, b) => b.amount - a.amount);
+    sorted = sorted.filter(
+      (ingr) => !this.ingredientsToSkip.includes(ingr.product)
+    );
+    if (sorted.length >= 6) {
+      sorted.splice(5);
+    }
+    return sorted;
+  }
+
+  getIngredientText(ingredient: Ingredient): string {
+    return this.datamapping.getIngredientText(ingredient);
+  }
+
+  get complexity() {
+    return ComplexityDescription[this.recipy.complexity];
+  }
+
+  get includedInCollections(): string[] {
+    if (this.currentUser?.collections) {
+      return this.currentUser.collections
+        .filter((collection) => collection.recipies?.includes(this.recipy.id))
+        .map((coll) => coll.name);
+    } else return [];
+  }
+
+  get recipyCollections() {
+    if (this.currentUser?.collections) {
+      return this.currentUser.collections.map((collection) => collection.name);
+    } else return [];
+  }
+
+  constructor(private datamapping: DataMappingService, private store: Store<IAppState>) {}
 
   ngOnInit() {
     this.isNeedsAdvancePreparation = this.recipy.type?.includes(
@@ -40,13 +93,49 @@ export class RecipyShortViewComponent implements OnInit {
   }
 
   onRecipyClicked() {
-    if (!this.isRecipyClickedOnce && !this.isRecipyClickedTwice) {
-      this.isRecipyClickedOnce = true;
-    } else if (this.isRecipyClickedOnce && !this.isRecipyClickedTwice) {
-      this.isRecipyClickedOnce = false;
-      this.isRecipyClickedTwice = true;
-    } else if (this.isRecipyClickedTwice) {
-      this.isRecipyClickedTwice = false;
+    if (this.isShowCollections && this.isRecipyClicked) {
+      this.isShowCollections = true;
+      this.isRecipyClicked = false;
+    } else if (this.isShowCollections && !this.isRecipyClicked) {
+      this.isShowCollections = false;
+    } else {
+      this.isRecipyClicked = !this.isRecipyClicked;
     }
+  }
+
+  showCollections() {
+    this.isShowCollections = true;
+  }
+
+  onCollectionSelected(collection: string) {
+    if (this.currentUser) {
+      let updated = _.cloneDeep(this.currentUser);
+      updated.collections = updated.collections!.map((coll) => {
+        if (coll.name === collection) {
+          if (coll.recipies && coll.recipies.includes(this.recipy.id)) {
+            coll.recipies = coll.recipies.filter((id) => id !== this.recipy.id);
+          } else if (coll.recipies && !coll.recipies.includes(this.recipy.id)) {
+            coll.recipies.push(this.recipy.id);
+          } else {
+            coll.recipies = [this.recipy.id];
+          }
+          return coll;
+        } else return coll;
+      });
+      this.store.dispatch(new UpdateUserAction(updated));
+      // TODO: TOAST MESSAGE
+    }
+  }
+
+  getIsInCollection(collection: string) {
+    if (this.currentUser?.collections) {
+      return this.currentUser.collections
+        .find((coll) => coll.name == collection)
+        ?.recipies?.find((recipy) => recipy == this.recipy.id);
+    } else return false;
+  }
+
+  addCollection() {
+    console.log('not implemented yet') // TODO: implement adding new collection
   }
 }

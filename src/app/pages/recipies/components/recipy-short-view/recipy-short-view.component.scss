@@ -5,7 +5,7 @@ ion-card {
 
 ion-card-subtitle {
   ion-icon {
-    font-size: 20px;
+    font-size: 16px;
   }
 }
 
@@ -22,8 +22,51 @@ ion-card-subtitle {
   z-index: -1;
   transition: all 200ms ease-in-out;
   background-color: var(--ion-color-light);
+  padding: 10px;
+  & > div {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    ion-icon {
+      margin-right: 5px;
+    }
+
+    &.actions-pane {
+      position: absolute;
+      bottom: 5px;
+      width: calc(100% - 20px);
+      justify-content: space-evenly;
+      flex-direction: row-reverse;
+      opacity: 0;
+      transition: all 300ms ease-in-out;
+    }
+  }
+
   &.visible {
     height: 200px;
     z-index: 2;
+
+    & > div.actions-pane {
+      opacity: 1;
+    }
+  }
+}
+
+.collections {
+  ion-list {
+    max-height: 180px;
+    overflow-y: auto;
+  }
+}
+
+.ingredients-wrapper {
+  h6 {
+    margin-block: 5px;
+  }
+  div {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    font-weight: 600;
   }
 }
