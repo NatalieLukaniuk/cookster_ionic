@@ -4,10 +4,10 @@ import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RecipiesContainer } from './recipies.page';
 
 import { RecipiesPageRoutingModule } from './recipies-routing.module';
 import { FullRecipyPageComponent } from './pages/full-recipy-page/full-recipy-page.component';
+import { RecipiesContainer } from './pages/all-recipies-page/recipies.page';
 
 @NgModule({
   imports: [

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RecipiesContainer } from './pages/all-recipies-page/recipies.page';
 import { FullRecipyPageComponent } from './pages/full-recipy-page/full-recipy-page.component';
-import { RecipiesContainer } from './recipies.page';
 
 const routes: Routes = [
   {
