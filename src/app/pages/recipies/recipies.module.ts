@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { RecipiesContainer } from './recipies.page';
 
 import { RecipiesPageRoutingModule } from './recipies-routing.module';
+import { FullRecipyPageComponent } from './pages/full-recipy-page/full-recipy-page.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,10 @@ import { RecipiesPageRoutingModule } from './recipies-routing.module';
     RecipiesPageRoutingModule,
     SharedModule,
   ],
-  declarations: [RecipiesContainer, RecipyShortViewComponent],
+  declarations: [
+    RecipiesContainer,
+    RecipyShortViewComponent,
+    FullRecipyPageComponent,
+  ],
 })
 export class RecipiesPageModule {}

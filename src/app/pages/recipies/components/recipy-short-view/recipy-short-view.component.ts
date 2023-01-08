@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { DataMappingService } from './../../../../services/data-mapping.service';
 import { Component, Input, OnInit } from '@angular/core';
@@ -81,7 +82,12 @@ export class RecipyShortViewComponent implements OnInit {
     } else return [];
   }
 
-  constructor(private datamapping: DataMappingService, private store: Store<IAppState>) {}
+  constructor(
+    private datamapping: DataMappingService,
+    private store: Store<IAppState>,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.isNeedsAdvancePreparation = this.recipy.type?.includes(
@@ -136,6 +142,12 @@ export class RecipyShortViewComponent implements OnInit {
   }
 
   addCollection() {
-    console.log('not implemented yet') // TODO: implement adding new collection
+    console.log('not implemented yet'); // TODO: implement adding new collection
+  }
+
+  goFullRecipy() {
+    this.router.navigate(['recipy/', this.recipy.id], {
+      relativeTo: this.route,
+    });
   }
 }
