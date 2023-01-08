@@ -5,6 +5,7 @@ import {
   getDefaultMeasuringUnit,
   getIngredientText,
   getProductText,
+  isIngrIncludedInAmountCalculation,
 } from '../pages/recipies/utils/recipy.utils';
 
 @Injectable({
@@ -25,5 +26,13 @@ export class DataMappingService {
 
   getDefaultMU(id: string): MeasuringUnit {
     return getDefaultMeasuringUnit(id, this.products$.value);
+  }
+
+  getIsIngredientInDB(id: string) {
+    return this.products$.value.find((ingr) => ingr.id == id);
+  }
+
+  getIsIngredientIncludedInAmountCalculation(ingr: Ingredient): boolean {
+    return isIngrIncludedInAmountCalculation(ingr, this.products$.value);
   }
 }
