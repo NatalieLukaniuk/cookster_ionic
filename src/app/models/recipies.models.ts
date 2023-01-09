@@ -220,3 +220,19 @@ export const MeasuringUnitOptionsFluid = [
     MeasuringUnit.gr,
     MeasuringUnit.kg
   ]
+
+  export interface IngredientsByGroup {
+    main: Ingredient[];
+    filling: Ingredient[];
+    souce: Ingredient[];
+    dough: Ingredient[];
+    decoration: Ingredient[];
+  }
+
+  export class ingredientsByGroup implements IngredientsByGroup {
+    main: Ingredient[] = [];
+    decoration: Ingredient[] = [];
+    dough: Ingredient[] = [];
+    souce: Ingredient[] = [];
+    filling: Ingredient[] = [];
+  }

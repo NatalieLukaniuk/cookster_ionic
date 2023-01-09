@@ -1,6 +1,6 @@
 import { DataMappingService } from './../../../../services/data-mapping.service';
-import { Component, Input, OnInit } from '@angular/core';
-import { Ingredient, Recipy } from 'src/app/models/recipies.models';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Ingredient, ingredientsByGroup, IngredientsByGroup, Recipy } from 'src/app/models/recipies.models';
 import { AVERAGE_PORTION } from 'src/app/shared/constants';
 
 @Component({
@@ -8,7 +8,7 @@ import { AVERAGE_PORTION } from 'src/app/shared/constants';
   templateUrl: './recipy-full-view.component.html',
   styleUrls: ['./recipy-full-view.component.scss'],
 })
-export class RecipyFullViewComponent implements OnInit {
+export class RecipyFullViewComponent implements OnInit, OnChanges {
   @Input() recipy: Recipy | undefined | null;
 
   @Input() portions?: number;
@@ -29,7 +29,20 @@ export class RecipyFullViewComponent implements OnInit {
 
   currentTab = this.tabs[0].value;
 
+  isSplitToGroups: boolean = false;
+  ingredientsByGroup: IngredientsByGroup = new ingredientsByGroup();
+
   constructor(private datamapping: DataMappingService) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      this.recipy?.isSplitIntoGroups &&
+      !!this.recipy.isSplitIntoGroups.length
+    ) {
+      this.isSplitToGroups = true;
+      this.getIngredientsByGroup();
+    }
+  }
 
   ngOnInit() {
     if(this.portions){
@@ -62,7 +75,14 @@ export class RecipyFullViewComponent implements OnInit {
     }
   }
 
-  onportionSizeChanged() {
-    this.getCoeficient();
+  getIngredientsByGroup() {
+    if (!!this.recipy && this.recipy.isSplitIntoGroups) {
+      let ingredients = this.recipy.ingrediends;
+      this.recipy.isSplitIntoGroups.forEach((group) => {
+        this.ingredientsByGroup[group] = ingredients.filter(
+          (ingredient) => ingredient.group == group
+        );
+      });
+    }
   }
 }
