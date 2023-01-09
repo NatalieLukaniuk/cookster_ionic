@@ -1,2 +1,5 @@
 <app-header></app-header>
-<app-recipy-full-view [recipy]="recipy$ | async"></app-recipy-full-view>
+<app-recipy-full-view
+  [recipy]="recipy$ | async"
+  [currentUser]="user$ | async"
+></app-recipy-full-view>

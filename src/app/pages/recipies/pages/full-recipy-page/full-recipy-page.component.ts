@@ -1,3 +1,4 @@
+import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { SetIsLoadingFalseAction } from './../../../../store/actions/ui.actions';
 import { map, tap } from 'rxjs/operators';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
@@ -23,11 +24,13 @@ export class FullRecipyPageComponent implements OnInit {
       if (recipy && recipy.ingrediends) {
         let updatedRecipy = _.cloneDeep(recipy);
         updatedRecipy.ingrediends.sort((a, b) => b.amount - a.amount);
+        this.store.dispatch(new SetIsLoadingFalseAction());
         return updatedRecipy;
       } else return recipy;
-    }),
-    tap((res) => this.store.dispatch(new SetIsLoadingFalseAction()))
+    })
   );
+
+  user$ = this.store.pipe(select(getCurrentUser));
 
   constructor(private store: Store<IAppState>) {
     const path = window.location.pathname.split('/');

@@ -1,7 +1,6 @@
-import { DataMappingService } from './../../../../services/data-mapping.service';
 import { Component, Input, OnInit } from '@angular/core';
+import { User } from 'src/app/models/auth.models';
 import { Recipy } from 'src/app/models/recipies.models';
-
 @Component({
   selector: 'app-recipy-full-view',
   templateUrl: './recipy-full-view.component.html',
@@ -9,6 +8,7 @@ import { Recipy } from 'src/app/models/recipies.models';
 })
 export class RecipyFullViewComponent implements OnInit {
   @Input() recipy: Recipy | undefined | null;
+  @Input() currentUser!: User | null;
 
   @Input() portions?: number;
   @Input() amountPerPortion?: number;
@@ -23,7 +23,7 @@ export class RecipyFullViewComponent implements OnInit {
 
   selectedStepId = 0;
 
-  constructor(private datamapping: DataMappingService) {}
+  constructor() {}
 
   ngOnInit() {}
 
