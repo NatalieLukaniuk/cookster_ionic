@@ -236,3 +236,14 @@ export const MeasuringUnitOptionsFluid = [
     souce: Ingredient[] = [];
     filling: Ingredient[] = [];
   }
+
+  export const ingredientsGroupTitle = (eng: string): string => {
+    switch(eng) {
+      case 'main': return 'Основна страва';
+      case 'decoration': return 'Оздоблення';
+      case 'dough': return 'Тісто';
+      case 'souce': return 'Соус / підливка / маринад';
+      case 'filling': return 'Начинка';
+      default: return ''
+    }
+  }
