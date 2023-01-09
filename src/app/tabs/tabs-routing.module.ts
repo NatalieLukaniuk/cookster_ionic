@@ -16,8 +16,8 @@ const routes: Routes = [
         loadChildren: () => import('../pages/add-recipy/add-recipy.module').then(m => m.AddRecipyPageModule)
       },
       {
-        path: 'planner',
-        loadChildren: () => import('../pages/planner/planner.module').then(m => m.PlannerPageModule)
+        path: 'calendar',
+        loadChildren: () => import('../pages/calendar/calendar.module').then(m => m.CalendarPageModule)
       },
       {
         path: 'shopping-list',
