@@ -21,6 +21,8 @@ export class RecipyFullViewComponent implements OnInit {
 
   currentTab = this.tabs[0].value;
 
+  selectedStepId = 0;
+
   constructor(private datamapping: DataMappingService) {}
 
   ngOnInit() {}

@@ -1,1 +1,9 @@
+.preparations-steps {
+  ion-label {
+    white-space: normal;
+  }
+}
 
+.current-step::part(native) {
+  background-color: var(--ion-color-secondary);
+}
