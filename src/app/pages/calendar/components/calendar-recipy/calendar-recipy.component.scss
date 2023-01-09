@@ -1,0 +1,17 @@
+.additional-info {
+  display: flex;
+  color: var(--ion-color-medium);
+  font-size: 10px;
+  & > span {
+    margin-right: 10px;
+  }
+  .icons {
+    color: var(--ion-color-primary);
+  }
+}
+
+h2 {
+  white-space: normal;
+  font-size: 16px;
+  font-weight: 600;
+}

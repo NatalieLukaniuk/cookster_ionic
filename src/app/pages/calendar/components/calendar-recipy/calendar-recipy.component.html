@@ -1,0 +1,72 @@
+<div class="recipy-name">
+  <ion-item button>
+    <ion-label>
+      <h2>{{ recipy.name }}</h2>
+      <div class="additional-info">
+        <span>{{ recipy.portions }} порцій</span>
+        <span *ngIf="recipy.calorificValue">
+          {{
+            Math.round((recipy.calorificValue * recipy.amountPerPortion) / 100)
+          }}
+          ккал/порцію
+        </span>
+        <span class="icons">
+          <ion-icon name="alarm" *ngIf="showNeedsAdvancePreparation"></ion-icon>
+          <ion-icon name="bulb" *ngIf="hasPrepSuggestions"></ion-icon>
+          <ion-icon
+            name="checkmark-done"
+            *ngIf="recipy.isCheckedAndApproved"
+          ></ion-icon>
+        </span>
+      </div>
+    </ion-label>
+  </ion-item>
+  <!-- <mat-expansion-panel hideToggle>
+     FIXME: needs implementation: delete recipy on swipe left, view recipy on click; change portions and amount pp in the recipy preview
+    <mat-action-list>
+      <div mat-list-item class="recipy-details-item">
+        <button
+          mat-icon-button
+          (click)="
+            recipy.amountPerPortion = recipy.amountPerPortion - 50;
+            onAmountPerPortionChanged()
+          "
+        >
+          <mat-icon>remove</mat-icon>
+        </button>
+        <mat-form-field appearance="outline" class="amount-per-portion-input">
+          <mat-label>Amount per portion (in gramms)</mat-label>
+          <input
+            matInput
+            [(ngModel)]="recipy.amountPerPortion"
+            type="number"
+            (ngModelChange)="onAmountPerPortionChanged()"
+          />
+        </mat-form-field>
+        <button
+          mat-icon-button
+          (click)="
+            recipy.amountPerPortion = recipy.amountPerPortion + 50;
+            onAmountPerPortionChanged()
+          "
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <button
+        mat-list-item
+        class="recipy-details-item button"
+        (click)="viewRecipy()"
+      >
+        <mat-icon>zoom_in</mat-icon>Перейти до рецепту
+      </button>
+      <button
+        mat-list-item
+        class="recipy-details-item button"
+        (click)="onRemoveRecipy()"
+      >
+        <mat-icon>delete_outline</mat-icon>Видалити
+      </button>
+    </mat-action-list>
+  </mat-expansion-panel> -->
+</div>

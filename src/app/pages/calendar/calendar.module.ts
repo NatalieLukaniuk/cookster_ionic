@@ -1,3 +1,6 @@
+import { CalendarRecipyComponent } from './components/calendar-recipy/calendar-recipy.component';
+import { CalendarMealComponent } from './components/calendar-meal/calendar-meal.component';
+import { DayComponent } from './components/day/day.component';
 import { SharedModule } from './../../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -15,8 +18,13 @@ import { CalendarPage } from './calendar.page';
     FormsModule,
     IonicModule,
     CalendarPageRoutingModule,
-    SharedModule
+    SharedModule,
   ],
-  declarations: [CalendarPage]
+  declarations: [
+    CalendarPage,
+    DayComponent,
+    CalendarMealComponent,
+    CalendarRecipyComponent,
+  ],
 })
 export class CalendarPageModule {}

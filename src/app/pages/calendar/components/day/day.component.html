@@ -1,0 +1,8 @@
+<div *ngIf="!!day.details" class="day-wrapper" [id]="day.details.day">
+  <app-calendar-meal [day]="day" [mealtime]="MealTime.Breakfast">
+  </app-calendar-meal>
+  <app-calendar-meal [day]="day" [mealtime]="MealTime.Lunch">
+  </app-calendar-meal>
+  <app-calendar-meal [day]="day" [mealtime]="MealTime.Dinner">
+  </app-calendar-meal>
+</div>
