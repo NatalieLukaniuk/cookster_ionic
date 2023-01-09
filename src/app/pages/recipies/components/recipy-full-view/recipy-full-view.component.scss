@@ -1,3 +1,10 @@
+:host {
+  --app-header: 44px;
+  --tabs-height: 50px;
+  --segment-height: 32px;
+  --safety-height: 20px;
+}
+
 .preparations-steps {
   ion-label {
     white-space: normal;
@@ -6,4 +13,12 @@
 
 .current-step::part(native) {
   background-color: var(--ion-color-secondary);
+}
+
+.scrollable {
+  max-height: calc(
+    100vh - var(--header-height) - var(--app-header) - var(--tabs-height) -
+      var(--segment-height) - var(--safety-height)
+  );
+  overflow-y: auto;
 }

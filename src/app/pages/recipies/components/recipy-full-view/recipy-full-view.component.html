@@ -1,34 +1,39 @@
 <ng-container *ngIf="recipy; else noRecipy">
-  <h1 class="padding-inline">{{ recipy.name }}</h1>
+  <h1 #header class="padding-inline">{{ recipy.name }}</h1>
   <ion-segment [value]="currentTab" (ionChange)="onTabChange($event)">
     <ion-segment-button *ngFor="let tab of tabs" [value]="tab.value">
       <ion-label>{{ tab.name }}</ion-label>
     </ion-segment-button>
   </ion-segment>
 
-  <ng-container *ngIf="currentTab === tabs[0].value">
-    <app-ingredients-tab
-      [recipy]="recipy"
-      [portions]="portions"
-      [amountPerPortion]="amountPerPortion"
-    ></app-ingredients-tab>
-  </ng-container>
+  <div class="scrollable">
+    <ng-container *ngIf="currentTab === tabs[0].value">
+      <app-ingredients-tab
+        [recipy]="recipy"
+        [portions]="portions"
+        [amountPerPortion]="amountPerPortion"
+      ></app-ingredients-tab>
+    </ng-container>
 
-  <ng-container *ngIf="currentTab === tabs[1].value">
-    <ion-list lines="full" class="preparations-steps">
-      <ion-item
-        *ngFor="let step of recipy.steps; let i = index"
-        [class.current-step]="selectedStepId === i"
-        (click)="selectedStepId = i"
-      >
-        <ion-label>{{ step.description }}</ion-label>
-      </ion-item>
-    </ion-list>
-  </ng-container>
+    <ng-container *ngIf="currentTab === tabs[1].value">
+      <ion-list lines="full" class="preparations-steps">
+        <ion-item
+          *ngFor="let step of recipy.steps; let i = index"
+          [class.current-step]="selectedStepId === i"
+          (click)="selectedStepId = i"
+        >
+          <ion-label>{{ step.description }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ng-container>
 
-  <ng-container *ngIf="currentTab === tabs[2].value">
-    <app-info-tab [currentUser]="currentUser" [recipy]="recipy"></app-info-tab>
-  </ng-container>
+    <ng-container *ngIf="currentTab === tabs[2].value">
+      <app-info-tab
+        [currentUser]="currentUser"
+        [recipy]="recipy"
+      ></app-info-tab>
+    </ng-container>
+  </div>
 </ng-container>
 
 <ng-template #noRecipy>There's no such recipy</ng-template>
