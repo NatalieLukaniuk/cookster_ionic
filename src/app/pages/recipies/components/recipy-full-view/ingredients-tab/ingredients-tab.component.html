@@ -1,0 +1,53 @@
+<div class="portions padding-inline">
+  <div
+    class="portions-info"
+    *ngIf="!isEditPortions"
+    (click)="isEditPortions = true"
+  >
+    {{ portionsToServe }} порції по {{ portionSize }} грам
+  </div>
+  <div *ngIf="isEditPortions" class="portions-edit">
+    <ion-item>
+      <ion-label position="floating">Кількість порцій</ion-label>
+      <ion-input
+        type="number"
+        [(ngModel)]="portionsToServe"
+        (ngModelChange)="getCoeficient()"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Розмір порції</ion-label>
+      <ion-input
+        type="number"
+        [(ngModel)]="portionSize"
+        (ngModelChange)="getCoeficient()"
+      ></ion-input>
+    </ion-item>
+    <ion-button size="small" (click)="isEditPortions = false">
+      <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+    </ion-button>
+  </div>
+</div>
+
+<ng-container *ngIf="!isSplitToGroups">
+  <ion-list>
+    <app-ingredient
+      *ngFor="let ingredient of recipy.ingrediends"
+      [ingredient]="ingredient"
+      [coefficient]="coeficient"
+    >
+    </app-ingredient>
+  </ion-list>
+</ng-container>
+<ng-container>
+  <ng-container *ngFor="let item of ingredientsByGroup | keyvalue">
+    <ng-container *ngIf="item.value.length > 0">
+      <h6 class="padding-inline">{{ ingredientsGroupTitle(item.key) }}</h6>
+      <app-ingredient
+        *ngFor="let ingredient of item.value"
+        [ingredient]="ingredient"
+        [coefficient]="coeficient"
+      ></app-ingredient>
+    </ng-container>
+  </ng-container>
+</ng-container>

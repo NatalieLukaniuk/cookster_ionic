@@ -1,3 +1,4 @@
+import { IngredientsTabComponent } from './components/recipy-full-view/ingredients-tab/ingredients-tab.component';
 import { ConvertToSelectedUnitPipe } from './utils/convert-to-selected-unit.pipe';
 import { NormalizeDisplayedAmountPipe } from './utils/normalize-displayed-amount.pipe';
 import { IngredientComponent } from './components/ingredient/ingredient.component';
@@ -28,7 +29,8 @@ import { RecipiesContainer } from './pages/all-recipies-page/recipies.page';
     RecipyFullViewComponent,
     IngredientComponent,
     NormalizeDisplayedAmountPipe,
-    ConvertToSelectedUnitPipe
+    ConvertToSelectedUnitPipe,
+    IngredientsTabComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe]
 })
