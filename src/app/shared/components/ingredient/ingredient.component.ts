@@ -9,7 +9,7 @@ import {
   MeasuringUnitOptionsSpice,
   MeasuringUnitText,
   ProductType,
-} from './../../../../models/recipies.models';
+} from '../../../models/recipies.models';
 import { Component, Input, OnInit } from '@angular/core';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 

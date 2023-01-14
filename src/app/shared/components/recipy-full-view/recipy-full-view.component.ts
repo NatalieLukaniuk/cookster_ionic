@@ -27,6 +27,8 @@ export class RecipyFullViewComponent implements OnChanges {
 
   constructor() {}
   ngOnChanges(changes: SimpleChanges): void {
+
+    debugger
     if(this.header){
       let root = document.documentElement;
       root.style.setProperty('--header-height', this.header.nativeElement.offsetHeight + 30 + "px");

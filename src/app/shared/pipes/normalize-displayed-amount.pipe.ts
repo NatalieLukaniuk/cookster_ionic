@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { MeasuringUnit } from 'src/app/models/recipies.models';
-import { NormalizeDisplayedAmount } from './recipy.utils';
+import { NormalizeDisplayedAmount } from '../../pages/recipies/utils/recipy.utils';
 
 @Pipe({
   name: 'normalizeDisplayedAmount',

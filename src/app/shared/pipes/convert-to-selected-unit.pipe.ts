@@ -1,7 +1,7 @@
-import { DataMappingService } from './../../../services/data-mapping.service';
+import { DataMappingService } from '../../services/data-mapping.service';
 import { Pipe, PipeTransform } from '@angular/core';
 import { MeasuringUnit } from 'src/app/models/recipies.models';
-import { convertAmountToSelectedUnit } from './recipy.utils';
+import { convertAmountToSelectedUnit } from '../../pages/recipies/utils/recipy.utils';
 
 @Pipe({
   name: 'convertToSelectedUnit',

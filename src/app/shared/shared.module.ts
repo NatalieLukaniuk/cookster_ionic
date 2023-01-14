@@ -1,3 +1,5 @@
+
+import { InfoTabComponent } from './components/recipy-full-view/info-tab/info-tab.component';
 import { ImageComponent } from './components/image/image.component';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
@@ -5,15 +7,34 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { NormalizeTimePipe } from './pipes/normalize-time.pipe';
-
-
+import { RecipyFullViewComponent } from './components/recipy-full-view/recipy-full-view.component';
+import { IngredientsTabComponent } from './components/recipy-full-view/ingredients-tab/ingredients-tab.component';
+import { IngredientComponent } from './components/ingredient/ingredient.component';
+import { FormsModule } from '@angular/forms';
+import { NormalizeDisplayedAmountPipe } from './pipes/normalize-displayed-amount.pipe';
+import { ConvertToSelectedUnitPipe } from './pipes/convert-to-selected-unit.pipe';
 
 @NgModule({
-  declarations: [HeaderComponent, LoadingOverlayComponent, ImageComponent, NormalizeTimePipe],
-  imports: [
-    CommonModule,
-    IonicModule
+  declarations: [
+    HeaderComponent,
+    LoadingOverlayComponent,
+    ImageComponent,
+    NormalizeTimePipe,
+    RecipyFullViewComponent,
+    InfoTabComponent,
+    IngredientsTabComponent,
+    IngredientComponent,
+    NormalizeDisplayedAmountPipe,
+    ConvertToSelectedUnitPipe,
   ],
-  exports: [HeaderComponent, LoadingOverlayComponent, ImageComponent, NormalizeTimePipe]
+  imports: [CommonModule, IonicModule, FormsModule],
+  exports: [
+    HeaderComponent,
+    LoadingOverlayComponent,
+    ImageComponent,
+    NormalizeTimePipe,
+    RecipyFullViewComponent
+  ],
+  providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe]
 })
-export class SharedModule { }
+export class SharedModule {}
