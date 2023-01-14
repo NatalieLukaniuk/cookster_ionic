@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tabs/calendar"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<app-recipy-full-view
+*ngIf="(recipy$ | async) && (amountPerPortion$ | async) && (portions$ | async); else loading"
+  [recipy]="recipy$ | async"
+  [currentUser]="user$ | async"
+  [amountPerPortion]="amountPerPortion$ | async"
+  [portions]="portions$ | async"
+></app-recipy-full-view>
+
+<ng-template #loading>
+  <app-loading-overlay></app-loading-overlay>
+</ng-template>

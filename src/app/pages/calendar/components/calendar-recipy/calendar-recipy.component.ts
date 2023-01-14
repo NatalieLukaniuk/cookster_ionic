@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import { RecipyForCalendar } from 'src/app/models/calendar.models';
 import { DishType } from 'src/app/models/recipies.models';
@@ -14,7 +15,7 @@ export class CalendarRecipyComponent implements OnInit {
   showNeedsAdvancePreparation: boolean = false;
 
   Math = Math;
-  constructor() {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.showNeedsAdvancePreparation = this.recipy.type.includes(
@@ -23,5 +24,19 @@ export class CalendarRecipyComponent implements OnInit {
     this.hasPrepSuggestions = !!this.recipy.ingrediends.find(
       (ingr) => !!ingr.prep
     );
+  }
+
+  viewRecipy() {
+    this.router.navigate(['recipy', this.recipy.id], {
+      relativeTo: this.route,
+      state: {
+        portions: this.recipy.portions,
+        amountPerportion: this.recipy.amountPerPortion,
+      },
+      queryParams: {
+        portions: this.recipy.portions,
+        amountPerportion: this.recipy.amountPerPortion,
+      },
+    });
   }
 }
