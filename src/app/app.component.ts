@@ -1,7 +1,12 @@
+import { DialogsService } from './services/dialogs.service';
 import { DataMappingService } from './services/data-mapping.service';
 import { getCurrentUser } from './store/selectors/user.selectors';
 import { AuthService } from './services/auth.service';
-import { getIsLoading } from './store/selectors/ui.selectors';
+import {
+  getIsError,
+  getIsLoading,
+  getIsSuccessMessage,
+} from './store/selectors/ui.selectors';
 import {
   getAllProducts,
   getAllRecipies,
@@ -37,7 +42,8 @@ export class AppComponent implements OnInit {
   constructor(
     private store: Store<IAppState>,
     private authService: AuthService,
-    private dataMappingService: DataMappingService
+    private dataMappingService: DataMappingService,
+    private dialog: DialogsService
   ) {}
   ngOnInit(): void {
     this.loadData();
@@ -45,6 +51,20 @@ export class AppComponent implements OnInit {
     initializeApp(this.firebaseConfig);
 
     this.subscribeIsLoggedIn();
+
+    this.store.pipe(select(getIsError)).subscribe((res) => {
+      if (res) {
+        this.dialog.presentInfoToast(res);
+        this.store.dispatch(new UiActions.ResetErrorAction());
+      }
+    });
+
+    this.store.pipe(select(getIsSuccessMessage)).subscribe((res) => {
+      if (res) {
+        this.dialog.presentInfoToast(res);
+        this.store.dispatch(new UiActions.DismissSuccessMessageAction());
+      }
+    });
   }
 
   loadData() {
