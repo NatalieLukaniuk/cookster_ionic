@@ -2,7 +2,7 @@ import { AuthService } from './../services/auth.service';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { IAppState } from './../store/reducers/index';
 import { Store, select } from '@ngrx/store';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-tabs',
@@ -11,6 +11,9 @@ import { Component } from '@angular/core';
 })
 export class TabsPage {
   isLoggedIn$ = this.store.pipe(select(getCurrentUser));
+
+  isProfileMenuOpen = false;
+
   constructor(
     private store: Store<IAppState>,
     private authService: AuthService
@@ -18,5 +21,16 @@ export class TabsPage {
 
   logout() {
     this.authService.logoutUser();
+  }
+
+  @ViewChild('popover') popover: { event: Event; } | undefined;
+
+  presentPopover(e: Event) {
+    this.popover!.event = e;
+    this.isProfileMenuOpen = true;
+  }
+
+  goPlanner(){
+    
   }
 }
