@@ -23,7 +23,11 @@
   <ng-container *ngIf="!!detailedRecipiesList">
     <ng-container>
       <div *ngFor="let item of detailedRecipiesList">
-        <app-calendar-recipy [recipy]="item"></app-calendar-recipy>
+        <app-calendar-recipy
+          [recipy]="item"
+          [day]="day"
+          [mealtime]="mealtime"
+        ></app-calendar-recipy>
       </div>
     </ng-container>
   </ng-container>

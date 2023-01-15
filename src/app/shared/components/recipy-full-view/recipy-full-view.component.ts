@@ -1,4 +1,13 @@
-import { AfterContentInit, AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+  OnChanges,
+  SimpleChanges,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { User } from 'src/app/models/auth.models';
 import { Recipy } from 'src/app/models/recipies.models';
 @Component({
@@ -12,6 +21,11 @@ export class RecipyFullViewComponent implements OnChanges {
 
   @Input() portions?: number;
   @Input() amountPerPortion?: number;
+
+  @Output() portionsChanged = new EventEmitter<{
+    portions: number;
+    amountPerPortion: number;
+  }>();
 
   @ViewChild('header') header: ElementRef | undefined;
 
@@ -27,15 +41,20 @@ export class RecipyFullViewComponent implements OnChanges {
 
   constructor() {}
   ngOnChanges(changes: SimpleChanges): void {
-
-    debugger
-    if(this.header){
+    if (this.header) {
       let root = document.documentElement;
-      root.style.setProperty('--header-height', this.header.nativeElement.offsetHeight + 30 + "px");
+      root.style.setProperty(
+        '--header-height',
+        this.header.nativeElement.offsetHeight + 30 + 'px'
+      );
     }
   }
 
   onTabChange(event: any) {
     this.currentTab = event.detail.value;
+  }
+
+  onPortionsChanged(event: { portions: number; amountPerPortion: number }) {
+    this.portionsChanged.emit(event);
   }
 }

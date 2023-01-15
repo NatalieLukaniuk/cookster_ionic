@@ -22,44 +22,8 @@
     </ion-label>
   </ion-item>
   <!-- <mat-expansion-panel hideToggle>
-     FIXME: needs implementation: delete recipy on swipe left, view recipy on click; change portions and amount pp in the recipy preview
+     FIXME: needs implementation: delete recipy on swipe left
     <mat-action-list>
-      <div mat-list-item class="recipy-details-item">
-        <button
-          mat-icon-button
-          (click)="
-            recipy.amountPerPortion = recipy.amountPerPortion - 50;
-            onAmountPerPortionChanged()
-          "
-        >
-          <mat-icon>remove</mat-icon>
-        </button>
-        <mat-form-field appearance="outline" class="amount-per-portion-input">
-          <mat-label>Amount per portion (in gramms)</mat-label>
-          <input
-            matInput
-            [(ngModel)]="recipy.amountPerPortion"
-            type="number"
-            (ngModelChange)="onAmountPerPortionChanged()"
-          />
-        </mat-form-field>
-        <button
-          mat-icon-button
-          (click)="
-            recipy.amountPerPortion = recipy.amountPerPortion + 50;
-            onAmountPerPortionChanged()
-          "
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-      <button
-        mat-list-item
-        class="recipy-details-item button"
-        (click)="viewRecipy()"
-      >
-        <mat-icon>zoom_in</mat-icon>Перейти до рецепту
-      </button>
       <button
         mat-list-item
         class="recipy-details-item button"

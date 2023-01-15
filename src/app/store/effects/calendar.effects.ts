@@ -1,3 +1,4 @@
+import { UpdateRecipyInCalendarAction } from './../actions/calendar.actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -15,6 +16,7 @@ import { ErrorAction } from '../actions/ui.actions';
 import { UpdateUserAction } from '../actions/user.actions';
 import { IAppState } from '../reducers';
 import { getCurrentUser } from '../selectors/user.selectors';
+import { User } from 'src/app/models/auth.models';
 
 @Injectable()
 export class CalendarEffects {
@@ -76,6 +78,37 @@ export class CalendarEffects {
           })
         )
       )
+    )
+  );
+
+  updateRecipyInCalendar$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(CalendarActionTypes.UPDATE_RECIPY_IN_CALENDAR),
+      switchMap((action: UpdateRecipyInCalendarAction) => 
+      this.store.pipe(
+        select(getCurrentUser),
+        take(1),
+        map((user: User | null) => {
+          if (user && user.details) {
+            let updatedUser = _.cloneDeep(user);
+            updatedUser.details = updatedUser.details!.map((day: IDayDetails) => {
+              if (day.day == action.day) {
+                day[action.mealtime] = day[action.mealtime].map((recipy: CalendarRecipyInDatabase) => {
+                  if(recipy.recipyId === action.recipyId){
+                    return {
+                      ...recipy,
+                      portions: action.portions,
+                      amountPerPortion: action.amountPerPortion
+                    }
+                  } else return recipy
+                })                
+              }
+              return day
+            })
+            return new UpdateUserAction(updatedUser);
+          } else return new ErrorAction('no user');
+        })
+      ))
     )
   );
 

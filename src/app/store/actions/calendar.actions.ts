@@ -1,5 +1,9 @@
 import { Action } from '@ngrx/store';
-import { CalendarRecipyInDatabase, Day, MealTime } from 'src/app/models/calendar.models';
+import {
+  CalendarRecipyInDatabase,
+  Day,
+  MealTime,
+} from 'src/app/models/calendar.models';
 import { Recipy } from 'src/app/models/recipies.models';
 
 export enum CalendarActionTypes {
@@ -14,6 +18,7 @@ export enum CalendarActionTypes {
   REMOVE_RECIPY_FROM_CALENDAR = '[CLANEDAR] Remove Recipy From Calendar',
   ADD_RECIPY_TO_CALENDAR = '[CLANEDAR] Add Recipy To Calendar',
   MOVE_RECIPY_IN_CALENDAR = '[CLANEDAR] Move Recipy In Calendar',
+  UPDATE_RECIPY_IN_CALENDAR = '[CLANEDAR] Update Recipy In Calendar',
 }
 
 export class MoveRecipyInCalendarAction implements Action {
@@ -31,6 +36,18 @@ export class MoveRecipyInCalendarAction implements Action {
     }
   ) {}
 }
+
+export class UpdateRecipyInCalendarAction implements Action {
+  readonly type = CalendarActionTypes.UPDATE_RECIPY_IN_CALENDAR;
+  constructor(
+    public recipyId: string,
+    public day: string,
+    public mealtime: MealTime,
+    public portions: number,
+    public amountPerPortion: number
+  ) {}
+}
+
 export class AddRecipyToCalendarAction implements Action {
   readonly type = CalendarActionTypes.ADD_RECIPY_TO_CALENDAR;
   constructor(
@@ -104,4 +121,5 @@ export type CalendarActions =
   | LoadCalendarAction
   | RemoveRecipyFromCalendarAction
   | AddRecipyToCalendarAction
-  | MoveRecipyInCalendarAction;
+  | MoveRecipyInCalendarAction
+  | UpdateRecipyInCalendarAction;

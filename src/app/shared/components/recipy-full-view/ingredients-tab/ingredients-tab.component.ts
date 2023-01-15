@@ -4,6 +4,8 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import {
   IngredientsByGroup,
@@ -24,6 +26,11 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
 
   @Input() portions?: number;
   @Input() amountPerPortion?: number;
+
+  @Output() portionsChanged = new EventEmitter<{
+    portions: number;
+    amountPerPortion: number;
+  }>();
 
   isEditPortions = false;
 
@@ -85,5 +92,14 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
       }
       this.coeficient = (this.portionsToServe * this.portionSize) / amount;
     }
+  }
+
+  onPortionsChanged() {
+    this.portionsChanged.emit({
+      portions: this.portionsToServe,
+      amountPerPortion: this.portionSize,
+    });
+
+    this.isEditPortions = false;
   }
 }
