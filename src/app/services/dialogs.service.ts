@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActionSheetController, ModalController } from '@ionic/angular';
+import { ActionSheetController, ModalController, ToastController } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core';
 
 export interface ActionsheetButton {
@@ -30,7 +30,7 @@ export const CancelButton: ActionsheetButton = {
   providedIn: 'root',
 })
 export class DialogsService {
-  constructor(private actionSheetCtrl: ActionSheetController) {}
+  constructor(private actionSheetCtrl: ActionSheetController, private toastController: ToastController) {}
 
   async presentActionSheet(
     title: string,
@@ -64,4 +64,30 @@ export class DialogsService {
   //     console.log(res)
   //   })
   //     }
+
+ async presentInfoToast(message: string){
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1500,
+      position: 'top'
+    });
+
+    await toast.present();
+  }
+
+  async presentInfoToastWithDismiss(message: string){
+    const toast = await this.toastController.create({
+      message: message,
+      position: 'top',
+      buttons: [
+        {
+          text: 'OK',
+          role: 'info',
+          handler: () => { toast.dismiss()}
+        },
+      ]
+    });
+
+    await toast.present();
+  }
 }
