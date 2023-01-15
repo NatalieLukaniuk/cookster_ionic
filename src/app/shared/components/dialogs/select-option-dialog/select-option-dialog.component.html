@@ -1,0 +1,77 @@
+<ion-button id="open-modal" expand="block">Open</ion-button>
+<ion-modal
+  #modal
+  trigger="open-modal"
+  [swipeToClose]="true"
+  [presentingElement]="presentingElement"
+  (didDismiss)="onDismissed()"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <!-- <ion-title>Виберіть час та кількість порцій</ion-title> -->
+        <ion-buttons slot="end">
+          <ion-button (click)="modal.dismiss()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div>
+        <h5>Meal time</h5>
+        <ion-radio-group
+          [(ngModel)]="selectedMealTime"
+        >
+          <ion-item *ngFor="let unit of mealOptions">
+            <ion-label>{{ unit }}</ion-label>
+            <ion-radio slot="end" [value]="unit"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </div>
+      <h5>Number of portions</h5>
+      <div class="amount-wrapper">
+        <ion-button
+          size="small"
+          (click)="selectedPortionOption = selectedPortionOption - 1"
+        >
+          <ion-icon slot="icon-only" name="remove"></ion-icon>
+        </ion-button>
+        <ion-item>
+          <ion-label position="floating">Number of portions to serve</ion-label>
+          <ion-input
+            [(ngModel)]="selectedPortionOption"
+            type="number"
+          ></ion-input>
+        </ion-item>
+        <ion-button
+          size="small"
+          (click)="selectedPortionOption = selectedPortionOption + 1"
+        >
+          <ion-icon slot="icon-only" name="add"></ion-icon>
+        </ion-button>
+      </div>
+      <div>
+        <h5>Amount per portion</h5>
+        <div class="amount-wrapper">
+          <ion-button
+            size="small"
+            (click)="amountPerPortion = amountPerPortion - 50"
+          >
+            <ion-icon slot="icon-only" name="remove"></ion-icon>
+          </ion-button>
+          <ion-item>
+            <ion-label position="floating"
+              >Amount per portion (in gramms)</ion-label
+            >
+            <ion-input [(ngModel)]="amountPerPortion" type="number"></ion-input>
+          </ion-item>
+          <ion-button
+            size="small"
+            (click)="amountPerPortion = amountPerPortion + 50"
+          >
+            <ion-icon slot="icon-only" name="add"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

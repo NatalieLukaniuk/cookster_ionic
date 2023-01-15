@@ -1,3 +1,5 @@
+import { InputDialogComponent } from './components/dialogs/input-dialog/input-dialog.component';
+import { SelectOptionDialogComponent } from './components/dialogs/select-option-dialog/select-option-dialog.component';
 
 import { InfoTabComponent } from './components/recipy-full-view/info-tab/info-tab.component';
 import { ImageComponent } from './components/image/image.component';
@@ -26,6 +28,8 @@ import { ConvertToSelectedUnitPipe } from './pipes/convert-to-selected-unit.pipe
     IngredientComponent,
     NormalizeDisplayedAmountPipe,
     ConvertToSelectedUnitPipe,
+    SelectOptionDialogComponent,
+    InputDialogComponent,
   ],
   imports: [CommonModule, IonicModule, FormsModule],
   exports: [
@@ -33,8 +37,10 @@ import { ConvertToSelectedUnitPipe } from './pipes/convert-to-selected-unit.pipe
     LoadingOverlayComponent,
     ImageComponent,
     NormalizeTimePipe,
-    RecipyFullViewComponent
+    RecipyFullViewComponent,
+    SelectOptionDialogComponent,
+    InputDialogComponent,
   ],
-  providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe]
+  providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
 export class SharedModule {}
