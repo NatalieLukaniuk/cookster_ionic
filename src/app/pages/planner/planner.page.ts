@@ -64,7 +64,7 @@ export class PlannerPage implements OnDestroy {
     );
   }
 
-  onDelete(plannerId: string) {
-    // TODO: implement deletion of planner
+  onDelete(planner: PlannerByDate) {
+    this.plannerService.removePlannerByDate(planner);
   }
 }
