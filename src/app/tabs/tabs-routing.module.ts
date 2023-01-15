@@ -31,6 +31,10 @@ const routes: Routes = [
         path: '',
         redirectTo: '/tabs/recipies',
         pathMatch: 'full'
+      },
+      {
+        path: 'planner',
+        loadChildren: () => import('../pages/planner/planner.module').then(m => m.PlannerPageModule)
       }
     ]
   },

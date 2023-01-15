@@ -1,9 +1,8 @@
-import { Router } from '@angular/router';
 import { AuthService } from './../services/auth.service';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { IAppState } from './../store/reducers/index';
 import { Store, select } from '@ngrx/store';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-tabs',
@@ -17,23 +16,10 @@ export class TabsPage {
 
   constructor(
     private store: Store<IAppState>,
-    private authService: AuthService,
-    private router: Router
+    private authService: AuthService
   ) {}
 
   logout() {
     this.authService.logoutUser();
-  }
-
-  @ViewChild('popover') popover: any | undefined;
-
-  presentPopover(e: Event) {
-    this.popover!.event = e;
-    this.isProfileMenuOpen = true;
-  }
-
-  goPlanner() {
-    this.popover.dismiss();
-    this.router.navigate(['planner']);
   }
 }
