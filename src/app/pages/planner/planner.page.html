@@ -13,8 +13,10 @@
       <ion-list>
         <ion-item
           button
+          swipeLeftDelete
           *ngFor="let planner of plannersList"
           (click)="onPlannerClicked(planner.id)"
+          (deleteItem)="onDelete(planner.id)"
         >
           <ion-label
             >{{ getFormattedName(planner.startDate) | date: 'MMMM, dd' }} - {{

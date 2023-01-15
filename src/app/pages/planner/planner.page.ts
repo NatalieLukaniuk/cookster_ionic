@@ -12,10 +12,9 @@ import { getFormattedName, transformDate } from './planner.utils';
 @Component({
   selector: 'app-planner',
   templateUrl: 'planner.page.html',
-  styleUrls: ['planner.page.scss']
+  styleUrls: ['planner.page.scss'],
 })
 export class PlannerPage implements OnDestroy {
-
   showDatePicker = false;
 
   plannersList: Planner[] = [];
@@ -26,7 +25,11 @@ export class PlannerPage implements OnDestroy {
   dateExampleEnd = new Date().toISOString();
   getFormattedName = getFormattedName;
 
-  constructor(private store: Store<IAppState>, private router: Router, private plannerService: PlannerService) {
+  constructor(
+    private store: Store<IAppState>,
+    private router: Router,
+    private plannerService: PlannerService
+  ) {
     this.store
       .pipe(select(getCurrentUser), takeUntil(this.destroyed$))
       .subscribe((user: User | null) => {
@@ -45,7 +48,6 @@ export class PlannerPage implements OnDestroy {
   }
 
   onPlannerClicked(id: string) {
-
     // TODO implement navigation
     // this.router.navigate(['by-date/', id, 'planning'], {
     //   relativeTo: this.route,
@@ -55,10 +57,14 @@ export class PlannerPage implements OnDestroy {
   onDateSelected() {
     this.showDatePicker = false;
     this.plannerService.addPlannerByDate(
-      new PlannerByDate(transformDate(new Date(this.dateExampleStart)), transformDate(new Date(this.dateExampleEnd)))
+      new PlannerByDate(
+        transformDate(new Date(this.dateExampleStart)),
+        transformDate(new Date(this.dateExampleEnd))
+      )
     );
   }
 
-
-
+  onDelete(plannerId: string) {
+    // TODO: implement deletion of planner
+  }
 }

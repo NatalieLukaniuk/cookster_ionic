@@ -15,6 +15,7 @@ import { IngredientComponent } from './components/ingredient/ingredient.componen
 import { FormsModule } from '@angular/forms';
 import { NormalizeDisplayedAmountPipe } from './pipes/normalize-displayed-amount.pipe';
 import { ConvertToSelectedUnitPipe } from './pipes/convert-to-selected-unit.pipe';
+import { SwipeLeftDirective } from './directives/swipe-left.directive';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ConvertToSelectedUnitPipe } from './pipes/convert-to-selected-unit.pipe
     ConvertToSelectedUnitPipe,
     SelectOptionDialogComponent,
     InputDialogComponent,
+    SwipeLeftDirective
   ],
   imports: [CommonModule, IonicModule, FormsModule],
   exports: [
@@ -40,6 +42,7 @@ import { ConvertToSelectedUnitPipe } from './pipes/convert-to-selected-unit.pipe
     RecipyFullViewComponent,
     SelectOptionDialogComponent,
     InputDialogComponent,
+    SwipeLeftDirective
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
