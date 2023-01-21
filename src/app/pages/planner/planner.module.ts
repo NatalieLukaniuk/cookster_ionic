@@ -1,8 +1,8 @@
-import { PrepsComponent } from './pages/preps/preps.component';
-import { ShoppingComponent } from './pages/shopping/shopping.component';
+import { PrepsComponent } from './components/preps/preps.component';
+import { ShoppingComponent } from './components/shopping/shopping.component';
 import { PlannerCoreComponent } from './pages/planner-core/planner-core.component';
 import { CalendarPageModule } from './../calendar/calendar.module';
-import { PlanningComponent } from './pages/planning/planning.component';
+import { PlanningComponent } from './components/planning/planning.component';
 import { SharedModule } from '../../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
