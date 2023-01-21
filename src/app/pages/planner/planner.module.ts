@@ -2,7 +2,7 @@ import { PrepsComponent } from './pages/preps/preps.component';
 import { ShoppingComponent } from './pages/shopping/shopping.component';
 import { PlannerCoreComponent } from './pages/planner-core/planner-core.component';
 import { CalendarPageModule } from './../calendar/calendar.module';
-import { PlannerMainComponent } from './pages/planner-main/planner-main.component';
+import { PlanningComponent } from './pages/planning/planning.component';
 import { SharedModule } from '../../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
@@ -24,7 +24,7 @@ import { ViewRecipyComponent } from './pages/view-recipy/view-recipy.component';
   ],
   declarations: [
     PlannerPage,
-    PlannerMainComponent,
+    PlanningComponent,
     ViewRecipyComponent,
     PlannerCoreComponent,
     ShoppingComponent,

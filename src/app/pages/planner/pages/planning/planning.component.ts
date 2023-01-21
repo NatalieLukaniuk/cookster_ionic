@@ -9,11 +9,11 @@ import { User } from 'src/app/models/auth.models';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-planner-main',
-  templateUrl: './planner-main.component.html',
-  styleUrls: ['./planner-main.component.scss'],
+  selector: 'app-planning',
+  templateUrl: './planning.component.html',
+  styleUrls: ['./planning.component.scss'],
 })
-export class PlannerMainComponent implements OnInit, OnDestroy {
+export class PlanningComponent implements OnInit, OnDestroy {
   currentPlanner: PlannerByDate | undefined;
   destroyed$ = new Subject<void>();
 

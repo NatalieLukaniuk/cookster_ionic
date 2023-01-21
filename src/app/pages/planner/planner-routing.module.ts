@@ -1,7 +1,4 @@
-import { PrepsComponent } from './pages/preps/preps.component';
-import { ShoppingComponent } from './pages/shopping/shopping.component';
 import { PlannerCoreComponent } from './pages/planner-core/planner-core.component';
-import { PlannerMainComponent } from './pages/planner-main/planner-main.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PlannerPage } from './planner.page';
@@ -15,7 +12,6 @@ const routes: Routes = [
   {
     path: 'by-date/:id',
     component: PlannerCoreComponent,
-    
   },
   {
     path: 'recipy/:id',
