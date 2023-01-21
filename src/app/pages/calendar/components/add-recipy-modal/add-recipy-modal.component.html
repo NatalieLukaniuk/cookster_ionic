@@ -21,8 +21,28 @@
           (click)="onRecipyClicked(recipy.id)"
         >
           <ion-label>
-            <h2>{{ recipy.name }}</h2>
-            <p>Paragraph</p>
+            <h2 class="ion-text-wrap">{{ recipy.name }}</h2>
+            <p class="recipy-details">
+              <span>{{ preparationTime(recipy) | normalizeTime }}</span>
+              <span>
+                <ion-icon
+                  name="alarm"
+                  *ngIf="isNeedsAdvancePreparation(recipy)"
+                ></ion-icon>
+                <ion-icon
+                  name="bulb"
+                  *ngIf="isPrepSuggestions(recipy)"
+                ></ion-icon>
+                <ion-icon
+                  name="checkmark-done"
+                  *ngIf="recipy.isCheckedAndApproved"
+                ></ion-icon>
+              </span>
+
+              <span *ngIf="recipy.calorificValue"
+                >{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span
+              >
+            </p>
           </ion-label>
         </ion-item>
       </ion-list>
