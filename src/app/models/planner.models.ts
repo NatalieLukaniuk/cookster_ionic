@@ -1,4 +1,5 @@
 import { SuggestionList } from './calendar.models';
+import { MeasuringUnit } from './recipies.models';
 
 export interface Planner {
   id: string;
@@ -38,4 +39,12 @@ export interface ShoppingListItem {
   comment?: string;
   editMode: boolean;
   completed: boolean;
+}
+
+export interface SLItem {
+  total: number;
+  name: string;
+  id: string;
+  unit: MeasuringUnit;
+  items: ShoppingListItem[];
 }

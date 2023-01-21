@@ -353,3 +353,10 @@ export function getNiceDecimal(amount: number): number {
     }
   } else return amount;
 }
+
+export function getRecipyNameById(
+  allRecipies: Recipy[],
+  recipyToFindId: string
+): string {
+  return allRecipies.find((rec) => rec.id == recipyToFindId)!.name;
+}

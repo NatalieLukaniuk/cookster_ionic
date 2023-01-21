@@ -38,7 +38,7 @@ export class CalendarService {
     }
     let dayExists = userToSave.details?.find((item) => item.day == day);
     if (!!dayExists) {
-      userToSave.details = userToSave.details!.map((item) => {
+      userToSave.details = userToSave.details!.map((item: any) => {
         if (item.day == day) {
           switch (mealTime) {
             case 'breakfast':
