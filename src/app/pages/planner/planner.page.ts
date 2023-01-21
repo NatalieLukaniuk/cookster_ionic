@@ -49,8 +49,7 @@ export class PlannerPage implements OnDestroy {
   }
 
   onPlannerClicked(id: string) {
-    // TODO implement navigation
-    this.router.navigate(['by-date/', id], {
+    this.router.navigate(['by-date/', id, 'planning'], {
       relativeTo: this.route,
     });
   }

@@ -42,15 +42,27 @@ export class CalendarRecipyComponent implements OnInit {
   }
 
   viewRecipy() {
-    this.router.navigate(['recipy', this.recipy.id], {
-      relativeTo: this.route,
-      queryParams: {
-        portions: this.recipy.portions,
-        amountPerPortion: this.recipy.amountPerPortion,
-        day: this.day.details.day,
-        mealtime: this.mealtime,
-      },
-    });
+    if (window.location.pathname.includes('calendar')) {
+      this.router.navigate(['recipy', this.recipy.id], {
+        relativeTo: this.route,
+        queryParams: {
+          portions: this.recipy.portions,
+          amountPerPortion: this.recipy.amountPerPortion,
+          day: this.day.details.day,
+          mealtime: this.mealtime,
+        },
+      });
+    } else if(window.location.pathname.includes('planner')) {
+      this.router.navigate(['recipy', this.recipy.id], {
+        relativeTo: this.route.parent,
+        queryParams: {
+          portions: this.recipy.portions,
+          amountPerPortion: this.recipy.amountPerPortion,
+          day: this.day.details.day,
+          mealtime: this.mealtime,
+        },
+      });
+    }
   }
 
   onDelete() {

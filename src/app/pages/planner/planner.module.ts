@@ -1,3 +1,4 @@
+import { PlannerCoreComponent } from './pages/planner-core/planner-core.component';
 import { CalendarPageModule } from './../calendar/calendar.module';
 import { PlannerMainComponent } from './pages/planner-main/planner-main.component';
 import { SharedModule } from '../../shared/shared.module';
@@ -8,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { PlannerPage } from './planner.page';
 
 import { PlannerPageRoutingModule } from './planner-routing.module';
+import { ViewRecipyComponent } from './pages/view-recipy/view-recipy.component';
 
 @NgModule({
   imports: [
@@ -18,6 +20,6 @@ import { PlannerPageRoutingModule } from './planner-routing.module';
     SharedModule,
     CalendarPageModule,
   ],
-  declarations: [PlannerPage, PlannerMainComponent],
+  declarations: [PlannerPage, PlannerMainComponent, ViewRecipyComponent, PlannerCoreComponent],
 })
 export class PlannerPageModule {}
