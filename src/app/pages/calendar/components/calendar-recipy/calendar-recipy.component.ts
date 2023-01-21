@@ -53,7 +53,7 @@ export class CalendarRecipyComponent implements OnInit {
         },
       });
     } else if(window.location.pathname.includes('planner')) {
-      this.router.navigate(['recipy', this.recipy.id], {
+      this.router.navigate(['tabs', 'planner', 'recipy', this.recipy.id], {
         relativeTo: this.route.parent,
         queryParams: {
           portions: this.recipy.portions,

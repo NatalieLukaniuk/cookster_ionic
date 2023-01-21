@@ -1,3 +1,5 @@
+import { PrepsComponent } from './pages/preps/preps.component';
+import { ShoppingComponent } from './pages/shopping/shopping.component';
 import { PlannerCoreComponent } from './pages/planner-core/planner-core.component';
 import { CalendarPageModule } from './../calendar/calendar.module';
 import { PlannerMainComponent } from './pages/planner-main/planner-main.component';
@@ -20,6 +22,13 @@ import { ViewRecipyComponent } from './pages/view-recipy/view-recipy.component';
     SharedModule,
     CalendarPageModule,
   ],
-  declarations: [PlannerPage, PlannerMainComponent, ViewRecipyComponent, PlannerCoreComponent],
+  declarations: [
+    PlannerPage,
+    PlannerMainComponent,
+    ViewRecipyComponent,
+    PlannerCoreComponent,
+    ShoppingComponent,
+    PrepsComponent,
+  ],
 })
 export class PlannerPageModule {}

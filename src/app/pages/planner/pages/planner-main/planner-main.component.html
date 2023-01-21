@@ -1,11 +1,3 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="tabs/planner"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <div *ngIf="!!currentPlanner; else noPlanner">
     <app-calendar-core

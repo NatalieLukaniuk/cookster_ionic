@@ -29,7 +29,7 @@ export class PlannerMainComponent implements OnInit, OnDestroy {
           if (user) {
             return user.planner?.find((item) => {
               let split = window.location.pathname.split('/');
-              let [startDate, endDate] = split[split.length - 2].split('_');
+              let [startDate, endDate] = split[split.length - 1].split('_');
               return item.endDate === endDate && item.startDate === startDate;
             });
           } else return null;

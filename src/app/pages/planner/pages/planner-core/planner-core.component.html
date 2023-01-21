@@ -1,1 +1,26 @@
-<ion-content [fullscreen]="true"><router-outlet></router-outlet></ion-content>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tabs/planner"></ion-back-button>
+    </ion-buttons>
+
+    <ion-segment [value]="currentTab" (ionChange)="onTabChange($event)">
+      <ion-segment-button [value]="tab.name" *ngFor="let tab of tabs">
+        <ion-icon [name]="tab.icon"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ng-container [ngSwitch]="currentTab">
+    <ng-container *ngSwitchCase="tabs[0].name"
+      ><app-planner-main></app-planner-main
+    ></ng-container>
+    <ng-container *ngSwitchCase="tabs[1].name"
+      ><app-shopping></app-shopping
+    ></ng-container>
+    <ng-container *ngSwitchCase="tabs[2].name"
+      ><app-preps></app-preps
+    ></ng-container>
+  </ng-container>
+</ion-content>
