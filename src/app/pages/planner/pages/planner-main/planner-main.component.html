@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tabs/planner"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="!!currentPlanner; else noPlanner">
+    <app-calendar-core
+      [setCurrentDay]="moment(currentPlanner.startDate, 'DDMMYYYY')"
+      [setEndDate]="moment(currentPlanner.endDate, 'DDMMYYYY')"
+      [showPreps]="false"
+      [addRecipies]="true"
+    ></app-calendar-core>
+  </div>
+
+  <ng-template #noPlanner>This planner doesn't exist</ng-template>
+</ion-content>

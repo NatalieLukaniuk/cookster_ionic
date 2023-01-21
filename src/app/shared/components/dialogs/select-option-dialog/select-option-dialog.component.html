@@ -1,32 +1,35 @@
-<ion-button id="open-modal" expand="block">Open</ion-button>
+<ion-button id="open-modal" expand="block" style="display: none"
+  >Open</ion-button
+>
 <ion-modal
-  #modal
+  #selectOption
   trigger="open-modal"
   [swipeToClose]="true"
   [presentingElement]="presentingElement"
-  (didDismiss)="onDismissed()"
 >
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <!-- <ion-title>Виберіть час та кількість порцій</ion-title> -->
+        <ion-title>Час та кількість порцій</ion-title>
+        <ion-buttons slot="start">
+          <ion-button (click)="selectOption.dismiss({}, 'cancel')"
+            >Скасувати</ion-button
+          >
+        </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button (click)="modal.dismiss()">Close</ion-button>
+          <ion-button
+            (click)="
+              selectOption.dismiss(
+                { portions: selectedPortionOption, amount: amountPerPortion },
+                'confirm'
+              )
+            "
+            >Додати</ion-button
+          >
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <div>
-        <h5>Meal time</h5>
-        <ion-radio-group
-          [(ngModel)]="selectedMealTime"
-        >
-          <ion-item *ngFor="let unit of mealOptions">
-            <ion-label>{{ unit }}</ion-label>
-            <ion-radio slot="end" [value]="unit"></ion-radio>
-          </ion-item>
-        </ion-radio-group>
-      </div>
       <h5>Number of portions</h5>
       <div class="amount-wrapper">
         <ion-button

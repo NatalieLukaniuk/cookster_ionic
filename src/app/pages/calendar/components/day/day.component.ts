@@ -8,6 +8,7 @@ import { Day, MealTime } from 'src/app/models/calendar.models';
 })
 export class DayComponent implements OnInit {
   @Input() day!: Day;
+  @Input() addRecipies!: boolean;
 
   MealTime = MealTime;
   constructor() {}

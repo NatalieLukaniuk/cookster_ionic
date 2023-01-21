@@ -1,0 +1,12 @@
+.current-day-selector {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-block: 15px;
+  width: 100%;
+}
+
+.in-date-range {
+  color: var(--ion-color-primary);
+  font-weight: 600;
+}

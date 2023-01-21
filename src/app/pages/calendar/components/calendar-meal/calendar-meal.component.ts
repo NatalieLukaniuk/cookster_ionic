@@ -1,9 +1,11 @@
+import { AddRecipyToCalendarAction } from './../../../../store/actions/calendar.actions';
 import {
   Component,
   Input,
   OnInit,
   SimpleChanges,
   OnChanges,
+  ViewChild,
 } from '@angular/core';
 import * as _ from 'lodash';
 import {
@@ -11,6 +13,8 @@ import {
   MealTime,
   RecipyForCalendar,
 } from 'src/app/models/calendar.models';
+import { IAppState } from 'src/app/store/reducers';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-calendar-meal',
@@ -20,6 +24,7 @@ import {
 export class CalendarMealComponent implements OnInit, OnChanges {
   @Input() day!: Day;
   @Input() mealtime!: MealTime;
+  @Input() addRecipies!: boolean;
 
   _day: Day | undefined;
 
@@ -47,7 +52,7 @@ export class CalendarMealComponent implements OnInit, OnChanges {
     } else return [];
   }
 
-  constructor() {}
+  constructor(private store: Store<IAppState>) {}
 
   ngOnInit() {}
 
@@ -150,5 +155,27 @@ export class CalendarMealComponent implements OnInit, OnChanges {
         ))
     );
     return total;
+  }
+
+  @ViewChild('selectOption') modal: any;
+  onRecipySelected(recipyId: string) {
+    setTimeout(() => {
+      this.modal.modal.present();
+    }, 200);
+
+    this.modal.modal.onDidDismiss().then((res: any) => {
+      if (res.role === 'confirm') {
+        this.store.dispatch(
+          new AddRecipyToCalendarAction(
+            recipyId,
+            this.day.details.day,
+            this.mealtime,
+            res.data.portions,
+            res.data.amount,
+            0
+          )
+        );
+      }
+    });
   }
 }

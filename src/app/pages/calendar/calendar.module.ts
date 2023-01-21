@@ -1,3 +1,5 @@
+import { AddRecipyModalComponent } from './components/add-recipy-modal/add-recipy-modal.component';
+import { CalendarCoreComponent } from './components/calendar-core/calendar-core.component';
 import { CalendarRecipyFullViewComponent } from './pages/calendar-recipy-full-view/calendar-recipy-full-view.component';
 import { CalendarRecipyComponent } from './components/calendar-recipy/calendar-recipy.component';
 import { CalendarMealComponent } from './components/calendar-meal/calendar-meal.component';
@@ -26,7 +28,10 @@ import { CalendarPage } from './calendar.page';
     DayComponent,
     CalendarMealComponent,
     CalendarRecipyComponent,
-    CalendarRecipyFullViewComponent
+    CalendarRecipyFullViewComponent,
+    CalendarCoreComponent,
+    AddRecipyModalComponent
   ],
+  exports: [CalendarCoreComponent]
 })
 export class CalendarPageModule {}

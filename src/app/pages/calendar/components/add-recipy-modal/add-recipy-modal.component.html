@@ -1,0 +1,31 @@
+<ion-button [id]="'open-modal' + meatime" expand="block">Додати</ion-button>
+
+<ion-modal
+  [trigger]="'open-modal' + meatime"
+  (willPresent)="ionModalWillPresent()"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Cancel</ion-button>
+        </ion-buttons>
+        <ion-title>Виберіть рецепт</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-list>
+        <ion-item
+          button
+          *ngFor="let recipy of recipies"
+          (click)="onRecipyClicked(recipy.id)"
+        >
+          <ion-label>
+            <h2>{{ recipy.name }}</h2>
+            <p>Paragraph</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>

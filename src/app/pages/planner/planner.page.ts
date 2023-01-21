@@ -1,6 +1,6 @@
 import { PlannerService } from './../../services/planner.service';
 import { Component, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
 import { User } from 'src/app/models/auth.models';
@@ -28,7 +28,8 @@ export class PlannerPage implements OnDestroy {
   constructor(
     private store: Store<IAppState>,
     private router: Router,
-    private plannerService: PlannerService
+    private plannerService: PlannerService,
+    private route: ActivatedRoute
   ) {
     this.store
       .pipe(select(getCurrentUser), takeUntil(this.destroyed$))
@@ -49,9 +50,9 @@ export class PlannerPage implements OnDestroy {
 
   onPlannerClicked(id: string) {
     // TODO implement navigation
-    // this.router.navigate(['by-date/', id, 'planning'], {
-    //   relativeTo: this.route,
-    // });
+    this.router.navigate(['by-date/', id], {
+      relativeTo: this.route,
+    });
   }
 
   onDateSelected() {

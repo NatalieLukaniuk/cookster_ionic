@@ -1,3 +1,5 @@
+import { CalendarPageModule } from './../calendar/calendar.module';
+import { PlannerMainComponent } from './pages/planner-main/planner-main.component';
 import { SharedModule } from '../../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
@@ -13,8 +15,9 @@ import { PlannerPageRoutingModule } from './planner-routing.module';
     CommonModule,
     FormsModule,
     PlannerPageRoutingModule,
-    SharedModule
+    SharedModule,
+    CalendarPageModule,
   ],
-  declarations: [PlannerPage]
+  declarations: [PlannerPage, PlannerMainComponent],
 })
 export class PlannerPageModule {}

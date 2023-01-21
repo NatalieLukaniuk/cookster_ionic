@@ -4,7 +4,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
 import { map, switchMap, take } from 'rxjs/operators';
-import { CalendarRecipyInDatabase, Day, IDayDetails, MealTime } from 'src/app/models/calendar.models';
+import {
+  CalendarRecipyInDatabase,
+  DayDetails,
+  IDayDetails,
+  MealTime,
+} from 'src/app/models/calendar.models';
 
 import {
   AddRecipyToCalendarAction,
@@ -30,16 +35,18 @@ export class CalendarEffects {
           map((user) => {
             if (user && user.details) {
               let updatedUser = _.cloneDeep(user);
-              updatedUser.details = updatedUser.details!.map((day: IDayDetails) => {
-                if (day.day == action.day) {
-                  day = this.updateDayOnRemoveRecipy(
-                    day,
-                    action.mealtime,
-                    action.recipyId
-                  );
-                  return day;
-                } else return day;
-              });
+              updatedUser.details = updatedUser.details!.map(
+                (day: IDayDetails) => {
+                  if (day.day == action.day) {
+                    day = this.updateDayOnRemoveRecipy(
+                      day,
+                      action.mealtime,
+                      action.recipyId
+                    );
+                    return day;
+                  } else return day;
+                }
+              );
               return new UpdateUserAction(updatedUser);
             } else return new ErrorAction('no user');
           })
@@ -58,21 +65,39 @@ export class CalendarEffects {
           map((user) => {
             if (user && user.details) {
               let updatedUser = _.cloneDeep(user);
-              updatedUser.details = updatedUser.details!.map((day: IDayDetails) => {
-                if (day.day == action.day) {
-                  day = this.updateDayOnAddRecipy(
-                    day,
-                    action.mealtime,
-                    {
-                      recipyId: action.recipyId,
-                      portions: action.portions,
-                      amountPerPortion: action.amountPerPortion,
-                    },
-                    action.order
-                  );
-                  return day;
-                } else return day;
-              });
+              if (updatedUser.details?.find((day) => day.day == action.day)) {
+                updatedUser.details = updatedUser.details!.map(
+                  (day: IDayDetails) => {
+                    if (day.day == action.day) {
+                      day = this.updateDayOnAddRecipy(
+                        day,
+                        action.mealtime,
+                        {
+                          recipyId: action.recipyId,
+                          portions: action.portions,
+                          amountPerPortion: action.amountPerPortion,
+                        },
+                        action.order
+                      );
+                      return day;
+                    } else return day;
+                  }
+                );
+              } else {
+                let newDay = new DayDetails(action.day);
+                newDay = this.updateDayOnAddRecipy(
+                  newDay,
+                  action.mealtime,
+                  {
+                    recipyId: action.recipyId,
+                    portions: action.portions,
+                    amountPerPortion: action.amountPerPortion,
+                  },
+                  action.order
+                );
+                updatedUser.details?.push(newDay);
+              }
+
               return new UpdateUserAction(updatedUser);
             } else return new ErrorAction('no user');
           })
@@ -81,34 +106,39 @@ export class CalendarEffects {
     )
   );
 
-  updateRecipyInCalendar$ = createEffect(() => 
+  updateRecipyInCalendar$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CalendarActionTypes.UPDATE_RECIPY_IN_CALENDAR),
-      switchMap((action: UpdateRecipyInCalendarAction) => 
-      this.store.pipe(
-        select(getCurrentUser),
-        take(1),
-        map((user: User | null) => {
-          if (user && user.details) {
-            let updatedUser = _.cloneDeep(user);
-            updatedUser.details = updatedUser.details!.map((day: IDayDetails) => {
-              if (day.day == action.day) {
-                day[action.mealtime] = day[action.mealtime].map((recipy: CalendarRecipyInDatabase) => {
-                  if(recipy.recipyId === action.recipyId){
-                    return {
-                      ...recipy,
-                      portions: action.portions,
-                      amountPerPortion: action.amountPerPortion
-                    }
-                  } else return recipy
-                })                
-              }
-              return day
-            })
-            return new UpdateUserAction(updatedUser);
-          } else return new ErrorAction('no user');
-        })
-      ))
+      switchMap((action: UpdateRecipyInCalendarAction) =>
+        this.store.pipe(
+          select(getCurrentUser),
+          take(1),
+          map((user: User | null) => {
+            if (user && user.details) {
+              let updatedUser = _.cloneDeep(user);
+              updatedUser.details = updatedUser.details!.map(
+                (day: IDayDetails) => {
+                  if (day.day == action.day) {
+                    day[action.mealtime] = day[action.mealtime].map(
+                      (recipy: CalendarRecipyInDatabase) => {
+                        if (recipy.recipyId === action.recipyId) {
+                          return {
+                            ...recipy,
+                            portions: action.portions,
+                            amountPerPortion: action.amountPerPortion,
+                          };
+                        } else return recipy;
+                      }
+                    );
+                  }
+                  return day;
+                }
+              );
+              return new UpdateUserAction(updatedUser);
+            } else return new ErrorAction('no user');
+          })
+        )
+      )
     )
   );
 

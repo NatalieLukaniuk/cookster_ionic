@@ -20,6 +20,7 @@
       <div *ngIf="getCalories()">{{ getCalories() }} ккал/порцію</div>
     </div>
   </div>
+  
   <ng-container *ngIf="!!detailedRecipiesList">
     <ng-container>
       <div *ngFor="let item of detailedRecipiesList">
@@ -31,4 +32,6 @@
       </div>
     </ng-container>
   </ng-container>
+  <app-add-recipy-modal *ngIf="addRecipies" [meatime]="mealtime" (recipyToAdd)="onRecipySelected($event)"></app-add-recipy-modal>
+  <app-select-option-dialog #selectOption></app-select-option-dialog>
 </div>

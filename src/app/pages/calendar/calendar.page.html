@@ -1,43 +1,5 @@
 <app-header></app-header>
 
 <ion-content>
-  <div class="calendar-by-day page-container" *ngIf="currentDay">
-    <div class="current-day-selector">
-      <ion-button size="small" (click)="goPreviousDay()">
-        <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
-      </ion-button>
-      {{ currentDay.toString() | date: "EEEE, d MMMM" }}
-      <ion-button size="small" (click)="goNextDay()">
-        <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
-      </ion-button>
-    </div>
-    <ion-segment [value]="currentTab" (ionChange)="onTabChange($event)">
-      <ion-segment-button *ngFor="let tab of tabs" [value]="tab.value">
-        <ion-label>{{ tab.name }}</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-
-    <ng-container *ngIf="currentTab === tabs[0].value">
-      <div *ngIf="!!_day">
-        <app-day [day]="_day"></app-day>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="currentTab === tabs[1].value"></ng-container>
-    <!-- <mat-tab-group> FIXME: needs implementation      
-        <ng-template mat-tab-label>
-          <div class="tab-label">
-            <span>Попереднє приготування</span>
-            <mat-icon class="timed-out" *ngIf="hasTimedOutPreps"
-              >report_problem</mat-icon
-            >
-          </div>
-        </ng-template>
-        <app-prep-lists
-          *ngIf="!!_day"
-          [day]="_day"
-          (hasTimedOutPreps)="onhasTimedOutPreps($event)"
-        ></app-prep-lists>
-      </mat-tab>
-    </mat-tab-group> -->
-  </div>
+  <app-calendar-core></app-calendar-core>
 </ion-content>
