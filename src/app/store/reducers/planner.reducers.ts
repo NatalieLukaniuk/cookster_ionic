@@ -21,12 +21,12 @@ export function PlannerReducers(
       };
     }
 
-    case PlannerActionTypes.RESET_CURRENT_PLANNER_BY_DATE: {
-      return {
-        ...state,
-        currentPlanner: null,
-      };
-    }
+    // case PlannerActionTypes.RESET_CURRENT_PLANNER_BY_DATE: {
+    //   return {
+    //     ...state,
+    //     currentPlanner: null,
+    //   };
+    // }
     default:
       return { ...state };
   }
