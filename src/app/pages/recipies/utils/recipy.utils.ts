@@ -1,6 +1,7 @@
 import {
   Ingredient,
   MeasuringUnit,
+  MeasuringUnitText,
   Product,
   Recipy,
 } from 'src/app/models/recipies.models';
@@ -360,3 +361,5 @@ export function getRecipyNameById(
 ): string {
   return allRecipies.find((rec) => rec.id == recipyToFindId)!.name;
 }
+
+export const getUnitText = (unit: MeasuringUnit) => MeasuringUnitText[unit];

@@ -46,5 +46,11 @@ export interface SLItem {
   name: string;
   id: string;
   unit: MeasuringUnit;
-  items: ShoppingListItem[];
+  items: {
+    product: string;
+    amount: string;
+    defaultUnit: number;
+    recipyId: string;
+    day: { day: string; meal: string };
+  }[];
 }

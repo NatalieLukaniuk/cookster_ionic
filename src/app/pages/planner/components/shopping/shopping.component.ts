@@ -1,5 +1,10 @@
 import { DataMappingService } from './../../../../services/data-mapping.service';
-import { PlannerByDate, ShoppingList, ShoppingListItem, SLItem } from './../../../../models/planner.models';
+import {
+  PlannerByDate,
+  ShoppingList,
+  ShoppingListItem,
+  SLItem,
+} from './../../../../models/planner.models';
 import { Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
@@ -13,15 +18,18 @@ import { getCalendar } from 'src/app/store/selectors/calendar.selectors';
 import { getCurrentPlanner } from 'src/app/store/selectors/planners.selectors';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { getRecipyNameById } from 'src/app/pages/recipies/utils/recipy.utils';
+import {
+  getRecipyNameById,
+  getUnitText,
+} from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
-  styleUrls: ['./shopping.component.scss']
+  styleUrls: ['./shopping.component.scss'],
 })
 export class ShoppingComponent implements OnInit {
-@Input() currentPlanner!: PlannerByDate;
+  @Input() currentPlanner!: PlannerByDate;
 
   get isShoppingListActive(): boolean {
     return !!this.currentPlanner?.isShoppingListActive;
@@ -30,8 +38,9 @@ export class ShoppingComponent implements OnInit {
 
   currentUser$ = this.store.pipe(select(getCurrentUser));
 
-
-  planner$: Observable<PlannerByDate | null> = this.store.pipe(select(getCurrentPlanner));
+  planner$: Observable<PlannerByDate | null> = this.store.pipe(
+    select(getCurrentPlanner)
+  );
   calendar$: Observable<Day[] | null> = this.store.pipe(select(getCalendar));
 
   fullIngredsList$ = new Subject<ShoppingListItem[]>();
@@ -42,12 +51,13 @@ export class ShoppingComponent implements OnInit {
 
   myLists: ShoppingList[] = [];
 
+  getUnitText = getUnitText;
+
   constructor(
     private store: Store<IAppState>,
     private dataMapping: DataMappingService,
     private plannerService: PlannerService
   ) {
-
     this.fullIngredsList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       if (res) {
         this.itemsTree = [];
@@ -93,7 +103,7 @@ export class ShoppingComponent implements OnInit {
                 moment(this.currentPlanner.endDate, 'DDMMYYYY')
               )
           );
-          let list: ShoppingListItem[] = [];
+          let list: any[] = [];
           dayItemsToAdd.forEach((day: Day) => {
             if (day.details.breakfastRecipies.length) {
               let newList = this.processMealtime('breakfast', day);
@@ -123,7 +133,7 @@ export class ShoppingComponent implements OnInit {
         this.itemsTree = this.itemsTree!.map((it) => {
           if (it.id == item.product) {
             let updated = { ...it };
-            updated.total = it.total + item.amount;
+            updated.total = +it.total + +item.amount;
             updated.items.push(item);
             return updated;
           } else return it;
@@ -131,7 +141,7 @@ export class ShoppingComponent implements OnInit {
       } else if (this.itemsTree) {
         this.itemsTree.push({
           id: item.product,
-          total: item.amount,
+          total: +item.amount,
           unit: this.dataMapping.getDefaultMU(item.product),
           name: this.dataMapping.getProductNameById(item.product),
           items: [item],
@@ -178,10 +188,8 @@ export class ShoppingComponent implements OnInit {
   getCoef(recipy: RecipyForCalendar): number {
     let totalAmount = 0;
     recipy.ingrediends.forEach((ingr) => {
-      if (
-        this.dataMapping.getIsIngredientIncludedInAmountCalculation(ingr)
-      ) {
-        totalAmount = totalAmount + ingr.amount;
+      if (this.dataMapping.getIsIngredientIncludedInAmountCalculation(ingr)) {
+        totalAmount = totalAmount + +ingr.amount;
       }
     });
     return (recipy.portions * recipy.amountPerPortion) / totalAmount;
@@ -211,11 +219,11 @@ export class ShoppingComponent implements OnInit {
     )?.name;
   }
 
-
   makeListActive() {
     if (this.currentPlanner) {
       this.plannerService.makeShoppingListActive(this.currentPlanner);
     }
   }
 
+  addToList(ingred: SLItem) {}
 }

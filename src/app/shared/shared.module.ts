@@ -42,7 +42,9 @@ import { SwipeLeftDirective } from './directives/swipe-left.directive';
     RecipyFullViewComponent,
     SelectOptionDialogComponent,
     InputDialogComponent,
-    SwipeLeftDirective
+    SwipeLeftDirective,
+    NormalizeDisplayedAmountPipe,
+    ConvertToSelectedUnitPipe
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

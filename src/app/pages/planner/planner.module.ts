@@ -1,3 +1,4 @@
+import { NormalizeDisplayedAmountPipe } from './../../shared/pipes/normalize-displayed-amount.pipe';
 import { PrepsComponent } from './components/preps/preps.component';
 import { ShoppingComponent } from './components/shopping/shopping.component';
 import { PlannerCoreComponent } from './pages/planner-core/planner-core.component';
@@ -12,6 +13,7 @@ import { PlannerPage } from './planner.page';
 
 import { PlannerPageRoutingModule } from './planner-routing.module';
 import { ViewRecipyComponent } from './pages/view-recipy/view-recipy.component';
+import { ConvertToSelectedUnitPipe } from 'src/app/shared/pipes/convert-to-selected-unit.pipe';
 
 @NgModule({
   imports: [
@@ -30,5 +32,6 @@ import { ViewRecipyComponent } from './pages/view-recipy/view-recipy.component';
     ShoppingComponent,
     PrepsComponent,
   ],
+  providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
 export class PlannerPageModule {}
