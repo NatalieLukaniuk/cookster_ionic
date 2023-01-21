@@ -12,12 +12,12 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <ng-container [ngSwitch]="currentTab">
+  <ng-container [ngSwitch]="currentTab" *ngIf="currentPlanner">
     <ng-container *ngSwitchCase="tabs[0].name"
-      ><app-planning></app-planning
+      ><app-planning [currentPlanner]="currentPlanner"></app-planning
     ></ng-container>
     <ng-container *ngSwitchCase="tabs[1].name"
-      ><app-shopping></app-shopping
+      ><app-shopping [currentPlanner]="currentPlanner"></app-shopping
     ></ng-container>
     <ng-container *ngSwitchCase="tabs[2].name"
       ><app-preps></app-preps

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { PlannerByDate } from './../../../../models/planner.models';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-shopping',
@@ -6,7 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./shopping.component.scss']
 })
 export class ShoppingComponent implements OnInit {
+@Input() currentPlanner!: PlannerByDate;
 
+  get isShoppingListActive(): boolean {
+    return !!this.currentPlanner?.isShoppingListActive;
+  }
   constructor() { }
 
   ngOnInit() {
