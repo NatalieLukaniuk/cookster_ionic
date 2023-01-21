@@ -1,3 +1,4 @@
+import { RemoveRecipyFromCalendarAction } from './../../../../store/actions/calendar.actions';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import {
@@ -6,6 +7,8 @@ import {
   RecipyForCalendar,
 } from 'src/app/models/calendar.models';
 import { DishType } from 'src/app/models/recipies.models';
+import { IAppState } from 'src/app/store/reducers';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-calendar-recipy',
@@ -26,6 +29,7 @@ export class CalendarRecipyComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private store: Store<IAppState>
   ) {}
 
   ngOnInit() {
@@ -47,5 +51,15 @@ export class CalendarRecipyComponent implements OnInit {
         mealtime: this.mealtime,
       },
     });
+  }
+
+  onDelete() {
+    this.store.dispatch(
+      new RemoveRecipyFromCalendarAction(
+        this.recipy.id,
+        this.day.details.day,
+        this.mealtime
+      )
+    );
   }
 }
