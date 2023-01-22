@@ -6,7 +6,11 @@
   <ion-item-sliding *ngFor="let ingred of itemsTree">
     <ion-item
       [color]="!!getHasBeenAddedToList(ingred) ? 'tertiary' : ''"
-      (click)="addToList(ingred)"
+      (click)="
+        !!getHasBeenAddedToList(ingred)
+          ? removeFromList(ingred, getHasBeenAddedToList(ingred)!)
+          : addToList(ingred)
+      "
     >
       <ion-chip *ngIf="!!getHasBeenAddedToList(ingred)" slot="end"
         >{{ getHasBeenAddedToList(ingred) }}:

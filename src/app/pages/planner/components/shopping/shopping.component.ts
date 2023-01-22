@@ -24,6 +24,7 @@ import {
   getUnitText,
 } from 'src/app/pages/recipies/utils/recipy.utils';
 import { ModalController } from '@ionic/angular';
+import { DialogsService } from 'src/app/services/dialogs.service';
 
 @Component({
   selector: 'app-shopping',
@@ -59,7 +60,8 @@ export class ShoppingComponent implements OnInit {
     private store: Store<IAppState>,
     private dataMapping: DataMappingService,
     private plannerService: PlannerService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private dialog: DialogsService
   ) {
     this.fullIngredsList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       if (res) {
@@ -253,5 +255,24 @@ export class ShoppingComponent implements OnInit {
     if (role === 'confirm') {
       this.plannerService.updateShoppingLists(data, this.currentPlanner);
     }
+  }
+
+  removeFromList(ingred: SLItem, listName: string){
+    this.dialog
+    .openConfirmationDialog(
+      `Видалити ${ingred.name} зі списку ${listName}?`,
+      'Ця дія незворотня'
+    )
+    .then((res) => {
+      if (res.role === 'confirm') {
+        this.myLists = this.myLists.map(list => {
+          if(list.name === listName){
+            list.items = list.items.filter(ingr => ingr.title !== ingred.name)
+          }
+          return list
+        })
+        this.plannerService.updateShoppingLists(this.myLists, this.currentPlanner);
+      } 
+    });
   }
 }
