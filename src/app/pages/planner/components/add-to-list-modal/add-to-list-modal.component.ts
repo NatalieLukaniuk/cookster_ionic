@@ -11,6 +11,7 @@ import {
   NormalizeDisplayedAmount,
 } from 'src/app/pages/recipies/utils/recipy.utils';
 import * as moment from 'moment';
+import { DialogsService } from 'src/app/services/dialogs.service';
 
 @Component({
   selector: 'app-add-to-list-modal',
@@ -45,7 +46,8 @@ export class AddToListModalComponent implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private datamapping: DataMappingService
+    private datamapping: DataMappingService,
+    private dialog: DialogsService
   ) {}
 
   cancel() {
@@ -88,5 +90,18 @@ export class AddToListModalComponent implements OnInit {
       items: [],
     });
     this.isAddNewList = false;
+  }
+
+  onDeleteList(list: ShoppingList) {
+    this.dialog
+      .openConfirmationDialog(
+        `Видалити список ${list.name}?`,
+        `${list.items.length} інгридієнтів буде з нього вилучено`
+      )
+      .then((res) => {
+        if (res.role === 'confirm') {
+          this.lists = this.lists.filter((item) => item.name !== list.name);
+        }
+      });
   }
 }

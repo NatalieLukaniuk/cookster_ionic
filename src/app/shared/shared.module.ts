@@ -1,3 +1,4 @@
+import { SwipeLeftNoConfirmationDirective } from './directives/swipe-left-no-confirmation.directive';
 import { InputDialogComponent } from './components/dialogs/input-dialog/input-dialog.component';
 import { SelectOptionDialogComponent } from './components/dialogs/select-option-dialog/select-option-dialog.component';
 
@@ -31,7 +32,8 @@ import { SwipeLeftDirective } from './directives/swipe-left.directive';
     ConvertToSelectedUnitPipe,
     SelectOptionDialogComponent,
     InputDialogComponent,
-    SwipeLeftDirective
+    SwipeLeftDirective,
+    SwipeLeftNoConfirmationDirective
   ],
   imports: [CommonModule, IonicModule, FormsModule],
   exports: [
@@ -44,7 +46,8 @@ import { SwipeLeftDirective } from './directives/swipe-left.directive';
     InputDialogComponent,
     SwipeLeftDirective,
     NormalizeDisplayedAmountPipe,
-    ConvertToSelectedUnitPipe
+    ConvertToSelectedUnitPipe,
+    SwipeLeftNoConfirmationDirective
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
