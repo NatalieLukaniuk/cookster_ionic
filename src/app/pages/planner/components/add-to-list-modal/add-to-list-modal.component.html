@@ -19,9 +19,16 @@
         <ion-radio slot="end" [value]="list.name"></ion-radio>
       </ion-item>
     </ion-radio-group>
-    <ion-item button detail="false">
+    <ion-item *ngIf="!isAddNewList" button detail="false" (click)="isAddNewList = true">
       <ion-label>Додати список</ion-label>
       <ion-icon slot="start" name="add-outline"></ion-icon>
+    </ion-item>
+    <ion-item class="add-new-list" *ngIf="isAddNewList" button detail="false">
+      <ion-label position="floating">Введіть назву:</ion-label>
+      <ion-input [(ngModel)]="newList"></ion-input>
+      <ion-button slot="end" (click)="addList()" [disabled]="newList.length < 3">
+        <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+      </ion-button>      
     </ion-item>
   </ion-list>
 

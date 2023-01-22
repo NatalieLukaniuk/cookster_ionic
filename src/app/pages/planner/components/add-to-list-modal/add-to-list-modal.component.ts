@@ -29,6 +29,9 @@ export class AddToListModalComponent implements OnInit {
   getUnitText = getUnitText;
   moment = moment;
 
+  isAddNewList = false;
+  newList = '';
+
   ngOnInit() {
     let converted = convertAmountToSelectedUnit(
       this.ingredient.total,
@@ -76,5 +79,14 @@ export class AddToListModalComponent implements OnInit {
     if (this.allRecipies) {
       return getRecipyNameById(this.allRecipies, id);
     } else return '';
+  }
+
+  addList() {
+    this.lists.push({
+      name: this.newList,
+      isExpanded: false,
+      items: [],
+    });
+    this.isAddNewList = false;
   }
 }
