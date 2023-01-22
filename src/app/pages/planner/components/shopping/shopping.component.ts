@@ -1,3 +1,4 @@
+import { AddToListModalComponent } from './../add-to-list-modal/add-to-list-modal.component';
 import { DataMappingService } from './../../../../services/data-mapping.service';
 import {
   PlannerByDate,
@@ -22,6 +23,7 @@ import {
   getRecipyNameById,
   getUnitText,
 } from 'src/app/pages/recipies/utils/recipy.utils';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-shopping',
@@ -56,7 +58,8 @@ export class ShoppingComponent implements OnInit {
   constructor(
     private store: Store<IAppState>,
     private dataMapping: DataMappingService,
-    private plannerService: PlannerService
+    private plannerService: PlannerService,
+    private modalCtrl: ModalController
   ) {
     this.fullIngredsList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
       if (res) {
@@ -219,11 +222,36 @@ export class ShoppingComponent implements OnInit {
     )?.name;
   }
 
+  getAmountInList(item: SLItem): string | undefined {
+    let ls = this.myLists.find((list) =>
+      list.items.find((ingr) => ingr.title == item.name)
+    );
+    if (ls) {
+      return ls.items.find((ingr) => ingr.title == item.name)?.amount;
+    } else return undefined;
+  }
+
   makeListActive() {
     if (this.currentPlanner) {
       this.plannerService.makeShoppingListActive(this.currentPlanner);
     }
   }
 
-  addToList(ingred: SLItem) {}
+  async addToList(ingred: SLItem) {
+    const modal = await this.modalCtrl.create({
+      component: AddToListModalComponent,
+      componentProps: {
+        ingredient: ingred,
+        lists: this.myLists,
+        allRecipies: this.allRecipies,
+      },
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      this.plannerService.updateShoppingLists(data, this.currentPlanner);
+    }
+  }
 }

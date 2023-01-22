@@ -8,9 +8,10 @@
       [color]="!!getHasBeenAddedToList(ingred) ? 'tertiary' : ''"
       (click)="addToList(ingred)"
     >
-      <ion-chip *ngIf="!!getHasBeenAddedToList(ingred)" slot="end">{{
-        getHasBeenAddedToList(ingred)
-      }}</ion-chip>
+      <ion-chip *ngIf="!!getHasBeenAddedToList(ingred)" slot="end"
+        >{{ getHasBeenAddedToList(ingred) }}:
+        {{ getAmountInList(ingred) }}</ion-chip
+      >
       <ion-label class="ion-text-wrap">
         <h3>{{ ingred.name }}</h3>
         <p *ngIf="ingred.unit !== 13">

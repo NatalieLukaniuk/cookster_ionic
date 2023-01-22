@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>{{ ingredient.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <h3>Виберіть список:</h3>
+  <ion-list>
+    <ion-radio-group
+      *ngIf="lists?.length"
+      [value]="selectedList"
+      (ionChange)="listChange($event)"
+    >
+      <ion-item *ngFor="let list of lists">
+        <ion-label>{{ list.name }}</ion-label>
+        <ion-radio slot="end" [value]="list.name"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+    <ion-item button detail="false">
+      <ion-label>Додати список</ion-label>
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <h3>Редагувати кількість:</h3>
+  <ion-item>
+    <ion-input [(ngModel)]="amountToAdd"></ion-input>
+  </ion-item>
+
+  <h3>Використовується в:</h3>
+  <ion-list class="used-in">
+    <ng-container *ngFor="let childItem of ingredient.items">
+      <ion-item *ngFor="let id of childItem.recipyId">
+        <ion-label>
+          <h4>
+            {{ getrecipyName(id) }}
+            <span *ngIf="ingredient.unit !== 13">
+              {{
+                +childItem.amount
+                  | convertToSelectedUnit : childItem.product : ingredient.unit
+                  | normalizeDisplayedAmount : ingredient.unit
+              }}
+            </span>
+            <span *ngIf="ingredient.unit === 13"> за смаком </span>
+            <span>{{ getUnitText(ingredient.unit) }}</span>
+          </h4>
+          <p>
+            {{
+              moment(childItem.day[0].day, "DDMMYYYY")
+                .clone()
+                .format("ddd, DD MMMM")
+            }}
+          </p>
+        </ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+
+  <ion-button
+    class="add-btn"
+    expand="full"
+    [disabled]="!isValid"
+    (click)="confirm()"
+    >{{ isValid ? "Додати" : "Виберіть список" }}</ion-button
+  >
+</ion-content>

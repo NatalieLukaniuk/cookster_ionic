@@ -51,6 +51,6 @@ export interface SLItem {
     amount: string;
     defaultUnit: number;
     recipyId: string;
-    day: { day: string; meal: string };
+    day: { day: string; meal: string }[];
   }[];
 }
