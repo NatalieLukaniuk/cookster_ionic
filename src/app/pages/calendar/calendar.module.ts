@@ -1,3 +1,4 @@
+import { AdvancePreparationComponent } from './components/advance-preparation/advance-preparation.component';
 import { AddRecipyModalComponent } from './components/add-recipy-modal/add-recipy-modal.component';
 import { CalendarCoreComponent } from './components/calendar-core/calendar-core.component';
 import { CalendarRecipyFullViewComponent } from './pages/calendar-recipy-full-view/calendar-recipy-full-view.component';
@@ -30,7 +31,8 @@ import { CalendarPage } from './calendar.page';
     CalendarRecipyComponent,
     CalendarRecipyFullViewComponent,
     CalendarCoreComponent,
-    AddRecipyModalComponent
+    AddRecipyModalComponent,
+    AdvancePreparationComponent
   ],
   exports: [CalendarCoreComponent]
 })

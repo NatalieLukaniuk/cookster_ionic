@@ -1,3 +1,4 @@
+import { AddPrepModalComponent } from './components/add-prep-modal/add-prep-modal.component';
 import { AddToListModalComponent } from './components/add-to-list-modal/add-to-list-modal.component';
 import { NormalizeDisplayedAmountPipe } from './../../shared/pipes/normalize-displayed-amount.pipe';
 import { PrepsComponent } from './components/preps/preps.component';
@@ -32,7 +33,8 @@ import { ConvertToSelectedUnitPipe } from 'src/app/shared/pipes/convert-to-selec
     PlannerCoreComponent,
     ShoppingComponent,
     PrepsComponent,
-    AddToListModalComponent
+    AddToListModalComponent,
+    AddPrepModalComponent,
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

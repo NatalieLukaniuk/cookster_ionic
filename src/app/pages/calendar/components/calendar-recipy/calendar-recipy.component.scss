@@ -1,7 +1,8 @@
 .additional-info {
   display: flex;
   color: var(--ion-color-medium);
-  font-size: 10px;
+  font-size: 12px;
+  flex-direction: column;
   & > span {
     margin-right: 10px;
   }
@@ -14,4 +15,18 @@ h2 {
   white-space: normal;
   font-size: 16px;
   font-weight: 600;
+}
+
+.recipy-content {
+  display: flex;
+  .recipy-text {
+    flex-grow: 1;
+  }
+}
+
+.recipy-photo {
+  height: 125px;
+  width: 140px;
+  min-width: 140px;
+  margin-left: 10px;
 }

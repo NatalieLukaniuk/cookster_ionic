@@ -246,6 +246,7 @@ export class ShoppingComponent implements OnInit {
         ingredient: ingred,
         lists: this.myLists,
         allRecipies: this.allRecipies,
+        isPlannedIngredient: true,
       },
     });
     modal.present();
@@ -257,22 +258,27 @@ export class ShoppingComponent implements OnInit {
     }
   }
 
-  removeFromList(ingred: SLItem, listName: string){
+  removeFromList(ingred: SLItem, listName: string) {
     this.dialog
-    .openConfirmationDialog(
-      `Видалити ${ingred.name} зі списку ${listName}?`,
-      'Ця дія незворотня'
-    )
-    .then((res) => {
-      if (res.role === 'confirm') {
-        this.myLists = this.myLists.map(list => {
-          if(list.name === listName){
-            list.items = list.items.filter(ingr => ingr.title !== ingred.name)
-          }
-          return list
-        })
-        this.plannerService.updateShoppingLists(this.myLists, this.currentPlanner);
-      } 
-    });
+      .openConfirmationDialog(
+        `Видалити ${ingred.name} зі списку ${listName}?`,
+        'Ця дія незворотня'
+      )
+      .then((res) => {
+        if (res.role === 'confirm') {
+          this.myLists = this.myLists.map((list) => {
+            if (list.name === listName) {
+              list.items = list.items.filter(
+                (ingr) => ingr.title !== ingred.name
+              );
+            }
+            return list;
+          });
+          this.plannerService.updateShoppingLists(
+            this.myLists,
+            this.currentPlanner
+          );
+        }
+      });
   }
 }

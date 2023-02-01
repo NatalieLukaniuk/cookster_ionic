@@ -1,5 +1,4 @@
 <ng-container *ngIf="recipy; else noRecipy">
-  <h1 #header class="padding-inline">{{ recipy.name }}</h1>
   <ion-segment [value]="currentTab" (ionChange)="onTabChange($event)">
     <ion-segment-button *ngFor="let tab of tabs" [value]="tab.value">
       <ion-label>{{ tab.name }}</ion-label>

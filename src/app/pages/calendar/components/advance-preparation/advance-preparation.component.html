@@ -1,13 +1,13 @@
-<ion-list *ngIf="currentUser$ | async">
-  <ion-item
-    button
-    detail="false"
-    *ngFor="let prep of allPrepsInDateRange"
-    [color]="!!isSaved(prep) ? 'primary' : ''"
-    (click)="!!isSaved(prep) ? removeFromList(prep) : addToList(prep)"
-  >
-    <ion-label class="prep-content">
-      <div class="prep-text">
+<ion-list>
+  <ng-container *ngFor="let prep of prepListItems">
+    <ion-item
+      button
+      swipeLeftNoConfirmation
+      detail="false"
+      *ngIf="!prep.done"
+      (itemSwiped)="markAsDone(prep)"
+    >
+      <ion-label>
         <h3 *ngFor="let ingredient of prep.ingredients">
           <span class="ingredient-name">{{ ingredient.productName }}</span
           ><span>{{
@@ -24,10 +24,7 @@
         <p>
           {{ prep.day.toString() | date }}
         </p>
-      </div>
-      <ion-chip *ngIf="!!dateSaved(prep)">{{
-        dateSaved(prep) | date
-      }}</ion-chip>
-    </ion-label>
-  </ion-item>
+      </ion-label>
+    </ion-item>
+  </ng-container>
 </ion-list>

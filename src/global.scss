@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -26,15 +26,22 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 .padding-inline {
-    padding-inline: 10px;
+  padding-inline: 10px;
 }
 
 .margin-block {
-    margin-block: 10px;
+  margin-block: 10px;
 }
 
-:root{
-    --header-height: 0px;
-    --ion-text-color: var(--ion-color-dark, #000);
-    --ion-background-color: var(--ion-color-secondary)
+:root {
+  --header-height: 0px;
+  --ion-text-color: var(--ion-color-dark, #000);
+  --ion-background-color: var(--ion-color-secondary);
+}
+
+ion-title p {
+  margin-block: 0;
+  white-space: normal;
+  font-size: 16px;
+  font-weight: 600;
 }

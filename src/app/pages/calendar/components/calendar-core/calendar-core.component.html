@@ -25,21 +25,10 @@
       <app-day [day]="_day" [addRecipies]="addRecipies"></app-day>
     </div>
   </ng-container>
-  <ng-container *ngIf="currentTab === tabs[1].value"></ng-container>
-  <!-- <mat-tab-group> FIXME: needs implementation      
-      <ng-template mat-tab-label>
-        <div class="tab-label">
-          <span>Попереднє приготування</span>
-          <mat-icon class="timed-out" *ngIf="hasTimedOutPreps"
-            >report_problem</mat-icon
-          >
-        </div>
-      </ng-template>
-      <app-prep-lists
-        *ngIf="!!_day"
-        [day]="_day"
-        (hasTimedOutPreps)="onhasTimedOutPreps($event)"
-      ></app-prep-lists>
-    </mat-tab>
-  </mat-tab-group> -->
+  <ng-container *ngIf="currentTab === tabs[1].value">
+    <app-advance-preparation
+      *ngIf="_day"
+      [day]="_day"
+    ></app-advance-preparation>
+  </ng-container>
 </div>

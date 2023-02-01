@@ -74,4 +74,20 @@ export class CalendarRecipyComponent implements OnInit {
       )
     );
   }
+
+  activePreparationTime() {
+    let time = 0;
+    for (let step of this.recipy.steps) {
+      time = time + +step.timeActive;
+    }
+    return time;
+  }
+
+  passivePreparationTime() {
+    let time = 0;
+    for (let step of this.recipy.steps) {
+      time = time + +step.timePassive;
+    }
+    return time;
+  }
 }

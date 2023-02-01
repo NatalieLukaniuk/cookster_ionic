@@ -35,4 +35,21 @@ export class DataMappingService {
   getIsIngredientIncludedInAmountCalculation(ingr: Ingredient): boolean {
     return isIngrIncludedInAmountCalculation(ingr, this.products$.value);
   }
+
+  getCoeficient(
+    ingredients: Ingredient[],
+    portionsToServe: number,
+    portionSize: number
+  ) {
+    let amount = 0;
+    for (let ingr of ingredients) {
+      if (
+        this.getIsIngredientInDB(ingr.product) &&
+        this.getIsIngredientIncludedInAmountCalculation(ingr)
+      ) {
+        amount = ingr.amount + amount; // amount of ingreds with calories
+      }
+    }
+    return (portionsToServe * portionSize) / amount;
+  }
 }

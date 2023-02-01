@@ -2,7 +2,6 @@ import { PlannerByDate } from 'src/app/models/planner.models';
 import {
   ShoppingList,
   ShoppingListItem,
-  SLItem,
 } from './../../models/planner.models';
 import { map, Subject, takeUntil } from 'rxjs';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
@@ -11,6 +10,8 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { PlannerService } from 'src/app/services/planner.service';
 import * as _ from 'lodash';
+import { ModalController } from '@ionic/angular';
+import { AddToListModalComponent } from '../planner/components/add-to-list-modal/add-to-list-modal.component';
 
 @Component({
   selector: 'app-shopping-list',
@@ -45,7 +46,8 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<IAppState>,
-    private plannerService: PlannerService
+    private plannerService: PlannerService,
+    private modalCtrl: ModalController
   ) {}
 
   ngOnInit() {}
@@ -89,5 +91,24 @@ export class ShoppingListPage implements OnInit, OnDestroy {
       return ls;
     });
     this.plannerService.updateShoppingLists(updatedList, this.planner!);
+  }
+
+  async addCustomItem() {
+    let cloned = _.cloneDeep(this.activeList);
+    const modal = await this.modalCtrl.create({
+      component: AddToListModalComponent,
+      componentProps: {
+        ingredient: {},
+        lists: cloned,
+        isPlannedIngredient: false,
+      },
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      this.plannerService.updateShoppingLists(data, this.planner!);
+    }
   }
 }

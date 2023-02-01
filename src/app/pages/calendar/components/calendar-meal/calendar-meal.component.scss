@@ -15,6 +15,10 @@
   .details {
     font-size: 10px;
     color: var(--ion-color-medium);
+    display: flex;
+    span {
+      margin-inline: 5px;
+    }
   }
 }
 
@@ -23,6 +27,6 @@
   margin-bottom: 40px;
 }
 
-.add-recipy{
+.add-recipy {
   margin-top: 15px;
 }

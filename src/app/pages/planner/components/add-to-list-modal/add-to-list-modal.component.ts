@@ -22,6 +22,7 @@ export class AddToListModalComponent implements OnInit {
   ingredient!: SLItem;
   lists!: ShoppingList[];
   allRecipies!: Recipy[];
+  isPlannedIngredient!: boolean;
 
   selectedList = '';
 
@@ -33,15 +34,22 @@ export class AddToListModalComponent implements OnInit {
   isAddNewList = false;
   newList = '';
 
+  newItemName = '';
+
   ngOnInit() {
-    let converted = convertAmountToSelectedUnit(
-      this.ingredient.total,
-      this.ingredient.unit,
-      this.ingredient.id,
-      this.datamapping.products$.value
-    );
-    let normalized = NormalizeDisplayedAmount(converted, this.ingredient.unit);
-    this.amountToAdd = normalized + ' ' + getUnitText(this.ingredient.unit);
+    if (this.isPlannedIngredient) {
+      let converted = convertAmountToSelectedUnit(
+        this.ingredient.total,
+        this.ingredient.unit,
+        this.ingredient.id,
+        this.datamapping.products$.value
+      );
+      let normalized = NormalizeDisplayedAmount(
+        converted,
+        this.ingredient.unit
+      );
+      this.amountToAdd = normalized + ' ' + getUnitText(this.ingredient.unit);
+    }
   }
 
   constructor(
@@ -55,16 +63,29 @@ export class AddToListModalComponent implements OnInit {
   }
 
   confirm() {
-    this.lists.forEach((list) => {
-      if (list.name === this.selectedList) {
-        list.items.push({
-          title: this.ingredient.name,
-          amount: this.amountToAdd,
-          editMode: false,
-          completed: false,
-        });
-      }
-    });
+    if (this.isPlannedIngredient) {
+      this.lists.forEach((list) => {
+        if (list.name === this.selectedList) {
+          list.items.push({
+            title: this.ingredient.name,
+            amount: this.amountToAdd,
+            editMode: false,
+            completed: false,
+          });
+        }
+      });
+    } else {
+      this.lists.forEach((list) => {
+        if (list.name === this.selectedList) {
+          list.items.push({
+            title: this.newItemName,
+            amount: this.amountToAdd,
+            editMode: false,
+            completed: false,
+          });
+        }
+      });
+    }
 
     return this.modalCtrl.dismiss(this.lists, 'confirm');
   }
@@ -74,7 +95,31 @@ export class AddToListModalComponent implements OnInit {
   }
 
   get isValid(): boolean {
-    return !!this.selectedList.length;
+    if (this.isPlannedIngredient) {
+      return !!this.selectedList.length;
+    } else {
+      return (
+        !!this.selectedList.length &&
+        !!this.amountToAdd.length &&
+        !!this.newItemName.length
+      );
+    }
+  }
+
+  get confirmButton() {
+    if (this.isValid) {
+      return 'Додати';
+    } else if (this.isPlannedIngredient) {
+      return 'Виберіть список';
+    } else {
+      if (!this.newItemName.length) {
+        return 'Вкажіть назву продукту';
+      } else if (!this.selectedList.length) {
+        return 'Виберіть список';
+      } else {
+        return 'Вкажіть кількість';
+      }
+    }
   }
 
   getrecipyName(id: string) {

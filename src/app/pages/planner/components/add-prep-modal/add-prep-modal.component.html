@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>{{ prep.recipyTitle }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <h3 *ngFor="let ingredient of prep.ingredients">
+    <span class="ingredient-name">{{ ingredient.productName }}</span
+    ><span>{{
+      ingredient.amount
+        | convertToSelectedUnit : ingredient.productId : ingredient.unit
+        | normalizeDisplayedAmount : ingredient.unit
+    }}</span>
+    <span>{{ getUnitText(ingredient.unit) }}</span>
+  </h3>
+  <h4>{{ prep.prepDescription }}</h4>
+  <p>Заплановано на: {{ prep.day | date }}</p>
+
+  <div class="prep-time-selection">
+    <span>Попереднє приготування:</span>
+    <ion-datetime-button
+      datetime="datetime"      
+    ></ion-datetime-button>
+  </div>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime #datetimepicker id="datetime" [value]="day" (ionChange)="dateTimePicked($event); datetimepicker.confirm(true)"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <ion-button [disabled]="!day" class="add-btn" expand="full" (click)="confirm()"
+    >{{day? 'Додати' : 'Виберіть дату'}}</ion-button
+  >
+</ion-content>

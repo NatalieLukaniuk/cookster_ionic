@@ -1,4 +1,4 @@
-import { SuggestionList } from './calendar.models';
+import { Suggestion } from './calendar.models';
 import { MeasuringUnit } from './recipies.models';
 
 export interface Planner {
@@ -6,7 +6,7 @@ export interface Planner {
   startDate: string;
   endDate: string;
   shoppingLists: ShoppingList[];
-  preps: SuggestionList[];
+  preps: Suggestion[];
   isShoppingListActive: boolean;
 }
 
@@ -15,7 +15,7 @@ export class PlannerByDate implements Planner {
   startDate: string;
   endDate: string;
   shoppingLists: ShoppingList[];
-  preps: SuggestionList[];
+  preps: Suggestion[];
   isShoppingListActive: boolean;
   constructor(startDate: string, endDate: string) {
     this.startDate = startDate;
