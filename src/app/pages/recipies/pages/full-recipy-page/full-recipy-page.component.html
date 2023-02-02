@@ -1,13 +1,8 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="tabs/recipies"></ion-back-button>
-    </ion-buttons>
-    <ion-title *ngIf="recipy$ | async">
-      <p>{{ (recipy$ | async)!.name }}</p>
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header>
+  <ion-back-button left-button defaultHref="tabs/recipies"></ion-back-button>
+  <p title>{{ (recipy$ | async)!.name }}</p>
+</app-header>
+
 <ion-content>
   <app-recipy-full-view
     [recipy]="recipy$ | async"

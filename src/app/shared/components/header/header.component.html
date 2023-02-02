@@ -1,7 +1,13 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ng-content select="[left-button]"></ng-content>
+    </ion-buttons>
     <ion-title>
-      Cookster
+      <ng-content select="[title]"></ng-content>
     </ion-title>
+    <ion-buttons slot="end">
+      
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>

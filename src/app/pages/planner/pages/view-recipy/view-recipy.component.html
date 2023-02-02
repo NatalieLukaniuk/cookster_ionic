@@ -1,10 +1,8 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="tabs/planner"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header>
+  <ion-back-button left-button defaultHref="tabs/planner"></ion-back-button>
+  <p *ngIf="(recipy$ | async)" title>{{(recipy$ | async)!.name}}</p>
+</app-header>
+
 <ion-content [fullscreen]="true">
   <app-recipy-full-view
     *ngIf="
