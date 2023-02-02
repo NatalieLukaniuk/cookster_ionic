@@ -1,4 +1,3 @@
-import { AuthService } from './../services/auth.service';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { IAppState } from './../store/reducers/index';
 import { Store, select } from '@ngrx/store';
@@ -16,10 +15,6 @@ export class TabsPage {
 
   constructor(
     private store: Store<IAppState>,
-    private authService: AuthService
   ) {}
 
-  logout() {
-    this.authService.logoutUser();
-  }
 }
