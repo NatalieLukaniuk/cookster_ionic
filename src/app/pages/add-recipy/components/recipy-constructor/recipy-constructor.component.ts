@@ -11,11 +11,12 @@ import {
   Complexity,
   ComplexityDescription,
 } from 'src/app/models/recipies.models';
+import { getUnitText } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
   selector: 'app-recipy-constructor',
   templateUrl: './recipy-constructor.component.html',
-  styleUrls: ['./recipy-constructor.component.css'],
+  styleUrls: ['./recipy-constructor.component.scss'],
 })
 export class RecipyConstructorComponent implements OnInit {
   @Input() recipyToPatch: DraftRecipy | undefined;
@@ -39,6 +40,8 @@ export class RecipyConstructorComponent implements OnInit {
   currentTab = this.tabs[0].value;
 
   constructor() {}
+
+  getUnitText = getUnitText;
 
   ngOnInit(): void {
     if (this.recipyToPatch) {
@@ -102,6 +105,9 @@ export class RecipyConstructorComponent implements OnInit {
     if (this.selectedTags.length < 1) {
       list.push('Виберіть хоча б один тег');
     }
+    if (this.ingredients.length < 1) {
+      list.push('Додайте інгридієнти');
+    }
     return list;
   }
 
@@ -120,5 +126,15 @@ export class RecipyConstructorComponent implements OnInit {
       list.push('Позначте як базовий рецепт');
     }
     return list;
+  }
+
+  onAddIngredient(event: Ingredient) {
+    this.ingredients.push(event);
+  }
+
+  onDeleteIngr(ingredient: Ingredient) {
+    this.ingredients = this.ingredients.filter(
+      (item) => item.product !== ingredient.product
+    );
   }
 }

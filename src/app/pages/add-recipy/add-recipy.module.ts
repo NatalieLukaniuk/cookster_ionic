@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddRecipyPage } from './add-recipy.page';
+import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 
 import { AddRecipyPageRoutingModule } from './add-recipy-routing.module';
 
@@ -15,7 +16,8 @@ import { AddRecipyPageRoutingModule } from './add-recipy-routing.module';
     CommonModule,
     FormsModule,
     AddRecipyPageRoutingModule,
-    SharedModule
+    SharedModule,
+    AutocompleteLibModule
   ],
   declarations: [AddRecipyPage, RecipyConstructorComponent, AddIngredientComponent]
 })

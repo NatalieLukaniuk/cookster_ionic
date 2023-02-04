@@ -6,6 +6,7 @@ import {
   getIngredientText,
   getProductText,
   isIngrIncludedInAmountCalculation,
+  transformToGr,
 } from '../pages/recipies/utils/recipy.utils';
 
 @Injectable({
@@ -51,5 +52,9 @@ export class DataMappingService {
       }
     }
     return (portionsToServe * portionSize) / amount;
+  }
+
+  transformToGr(ingrId: string, amount: number, unit: MeasuringUnit) {
+    return transformToGr(ingrId, amount, unit, this.products$.value);
   }
 }

@@ -1,0 +1,8 @@
+.ng-autocomplete {
+    height: 400px;
+    width: 100%;    
+}
+
+::ng-deep .ng-autocomplete .suggestions-container.is-visible {
+    z-index: 10000;
+}

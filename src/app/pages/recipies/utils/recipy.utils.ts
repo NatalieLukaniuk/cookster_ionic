@@ -363,3 +363,41 @@ export function getRecipyNameById(
 }
 
 export const getUnitText = (unit: MeasuringUnit) => MeasuringUnitText[unit];
+
+export function transformToGr(
+  ingrId: string,
+  amount: number,
+  unit: MeasuringUnit,
+  allProducts: Product[]
+): number {
+  let density: number = getDensity(ingrId, allProducts);
+  let grInOneItem: number = getGrPerItem(ingrId, allProducts);
+  switch (unit) {
+    case MeasuringUnit.gr:
+      return amount;
+    case MeasuringUnit.kg:
+      return kgToGR(amount);
+    case MeasuringUnit.bunch:
+      return bunchToGr(amount);
+    case MeasuringUnit.coffeeSpoon:
+      return coffeeSpoonsToGr(amount, density);
+    case MeasuringUnit.dessertSpoon:
+      return dessertSpoonsToGr(amount, density);
+    case MeasuringUnit.l:
+      return literToGr(amount, density);
+    case MeasuringUnit.ml:
+      return mlToGr(amount, density);
+    case MeasuringUnit.pinch:
+      return pinchToGr(amount, density);
+    case MeasuringUnit.tableSpoon:
+      return tableSpoonsToGr(amount, density);
+    case MeasuringUnit.teaSpoon:
+      return teaSpoonsToGr(amount, density);
+    case MeasuringUnit.item:
+      return itemsToGr(amount, grInOneItem);
+    case MeasuringUnit.cup:
+      return glassToGr(amount, density);
+    default:
+      return 0;
+  }
+}

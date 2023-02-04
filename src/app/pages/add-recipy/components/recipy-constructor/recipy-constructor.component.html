@@ -71,17 +71,35 @@
 
   <ng-container *ngSwitchCase="tabs[1].value">
     <ion-list>
-      <ion-item *ngFor="let ingredient of ingredients">
-        <ion-label>{{ingredient.ingredient}}</ion-label>
+      <ion-item
+        swipeLeftNoConfirmation
+        *ngFor="let ingredient of ingredients"
+        (itemSwiped)="onDeleteIngr(ingredient)"
+      >
+        <ion-label class="ingredient-item-content">
+          <span>{{ ingredient.ingredient }}</span>
+          <span
+            >{{
+              ingredient.amount
+                | convertToSelectedUnit
+                  : ingredient.product
+                  : ingredient.defaultUnit
+                | normalizeDisplayedAmount : ingredient.defaultUnit
+            }}
+            {{ getUnitText(ingredient.defaultUnit) }}</span
+          >
+        </ion-label>
       </ion-item>
-    </ion-list>    
+    </ion-list>
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="light">
           <ion-label>Додати інгридієнт</ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
-          <app-add-ingredient></app-add-ingredient>          
+          <app-add-ingredient
+            (addNewIngredient)="onAddIngredient($event)"
+          ></app-add-ingredient>
         </div>
       </ion-accordion>
     </ion-accordion-group>
