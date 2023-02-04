@@ -1,0 +1,106 @@
+<ion-segment [value]="currentTab" (ionChange)="onTabChange($event)">
+  <ion-segment-button *ngFor="let tab of tabs" [value]="tab.value">
+    <ion-label>{{ tab.name }}</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<ng-container [ngSwitch]="currentTab">
+  <ng-container *ngSwitchCase="tabs[0].value">
+    <ion-item>
+      <ion-label position="floating">Назва рецепту</ion-label>
+      <ion-input [(ngModel)]="recipyName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Джерело рецепту</ion-label>
+      <ion-input [(ngModel)]="recipySource"></ion-input>
+    </ion-item>
+
+    <ion-accordion-group>
+      <ion-accordion value="first">
+        <ion-item slot="header" color="tertiary">
+          <ion-label>Виберіть складність</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-radio-group [(ngModel)]="complexity">
+            <ion-item *ngFor="let unit of complexityOptions">
+              <ion-label>{{ getComplexityOptionsText(unit) }}</ion-label>
+              <ion-radio slot="end" [value]="unit"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </div>
+      </ion-accordion>
+      <ion-accordion value="second">
+        <ion-item
+          slot="header"
+          [color]="selectedTags.length ? 'tertiary' : 'light'"
+        >
+          <ion-label>Виберіть теги</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-list>
+            <ion-item *ngFor="let tag of tags">
+              <ion-checkbox
+                slot="end"
+                [checked]="selectedTags.includes(tag)"
+                (ionChange)="onTagClicked($event, tag)"
+              ></ion-checkbox>
+              <ion-label>{{ getTagsText(tag) }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+
+    <ion-item>
+      <ion-checkbox
+        slot="start"
+        [checked]="isSplitIntoGroups"
+        (ionChange)="onSplitChange($event)"
+      ></ion-checkbox>
+      <ion-label>Розділити інгридієнти на групи</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-checkbox
+        slot="start"
+        [checked]="isBaseRecipy"
+        (ionChange)="onBaseChange($event)"
+      ></ion-checkbox>
+      <ion-label>Базовий рецепт</ion-label>
+    </ion-item>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="tabs[1].value">
+    <ion-list>
+      <ion-item *ngFor="let ingredient of ingredients">
+        <ion-label>{{ingredient.ingredient}}</ion-label>
+      </ion-item>
+    </ion-list>    
+  </ng-container>
+
+  <ng-container *ngSwitchCase="tabs[2].value"> </ng-container>
+</ng-container>
+
+<ion-accordion-group>
+  <ion-accordion value="first">
+    <ion-item slot="header" color="light">
+      <ion-label>Що ще не готово</ion-label>
+    </ion-item>
+    <div class="ion-padding" slot="content">
+      <ion-list>
+        <ion-list-header>Обов'язково:</ion-list-header>
+        <ion-item *ngFor="let item of notReadyMandatory">
+          <ion-label>{{ item }}</ion-label>
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <ion-list-header>За бажанням:</ion-list-header>
+        <ion-item *ngFor="let item of notReadyOptional">
+          <ion-label>{{ item }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ion-accordion>
+</ion-accordion-group>
+
+<ion-button expand="full" (click)="saveDraft()">Зберегти в чернетки</ion-button>
+<ion-button *ngIf="isReadyToPublish" expand="full">Опублікувати</ion-button>

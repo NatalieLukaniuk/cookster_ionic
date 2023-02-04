@@ -1,0 +1,124 @@
+import {
+  DishType,
+  DraftRecipy,
+  Ingredient,
+  PreparationStep,
+} from './../../../../models/recipies.models';
+import { Component, Input, OnInit } from '@angular/core';
+import * as _ from 'lodash';
+import { User } from 'src/app/models/auth.models';
+import {
+  Complexity,
+  ComplexityDescription,
+} from 'src/app/models/recipies.models';
+
+@Component({
+  selector: 'app-recipy-constructor',
+  templateUrl: './recipy-constructor.component.html',
+  styleUrls: ['./recipy-constructor.component.css'],
+})
+export class RecipyConstructorComponent implements OnInit {
+  @Input() recipyToPatch: DraftRecipy | undefined;
+  @Input() currentUser!: User | null;
+
+  tabs = [
+    { value: 'info', icon: '', name: 'Інформація' },
+    { value: 'ingredients', icon: '', name: 'Інгридієнти' },
+    { value: 'steps', icon: '', name: 'Приготування' },
+  ];
+
+  recipyName = '';
+  isSplitIntoGroups = false;
+  complexity = Complexity.simple;
+  selectedTags: DishType[] = [];
+  recipySource = '';
+  isBaseRecipy = false;
+  ingredients: Ingredient[] = [];
+  steps: PreparationStep[] = [];
+
+  currentTab = this.tabs[0].value;
+
+  constructor() {}
+
+  ngOnInit(): void {
+    if (this.recipyToPatch) {
+      this.recipyName = this.recipyToPatch.name;
+    }
+  }
+
+  onTabChange(event: any) {
+    this.currentTab = event.detail.value;
+  }
+
+  get complexityOptions() {
+    return [1, 2, 3];
+  }
+  getComplexityOptionsText(unit: Complexity) {
+    return ComplexityDescription[unit];
+  }
+
+  get tags() {
+    let tags: number[] = [];
+    tags = Object.values(DishType).filter(
+      (value) => typeof value === 'number'
+    ) as number[];
+    return tags;
+  }
+
+  getTagsText(tag: DishType) {
+    return DishType[tag];
+  }
+
+  saveDraft() {
+    console.log(this.selectedTags);
+    //fixme: not implemented
+  }
+
+  onSplitChange(event: any) {
+    this.isSplitIntoGroups = event.detail.checked;
+  }
+
+  onBaseChange(event: any) {
+    this.isBaseRecipy = event.detail.checked;
+  }
+
+  onTagClicked(event: any, tag: DishType) {
+    if (event.detail.checked) {
+      this.selectedTags.push(tag);
+    } else {
+      this.selectedTags = this.selectedTags.filter((item) => item !== tag);
+    }
+  }
+
+  get isReadyToPublish() {
+    return !this.notReadyMandatory.length;
+  }
+
+  get notReadyMandatory() {
+    let list: string[] = [];
+    if (this.recipyName.length < 3) {
+      list.push('Введіть назву, мінімум 3 символи');
+    }
+    if (this.selectedTags.length < 1) {
+      list.push('Виберіть хоча б один тег');
+    }
+    return list;
+  }
+
+  get notReadyOptional() {
+    let list: string[] = [];
+    if (this.recipySource.length < 3) {
+      list.push('Вкажіть джерело рецепту');
+    }
+    if (this.complexity == Complexity.simple) {
+      list.push('Змініть складність');
+    }
+    if (!this.isSplitIntoGroups) {
+      list.push('Розділіть інгридієнти на групи');
+    }
+    if (!this.isBaseRecipy) {
+      list.push('Позначте як базовий рецепт');
+    }
+    return list;
+  }
+}

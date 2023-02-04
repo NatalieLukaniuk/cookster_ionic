@@ -38,6 +38,26 @@ export interface Recipy extends NewRecipy {
   source?: string;
 }
 
+
+export interface DraftRecipy {
+  name: string;
+  ingrediends: Ingredient[];
+  complexity: Complexity;
+  steps: PreparationStep[];
+  type?: DishType[];
+  photo?: string;
+  author: string;
+  createdOn: number;
+  clonedBy?: string;
+  clonedOn?: number;
+  originalRecipy?: string;
+  isSplitIntoGroups: IngredientsGroup[] | boolean;
+  isBaseRecipy: boolean;
+  notApproved?: boolean;
+  source?: string;
+  isCheckedAndApproved?: boolean;
+}
+
 export interface Ingredient {
   product: string; // product id in the firebase db // FIXME: rename to productID
   amount: number; // gramm
@@ -131,7 +151,7 @@ export enum MeasuringUnitText {
   'пучок',
   'шт.',
   'склянка',
-  'за смаком'
+  'за смаком',
 }
 
 export interface Product {
@@ -171,79 +191,85 @@ export const MeasuringUnitOptions = [
   MeasuringUnit.bunch,
   MeasuringUnit.item,
   MeasuringUnit.cup,
-  MeasuringUnit.none
+  MeasuringUnit.none,
 ];
 
 export const MeasuringUnitOptionsFluid = [
-    MeasuringUnit.gr,
-    MeasuringUnit.l,
-    MeasuringUnit.ml,
-    MeasuringUnit.tableSpoon,
-    MeasuringUnit.dessertSpoon,
-    MeasuringUnit.teaSpoon,
-    MeasuringUnit.coffeeSpoon,
-    MeasuringUnit.cup
-  ];
+  MeasuringUnit.gr,
+  MeasuringUnit.l,
+  MeasuringUnit.ml,
+  MeasuringUnit.tableSpoon,
+  MeasuringUnit.dessertSpoon,
+  MeasuringUnit.teaSpoon,
+  MeasuringUnit.coffeeSpoon,
+  MeasuringUnit.cup,
+];
 
-  export const MeasuringUnitOptionsSpice = [
-    MeasuringUnit.gr,
-    MeasuringUnit.teaSpoon,
-    MeasuringUnit.tableSpoon,
-    MeasuringUnit.coffeeSpoon,
-    MeasuringUnit.pinch,
-    MeasuringUnit.cup
-  ];
+export const MeasuringUnitOptionsSpice = [
+  MeasuringUnit.gr,
+  MeasuringUnit.teaSpoon,
+  MeasuringUnit.tableSpoon,
+  MeasuringUnit.coffeeSpoon,
+  MeasuringUnit.pinch,
+  MeasuringUnit.cup,
+];
 
-  export const MeasuringUnitOptionsHerbs = [
-    MeasuringUnit.gr,
-    MeasuringUnit.teaSpoon,
-    MeasuringUnit.pinch,
-    MeasuringUnit.bunch,
-    MeasuringUnit.cup
-  ];
+export const MeasuringUnitOptionsHerbs = [
+  MeasuringUnit.gr,
+  MeasuringUnit.teaSpoon,
+  MeasuringUnit.pinch,
+  MeasuringUnit.bunch,
+  MeasuringUnit.cup,
+];
 
-  export const MeasuringUnitOptionsHardItems = [
-    MeasuringUnit.gr,
-    MeasuringUnit.kg,
-    MeasuringUnit.item
-  ];
+export const MeasuringUnitOptionsHardItems = [
+  MeasuringUnit.gr,
+  MeasuringUnit.kg,
+  MeasuringUnit.item,
+];
 
-  export const MeasuringUnitOptionsGranular = [
-    MeasuringUnit.gr,
-    MeasuringUnit.kg,
-    MeasuringUnit.dessertSpoon,
-    MeasuringUnit.tableSpoon,
-    MeasuringUnit.cup
-  ]
+export const MeasuringUnitOptionsGranular = [
+  MeasuringUnit.gr,
+  MeasuringUnit.kg,
+  MeasuringUnit.dessertSpoon,
+  MeasuringUnit.tableSpoon,
+  MeasuringUnit.cup,
+];
 
-  export const MeasuringUnitOptionsHardHomogeneous = [
-    MeasuringUnit.gr,
-    MeasuringUnit.kg
-  ]
+export const MeasuringUnitOptionsHardHomogeneous = [
+  MeasuringUnit.gr,
+  MeasuringUnit.kg,
+];
 
-  export interface IngredientsByGroup {
-    main: Ingredient[];
-    filling: Ingredient[];
-    souce: Ingredient[];
-    dough: Ingredient[];
-    decoration: Ingredient[];
+export interface IngredientsByGroup {
+  main: Ingredient[];
+  filling: Ingredient[];
+  souce: Ingredient[];
+  dough: Ingredient[];
+  decoration: Ingredient[];
+}
+
+export class ingredientsByGroup implements IngredientsByGroup {
+  main: Ingredient[] = [];
+  decoration: Ingredient[] = [];
+  dough: Ingredient[] = [];
+  souce: Ingredient[] = [];
+  filling: Ingredient[] = [];
+}
+
+export const ingredientsGroupTitle = (eng: string): string => {
+  switch (eng) {
+    case 'main':
+      return 'Основна страва';
+    case 'decoration':
+      return 'Оздоблення';
+    case 'dough':
+      return 'Тісто';
+    case 'souce':
+      return 'Соус / підливка / маринад';
+    case 'filling':
+      return 'Начинка';
+    default:
+      return '';
   }
-
-  export class ingredientsByGroup implements IngredientsByGroup {
-    main: Ingredient[] = [];
-    decoration: Ingredient[] = [];
-    dough: Ingredient[] = [];
-    souce: Ingredient[] = [];
-    filling: Ingredient[] = [];
-  }
-
-  export const ingredientsGroupTitle = (eng: string): string => {
-    switch(eng) {
-      case 'main': return 'Основна страва';
-      case 'decoration': return 'Оздоблення';
-      case 'dough': return 'Тісто';
-      case 'souce': return 'Соус / підливка / маринад';
-      case 'filling': return 'Начинка';
-      default: return ''
-    }
-  }
+};
