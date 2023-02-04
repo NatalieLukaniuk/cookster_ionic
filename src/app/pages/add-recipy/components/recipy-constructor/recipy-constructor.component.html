@@ -105,7 +105,33 @@
     </ion-accordion-group>
   </ng-container>
 
-  <ng-container *ngSwitchCase="tabs[2].value"> </ng-container>
+  <ng-container *ngSwitchCase="tabs[2].value"> 
+    <ion-list>
+      <ion-item
+        swipeLeftNoConfirmation
+        *ngFor="let step of steps"
+        (itemSwiped)="onDeleteStep(step)"
+      >
+        <ion-label class="ingredient-item-content">
+          <span>{{ step.description }}</span>
+          <span
+            >{{step.timeActive | normalizeTime}}
+            {{ step.timePassive | normalizeTime }}</span
+          >
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-accordion-group>
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label>Додати крок</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <app-add-step></app-add-step>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ng-container>
 </ng-container>
 
 <ion-accordion-group>

@@ -37,7 +37,7 @@ export class RecipyConstructorComponent implements OnInit {
   ingredients: Ingredient[] = [];
   steps: PreparationStep[] = [];
 
-  currentTab = this.tabs[0].value;
+  currentTab = this.tabs[2].value;
 
   constructor() {}
 
@@ -135,6 +135,12 @@ export class RecipyConstructorComponent implements OnInit {
   onDeleteIngr(ingredient: Ingredient) {
     this.ingredients = this.ingredients.filter(
       (item) => item.product !== ingredient.product
+    );
+  }
+
+  onDeleteStep(step: PreparationStep) {
+    this.steps = this.steps.filter(
+      (item) => item.description !== step.description
     );
   }
 }

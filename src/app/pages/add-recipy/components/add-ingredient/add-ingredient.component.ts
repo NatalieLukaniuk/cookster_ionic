@@ -37,7 +37,7 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
   data: Product[] = [];
   keyword = 'name';
 
-  destroyed$ = new Subject();
+  destroyed$ = new Subject<void>();
 
   selectedProduct: Product | null = null;
   quantity: string = '';
