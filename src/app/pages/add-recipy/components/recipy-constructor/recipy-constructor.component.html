@@ -75,6 +75,16 @@
         <ion-label>{{ingredient.ingredient}}</ion-label>
       </ion-item>
     </ion-list>    
+    <ion-accordion-group>
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label>Додати інгридієнт</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <app-add-ingredient></app-add-ingredient>          
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[2].value"> </ng-container>

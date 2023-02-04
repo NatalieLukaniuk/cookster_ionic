@@ -1,3 +1,4 @@
+import { AddIngredientComponent } from './components/add-ingredient/add-ingredient.component';
 import { RecipyConstructorComponent } from './components/recipy-constructor/recipy-constructor.component';
 import { SharedModule } from '../../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
@@ -16,6 +17,6 @@ import { AddRecipyPageRoutingModule } from './add-recipy-routing.module';
     AddRecipyPageRoutingModule,
     SharedModule
   ],
-  declarations: [AddRecipyPage, RecipyConstructorComponent]
+  declarations: [AddRecipyPage, RecipyConstructorComponent, AddIngredientComponent]
 })
 export class AddRecipyPageModule {}
