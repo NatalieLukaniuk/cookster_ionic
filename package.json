@@ -28,6 +28,7 @@
     "@ngrx/effects": "^15.1.0",
     "@ngrx/store": "^15.1.0",
     "@ngrx/store-devtools": "^15.1.0",
+    "angular-ng-autocomplete": "^2.0.12",
     "firebase": "^9.16.0",
     "ionicons": "^6.0.3",
     "lodash": "^4.17.21",
