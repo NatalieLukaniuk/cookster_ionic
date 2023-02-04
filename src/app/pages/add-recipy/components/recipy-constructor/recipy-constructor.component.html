@@ -127,7 +127,7 @@
           <ion-label>Додати крок</ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
-          <app-add-step></app-add-step>
+          <app-add-step (addNewStep)="onAddNewStep($event)"></app-add-step>
         </div>
       </ion-accordion>
     </ion-accordion-group>

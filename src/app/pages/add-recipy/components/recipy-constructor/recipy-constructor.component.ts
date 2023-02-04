@@ -1,3 +1,5 @@
+import { AddDraftRecipyAction } from './../../../../store/actions/recipies.actions';
+import { Store } from '@ngrx/store';
 import {
   DishType,
   DraftRecipy,
@@ -39,7 +41,7 @@ export class RecipyConstructorComponent implements OnInit {
 
   currentTab = this.tabs[2].value;
 
-  constructor() {}
+  constructor(private store: Store) {}
 
   getUnitText = getUnitText;
 
@@ -74,7 +76,19 @@ export class RecipyConstructorComponent implements OnInit {
 
   saveDraft() {
     console.log(this.selectedTags);
-    //fixme: not implemented
+    let draftRecipy: DraftRecipy = {
+      name: this.recipyName,
+      ingrediends: this.ingredients,
+      complexity: this.complexity,
+      steps: this.steps,
+      type: this.selectedTags,
+      author: this.currentUser!.email,
+      createdOn: Date.now(),
+      isSplitIntoGroups: [],
+      isBaseRecipy: this.isBaseRecipy,
+      source: this.recipySource,
+    };
+    this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
   }
 
   onSplitChange(event: any) {
@@ -107,6 +121,9 @@ export class RecipyConstructorComponent implements OnInit {
     }
     if (this.ingredients.length < 1) {
       list.push('Додайте інгридієнти');
+    }
+    if (this.steps.length < 1) {
+      list.push('Додайте опис приготування');
     }
     return list;
   }
@@ -142,5 +159,9 @@ export class RecipyConstructorComponent implements OnInit {
     this.steps = this.steps.filter(
       (item) => item.description !== step.description
     );
+  }
+
+  onAddNewStep(step: PreparationStep) {
+    this.steps.push(step);
   }
 }

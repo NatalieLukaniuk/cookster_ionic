@@ -1,6 +1,6 @@
 import { DayDetails, Suggestion } from './calendar.models';
 import { PlannerByDate, ShoppingListItem } from './planner.models';
-import { RecipyCollection } from './recipies.models';
+import { DraftRecipy, RecipyCollection } from './recipies.models';
 
 export interface User {
   email: string;
@@ -13,6 +13,7 @@ export interface User {
   role: Role;
   planner?: PlannerByDate[];
   collections?: RecipyCollection[];
+  draftRecipies?: DraftRecipy[];
   // scenarios?: SuggestionList[];
 }
 

@@ -1,3 +1,4 @@
+import { DraftRecipy } from './../../models/recipies.models';
 import { Action } from '@ngrx/store';
 import { NewRecipy, Product, Recipy } from 'src/app/models/recipies.models';
 
@@ -16,6 +17,18 @@ export enum RecipiesActionTypes {
   NEW_INGREDIENTS_LOADED = '[INGREDIENT] New Ingredients Loaded',
   UPDATE_PRODUCT = '[RECIPIES] Update Ingredient',
   UPDATE_PRODUCT_SUCCESS = '[RECIPIES] Ingredient Has Been Updated',
+  ADD_DRAFT_RECIPY = '[RECIPIES] Add Draft Recipy',
+  ADD_DRAFT_RECIPY_SUCCESS = '[RECIPIES] Draft Recipy Has Been Added',
+}
+
+export class AddDraftRecipyAction implements Action {
+  readonly type = RecipiesActionTypes.ADD_DRAFT_RECIPY;
+  constructor(public recipy: DraftRecipy) {}
+}
+
+export class AddDraftRecipySuccessAction implements Action {
+  readonly type = RecipiesActionTypes.ADD_DRAFT_RECIPY_SUCCESS;
+  constructor(public recipy: DraftRecipy) {}
 }
 
 export class GetProductsAction implements Action {
@@ -98,4 +111,6 @@ export type RecipiesActions =
   | UpdateProductAction
   | UpdateProductSuccessAction
   | GetProductsAction
-  | ProductsLoadedAction;
+  | ProductsLoadedAction
+  | AddDraftRecipyAction
+  | AddDraftRecipySuccessAction;

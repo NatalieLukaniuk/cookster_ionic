@@ -41,9 +41,9 @@ export interface Recipy extends NewRecipy {
 
 export interface DraftRecipy {
   name: string;
-  ingrediends: Ingredient[];
+  ingrediends?: Ingredient[];
   complexity: Complexity;
-  steps: PreparationStep[];
+  steps?: PreparationStep[];
   type?: DishType[];
   photo?: string;
   author: string;
@@ -88,7 +88,7 @@ export enum ComplexityDescription {
 }
 
 export interface PreparationStep {
-  id: number;
+  id?: number;
   description: string;
   timeActive: number; // minutes
   timePassive: number; // minutes
