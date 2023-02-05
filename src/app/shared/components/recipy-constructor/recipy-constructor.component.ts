@@ -1,11 +1,11 @@
-import { AddDraftRecipyAction } from './../../../../store/actions/recipies.actions';
+import { AddDraftRecipyAction } from '../../../store/actions/recipies.actions';
 import { Store } from '@ngrx/store';
 import {
   DishType,
   DraftRecipy,
   Ingredient,
   PreparationStep,
-} from './../../../../models/recipies.models';
+} from '../../../models/recipies.models';
 import { Component, Input, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { User } from 'src/app/models/auth.models';

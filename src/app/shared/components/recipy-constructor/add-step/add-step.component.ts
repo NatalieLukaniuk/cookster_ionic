@@ -1,4 +1,4 @@
-import { PreparationStep } from './../../../../models/recipies.models';
+import { PreparationStep } from '../../../../models/recipies.models';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({

@@ -1,4 +1,4 @@
-import { getAllProducts } from './../../../../store/selectors/recipies.selectors';
+import { getAllProducts } from '../../../../store/selectors/recipies.selectors';
 import {
   Ingredient,
   MeasuringUnitOptionsGranular,
@@ -6,7 +6,7 @@ import {
   MeasuringUnitOptionsHardItems,
   MeasuringUnitOptionsHerbs,
   MeasuringUnitOptionsSpice,
-} from './../../../../models/recipies.models';
+} from '../../../../models/recipies.models';
 import {
   Product,
   MeasuringUnit,

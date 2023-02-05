@@ -17,6 +17,10 @@ import { FormsModule } from '@angular/forms';
 import { NormalizeDisplayedAmountPipe } from './pipes/normalize-displayed-amount.pipe';
 import { ConvertToSelectedUnitPipe } from './pipes/convert-to-selected-unit.pipe';
 import { SwipeLeftDirective } from './directives/swipe-left.directive';
+import { RecipyConstructorComponent } from './components/recipy-constructor/recipy-constructor.component';
+import { AddIngredientComponent } from './components/recipy-constructor/add-ingredient/add-ingredient.component';
+import { AddStepComponent } from './components/recipy-constructor/add-step/add-step.component';
+import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 
 @NgModule({
   declarations: [
@@ -33,9 +37,12 @@ import { SwipeLeftDirective } from './directives/swipe-left.directive';
     SelectOptionDialogComponent,
     InputDialogComponent,
     SwipeLeftDirective,
-    SwipeLeftNoConfirmationDirective
+    SwipeLeftNoConfirmationDirective,
+    RecipyConstructorComponent,
+    AddIngredientComponent,
+    AddStepComponent,
   ],
-  imports: [CommonModule, IonicModule, FormsModule],
+  imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule,],
   exports: [
     HeaderComponent,
     LoadingOverlayComponent,
@@ -47,7 +54,10 @@ import { SwipeLeftDirective } from './directives/swipe-left.directive';
     SwipeLeftDirective,
     NormalizeDisplayedAmountPipe,
     ConvertToSelectedUnitPipe,
-    SwipeLeftNoConfirmationDirective
+    SwipeLeftNoConfirmationDirective,
+    RecipyConstructorComponent,
+    AddIngredientComponent,
+    AddStepComponent,
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
