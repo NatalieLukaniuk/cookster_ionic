@@ -21,7 +21,7 @@ import { getUnitText } from 'src/app/pages/recipies/utils/recipy.utils';
   styleUrls: ['./recipy-constructor.component.scss'],
 })
 export class RecipyConstructorComponent implements OnInit {
-  @Input() recipyToPatch: DraftRecipy | undefined;
+  @Input() recipyToPatch: DraftRecipy | undefined | null;
   @Input() currentUser!: User | null;
 
   tabs = [

@@ -1,3 +1,4 @@
+import { EditDraftComponent } from './pages/edit-draft/edit-draft.component';
 import { SharedModule } from './../../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -17,6 +18,6 @@ import { DraftRecipiesPage } from './draft-recipies.page';
     DraftRecipiesPageRoutingModule,
     SharedModule
   ],
-  declarations: [DraftRecipiesPage]
+  declarations: [DraftRecipiesPage, EditDraftComponent]
 })
 export class DraftRecipiesPageModule {}
