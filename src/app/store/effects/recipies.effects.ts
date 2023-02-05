@@ -127,6 +127,31 @@ export class RecipiesEffects {
     )
   );
 
+  deleteDraftRecipy$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RecipiesActionTypes.DELETE_DRAFT_RECIPY),
+      switchMap((action: RecipiesActions.DeleteDraftRecipyAction) =>
+        this.store.pipe(
+          select(getCurrentUser),
+          take(1),
+          map((user) => {
+            if (user) {
+              let updatedUser = _.cloneDeep(user);
+              if (updatedUser.draftRecipies) {
+                updatedUser.draftRecipies! = updatedUser.draftRecipies.filter(
+                  (item) =>
+                    item.name !== action.recipy.name &&
+                    item.createdOn !== action.recipy.createdOn
+                );
+              }
+              return new UpdateUserAction(updatedUser);
+            } else return new UiActions.ErrorAction('no user');
+          })
+        )
+      )
+    )
+  );
+
   updateRecipy$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RecipiesActionTypes.UPDATE_RECIPY),

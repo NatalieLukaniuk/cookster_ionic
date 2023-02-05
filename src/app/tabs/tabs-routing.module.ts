@@ -35,6 +35,10 @@ const routes: Routes = [
       {
         path: 'planner',
         loadChildren: () => import('../pages/planner/planner.module').then(m => m.PlannerPageModule)
+      },
+      {
+        path: 'draft-recipies',
+        loadChildren: () => import('../pages/draft-recipies/draft-recipies.module').then( m => m.DraftRecipiesPageModule)
       }
     ]
   },

@@ -18,7 +18,7 @@ export enum RecipiesActionTypes {
   UPDATE_PRODUCT = '[RECIPIES] Update Ingredient',
   UPDATE_PRODUCT_SUCCESS = '[RECIPIES] Ingredient Has Been Updated',
   ADD_DRAFT_RECIPY = '[RECIPIES] Add Draft Recipy',
-  ADD_DRAFT_RECIPY_SUCCESS = '[RECIPIES] Draft Recipy Has Been Added',
+  DELETE_DRAFT_RECIPY = '[RECIPIES] Delete Draft Recipy',
 }
 
 export class AddDraftRecipyAction implements Action {
@@ -26,8 +26,8 @@ export class AddDraftRecipyAction implements Action {
   constructor(public recipy: DraftRecipy) {}
 }
 
-export class AddDraftRecipySuccessAction implements Action {
-  readonly type = RecipiesActionTypes.ADD_DRAFT_RECIPY_SUCCESS;
+export class DeleteDraftRecipyAction implements Action {
+  readonly type = RecipiesActionTypes.DELETE_DRAFT_RECIPY;
   constructor(public recipy: DraftRecipy) {}
 }
 
@@ -113,4 +113,4 @@ export type RecipiesActions =
   | GetProductsAction
   | ProductsLoadedAction
   | AddDraftRecipyAction
-  | AddDraftRecipySuccessAction;
+  | DeleteDraftRecipyAction;

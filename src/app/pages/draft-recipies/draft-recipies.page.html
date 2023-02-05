@@ -1,0 +1,20 @@
+<app-header>
+  <span title>Чернетки рецептів</span>
+</app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item
+      swipeLeftDelete
+      button
+      *ngFor="let draft of (draftRecipies$ | async)"
+      (click)="editDraft(draft)"
+      (deleteItem)="deleteDraft(draft)"
+    >
+      <ion-label>
+        <h5>{{draft.name}}</h5>
+        <p>{{draft.createdOn | date}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
