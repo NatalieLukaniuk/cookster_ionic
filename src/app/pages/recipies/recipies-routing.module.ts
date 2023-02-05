@@ -1,3 +1,4 @@
+import { EditRecipyComponent } from './pages/edit-recipy/edit-recipy.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RecipiesContainer } from './pages/all-recipies-page/recipies.page';
@@ -11,6 +12,11 @@ const routes: Routes = [
   {
     path: 'recipy/:id',
     component: FullRecipyPageComponent,
+    pathMatch: 'full',
+  },
+  {
+    path: 'edit-recipy/:id',
+    component: EditRecipyComponent,
     pathMatch: 'full',
   },
 

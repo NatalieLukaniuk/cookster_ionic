@@ -1,12 +1,14 @@
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { SetIsLoadingFalseAction } from './../../../../store/actions/ui.actions';
-import { map, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { Store, select } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { IAppState } from 'src/app/store/reducers';
 import { SetIsLoadingAction } from 'src/app/store/actions/ui.actions';
 import * as _ from 'lodash';
+import { Router } from '@angular/router';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-full-recipy-page',
@@ -18,6 +20,7 @@ export class FullRecipyPageComponent implements OnInit {
 
   recipy$ = this.store.pipe(
     select(getAllRecipies),
+    filter((res) => !!res.length),
     tap(() => this.store.dispatch(new SetIsLoadingAction())),
     map((res) => res.find((recipy) => recipy.id === this.recipyId)),
     map((recipy) => {
@@ -31,11 +34,18 @@ export class FullRecipyPageComponent implements OnInit {
   );
 
   user$ = this.store.pipe(select(getCurrentUser));
-
-  constructor(private store: Store<IAppState>) {
+  isOwnRecipy$ = combineLatest([this.user$, this.recipy$]).pipe(
+    filter((res) => !!res[0] && !!res[1]),
+    map((res) => res[0]?.email === res[1]?.author)
+  );
+  constructor(private store: Store<IAppState>, private router: Router) {
     const path = window.location.pathname.split('/');
     this.recipyId = path[path.length - 1];
   }
 
   ngOnInit() {}
+
+  goEditRecipy() {
+    this.router.navigate(['tabs', 'recipies', 'edit-recipy', this.recipyId]);
+  }
 }

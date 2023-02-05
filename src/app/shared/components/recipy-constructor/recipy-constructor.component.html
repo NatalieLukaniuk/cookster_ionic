@@ -143,13 +143,13 @@
     </ion-item>
     <div class="ion-padding" slot="content">
       <ion-list>
-        <ion-list-header>Обов'язково:</ion-list-header>
+        <ion-list-header *ngIf="notReadyMandatory.length">Обов'язково:</ion-list-header>
         <ion-item *ngFor="let item of notReadyMandatory">
           <ion-label>{{ item }}</ion-label>
         </ion-item>
       </ion-list>
       <ion-list>
-        <ion-list-header>За бажанням:</ion-list-header>
+        <ion-list-header *ngIf="notReadyOptional.length">За бажанням:</ion-list-header>
         <ion-item *ngFor="let item of notReadyOptional">
           <ion-label>{{ item }}</ion-label>
         </ion-item>
@@ -160,8 +160,8 @@
 
 <ion-button
   expand="full"
-  (click)="recipyToPatch ? saveEditedDraft() : saveDraft()"
-  >{{ recipyToPatch ? "Оновити чернетку" : "Зберегти в чернетки" }}</ion-button
+  (click)="recipyToPatch && isSavedDraft ? saveEditedDraft() : saveDraft()"
+  >{{ recipyToPatch && isSavedDraft ? "Оновити чернетку" : "Зберегти в чернетки" }}</ion-button
 >
 <ion-button
   *ngIf="isReadyToPublish"

@@ -1,0 +1,12 @@
+<app-header>
+  <ion-back-button left-button defaultHref="tabs/recipies"></ion-back-button>
+  <p title *ngIf="recipy$ | async">{{ (recipy$ | async)!.name }}</p>
+</app-header>
+
+<ion-content [fullscreen]="true">
+  <app-recipy-constructor
+    *ngIf="recipy$ | async"
+    [recipyToPatch]="recipy$ | async"
+    [currentUser]="user$ | async"
+  ></app-recipy-constructor>
+</ion-content>

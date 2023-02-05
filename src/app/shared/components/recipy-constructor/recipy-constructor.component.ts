@@ -39,8 +39,12 @@ export class RecipyConstructorComponent implements OnInit {
 
   get isPublished() {
     if (this.recipyToPatch) {
-      return ('id' in this.recipyToPatch);
+      return 'id' in this.recipyToPatch;
     } else return false;
+  }
+
+  get isSavedDraft() {
+    return this.recipyToPatch && this.recipyToPatchOrder;
   }
 
   recipyName = '';
@@ -60,6 +64,7 @@ export class RecipyConstructorComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.recipyToPatch) {
+      console.log(this.recipyToPatch);
       this.recipyName = this.recipyToPatch.name;
       this.isBaseRecipy = this.recipyToPatch.isBaseRecipy;
       this.complexity = this.recipyToPatch.complexity;
@@ -102,12 +107,12 @@ export class RecipyConstructorComponent implements OnInit {
   }
 
   saveDraft() {
-    let draftRecipy: DraftRecipy = this.collectData();
+    let draftRecipy: DraftRecipy = this.collectDataNewRecipyOrDraft();
     this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
   }
 
   saveEditedDraft() {
-    let draftRecipy: DraftRecipy = this.collectData();
+    let draftRecipy: DraftRecipy = this.collectDataNewRecipyOrDraft();
     if (this.recipyToPatchOrder) {
       this.store.dispatch(
         new UpdateDraftRecipyAction(draftRecipy, this.recipyToPatchOrder)
@@ -115,7 +120,7 @@ export class RecipyConstructorComponent implements OnInit {
     }
   }
 
-  collectData(): NewRecipy {
+  collectDataNewRecipyOrDraft(): NewRecipy {
     return {
       name: this.recipyName,
       ingrediends: this.ingredients,
@@ -129,9 +134,31 @@ export class RecipyConstructorComponent implements OnInit {
       source: this.recipySource,
     };
   }
+  collectDataExistingRecipy(): Recipy | null {
+    if (this.recipyToPatch && 'id' in this.recipyToPatch) {
+      return {
+        id: this.recipyToPatch.id,
+        name: this.recipyName,
+        ingrediends: this.ingredients,
+        complexity: this.complexity,
+        steps: this.steps,
+        type: this.selectedTags,
+        author: this.recipyToPatch.author,
+        createdOn: this.recipyToPatch?.createdOn,
+        isSplitIntoGroups: this.recipyToPatch.isSplitIntoGroups,
+        isBaseRecipy: this.isBaseRecipy,
+        source: this.recipySource,
+        editedBy: this.currentUser!.email,
+        isCheckedAndApproved: this.recipyToPatch.isCheckedAndApproved,
+        notApproved: this.recipyToPatch.notApproved,
+        photo: this.recipyToPatch.photo,
+        lastEdited: Date.now()
+      };
+    } else return null
+  }
 
   saveNewRecipy() {
-    let recipy: NewRecipy = this.collectData();
+    let recipy: NewRecipy = this.collectDataNewRecipyOrDraft();
     this.store.dispatch(new AddNewRecipyAction(recipy));
   }
 

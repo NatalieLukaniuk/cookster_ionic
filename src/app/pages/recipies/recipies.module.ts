@@ -1,3 +1,4 @@
+import { EditRecipyComponent } from './pages/edit-recipy/edit-recipy.component';
 import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-short-view.component';
 import { SharedModule } from '../../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
@@ -21,7 +22,7 @@ import { RecipiesContainer } from './pages/all-recipies-page/recipies.page';
     RecipiesContainer,
     RecipyShortViewComponent,
     FullRecipyPageComponent,
-    
+    EditRecipyComponent
   ],
   
 })
