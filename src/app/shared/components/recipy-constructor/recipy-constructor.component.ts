@@ -1,3 +1,8 @@
+import { NewRecipy } from './../../../models/recipies.models';
+import {
+  UpdateDraftRecipyAction,
+  AddNewRecipyAction,
+} from './../../../store/actions/recipies.actions';
 import { AddDraftRecipyAction } from '../../../store/actions/recipies.actions';
 import { Store } from '@ngrx/store';
 import {
@@ -5,6 +10,7 @@ import {
   DraftRecipy,
   Ingredient,
   PreparationStep,
+  Recipy,
 } from '../../../models/recipies.models';
 import { Component, Input, OnInit } from '@angular/core';
 import * as _ from 'lodash';
@@ -21,7 +27,8 @@ import { getUnitText } from 'src/app/pages/recipies/utils/recipy.utils';
   styleUrls: ['./recipy-constructor.component.scss'],
 })
 export class RecipyConstructorComponent implements OnInit {
-  @Input() recipyToPatch: DraftRecipy | undefined | null;
+  @Input() recipyToPatch: DraftRecipy | Recipy | undefined | null;
+  @Input() recipyToPatchOrder: number | undefined;
   @Input() currentUser!: User | null;
 
   tabs = [
@@ -29,6 +36,12 @@ export class RecipyConstructorComponent implements OnInit {
     { value: 'ingredients', icon: '', name: 'Інгридієнти' },
     { value: 'steps', icon: '', name: 'Приготування' },
   ];
+
+  get isPublished() {
+    if (this.recipyToPatch) {
+      return ('id' in this.recipyToPatch);
+    } else return false;
+  }
 
   recipyName = '';
   isSplitIntoGroups = false;
@@ -39,7 +52,7 @@ export class RecipyConstructorComponent implements OnInit {
   ingredients: Ingredient[] = [];
   steps: PreparationStep[] = [];
 
-  currentTab = this.tabs[2].value;
+  currentTab = this.tabs[0].value;
 
   constructor(private store: Store) {}
 
@@ -48,6 +61,20 @@ export class RecipyConstructorComponent implements OnInit {
   ngOnInit(): void {
     if (this.recipyToPatch) {
       this.recipyName = this.recipyToPatch.name;
+      this.isBaseRecipy = this.recipyToPatch.isBaseRecipy;
+      this.complexity = this.recipyToPatch.complexity;
+      if (this.recipyToPatch.source) {
+        this.recipySource = this.recipyToPatch.source;
+      }
+      if (this.recipyToPatch.ingrediends?.length) {
+        this.ingredients = _.cloneDeep(this.recipyToPatch.ingrediends);
+      }
+      if (this.recipyToPatch.steps?.length) {
+        this.steps = _.cloneDeep(this.recipyToPatch.steps);
+      }
+      if (this.recipyToPatch.type?.length) {
+        this.selectedTags = _.cloneDeep(this.recipyToPatch.type);
+      }
     }
   }
 
@@ -75,8 +102,21 @@ export class RecipyConstructorComponent implements OnInit {
   }
 
   saveDraft() {
-    console.log(this.selectedTags);
-    let draftRecipy: DraftRecipy = {
+    let draftRecipy: DraftRecipy = this.collectData();
+    this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
+  }
+
+  saveEditedDraft() {
+    let draftRecipy: DraftRecipy = this.collectData();
+    if (this.recipyToPatchOrder) {
+      this.store.dispatch(
+        new UpdateDraftRecipyAction(draftRecipy, this.recipyToPatchOrder)
+      );
+    }
+  }
+
+  collectData(): NewRecipy {
+    return {
       name: this.recipyName,
       ingrediends: this.ingredients,
       complexity: this.complexity,
@@ -88,8 +128,14 @@ export class RecipyConstructorComponent implements OnInit {
       isBaseRecipy: this.isBaseRecipy,
       source: this.recipySource,
     };
-    this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
   }
+
+  saveNewRecipy() {
+    let recipy: NewRecipy = this.collectData();
+    this.store.dispatch(new AddNewRecipyAction(recipy));
+  }
+
+  updateRecipy() {}
 
   onSplitChange(event: any) {
     this.isSplitIntoGroups = event.detail.checked;

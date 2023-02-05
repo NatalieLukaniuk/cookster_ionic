@@ -1,3 +1,4 @@
+import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { SetIsLoadingAction } from './../actions/ui.actions';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -76,7 +77,9 @@ export class RecipiesEffects {
           ...action,
           recipy: {
             ...action.recipy,
-            // calorificValue: this.recService.countRecipyCalorificValue(action.recipy.ingrediends) FIXME
+            calorificValue: this.dataMapping.countRecipyCalorificValue(
+              action.recipy.ingrediends
+            ),
           },
         };
         this.store.dispatch(new SetIsLoadingAction());
@@ -89,7 +92,6 @@ export class RecipiesEffects {
               ...action.recipy,
               id: res.name,
             };
-            this.router.navigate(['cookster']);
             return [
               new RecipiesActions.AddNewRecipySuccessAction(recipy),
               new UiActions.ShowSuccessMessageAction(
@@ -118,6 +120,27 @@ export class RecipiesEffects {
                 updatedUser.draftRecipies!.push(action.recipy);
               } else {
                 updatedUser.draftRecipies = [action.recipy];
+              }
+              return new UpdateUserAction(updatedUser);
+            } else return new UiActions.ErrorAction('no user');
+          })
+        )
+      )
+    )
+  );
+
+  updateDraftRecipy$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RecipiesActionTypes.UPDATE_DRAFT_RECIPY),
+      switchMap((action: RecipiesActions.UpdateDraftRecipyAction) =>
+        this.store.pipe(
+          select(getCurrentUser),
+          take(1),
+          map((user) => {
+            if (user) {
+              let updatedUser = _.cloneDeep(user);
+              if (updatedUser.draftRecipies) {
+                updatedUser.draftRecipies[action.order] = action.recipy;
               }
               return new UpdateUserAction(updatedUser);
             } else return new UiActions.ErrorAction('no user');
@@ -161,7 +184,9 @@ export class RecipiesEffects {
           ...action,
           recipy: {
             ...action.recipy,
-            // calorificValue: this.recService.countRecipyCalorificValue(action.recipy.ingrediends) FIXME
+            calorificValue: this.dataMapping.countRecipyCalorificValue(
+              action.recipy.ingrediends
+            ),
           },
         };
         return updated;
@@ -233,8 +258,7 @@ export class RecipiesEffects {
   constructor(
     private actions$: Actions,
     private recipiesService: RecipiesApiService,
-    // private recService: RecipiesService, FIXME
-    private router: Router,
+    private dataMapping: DataMappingService,
     private productsApiService: ProductsApiService,
     private store: Store
   ) {}

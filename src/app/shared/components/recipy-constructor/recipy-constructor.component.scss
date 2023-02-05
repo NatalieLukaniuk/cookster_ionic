@@ -1,4 +1,18 @@
 .ingredient-item-content {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+}
+
+.step-description {
+  white-space: normal;
+  margin-right: 15px;
+}
+
+.step-time {
+  display: flex;
+  align-items: center;
+  ion-icon {
+    margin-inline: 7px 3px;
+    font-size: 14px;
+  }
 }

@@ -105,7 +105,7 @@
     </ion-accordion-group>
   </ng-container>
 
-  <ng-container *ngSwitchCase="tabs[2].value"> 
+  <ng-container *ngSwitchCase="tabs[2].value">
     <ion-list>
       <ion-item
         swipeLeftNoConfirmation
@@ -113,10 +113,12 @@
         (itemSwiped)="onDeleteStep(step)"
       >
         <ion-label class="ingredient-item-content">
-          <span>{{ step.description }}</span>
-          <span
-            >{{step.timeActive | normalizeTime}}
-            {{ step.timePassive | normalizeTime }}</span
+          <span class="step-description">{{ step.description }}</span>
+          <span class="step-time"
+            ><ion-icon name="american-football-outline"></ion-icon
+            >{{ step.timeActive | normalizeTime }}
+            <ion-icon name="beer-outline"></ion-icon
+            >{{ step.timePassive | normalizeTime }}</span
           >
         </ion-label>
       </ion-item>
@@ -156,5 +158,16 @@
   </ion-accordion>
 </ion-accordion-group>
 
-<ion-button expand="full" (click)="saveDraft()">Зберегти в чернетки</ion-button>
-<ion-button *ngIf="isReadyToPublish" expand="full">Опублікувати</ion-button>
+<ion-button
+  expand="full"
+  (click)="recipyToPatch ? saveEditedDraft() : saveDraft()"
+  >{{ recipyToPatch ? "Оновити чернетку" : "Зберегти в чернетки" }}</ion-button
+>
+<ion-button
+  *ngIf="isReadyToPublish"
+  expand="full"
+  (click)="recipyToPatch && isPublished ? updateRecipy() : saveNewRecipy()"
+  >{{
+    recipyToPatch && isPublished ? "Оновити рецепт" : "Опублікувати"
+  }}</ion-button
+>

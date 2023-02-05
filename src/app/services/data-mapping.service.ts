@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Ingredient, MeasuringUnit, Product } from '../models/recipies.models';
 import {
+  getCalorificValue,
   getDefaultMeasuringUnit,
   getIngredientText,
   getProductText,
@@ -56,5 +57,15 @@ export class DataMappingService {
 
   transformToGr(ingrId: string, amount: number, unit: MeasuringUnit) {
     return transformToGr(ingrId, amount, unit, this.products$.value);
+  }
+
+  countRecipyCalorificValue(ingreds: Ingredient[]){
+    let calories = 0;
+    let totalAmount = 0;
+    ingreds.forEach(ingr => {
+      totalAmount += ingr.amount;
+      calories += ingr.amount * getCalorificValue(ingr, this.products$.value)
+    })
+    return calories / totalAmount
   }
 }

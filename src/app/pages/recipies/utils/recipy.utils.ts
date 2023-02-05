@@ -401,3 +401,7 @@ export function transformToGr(
       return 0;
   }
 }
+
+export function getCalorificValue(ingr: Ingredient, allProducts: Product[]): number {
+  return allProducts.find(product => product.id == ingr.product)!.calories
+}
