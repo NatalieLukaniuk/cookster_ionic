@@ -10,7 +10,7 @@ export interface NewRecipy {
   clonedBy?: string;
   clonedOn?: number;
   originalRecipy?: string;
-  isSplitIntoGroups: IngredientsGroup[];
+  isSplitIntoGroups: boolean;
   isBaseRecipy: boolean;
   notApproved?: boolean;
   source?: string;
@@ -32,12 +32,11 @@ export interface Recipy extends NewRecipy {
   clonedBy?: string;
   clonedOn?: number;
   originalRecipy?: string;
-  isSplitIntoGroups: IngredientsGroup[];
+  isSplitIntoGroups: boolean;
   isCheckedAndApproved?: boolean;
   calorificValue?: number;
   source?: string;
 }
-
 
 export interface DraftRecipy {
   name: string;
@@ -51,7 +50,7 @@ export interface DraftRecipy {
   clonedBy?: string;
   clonedOn?: number;
   originalRecipy?: string;
-  isSplitIntoGroups: IngredientsGroup[] | boolean;
+  isSplitIntoGroups: boolean;
   isBaseRecipy: boolean;
   notApproved?: boolean;
   source?: string;
@@ -247,14 +246,6 @@ export interface IngredientsByGroup {
   souce: Ingredient[];
   dough: Ingredient[];
   decoration: Ingredient[];
-}
-
-export class ingredientsByGroup implements IngredientsByGroup {
-  main: Ingredient[] = [];
-  decoration: Ingredient[] = [];
-  dough: Ingredient[] = [];
-  souce: Ingredient[] = [];
-  filling: Ingredient[] = [];
 }
 
 export const ingredientsGroupTitle = (eng: string): string => {

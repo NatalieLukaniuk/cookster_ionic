@@ -129,7 +129,7 @@ export class RecipyConstructorComponent implements OnInit {
       type: this.selectedTags,
       author: this.currentUser!.email,
       createdOn: Date.now(),
-      isSplitIntoGroups: [],
+      isSplitIntoGroups: this.isSplitIntoGroups,
       isBaseRecipy: this.isBaseRecipy,
       source: this.recipySource,
     };

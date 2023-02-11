@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import {
   IngredientsByGroup,
-  ingredientsByGroup,
   ingredientsGroupTitle,
   Recipy,
 } from 'src/app/models/recipies.models';
@@ -35,7 +34,7 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
   isEditPortions = false;
 
   isSplitToGroups: boolean = false;
-  ingredientsByGroup: IngredientsByGroup = new ingredientsByGroup();
+  ingredientsByGroup = <Record<string, any>>{};
 
   portionsToServe: number = 4;
   portionSize: number = AVERAGE_PORTION;
@@ -59,10 +58,7 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      this.recipy?.isSplitIntoGroups &&
-      !!this.recipy.isSplitIntoGroups.length
-    ) {
+    if (this.recipy.isSplitIntoGroups) {
       this.isSplitToGroups = true;
       this.getIngredientsByGroup();
     }
@@ -71,12 +67,24 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
   getIngredientsByGroup() {
     if (!!this.recipy && this.recipy.isSplitIntoGroups) {
       let ingredients = this.recipy.ingrediends;
-      this.recipy.isSplitIntoGroups.forEach((group) => {
+      let groups = this.getGroups();
+
+      groups.forEach((group) => {
         this.ingredientsByGroup[group] = ingredients.filter(
           (ingredient) => ingredient.group == group
         );
       });
     }
+  }
+
+  getGroups(): string[] {
+    let group: string[] = [];
+    for (let ingr of this.recipy.ingrediends) {
+      if (ingr.group && !group.includes(ingr.group)) {
+        group.push(ingr.group);
+      }
+    }
+    return group;
   }
 
   getCoeficient() {

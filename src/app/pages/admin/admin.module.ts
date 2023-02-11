@@ -12,6 +12,7 @@ import { IonicModule } from '@ionic/angular';
 import { AdminPageRoutingModule } from './admin-routing.module';
 
 import { AdminPage } from './admin.page';
+import { AdminTableComponent } from './components/admin-table/admin-table.component';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { AdminPage } from './admin.page';
     ProductsComponent,
     RecipiesCommentsComponent,
     UpdateProductsComponent,
+    AdminTableComponent
   ],
 })
 export class AdminPageModule {}

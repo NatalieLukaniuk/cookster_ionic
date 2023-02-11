@@ -10,10 +10,6 @@ import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
   styleUrls: ['./admin.page.scss'],
 })
 export class AdminPage implements OnInit {
-
-  recipies$ = this.store.pipe(select(getAllRecipies));
-  products$ = this.store.pipe(select(getAllProducts));
-
   pages = [
     { name: 'Рецепти', path: `recipies` },
     { name: 'Продукти', path: 'products' },
@@ -21,10 +17,9 @@ export class AdminPage implements OnInit {
     { name: 'Коментарі до рецептів', path: 'recipies-comments' },
   ];
 
-  constructor(private store: Store<IAppState>) { }
+  recipies$ = this.store.pipe(select(getAllRecipies));
+  products$ = this.store.pipe(select(getAllProducts));
+  constructor(private store: Store<IAppState>) {}
 
-  ngOnInit() {
-    
-  }
-
+  ngOnInit() {}
 }
