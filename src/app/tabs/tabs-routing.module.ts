@@ -39,6 +39,10 @@ const routes: Routes = [
       {
         path: 'draft-recipies',
         loadChildren: () => import('../pages/draft-recipies/draft-recipies.module').then( m => m.DraftRecipiesPageModule)
+      },
+      {
+        path: 'admin',
+        loadChildren: () => import('../pages/admin/admin.module').then( m => m.AdminPageModule)
       }
     ]
   },

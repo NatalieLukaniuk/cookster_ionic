@@ -19,6 +19,7 @@ import { combineLatest } from 'rxjs';
 import { IAppState } from './store/reducers';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { Role } from './models/auth.models';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +39,8 @@ export class AppComponent implements OnInit {
 
   isLoading$ = this.store.pipe(select(getIsLoading));
   user$ = this.store.pipe(select(getCurrentUser));
+
+  Role = Role;
 
   constructor(
     private store: Store<IAppState>,

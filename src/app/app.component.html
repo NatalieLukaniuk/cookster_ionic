@@ -25,6 +25,14 @@
             </ion-label>
           </ion-item>
         </ion-menu-toggle>     
+        <ion-menu-toggle autoHide="false" *ngIf="(user$ | async)?.role == Role.Admin">
+          <ion-item routerLink="/tabs/admin" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-icon slot="start" name="cog-outline"></ion-icon>
+            <ion-label>
+              Адмін панель
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
         <ion-menu-toggle autoHide="false">
           <ion-item button (click)="logout()" detail="false">
             <ion-icon slot="start" name="log-out"></ion-icon>
