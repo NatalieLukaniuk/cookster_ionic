@@ -77,7 +77,7 @@
         (itemSwiped)="onDeleteIngr(ingredient)"
       >
         <ion-label class="ingredient-item-content">
-          <span>{{ ingredient.ingredient }}</span>
+          <span>{{ getIngredient(ingredient.product) }}</span>
           <span
             >{{
               ingredient.amount
@@ -107,7 +107,8 @@
 
   <ng-container *ngSwitchCase="tabs[2].value">
     <ion-list>
-      <ion-item
+      <ion-reorder-group [disabled]="false" (ionItemReorder)="handleReorder($any($event))">
+        <ion-item
         swipeLeftNoConfirmation
         *ngFor="let step of steps"
         (itemSwiped)="onDeleteStep(step)"
@@ -121,7 +122,10 @@
             >{{ step.timePassive | normalizeTime }}</span
           >
         </ion-label>
+        <ion-reorder slot="end"></ion-reorder>
       </ion-item>
+      </ion-reorder-group>
+      
     </ion-list>
     <ion-accordion-group>
       <ion-accordion value="first">

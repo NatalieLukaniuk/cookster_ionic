@@ -1,7 +1,9 @@
+import { DataMappingService } from './../../../services/data-mapping.service';
 import { NewRecipy } from './../../../models/recipies.models';
 import {
   UpdateDraftRecipyAction,
   AddNewRecipyAction,
+  UpdateRecipyAction,
 } from './../../../store/actions/recipies.actions';
 import { AddDraftRecipyAction } from '../../../store/actions/recipies.actions';
 import { Store } from '@ngrx/store';
@@ -20,6 +22,7 @@ import {
   ComplexityDescription,
 } from 'src/app/models/recipies.models';
 import { getUnitText } from 'src/app/pages/recipies/utils/recipy.utils';
+import { ItemReorderEventDetail } from '@ionic/angular';
 
 @Component({
   selector: 'app-recipy-constructor',
@@ -58,7 +61,7 @@ export class RecipyConstructorComponent implements OnInit {
 
   currentTab = this.tabs[0].value;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private dataMapping: DataMappingService) {}
 
   getUnitText = getUnitText;
 
@@ -137,24 +140,25 @@ export class RecipyConstructorComponent implements OnInit {
   collectDataExistingRecipy(): Recipy | null {
     if (this.recipyToPatch && 'id' in this.recipyToPatch) {
       return {
-        id: this.recipyToPatch.id,
+        ...this.recipyToPatch,
+        // id: this.recipyToPatch.id,
         name: this.recipyName,
         ingrediends: this.ingredients,
         complexity: this.complexity,
         steps: this.steps,
         type: this.selectedTags,
-        author: this.recipyToPatch.author,
-        createdOn: this.recipyToPatch?.createdOn,
-        isSplitIntoGroups: this.recipyToPatch.isSplitIntoGroups,
+        // author: this.recipyToPatch.author,
+        // createdOn: this.recipyToPatch?.createdOn,
+        isSplitIntoGroups: this.isSplitIntoGroups,
         isBaseRecipy: this.isBaseRecipy,
         source: this.recipySource,
         editedBy: this.currentUser!.email,
-        isCheckedAndApproved: this.recipyToPatch.isCheckedAndApproved,
-        notApproved: this.recipyToPatch.notApproved,
-        photo: this.recipyToPatch.photo,
-        lastEdited: Date.now()
+        // isCheckedAndApproved: this.recipyToPatch.isCheckedAndApproved,
+        // notApproved: this.recipyToPatch.notApproved,
+        // photo: this.recipyToPatch.photo,
+        lastEdited: Date.now(),
       };
-    } else return null
+    } else return null;
   }
 
   saveNewRecipy() {
@@ -162,7 +166,13 @@ export class RecipyConstructorComponent implements OnInit {
     this.store.dispatch(new AddNewRecipyAction(recipy));
   }
 
-  updateRecipy() {}
+  updateRecipy() {
+    let updated: Recipy | null = this.collectDataExistingRecipy();
+    console.log(updated);
+    if (updated) {
+      this.store.dispatch(new UpdateRecipyAction(updated));
+    }
+  }
 
   onSplitChange(event: any) {
     this.isSplitIntoGroups = event.detail.checked;
@@ -236,5 +246,22 @@ export class RecipyConstructorComponent implements OnInit {
 
   onAddNewStep(step: PreparationStep) {
     this.steps.push(step);
+  }
+
+  getIngredient(product: string) {
+    return this.dataMapping.getProductNameById(product);
+  }
+
+  handleReorder(ev: CustomEvent<ItemReorderEventDetail>) {
+    ev.detail.complete();
+    this.steps = this.move(ev.detail.from, ev.detail.to, this.steps);
+    
+  }
+
+  move(from: number, to: number, arr: any[]) {
+    const newArr = [...arr];
+    const item = newArr.splice(from, 1)[0];
+    newArr.splice(to, 0, item);
+    return newArr;
   }
 }
