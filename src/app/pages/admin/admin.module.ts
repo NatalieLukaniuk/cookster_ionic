@@ -1,3 +1,7 @@
+import { UpdateProductsComponent } from './pages/update-products/update-products.component';
+import { RecipiesCommentsComponent } from './pages/recipies-comments/recipies-comments.component';
+import { ProductsComponent } from './pages/products/products.component';
+import { RecipiesComponent } from './pages/recipies/recipies.component';
 import { SharedModule } from './../../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -15,8 +19,14 @@ import { AdminPage } from './admin.page';
     FormsModule,
     IonicModule,
     AdminPageRoutingModule,
-    SharedModule
+    SharedModule,
   ],
-  declarations: [AdminPage]
+  declarations: [
+    AdminPage,
+    RecipiesComponent,
+    ProductsComponent,
+    RecipiesCommentsComponent,
+    UpdateProductsComponent,
+  ],
 })
 export class AdminPageModule {}
