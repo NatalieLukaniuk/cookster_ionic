@@ -65,13 +65,13 @@ export class LoadNewIngredientsAction implements Action {
   readonly type = RecipiesActionTypes.GET_NEW_INGREDIENTS_ACTION;
   constructor() {}
 }
-export class NewIngredientSavedAction implements Action {
+export class NewIngredientSavedAction implements Action { // this is not used anymore
   readonly type = RecipiesActionTypes.NEW_INGREDIENT_SAVED;
   constructor() {}
 }
 export class AddNewIngredientAction implements Action {
   readonly type = RecipiesActionTypes.ADD_NEW_INGREDIENT;
-  constructor(public ingredientName: string) {}
+  constructor(public ingredient: Product) {}
 }
 export class UpdateRecipyAction implements Action {
   readonly type = RecipiesActionTypes.UPDATE_RECIPY;

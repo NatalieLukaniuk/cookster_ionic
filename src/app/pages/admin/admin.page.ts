@@ -15,6 +15,7 @@ export class AdminPage implements OnInit {
     { name: 'Продукти', path: 'products' },
     { name: 'Редагування продуктів', path: 'update-products' },
     { name: 'Коментарі до рецептів', path: 'recipies-comments' },
+    { name: 'Додати продукт', path: 'add-product' },
   ];
 
   recipies$ = this.store.pipe(select(getAllRecipies));

@@ -1,3 +1,4 @@
+import { AddProductComponent } from './pages/add-product/add-product.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -30,6 +31,11 @@ const routes: Routes = [
   {
     path: 'recipies-comments',
     component: RecipiesCommentsComponent,
+    pathMatch: 'full',
+  },
+  {
+    path: 'add-product',
+    component: AddProductComponent,
     pathMatch: 'full',
   }
 ];

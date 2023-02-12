@@ -264,3 +264,21 @@ export const ingredientsGroupTitle = (eng: string): string => {
       return '';
   }
 };
+
+export const ProductTypeOptions = [
+  ProductType.fluid,
+  ProductType.spice,
+  ProductType.herb,
+  ProductType.hardItem,
+  ProductType.hardHomogenious,
+  ProductType.granular
+];
+
+export enum ProductTypeText {
+  'рідкий продукт' = 1,
+  'подрібнена спеція',
+  'трава',
+  'твердий продукт',
+  'твердий однорідний',
+  'сипучий продукт (крупа, борошно)'
+}

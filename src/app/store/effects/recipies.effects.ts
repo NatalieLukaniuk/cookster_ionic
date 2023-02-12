@@ -241,20 +241,6 @@ export class RecipiesEffects {
     )
   );
 
-  saveUnknownIngredient$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(RecipiesActionTypes.ADD_NEW_INGREDIENT),
-      switchMap((action: RecipiesActions.AddNewIngredientAction) =>
-        this.recipiesService
-          .saveToIngredientsToAddArray(action.ingredientName)
-          .pipe(
-            map((res) => new RecipiesActions.NewIngredientSavedAction()),
-            catchError((error) => of(new UiActions.ErrorAction(error)))
-          )
-      )
-    )
-  );
-
   constructor(
     private actions$: Actions,
     private recipiesService: RecipiesApiService,

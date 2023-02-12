@@ -55,6 +55,13 @@ export function RecipiesReducers(
         ingredientsToAdd: action.nameArray,
       };
     }
+
+    case RecipiesActionTypes.ADD_NEW_INGREDIENT: {
+      return {
+        ...state,
+        allProducts: addProduct(state.allProducts, action.ingredient),
+      };
+    }
     default:
       return { ...state };
   }
@@ -78,5 +85,14 @@ export function updateRecipy(
       return updatedRecipy;
     } else return recipy;
   });
+  return _array;
+}
+
+export function addProduct(
+  allProducts: Product[],
+  ingredient: Product
+): Product[] {
+  let _array = allProducts.map((product) => product);
+  _array.unshift(ingredient);
   return _array;
 }

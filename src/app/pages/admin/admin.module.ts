@@ -1,3 +1,4 @@
+import { AddProductComponent } from './pages/add-product/add-product.component';
 import { UpdateProductsComponent } from './pages/update-products/update-products.component';
 import { RecipiesCommentsComponent } from './pages/recipies-comments/recipies-comments.component';
 import { ProductsComponent } from './pages/products/products.component';
@@ -5,7 +6,7 @@ import { RecipiesComponent } from './pages/recipies/recipies.component';
 import { SharedModule } from './../../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -21,6 +22,7 @@ import { AdminTableComponent } from './components/admin-table/admin-table.compon
     IonicModule,
     AdminPageRoutingModule,
     SharedModule,
+    ReactiveFormsModule
   ],
   declarations: [
     AdminPage,
@@ -28,7 +30,8 @@ import { AdminTableComponent } from './components/admin-table/admin-table.compon
     ProductsComponent,
     RecipiesCommentsComponent,
     UpdateProductsComponent,
-    AdminTableComponent
+    AdminTableComponent,
+    AddProductComponent
   ],
 })
 export class AdminPageModule {}
