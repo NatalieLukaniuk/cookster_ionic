@@ -202,6 +202,7 @@ export const MeasuringUnitOptionsFluid = [
   MeasuringUnit.teaSpoon,
   MeasuringUnit.coffeeSpoon,
   MeasuringUnit.cup,
+  MeasuringUnit.none
 ];
 
 export const MeasuringUnitOptionsSpice = [
@@ -211,6 +212,7 @@ export const MeasuringUnitOptionsSpice = [
   MeasuringUnit.coffeeSpoon,
   MeasuringUnit.pinch,
   MeasuringUnit.cup,
+  MeasuringUnit.none
 ];
 
 export const MeasuringUnitOptionsHerbs = [
@@ -219,12 +221,14 @@ export const MeasuringUnitOptionsHerbs = [
   MeasuringUnit.pinch,
   MeasuringUnit.bunch,
   MeasuringUnit.cup,
+  MeasuringUnit.none
 ];
 
 export const MeasuringUnitOptionsHardItems = [
   MeasuringUnit.gr,
   MeasuringUnit.kg,
   MeasuringUnit.item,
+  MeasuringUnit.none
 ];
 
 export const MeasuringUnitOptionsGranular = [
@@ -233,11 +237,13 @@ export const MeasuringUnitOptionsGranular = [
   MeasuringUnit.dessertSpoon,
   MeasuringUnit.tableSpoon,
   MeasuringUnit.cup,
+  MeasuringUnit.none
 ];
 
 export const MeasuringUnitOptionsHardHomogeneous = [
   MeasuringUnit.gr,
   MeasuringUnit.kg,
+  MeasuringUnit.none
 ];
 
 export interface IngredientsByGroup {

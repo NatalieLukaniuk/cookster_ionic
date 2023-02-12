@@ -111,7 +111,7 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
   }
 
   get isAddDisabled() {
-    return !this.selectedProduct || !+this.quantity;
+    return !this.selectedProduct || (!+this.quantity && this.unit !== MeasuringUnit.none);
   }
 
   clear() {
