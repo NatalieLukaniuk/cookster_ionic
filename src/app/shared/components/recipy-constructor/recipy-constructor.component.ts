@@ -59,6 +59,8 @@ export class RecipyConstructorComponent implements OnInit {
   ingredients: Ingredient[] = [];
   steps: PreparationStep[] = [];
 
+  photo: string = '';
+
   currentTab = this.tabs[0].value;
 
   constructor(private store: Store, private dataMapping: DataMappingService) {}
@@ -82,6 +84,9 @@ export class RecipyConstructorComponent implements OnInit {
       }
       if (this.recipyToPatch.type?.length) {
         this.selectedTags = _.cloneDeep(this.recipyToPatch.type);
+      }
+      if (this.recipyToPatch.photo) {
+        this.photo = this.recipyToPatch.photo;
       }
     }
   }
@@ -135,27 +140,23 @@ export class RecipyConstructorComponent implements OnInit {
       isSplitIntoGroups: this.isSplitIntoGroups,
       isBaseRecipy: this.isBaseRecipy,
       source: this.recipySource,
+      photo: this.photo
     };
   }
   collectDataExistingRecipy(): Recipy | null {
     if (this.recipyToPatch && 'id' in this.recipyToPatch) {
       return {
         ...this.recipyToPatch,
-        // id: this.recipyToPatch.id,
         name: this.recipyName,
         ingrediends: this.ingredients,
         complexity: this.complexity,
         steps: this.steps,
         type: this.selectedTags,
-        // author: this.recipyToPatch.author,
-        // createdOn: this.recipyToPatch?.createdOn,
         isSplitIntoGroups: this.isSplitIntoGroups,
         isBaseRecipy: this.isBaseRecipy,
         source: this.recipySource,
         editedBy: this.currentUser!.email,
-        // isCheckedAndApproved: this.recipyToPatch.isCheckedAndApproved,
-        // notApproved: this.recipyToPatch.notApproved,
-        // photo: this.recipyToPatch.photo,
+        photo: this.photo,
         lastEdited: Date.now(),
       };
     } else return null;
@@ -255,7 +256,6 @@ export class RecipyConstructorComponent implements OnInit {
   handleReorder(ev: CustomEvent<ItemReorderEventDetail>) {
     ev.detail.complete();
     this.steps = this.move(ev.detail.from, ev.detail.to, this.steps);
-    
   }
 
   move(from: number, to: number, arr: any[]) {
@@ -263,5 +263,9 @@ export class RecipyConstructorComponent implements OnInit {
     const item = newArr.splice(from, 1)[0];
     newArr.splice(to, 0, item);
     return newArr;
+  }
+
+  onFileUploaded(event: string) {
+    this.photo = event;
   }
 }

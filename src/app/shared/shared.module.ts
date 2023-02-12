@@ -1,3 +1,4 @@
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { SwipeLeftNoConfirmationDirective } from './directives/swipe-left-no-confirmation.directive';
 import { InputDialogComponent } from './components/dialogs/input-dialog/input-dialog.component';
 import { SelectOptionDialogComponent } from './components/dialogs/select-option-dialog/select-option-dialog.component';
@@ -41,6 +42,7 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
     RecipyConstructorComponent,
     AddIngredientComponent,
     AddStepComponent,
+    FileUploadComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule,],
   exports: [
@@ -58,6 +60,7 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
     RecipyConstructorComponent,
     AddIngredientComponent,
     AddStepComponent,
+    FileUploadComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

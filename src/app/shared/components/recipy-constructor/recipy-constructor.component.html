@@ -67,6 +67,13 @@
       ></ion-checkbox>
       <ion-label>Базовий рецепт</ion-label>
     </ion-item>
+    <div>
+      <app-image *ngIf="photo.length" [imagePath]="photo"></app-image>
+      <app-file-upload *ngIf="!photo.length"
+        (fileUploaded)="onFileUploaded($event)"
+      ></app-file-upload>
+
+    </div>
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[1].value">
@@ -107,25 +114,27 @@
 
   <ng-container *ngSwitchCase="tabs[2].value">
     <ion-list>
-      <ion-reorder-group [disabled]="false" (ionItemReorder)="handleReorder($any($event))">
-        <ion-item
-        swipeLeftNoConfirmation
-        *ngFor="let step of steps"
-        (itemSwiped)="onDeleteStep(step)"
+      <ion-reorder-group
+        [disabled]="false"
+        (ionItemReorder)="handleReorder($any($event))"
       >
-        <ion-label class="ingredient-item-content">
-          <span class="step-description">{{ step.description }}</span>
-          <span class="step-time"
-            ><ion-icon name="american-football-outline"></ion-icon
-            >{{ step.timeActive | normalizeTime }}
-            <ion-icon name="beer-outline"></ion-icon
-            >{{ step.timePassive | normalizeTime }}</span
-          >
-        </ion-label>
-        <ion-reorder slot="end"></ion-reorder>
-      </ion-item>
+        <ion-item
+          swipeLeftNoConfirmation
+          *ngFor="let step of steps"
+          (itemSwiped)="onDeleteStep(step)"
+        >
+          <ion-label class="ingredient-item-content">
+            <span class="step-description">{{ step.description }}</span>
+            <span class="step-time"
+              ><ion-icon name="american-football-outline"></ion-icon
+              >{{ step.timeActive | normalizeTime }}
+              <ion-icon name="beer-outline"></ion-icon
+              >{{ step.timePassive | normalizeTime }}</span
+            >
+          </ion-label>
+          <ion-reorder slot="end"></ion-reorder>
+        </ion-item>
       </ion-reorder-group>
-      
     </ion-list>
     <ion-accordion-group>
       <ion-accordion value="first">
@@ -147,13 +156,17 @@
     </ion-item>
     <div class="ion-padding" slot="content">
       <ion-list>
-        <ion-list-header *ngIf="notReadyMandatory.length">Обов'язково:</ion-list-header>
+        <ion-list-header *ngIf="notReadyMandatory.length"
+          >Обов'язково:</ion-list-header
+        >
         <ion-item *ngFor="let item of notReadyMandatory">
           <ion-label>{{ item }}</ion-label>
         </ion-item>
       </ion-list>
       <ion-list>
-        <ion-list-header *ngIf="notReadyOptional.length">За бажанням:</ion-list-header>
+        <ion-list-header *ngIf="notReadyOptional.length"
+          >За бажанням:</ion-list-header
+        >
         <ion-item *ngFor="let item of notReadyOptional">
           <ion-label>{{ item }}</ion-label>
         </ion-item>
@@ -165,7 +178,9 @@
 <ion-button
   expand="full"
   (click)="recipyToPatch && isSavedDraft ? saveEditedDraft() : saveDraft()"
-  >{{ recipyToPatch && isSavedDraft ? "Оновити чернетку" : "Зберегти в чернетки" }}</ion-button
+  >{{
+    recipyToPatch && isSavedDraft ? "Оновити чернетку" : "Зберегти в чернетки"
+  }}</ion-button
 >
 <ion-button
   *ngIf="isReadyToPublish"
