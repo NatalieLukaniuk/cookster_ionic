@@ -85,9 +85,14 @@
       >
         <ion-label class="ingredient-item-content">
           <span>{{ getIngredient(ingredient.product) }}</span>
-          <ion-chip *ngIf="isSplitIntoGroups && ingredient.group">{{
-            ingredient.group
-          }}</ion-chip>
+          <app-add-group-modal
+            *ngIf="isSplitIntoGroups && ingredient.group"
+            [ingredId]="ingredient.product"
+            [groups]="groups"
+            [preselectedGroup]="ingredient.group"
+            [textTitle]="ingredient.group"
+            (onGroupSelected)="onGroupSelected($event, index)"
+          ></app-add-group-modal>
           <app-add-group-modal
             *ngIf="isSplitIntoGroups && !ingredient.group"
             [ingredId]="ingredient.product"

@@ -40,14 +40,21 @@
   </ion-list>
 </ng-container>
 <ng-container>
-  <ng-container *ngFor="let item of ingredientsByGroup | keyvalue">
-    <ng-container *ngIf="item.value.length > 0">
-      <h6 class="padding-inline">{{ item.key }}</h6>
-      <app-ingredient
-        *ngFor="let ingredient of item.value"
-        [ingredient]="ingredient"
-        [coefficient]="coeficient"
-      ></app-ingredient>
-    </ng-container>
-  </ng-container>
+  <ion-accordion-group>
+    <ion-accordion
+      [value]="item"
+      *ngFor="let item of ingredientsByGroup | keyvalue"
+    >
+      <ion-item slot="header" color="tertiary">
+        <ion-label>{{ item.key }}</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <app-ingredient
+          *ngFor="let ingredient of item.value"
+          [ingredient]="ingredient"
+          [coefficient]="coeficient"
+        ></app-ingredient>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
 </ng-container>

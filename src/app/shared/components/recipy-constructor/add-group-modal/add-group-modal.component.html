@@ -1,6 +1,8 @@
 <ion-button [id]="'modal' + ingredId"
-  ><ion-icon name="add-outline"></ion-icon
-></ion-button>
+  >
+  <ion-icon *ngIf="!textTitle" name="add-outline"></ion-icon>
+  <span *ngIf="textTitle">{{textTitle}}</span>
+</ion-button>
 
 <ion-modal [trigger]="'modal' + ingredId">
   <ng-template>

@@ -18,6 +18,8 @@ import { areSetsEqual } from 'src/app/shared/constants';
 export class AddGroupModalComponent implements OnChanges {
   @Input() groups: Set<string> | undefined;
   @Input() ingredId!: string;
+  @Input() textTitle: string | undefined;
+  @Input() preselectedGroup: string | undefined;
   @Output() onGroupSelected = new EventEmitter<string>();
 
   _groups: string[] = ['Основна страва'];
@@ -52,7 +54,12 @@ export class AddGroupModalComponent implements OnChanges {
       } else {
         this._groups = ['Основна страва'];
       }
-      this.selectedgroup = this._groups[0];
+      if(this.preselectedGroup){
+        this.selectedgroup = this.preselectedGroup
+      } else {
+        this.selectedgroup = this._groups[0];
+      }
+      
     }
   }
 
