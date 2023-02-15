@@ -42,7 +42,7 @@
 <ng-container>
   <ng-container *ngFor="let item of ingredientsByGroup | keyvalue">
     <ng-container *ngIf="item.value.length > 0">
-      <h6 class="padding-inline">{{ ingredientsGroupTitle(item.key) }}</h6>
+      <h6 class="padding-inline">{{ item.key }}</h6>
       <app-ingredient
         *ngFor="let ingredient of item.value"
         [ingredient]="ingredient"

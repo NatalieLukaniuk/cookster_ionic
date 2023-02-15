@@ -22,6 +22,7 @@ import {
   Output,
   ViewChild,
   OnDestroy,
+  Input,
 } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Store, select } from '@ngrx/store';
@@ -33,6 +34,10 @@ import { Store, select } from '@ngrx/store';
 })
 export class AddIngredientComponent implements OnInit, OnDestroy {
   @Output() addNewIngredient = new EventEmitter<Ingredient>();
+  @Input() isSplitIntoGroups: boolean = false;
+  @Input() groups: Set<string> | undefined;
+
+  _groups: string[] = ['Основна страва'];
 
   data: Product[] = [];
   keyword = 'name';
@@ -42,6 +47,7 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
   selectedProduct: Product | null = null;
   quantity: string = '';
   unit: MeasuringUnit = MeasuringUnit.gr;
+  selectedgroup: string = this._groups[0];
 
   @ViewChild('autocomplete') autocomplete: any;
 
@@ -58,7 +64,12 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.groups?.size) {
+      this._groups = Array.from(this.groups);
+      this.selectedgroup = this._groups[0];
+    }
+  }
 
   selectEvent(item: Product) {
     this.selectedProduct = item;
@@ -105,13 +116,19 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
         defaultUnit: this.unit,
         ingredient: this.selectedProduct.name,
       };
+      if (this.isSplitIntoGroups) {
+        ingr.group = this.selectedgroup;
+      }
       this.addNewIngredient.emit(ingr);
       this.clear();
     }
   }
 
   get isAddDisabled() {
-    return !this.selectedProduct || (!+this.quantity && this.unit !== MeasuringUnit.none);
+    return (
+      !this.selectedProduct ||
+      (!+this.quantity && this.unit !== MeasuringUnit.none)
+    );
   }
 
   clear() {
@@ -120,5 +137,10 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
     this.unit = MeasuringUnit.gr;
     this.autocomplete.clear();
     this.autocomplete.close();
+  }
+
+  onGroupName(event: string) {
+    this._groups.push(event);
+    this.selectedgroup = this._groups[this._groups.length - 1];
   }
 }

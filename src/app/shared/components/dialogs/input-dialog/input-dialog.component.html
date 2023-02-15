@@ -1,4 +1,4 @@
-<ion-button id="open-modal" expand="block">Open</ion-button>
+<ion-button id="open-modal" expand="block">{{ buttonText }}</ion-button>
 <ion-modal
   #modal
   trigger="open-modal"
@@ -9,19 +9,15 @@
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <!-- <ion-title>Виберіть час та кількість порцій</ion-title> -->
         <ion-buttons slot="end">
-          <ion-button (click)="modal.dismiss()">Close</ion-button>
+          <ion-button (click)="modal.dismiss()">Закрити</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
       <ion-item>
-        <ion-label position="floating">Number of portions to serve</ion-label>
-        <ion-input
-          [(ngModel)]="result"
-          [type]="inputType"
-        ></ion-input>
+        <ion-label position="floating">{{ inputFieldLabel }}</ion-label>
+        <ion-input [(ngModel)]="result" [type]="inputType"></ion-input>
       </ion-item>
     </ion-content>
   </ng-template>

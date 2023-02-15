@@ -69,10 +69,10 @@
     </ion-item>
     <div>
       <app-image *ngIf="photo.length" [imagePath]="photo"></app-image>
-      <app-file-upload *ngIf="!photo.length"
+      <app-file-upload
+        *ngIf="!photo.length"
         (fileUploaded)="onFileUploaded($event)"
       ></app-file-upload>
-
     </div>
   </ng-container>
 
@@ -85,6 +85,14 @@
       >
         <ion-label class="ingredient-item-content">
           <span>{{ getIngredient(ingredient.product) }}</span>
+          <ion-chip *ngIf="isSplitIntoGroups && ingredient.group">{{
+            ingredient.group
+          }}</ion-chip>
+          <ion-chip
+            *ngIf="isSplitIntoGroups && !ingredient.group"
+            (click)="addGroup(ingredient)"
+            ><ion-icon name="build-outline"></ion-icon
+          ></ion-chip>
           <span
             >{{
               ingredient.amount
@@ -105,6 +113,8 @@
         </ion-item>
         <div class="ion-padding" slot="content">
           <app-add-ingredient
+            [isSplitIntoGroups]="isSplitIntoGroups"
+            [groups]="groups"
             (addNewIngredient)="onAddIngredient($event)"
           ></app-add-ingredient>
         </div>

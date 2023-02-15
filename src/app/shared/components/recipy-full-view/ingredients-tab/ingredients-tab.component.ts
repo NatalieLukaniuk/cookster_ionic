@@ -8,8 +8,6 @@ import {
   EventEmitter,
 } from '@angular/core';
 import {
-  IngredientsByGroup,
-  ingredientsGroupTitle,
   Recipy,
 } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
@@ -40,8 +38,6 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
   portionSize: number = AVERAGE_PORTION;
 
   coeficient: number = 1;
-
-  ingredientsGroupTitle = ingredientsGroupTitle;
 
   constructor(private datamapping: DataMappingService) {}
 

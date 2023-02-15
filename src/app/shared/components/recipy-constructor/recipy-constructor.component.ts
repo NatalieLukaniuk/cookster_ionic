@@ -63,6 +63,12 @@ export class RecipyConstructorComponent implements OnInit {
 
   currentTab = this.tabs[0].value;
 
+  get groups(): Set<string> {
+    let mappedArray = this.ingredients.map((ingr) => ingr.group);
+    let filteredarray = mappedArray.filter((group) => group !== undefined);
+    return new Set(filteredarray as string[]);
+  }
+
   constructor(private store: Store, private dataMapping: DataMappingService) {}
 
   getUnitText = getUnitText;
@@ -73,6 +79,7 @@ export class RecipyConstructorComponent implements OnInit {
       this.recipyName = this.recipyToPatch.name;
       this.isBaseRecipy = this.recipyToPatch.isBaseRecipy;
       this.complexity = this.recipyToPatch.complexity;
+      this.isSplitIntoGroups = this.recipyToPatch.isSplitIntoGroups;
       if (this.recipyToPatch.source) {
         this.recipySource = this.recipyToPatch.source;
       }
@@ -140,7 +147,7 @@ export class RecipyConstructorComponent implements OnInit {
       isSplitIntoGroups: this.isSplitIntoGroups,
       isBaseRecipy: this.isBaseRecipy,
       source: this.recipySource,
-      photo: this.photo
+      photo: this.photo,
     };
   }
   collectDataExistingRecipy(): Recipy | null {
@@ -267,5 +274,9 @@ export class RecipyConstructorComponent implements OnInit {
 
   onFileUploaded(event: string) {
     this.photo = event;
+  }
+
+  addGroup(ingredient: Ingredient) {
+    console.log(ingredient);
   }
 }

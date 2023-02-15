@@ -61,7 +61,7 @@ export interface Ingredient {
   product: string; // product id in the firebase db // FIXME: rename to productID
   amount: number; // gramm
   defaultUnit: MeasuringUnit;
-  group?: IngredientsGroup;
+  group?: string;
   ingredient?: string;
   prep?: string[];
 }
@@ -246,30 +246,6 @@ export const MeasuringUnitOptionsHardHomogeneous = [
   MeasuringUnit.none
 ];
 
-export interface IngredientsByGroup {
-  main: Ingredient[];
-  filling: Ingredient[];
-  souce: Ingredient[];
-  dough: Ingredient[];
-  decoration: Ingredient[];
-}
-
-export const ingredientsGroupTitle = (eng: string): string => {
-  switch (eng) {
-    case 'main':
-      return 'Основна страва';
-    case 'decoration':
-      return 'Оздоблення';
-    case 'dough':
-      return 'Тісто';
-    case 'souce':
-      return 'Соус / підливка / маринад';
-    case 'filling':
-      return 'Начинка';
-    default:
-      return '';
-  }
-};
 
 export const ProductTypeOptions = [
   ProductType.fluid,
