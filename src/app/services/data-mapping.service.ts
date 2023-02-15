@@ -1,4 +1,3 @@
-import { ingredsThatAbsorbWater } from './../shared/constants';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Ingredient, MeasuringUnit, Product } from '../models/recipies.models';
@@ -45,44 +44,21 @@ export class DataMappingService {
     portionSize: number
   ) {
     let amount = 0;
-    const hasGrowingIngreds = ingredients.some((ingr) =>
-      ingredsThatAbsorbWater.some((item) => ingr.product === item.id)
-    );
-    if (!hasGrowingIngreds) {
-      for (let ingr of ingredients) {
-        if (
-          this.getIsIngredientInDB(ingr.product) &&
-          this.getIsIngredientIncludedInAmountCalculation(ingr)
-        ) {
-          amount = ingr.amount + amount; // amount of ingreds with calories
-        }
-      }
-    } else {
-      const growing = ingredients.filter((ingr) =>
-        ingredsThatAbsorbWater.some((item) => ingr.product === item.id)
-      );
-      const other = ingredients.filter(
-        (ingr) =>
-          !ingredsThatAbsorbWater.some((item) => ingr.product === item.id) &&
-          this.getIsIngredientIncludedInAmountCalculation(ingr)
-      );
-      for (let ingr of other) {
-        if (this.getIsIngredientInDB(ingr.product)) {
-          amount = ingr.amount + amount; // amount of ingreds with calories
-        }
-      }
-      for (let ingr of growing) {
-        if (this.getIsIngredientInDB(ingr.product)) {
-          amount =
-            ingr.amount *
-              ingredsThatAbsorbWater.find((item) => ingr.product === item.id)
-                ?.multiplyBy! +
-            amount;
-        }
+    for (let ingr of ingredients) {
+      if (
+        this.getIsIngredientInDB(ingr.product) &&
+        this.getIsIngredientIncludedInAmountCalculation(ingr)
+      ) {
+        amount = ingr.amount * this.getAmountChangeCoef(ingr.product) + amount; // amount of ingreds with calories
       }
     }
 
     return (portionsToServe * portionSize) / amount;
+  }
+
+  getAmountChangeCoef(ingrId: string): number {
+    return this.products$.value.find((item) => ingrId === item.id)!
+      .sizeChangeCoef;
   }
 
   transformToGr(ingrId: string, amount: number, unit: MeasuringUnit) {

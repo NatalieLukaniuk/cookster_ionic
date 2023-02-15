@@ -161,6 +161,7 @@ export interface Product {
   calories: number; //kKal,
   defaultUnit: MeasuringUnit;
   type: ProductType;
+  sizeChangeCoef: number
 }
 
 export enum ProductType {
