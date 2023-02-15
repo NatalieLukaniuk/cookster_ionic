@@ -203,7 +203,7 @@ export class PrepsComponent implements OnInit, OnDestroy {
     } else return false;
   }
 
-  dateSaved(suggestion: Suggestion): Date | null{
+  dateSaved(suggestion: Suggestion): Date | null {
     if (this.currentUser && !!this.currentUser.savedPreps) {
       let found = this.currentUser.savedPreps.find((savedS: Suggestion) => {
         return (
@@ -211,8 +211,8 @@ export class PrepsComponent implements OnInit, OnDestroy {
           savedS.recipyId === suggestion.recipyId
         );
       });
-      if(found){
-        return found.day
+      if (found) {
+        return found.day;
       } else return null;
     } else return null;
   }
@@ -233,7 +233,12 @@ export class PrepsComponent implements OnInit, OnDestroy {
                 prep.recipyId === suggestion.recipyId
               );
             });
-            this.store.dispatch(new UserActions.UpdateUserAction(updatedUser));
+            this.store.dispatch(
+              new UserActions.UpdateUserAction(
+                updatedUser,
+                `${suggestion.prepDescription} видалено`
+              )
+            );
           }
         }
       });
@@ -254,12 +259,16 @@ export class PrepsComponent implements OnInit, OnDestroy {
       if (this.currentUser && this.currentUser.savedPreps) {
         let updatedUser = _.cloneDeep(this.currentUser);
         updatedUser.savedPreps!.push(data);
-        this.store.dispatch(new UserActions.UpdateUserAction(updatedUser));
+        this.store.dispatch(
+          new UserActions.UpdateUserAction(updatedUser, `${data} додано`)
+        );
       } else if (this.currentUser) {
         let updatedUser = _.cloneDeep(this.currentUser);
         updatedUser.savedPreps = [];
         updatedUser.savedPreps.push(data);
-        this.store.dispatch(new UserActions.UpdateUserAction(updatedUser));
+        this.store.dispatch(
+          new UserActions.UpdateUserAction(updatedUser, `${data} додано`)
+        );
       }
     }
   }

@@ -20,7 +20,9 @@ export class PlannerService {
           updatedUser.planner = [];
         }
         updatedUser.planner.push(planner);
-        this.store.dispatch(new UpdateUserAction(updatedUser));
+        this.store.dispatch(
+          new UpdateUserAction(updatedUser, `Планер створено`)
+        );
       }
     });
   }
@@ -34,7 +36,9 @@ export class PlannerService {
             return planner;
           } else return plannerByDate;
         });
-        this.store.dispatch(new UpdateUserAction(updatedUser));
+        this.store.dispatch(
+          new UpdateUserAction(updatedUser, `Планер оновлено`)
+        );
       }
     });
   }
@@ -46,7 +50,9 @@ export class PlannerService {
         updatedUser.planner = updatedUser.planner!.filter(
           (plannerByDate) => plannerByDate.id !== planner.id
         );
-        this.store.dispatch(new UpdateUserAction(updatedUser));
+        this.store.dispatch(
+          new UpdateUserAction(updatedUser, `Планер видалено`)
+        );
       }
     });
   }
@@ -93,7 +99,9 @@ export class PlannerService {
             };
           }
         });
-        this.store.dispatch(new UpdateUserAction(updatedUser));
+        this.store.dispatch(
+          new UpdateUserAction(updatedUser, `Список покупок тепер активний`)
+        );
       }
     });
   }

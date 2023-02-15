@@ -22,7 +22,7 @@ export class CreateRecipyCollection implements Action {
 
 export class UpdateUserAction implements Action {
   readonly type = UserActionTypes.UPDATE_USER;
-  constructor(public user: Partial<User>) {}
+  constructor(public user: Partial<User>, public successMessage: string) {}
 }
 
 export class UpdateUserSuccessfulAction implements Action {

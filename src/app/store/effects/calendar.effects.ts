@@ -47,7 +47,10 @@ export class CalendarEffects {
                   } else return day;
                 }
               );
-              return new UpdateUserAction(updatedUser);
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipyId} видалено`
+              );
             } else return new ErrorAction('no user');
           })
         )
@@ -98,7 +101,10 @@ export class CalendarEffects {
                 updatedUser.details?.push(newDay);
               }
 
-              return new UpdateUserAction(updatedUser);
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipyId} додано`
+              );
             } else return new ErrorAction('no user');
           })
         )
@@ -134,7 +140,10 @@ export class CalendarEffects {
                   return day;
                 }
               );
-              return new UpdateUserAction(updatedUser);
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipyId} оновлено`
+              );
             } else return new ErrorAction('no user');
           })
         )
@@ -158,7 +167,10 @@ export class CalendarEffects {
                 action.previousEntry,
                 action.newEntry
               );
-              return new UpdateUserAction(updatedUser);
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipy} перенесено`
+              );
             } else return new ErrorAction('no user');
           })
         )

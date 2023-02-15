@@ -67,7 +67,9 @@ export class CalendarService {
         }
         return item;
       });
-      this.store.dispatch(new UpdateUserAction(userToSave));
+      this.store.dispatch(
+        new UpdateUserAction(userToSave, `${recipyId} збережено для ${day}`)
+      );
     } else if (!!day) {
       let itemToSave: DayDetails = new DayDetails(day);
       switch (mealTime) {
@@ -81,7 +83,9 @@ export class CalendarService {
           itemToSave.dinner.push({ recipyId, portions, amountPerPortion });
       }
       userToSave.details!.push(itemToSave);
-      this.store.dispatch(new UpdateUserAction(userToSave));
+      this.store.dispatch(
+        new UpdateUserAction(userToSave, `${recipyId} збережено для ${day}`)
+      );
     }
   }
 
@@ -107,7 +111,9 @@ export class CalendarService {
       ...userToSave,
       details: details,
     };
-    this.store.dispatch(new UpdateUserAction(updatedUser));
+    this.store.dispatch(
+      new UpdateUserAction(updatedUser, `${updatedDetails.day} оновлено`)
+    );
   }
 
   generateInRange(start: string, end: string): Day[] {

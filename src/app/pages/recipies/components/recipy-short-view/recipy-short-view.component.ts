@@ -128,8 +128,12 @@ export class RecipyShortViewComponent implements OnInit {
           return coll;
         } else return coll;
       });
-      this.store.dispatch(new UpdateUserAction(updated));
-      // TODO: TOAST MESSAGE
+      this.store.dispatch(
+        new UpdateUserAction(
+          updated,
+          `${this.recipy.id} додано до колекції ${collection}`
+        )
+      );
     }
   }
 

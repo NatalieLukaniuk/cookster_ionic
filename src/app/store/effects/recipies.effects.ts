@@ -121,7 +121,10 @@ export class RecipiesEffects {
               } else {
                 updatedUser.draftRecipies = [action.recipy];
               }
-              return new UpdateUserAction(updatedUser);
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipy.name} додано в чернетки`
+              );
             } else return new UiActions.ErrorAction('no user');
           })
         )
@@ -142,7 +145,10 @@ export class RecipiesEffects {
               if (updatedUser.draftRecipies) {
                 updatedUser.draftRecipies[action.order] = action.recipy;
               }
-              return new UpdateUserAction(updatedUser);
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipy.name} - чернетку оновлено`
+              );
             } else return new UiActions.ErrorAction('no user');
           })
         )
@@ -167,7 +173,10 @@ export class RecipiesEffects {
                     item.createdOn !== action.recipy.createdOn
                 );
               }
-              return new UpdateUserAction(updatedUser);
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipy.name} - чернетку видалено`
+              );
             } else return new UiActions.ErrorAction('no user');
           })
         )

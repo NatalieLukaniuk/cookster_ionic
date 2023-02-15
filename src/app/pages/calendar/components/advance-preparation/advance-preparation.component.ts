@@ -111,7 +111,12 @@ export class AdvancePreparationComponent implements OnChanges {
                 item.recipyId == prep.recipyId
               )
           );
-          this.store.dispatch(new UserActions.UpdateUserAction(updatedUser));
+          this.store.dispatch(
+            new UserActions.UpdateUserAction(
+              updatedUser,
+              `${prep.prepDescription} видалено`
+            )
+          );
         }
       });
   }
