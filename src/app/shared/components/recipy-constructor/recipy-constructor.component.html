@@ -87,7 +87,7 @@
           <span>{{ getIngredient(ingredient.product) }}</span>
           <app-add-group-modal
             *ngIf="isSplitIntoGroups && ingredient.group"
-            [ingredId]="ingredient.product"
+            [ingredindex]="index"
             [groups]="groups"
             [preselectedGroup]="ingredient.group"
             [textTitle]="ingredient.group"
@@ -95,7 +95,7 @@
           ></app-add-group-modal>
           <app-add-group-modal
             *ngIf="isSplitIntoGroups && !ingredient.group"
-            [ingredId]="ingredient.product"
+            [ingredindex]="ingredients.length"
             [groups]="groups"
             (onGroupSelected)="onGroupSelected($event, index)"
           ></app-add-group-modal>

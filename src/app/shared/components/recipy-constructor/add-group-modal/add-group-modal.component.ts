@@ -17,7 +17,7 @@ import { areSetsEqual } from 'src/app/shared/constants';
 })
 export class AddGroupModalComponent implements OnChanges {
   @Input() groups: Set<string> | undefined;
-  @Input() ingredId!: string;
+  @Input() ingredindex!: number;
   @Input() textTitle: string | undefined;
   @Input() preselectedGroup: string | undefined;
   @Output() onGroupSelected = new EventEmitter<string>();
