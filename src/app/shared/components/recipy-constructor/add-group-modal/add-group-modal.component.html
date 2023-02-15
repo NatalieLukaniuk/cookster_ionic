@@ -1,0 +1,41 @@
+<ion-button [id]="'modal' + ingredId"
+  ><ion-icon name="add-outline"></ion-icon
+></ion-button>
+
+<ion-modal [trigger]="'modal' + ingredId">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Cancel</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button (click)="confirm()">Підтвердити</ion-button>
+        </ion-buttons>
+        <ion-title>Виберіть групу</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-radio-group [(ngModel)]="selectedgroup">
+        <ion-item *ngFor="let group of _groups">
+          <ion-label>{{ group }}</ion-label>
+          <ion-radio slot="end" [value]="group"></ion-radio>
+        </ion-item>
+        <ion-item button *ngIf="!addNewGroupOn" (click)="addNewGroupOn = true">
+          <ion-label>Додати групу</ion-label>
+        </ion-item>
+        <ion-item *ngIf="addNewGroupOn">
+          <ion-label position="floating">Введіть назву групи</ion-label>
+          <ion-input [(ngModel)]="newGroup" type="text"></ion-input>
+          <ion-button
+            slot="end"
+            class="confirm-add-group"
+            [disabled]="newGroup.length < 3"
+            (click)="addGroup()"
+            ><ion-icon slot="icon-only" name="checkmark-outline"></ion-icon
+          ></ion-button>
+        </ion-item>
+      </ion-radio-group>
+    </ion-content>
+  </ng-template>
+</ion-modal>

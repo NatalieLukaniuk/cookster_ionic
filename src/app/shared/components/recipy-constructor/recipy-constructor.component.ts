@@ -216,6 +216,9 @@ export class RecipyConstructorComponent implements OnInit {
     if (this.steps.length < 1) {
       list.push('Додайте опис приготування');
     }
+    if(this.isSplitIntoGroups && this.ingredients.some(ingr => !ingr.group)){
+      list.push('Вкажіть групи для інгридієнтів');
+    }
     return list;
   }
 
@@ -276,7 +279,7 @@ export class RecipyConstructorComponent implements OnInit {
     this.photo = event;
   }
 
-  addGroup(ingredient: Ingredient) {
-    console.log(ingredient);
+  onGroupSelected(event: string, index: number) {
+    this.ingredients[index].group = event;
   }
 }

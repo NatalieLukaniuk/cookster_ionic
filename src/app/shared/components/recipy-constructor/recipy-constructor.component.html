@@ -80,7 +80,7 @@
     <ion-list>
       <ion-item
         swipeLeftNoConfirmation
-        *ngFor="let ingredient of ingredients"
+        *ngFor="let ingredient of ingredients; let index = index"
         (itemSwiped)="onDeleteIngr(ingredient)"
       >
         <ion-label class="ingredient-item-content">
@@ -88,11 +88,12 @@
           <ion-chip *ngIf="isSplitIntoGroups && ingredient.group">{{
             ingredient.group
           }}</ion-chip>
-          <ion-chip
+          <app-add-group-modal
             *ngIf="isSplitIntoGroups && !ingredient.group"
-            (click)="addGroup(ingredient)"
-            ><ion-icon name="build-outline"></ion-icon
-          ></ion-chip>
+            [ingredId]="ingredient.product"
+            [groups]="groups"
+            (onGroupSelected)="onGroupSelected($event, index)"
+          ></app-add-group-modal>
           <span
             >{{
               ingredient.amount

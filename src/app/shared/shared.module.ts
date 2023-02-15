@@ -1,3 +1,4 @@
+import { AddGroupModalComponent } from './components/recipy-constructor/add-group-modal/add-group-modal.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { SwipeLeftNoConfirmationDirective } from './directives/swipe-left-no-confirmation.directive';
 import { InputDialogComponent } from './components/dialogs/input-dialog/input-dialog.component';
@@ -42,7 +43,8 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
     RecipyConstructorComponent,
     AddIngredientComponent,
     AddStepComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    AddGroupModalComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule,],
   exports: [
