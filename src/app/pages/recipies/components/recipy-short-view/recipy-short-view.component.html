@@ -4,7 +4,14 @@
     <ion-card-subtitle>
       <div class="flex-container">
         <div>
-          <div>{{ preparationTime | normalizeTime }}</div>
+          <span>
+            <ion-icon name="american-football-outline"></ion-icon>
+            {{ activePreparationTime() | normalizeTime }}
+          </span>
+          <span>
+            <ion-icon name="beer-outline"></ion-icon>
+            {{ passivePreparationTime() | normalizeTime }}
+          </span>
         </div>
         <div>
           <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
@@ -35,10 +42,20 @@
   <div class="overlay once" [class.visible]="isRecipyClicked">
     <div class="time-details">
       <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
-      {{ preparationTime | normalizeTime }}
+      
       <span *ngIf="isNeedsAdvancePreparation"
-        >, потребує попередньої підготовки</span
+        >потребує попередньої підготовки</span
       >
+    </div>
+    <div class="time">
+      <span>
+        <ion-icon name="american-football-outline"></ion-icon>
+        {{ activePreparationTime() | normalizeTime }}
+      </span>
+      <span>
+        <ion-icon name="beer-outline"></ion-icon>
+        {{ passivePreparationTime() | normalizeTime }}
+      </span>
     </div>
     <div>{{ complexity }} рецепт</div>
     <div class="advance-prep" *ngIf="isPrepSuggestions">

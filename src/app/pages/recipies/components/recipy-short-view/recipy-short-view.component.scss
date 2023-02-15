@@ -9,7 +9,7 @@ ion-card-subtitle {
 }
 
 ion-card-content {
-    height: 250px;
+  height: 250px;
 }
 
 .flex-container {
@@ -45,6 +45,13 @@ ion-card-content {
     }
   }
 
+  .time {
+    gap: 20px;
+    ion-icon {
+      margin-right: 0;
+    }
+  }
+
   &.visible {
     height: 260px;
     z-index: 2;
@@ -73,3 +80,5 @@ ion-card-content {
     font-weight: 600;
   }
 }
+
+
