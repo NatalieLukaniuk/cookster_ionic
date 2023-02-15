@@ -7,9 +7,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import {
-  Recipy,
-} from 'src/app/models/recipies.models';
+import { Recipy } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { AVERAGE_PORTION } from 'src/app/shared/constants';
 
@@ -85,16 +83,11 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
 
   getCoeficient() {
     if (this.recipy && this.portionsToServe) {
-      let amount = 0;
-      for (let ingr of this.recipy.ingrediends) {
-        if (
-          this.datamapping.getIsIngredientInDB(ingr.product) &&
-          this.datamapping.getIsIngredientIncludedInAmountCalculation(ingr)
-        ) {
-          amount = ingr.amount + amount; // amount of ingreds with calories
-        }
-      }
-      this.coeficient = (this.portionsToServe * this.portionSize) / amount;
+      this.coeficient = this.datamapping.getCoeficient(
+        this.recipy.ingrediends,
+        this.portionsToServe,
+        this.portionSize
+      );
     }
   }
 
