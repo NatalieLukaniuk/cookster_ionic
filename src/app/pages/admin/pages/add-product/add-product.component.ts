@@ -10,6 +10,7 @@ import {
 import {
   MeasuringUnit,
   MeasuringUnitOptions,
+  Product,
   ProductTypeOptions,
   ProductTypeText,
 } from 'src/app/models/recipies.models';
@@ -35,6 +36,7 @@ export class AddProductComponent implements OnInit {
       calories: new UntypedFormControl('', Validators.required),
       defaultUnit: new UntypedFormControl('', Validators.required),
       type: new UntypedFormControl('', Validators.required),
+      sizeChangeCoef: new UntypedFormControl('', Validators.required),
     });
   }
 
@@ -55,8 +57,16 @@ export class AddProductComponent implements OnInit {
   }
 
   submit() {
+    let product = {
+      name: this.productForm.controls['name'].value,
+      density: +this.productForm.controls['density'].value,
+      calories: +this.productForm.controls['calories'].value,
+      defaultUnit: this.productForm.controls['defaultUnit'].value,
+      type: this.productForm.controls['type'].value,
+      sizeChangeCoef: this.productForm.controls['sizeChangeCoef'].value,
+    }
     this.productsApi
-      .addProduct(this.productForm.value)
+      .addProduct(product)
       .subscribe((res: { name: string }) => {
         this.store.dispatch(
           new AddNewIngredientAction({

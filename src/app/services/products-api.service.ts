@@ -10,7 +10,7 @@ export class ProductsApiService {
   url = `https://cookster-12ac8-default-rtdb.firebaseio.com/products`;
   constructor(private http: HttpClient) {}
 
-  addProduct(product: Product): Observable<{ name: string }> {
+  addProduct(product: any): Observable<{ name: string }> {
     return this.http.post<{ name: string }>(`${this.url}.json`, product);
   }
 
