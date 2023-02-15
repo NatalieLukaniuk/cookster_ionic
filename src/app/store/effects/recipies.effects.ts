@@ -168,14 +168,12 @@ export class RecipiesEffects {
               let updatedUser = _.cloneDeep(user);
               if (updatedUser.draftRecipies) {
                 updatedUser.draftRecipies! = updatedUser.draftRecipies.filter(
-                  (item) =>
-                    item.name !== action.recipy.name &&
-                    item.createdOn !== action.recipy.createdOn
+                  (item, i) => i !== action.index
                 );
               }
               return new UpdateUserAction(
                 updatedUser,
-                `${action.recipy.name} - чернетку видалено`
+                `Чернетку видалено`
               );
             } else return new UiActions.ErrorAction('no user');
           })

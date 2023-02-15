@@ -36,7 +36,7 @@ export class DraftRecipiesPage implements OnInit {
     });
   }
 
-  deleteDraft(draft: DraftRecipy) {
-    this.store.dispatch(new DeleteDraftRecipyAction(draft));
+  deleteDraft(i: number) {
+    this.store.dispatch(new DeleteDraftRecipyAction(i));
   }
 }

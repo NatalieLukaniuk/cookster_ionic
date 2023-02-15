@@ -9,7 +9,7 @@
       button
       *ngFor="let draft of (draftRecipies$ | async); let index = index"
       (click)="editDraft(draft, index)"
-      (deleteItem)="deleteDraft(draft)"
+      (deleteItem)="deleteDraft(index)"
     >
       <ion-label>
         <h5>{{draft.name}}</h5>

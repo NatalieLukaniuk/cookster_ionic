@@ -34,7 +34,7 @@ export class AddDraftRecipyAction implements Action {
 
 export class DeleteDraftRecipyAction implements Action {
   readonly type = RecipiesActionTypes.DELETE_DRAFT_RECIPY;
-  constructor(public recipy: DraftRecipy) {}
+  constructor(public index: number) {}
 }
 
 export class GetProductsAction implements Action {
