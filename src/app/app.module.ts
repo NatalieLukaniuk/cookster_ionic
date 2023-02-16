@@ -1,3 +1,4 @@
+import { FiltersModule } from './filters/filters.module';
 import { SharedModule } from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -26,6 +27,7 @@ import { reducers } from './store/reducers';
     AppRoutingModule,
     HttpClientModule,
     SharedModule,
+    FiltersModule,
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([
       RecipiesEffects,
