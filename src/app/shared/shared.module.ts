@@ -1,3 +1,4 @@
+import { ProductAutocompleteComponent } from './components/product-autocomplete/product-autocomplete.component';
 import { AddGroupModalComponent } from './components/recipy-constructor/add-group-modal/add-group-modal.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { SwipeLeftNoConfirmationDirective } from './directives/swipe-left-no-confirmation.directive';
@@ -44,7 +45,8 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
     AddIngredientComponent,
     AddStepComponent,
     FileUploadComponent,
-    AddGroupModalComponent
+    AddGroupModalComponent,
+    ProductAutocompleteComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule,],
   exports: [
@@ -62,7 +64,8 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
     RecipyConstructorComponent,
     AddIngredientComponent,
     AddStepComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    ProductAutocompleteComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

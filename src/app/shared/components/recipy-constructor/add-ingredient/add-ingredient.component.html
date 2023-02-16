@@ -1,15 +1,9 @@
 <div class="ng-autocomplete">
-  <ng-autocomplete
+  <app-product-autocomplete
     #autocomplete
-    [data]="data"
-    [searchKeyword]="keyword"
-    placeholder="Виберіть інгридієнт"
-    (selected)="selectEvent($event)"
-    (inputCleared)="onClearSearch()"
-    [itemTemplate]="itemTemplate"
-    [notFoundTemplate]="notFoundTemplate"
-  >
-  </ng-autocomplete>
+    [products]="data"
+    (productSelected)="selectEvent($event)"
+  ></app-product-autocomplete>
 
   <ion-item>
     <ion-label position="floating">Кількість</ion-label>
@@ -55,12 +49,4 @@
   <ion-button expand="full" [disabled]="isAddDisabled" (click)="addIngredient()"
     >Додати</ion-button
   >
-
-  <ng-template #itemTemplate let-item>
-    <a [innerHTML]="item.name"></a>
-  </ng-template>
-
-  <ng-template #notFoundTemplate let-notFound>
-    <div [innerHTML]="notFound"></div>
-  </ng-template>
 </div>

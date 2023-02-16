@@ -40,7 +40,6 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
   _groups: string[] = ['Основна страва'];
 
   data: Product[] = [];
-  keyword = 'name';
 
   destroyed$ = new Subject<void>();
 
@@ -73,10 +72,6 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
 
   selectEvent(item: Product) {
     this.selectedProduct = item;
-  }
-
-  onClearSearch() {
-    this.selectedProduct = null;
   }
 
   get measuringUnitsOptions() {
@@ -135,8 +130,8 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
     this.selectedProduct = null;
     this.quantity = '';
     this.unit = MeasuringUnit.gr;
-    this.autocomplete.clear();
-    this.autocomplete.close();
+    this.autocomplete.clearSearch();
+    this.autocomplete.autocomplete.close();
   }
 
   onGroupName(event: string) {
