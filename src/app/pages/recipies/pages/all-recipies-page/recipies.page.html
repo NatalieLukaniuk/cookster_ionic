@@ -1,9 +1,10 @@
 <app-header>
   <span title>Всі рецепти</span>
-<app-filters right-button></app-filters>
+  <app-filters right-button></app-filters>
 </app-header>
 
 <ion-content [fullscreen]="true">
+  <app-search-recipies-filter></app-search-recipies-filter>
   <div>
     <app-recipy-short-view
       *ngFor="let recipy of (recipies$ |async)"
