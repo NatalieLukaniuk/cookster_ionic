@@ -1,31 +1,29 @@
+import { FiltersService } from './../../services/filters.service';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+
 import { Subject, takeUntil } from 'rxjs';
 import { Filters } from 'src/app/models/filters.models';
 import { Product, DishType } from 'src/app/models/recipies.models';
-import { IAppState } from 'src/app/store/reducers';
-import { getFilters } from 'src/app/store/selectors/filters.selectors';
+
 import { areObjectsEqual } from 'src/app/services/comparison';
-import { ToggleIngredientToExcludeAction, ToggleIngredientToIncludeAction, ToggleTagAction } from 'src/app/store/actions/filters.actions';
 
 @Component({
   selector: 'app-active-filters-widget',
   templateUrl: './active-filters-widget.component.html',
-  styleUrls: ['./active-filters-widget.component.scss']
+  styleUrls: ['./active-filters-widget.component.scss'],
 })
 export class ActiveFiltersWidgetComponent implements OnDestroy {
-
   destroy$ = new Subject<void>();
   currentFilters: Filters | undefined;
   products: Product[] = [];
 
   constructor(
-    private store: Store<IAppState>,
-    public recipiesService: DataMappingService
+    public recipiesService: DataMappingService,
+    private filtersService: FiltersService
   ) {
-    this.store
-      .pipe(select(getFilters), takeUntil(this.destroy$))
+    this.filtersService.getFilters
+      .pipe(takeUntil(this.destroy$))
       .subscribe((filters) => {
         if (
           !this.currentFilters ||
@@ -47,22 +45,17 @@ export class ActiveFiltersWidgetComponent implements OnDestroy {
   }
 
   removeTag(tag: DishType) {
-    this.store.dispatch(new ToggleTagAction(tag));
+    this.filtersService.toggleTag(tag);
   }
 
   removeIngrToInclude(tag: string) {
-    this.store.dispatch(
-      new ToggleIngredientToIncludeAction(tag)
-    );
+    this.filtersService.toggleIngredsToshow(tag);
   }
   removeIngrToExclude(tag: string) {
-    this.store.dispatch(
-      new ToggleIngredientToExcludeAction(tag)
-    );
+    this.filtersService.toggleIngredsToNotshow(tag);
   }
 
   getIngredientText(ingr: string): string {
     return this.recipiesService.getProductNameById(ingr);
   }
-
 }

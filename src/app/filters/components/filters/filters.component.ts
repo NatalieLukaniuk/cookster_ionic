@@ -4,16 +4,9 @@ import { FiltersService } from './../../services/filters.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { select, Store } from '@ngrx/store';
-import { tap, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
-import {
-  ResetFiltersAction,
-  ToggleIngredientToExcludeAction,
-  ToggleIngredientToIncludeAction,
-  ToggleTagAction,
-} from 'src/app/store/actions/filters.actions';
-import { getFilters } from 'src/app/store/selectors/filters.selectors';
 
 @Component({
   selector: 'app-filters',
@@ -42,10 +35,7 @@ export class FiltersComponent implements OnInit {
     return tags;
   }
 
-  checkedTags$ = this.store.pipe(
-    select(getFilters),
-    map((res) => res.tags)
-  );
+  checkedTags$ = this.filtersService.getFilters.pipe(map((res) => res.tags));
 
   constructor(
     public filtersService: FiltersService,
@@ -58,7 +48,7 @@ export class FiltersComponent implements OnInit {
   @ViewChild(IonModal) modal: IonModal | undefined;
 
   cancel() {
-    this.store.dispatch(new ResetFiltersAction());
+    this.filtersService.resetFilters();
     this.modal?.dismiss();
   }
 
@@ -74,12 +64,12 @@ export class FiltersComponent implements OnInit {
   @ViewChild('withoutAutocomplete') withoutAutocomplete: any;
 
   addToDisplayWith(event: Product) {
-    this.store.dispatch(new ToggleIngredientToIncludeAction(event.id));
+    this.filtersService.toggleIngredsToshow(event.id);
     this.withAutocomplete.clearSearch();
   }
 
   addToDisplayWithout(event: Product) {
-    this.store.dispatch(new ToggleIngredientToExcludeAction(event.id));
+    this.filtersService.toggleIngredsToNotshow(event.id);
     this.withoutAutocomplete.clearSearch();
   }
 
@@ -88,6 +78,6 @@ export class FiltersComponent implements OnInit {
   }
 
   onTagCheck(tag: DishType) {
-    this.store.dispatch(new ToggleTagAction(tag));
+    this.filtersService.toggleTag(tag);
   }
 }

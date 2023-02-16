@@ -1,11 +1,14 @@
 import { Filters } from 'src/app/models/filters.models';
-import { Observable, combineLatest, map, shareReplay } from 'rxjs';
+import {
+  BehaviorSubject, shareReplay, tap,
+} from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Recipy } from 'src/app/models/recipies.models';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
-import { getFilters } from 'src/app/store/selectors/filters.selectors';
+
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +17,20 @@ export class FiltersService {
   filteredRecipies: number = 0;
   constructor(private store: Store<IAppState>) {}
   recipies$ = this.store.pipe(select(getAllRecipies));
+
+  clearedFilters: Filters = {
+    ingredientsToExclude: [],
+    ingredientsToInclude: [],
+    maxPrepTime: 0,
+    tags: [],
+    search: '',
+  };
+
+  currentFilters: Filters = _.cloneDeep(this.clearedFilters);
+
+  filters$: BehaviorSubject<Filters> = new BehaviorSubject(this.clearedFilters);
+
+  getFilters = this.filters$.asObservable().pipe(shareReplay(1));
 
   applyFilters(recipies: Recipy[], filters: Filters) {
     let _recipies = recipies.map((recipy) => recipy);
@@ -62,5 +79,64 @@ export class FiltersService {
     }
     this.filteredRecipies = _recipies.length;
     return _recipies;
+  }
+
+  onFiltersChange() {
+    this.filters$.next(this.currentFilters);
+  }
+
+  toggleIngredsToshow(id: string) {
+    this.currentFilters.ingredientsToInclude = this.processToggleIngredient(
+      this.currentFilters.ingredientsToInclude,
+      id
+    );
+    this.onFiltersChange();
+  }
+  toggleIngredsToNotshow(id: string) {
+    this.currentFilters.ingredientsToExclude = this.processToggleIngredient(
+      this.currentFilters.ingredientsToExclude,
+      id
+    );
+    this.onFiltersChange();
+  }
+  toggleTag(tag: number) {
+    this.currentFilters.tags = this.processToggleTag(
+      this.currentFilters.tags,
+      tag
+    );
+    this.onFiltersChange();
+  }
+
+  processToggleIngredient(
+    ingredientsArray: string[],
+    ingredientId: string
+  ): string[] {
+    let _array = ingredientsArray.map((ingr) => ingr);
+    if (_array.includes(ingredientId)) {
+      _array = _array.filter((ingr) => ingr !== ingredientId);
+    } else {
+      _array.push(ingredientId);
+    }
+    return _array;
+  }
+
+  processToggleTag(tagsArray: number[], tagId: number): number[] {
+    let _array = tagsArray.map((tag) => tag);
+    if (_array.includes(tagId)) {
+      _array = _array.filter((tag) => tag !== tagId);
+    } else {
+      _array.push(tagId);
+    }
+    return _array;
+  }
+
+  toggleSearch(word: string) {
+    this.currentFilters.search = word;
+    this.onFiltersChange();
+  }
+
+  resetFilters() {
+    this.currentFilters = _.cloneDeep(this.clearedFilters);
+    this.filters$.next(this.clearedFilters);
   }
 }

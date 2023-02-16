@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { getFilters } from 'src/app/store/selectors/filters.selectors';
 import { combineLatest, map } from 'rxjs';
 
 @Component({
@@ -13,7 +12,7 @@ import { combineLatest, map } from 'rxjs';
   styleUrls: ['recipies.page.scss'],
 })
 export class RecipiesContainer {
-  filters$ = this.store.pipe(select(getFilters));
+  filters$ = this.filtersService.getFilters;
   recipies$ = combineLatest([
     this.store.pipe(select(getAllRecipies)),
     this.filters$,
