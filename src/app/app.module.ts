@@ -27,7 +27,6 @@ import { reducers } from './store/reducers';
     AppRoutingModule,
     HttpClientModule,
     SharedModule,
-    FiltersModule,
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([
       RecipiesEffects,
