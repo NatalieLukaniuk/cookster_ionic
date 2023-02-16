@@ -8,6 +8,7 @@ import { tap, map, Observable } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 import {
+  ResetFiltersAction,
   ToggleIngredientToExcludeAction,
   ToggleIngredientToIncludeAction,
   ToggleTagAction,
@@ -57,7 +58,8 @@ export class FiltersComponent implements OnInit {
   @ViewChild(IonModal) modal: IonModal | undefined;
 
   cancel() {
-    this.modal?.dismiss(null, 'cancel');
+    this.store.dispatch(new ResetFiltersAction());
+    this.modal?.dismiss();
   }
 
   confirm() {
