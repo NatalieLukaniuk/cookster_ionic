@@ -16,6 +16,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
+      <app-active-filters-widget></app-active-filters-widget>
       <h3>Знайдено {{ filtersService.filteredRecipies }} рецептів</h3>
       <ion-accordion-group>
         <ion-accordion value="first">
@@ -50,12 +51,11 @@
           </ion-item>
           <div class="ion-padding" slot="content">
             <ion-list>
-              <ion-item *ngFor="let tag of tags">
+              <ion-item *ngFor="let tag of tags" (click)="onTagCheck(tag)">
                 <ion-label>{{ getTagsText(tag) }}</ion-label>
                 <ion-checkbox
                   slot="end"
-                  [checked]="(checkedTags$ | async)?.includes(tag)"
-                  (ionChange)="onTagCheck(tag)"
+                  [checked]="(checkedTags$ | async)?.includes(tag)"                  
                 ></ion-checkbox>
               </ion-item>
             </ion-list>
