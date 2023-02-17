@@ -200,6 +200,15 @@
       </ion-accordion>
     </ion-accordion-group>
   </ng-container>
+
+  <ng-container *ngSwitchCase="tabs[3].value">
+    <app-preps
+      [ingredients]="ingredients"
+      [isSplitIntoGroups]="isSplitIntoGroups"
+      (deletePrep)="onDeletePrep($event)"
+      (addPrep)="onAddPrep($event)"
+    ></app-preps>
+  </ng-container>
 </ng-container>
 
 <ion-accordion-group>

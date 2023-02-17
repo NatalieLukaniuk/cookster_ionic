@@ -38,6 +38,7 @@ export class RecipyConstructorComponent implements OnInit {
     { value: 'info', icon: '', name: 'Інформація' },
     { value: 'ingredients', icon: '', name: 'Інгридієнти' },
     { value: 'steps', icon: '', name: 'Приготування' },
+    { value: 'preps', icon: '', name: 'Заготовки' },
   ];
 
   get isPublished() {
@@ -294,5 +295,28 @@ export class RecipyConstructorComponent implements OnInit {
   }
   saveStep() {
     this.editStepIndex = null;
+  }
+
+  onDeletePrep(event: { ingredient: Ingredient; description: string }) {
+    this.ingredients = this.ingredients.map((ingred) => {
+      if (ingred == event.ingredient) {
+        ingred.prep = ingred.prep?.filter((prep) => prep !== event.description);
+      }
+      return ingred;
+    });
+  }
+
+  onAddPrep(event: { ingredient: Ingredient; description: string }) {
+    this.ingredients = this.ingredients.map((ingred) => {
+      if (
+        ingred == event.ingredient &&
+        ingred.amount === event.ingredient.amount
+      ) {
+        ingred.prep
+          ? ingred.prep.push(event.description)
+          : (ingred.prep = [event.description]);
+      }
+      return ingred;
+    });
   }
 }
