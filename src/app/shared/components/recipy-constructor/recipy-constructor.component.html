@@ -129,35 +129,6 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[2].value">
-    <ion-list>
-      <ion-reorder-group
-        [disabled]="false"
-        (ionItemReorder)="handleReorder($any($event))"
-      >
-        <ion-item
-          class="step"
-          *ngFor="let step of steps; let index = index"
-          swipeLeftNoConfirmation
-          (itemSwiped)="onDeleteStep(step)"
-        >
-          <ion-label class="ingredient-item-content">
-            <span
-              class="step-description"
-              appLongPress
-              (press)="onLongPress(index)"
-              >{{ step.description }}</span
-            >
-            <span class="step-time"
-              ><ion-icon name="american-football-outline"></ion-icon
-              >{{ step.timeActive | normalizeTime }}
-              <ion-icon name="beer-outline"></ion-icon
-              >{{ step.timePassive | normalizeTime }}</span
-            >
-          </ion-label>
-          <ion-reorder slot="end"></ion-reorder>
-        </ion-item>
-      </ion-reorder-group>
-    </ion-list>
     <div *ngIf="editStepIndex !== null">
       <ion-list [inset]="true">
         <ion-list-header>Редагування</ion-list-header>
@@ -188,6 +159,36 @@
 
       <ion-button expand="full" (click)="saveStep()">Зберегти</ion-button>
     </div>
+    <ion-list>
+      <ion-reorder-group
+        [disabled]="false"
+        (ionItemReorder)="handleReorder($any($event))"
+      >
+        <ion-item
+          class="step"
+          *ngFor="let step of steps; let index = index"
+          swipeLeftNoConfirmation
+          (itemSwiped)="onDeleteStep(step)"
+        >
+          <ion-label class="ingredient-item-content">
+            <span
+              class="step-description"
+              appLongPress
+              (press)="onLongPress(index)"
+              >{{ step.description }}</span
+            >
+            <span class="step-time"
+              ><ion-icon name="american-football-outline"></ion-icon
+              >{{ step.timeActive | normalizeTime }}
+              <ion-icon name="beer-outline"></ion-icon
+              >{{ step.timePassive | normalizeTime }}</span
+            >
+          </ion-label>
+          <ion-reorder slot="end"></ion-reorder>
+        </ion-item>
+      </ion-reorder-group>
+    </ion-list>
+
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="light">
