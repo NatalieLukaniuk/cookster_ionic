@@ -69,6 +69,8 @@ export class RecipyConstructorComponent implements OnInit {
     return new Set(filteredarray as string[]);
   }
 
+  editStepIndex: number | null = null;
+
   constructor(private store: Store, private dataMapping: DataMappingService) {}
 
   getUnitText = getUnitText;
@@ -216,7 +218,10 @@ export class RecipyConstructorComponent implements OnInit {
     if (this.steps.length < 1) {
       list.push('Додайте опис приготування');
     }
-    if(this.isSplitIntoGroups && this.ingredients.some(ingr => !ingr.group)){
+    if (
+      this.isSplitIntoGroups &&
+      this.ingredients.some((ingr) => !ingr.group)
+    ) {
       list.push('Вкажіть групи для інгридієнтів');
     }
     return list;
@@ -243,10 +248,8 @@ export class RecipyConstructorComponent implements OnInit {
     this.ingredients.push(event);
   }
 
-  onDeleteIngr(ingredient: Ingredient) {
-    this.ingredients = this.ingredients.filter(
-      (item) => item.product !== ingredient.product
-    );
+  onDeleteIngr(index: number) {
+    this.ingredients = this.ingredients.filter((item, i) => i !== index);
   }
 
   onDeleteStep(step: PreparationStep) {
@@ -281,5 +284,12 @@ export class RecipyConstructorComponent implements OnInit {
 
   onGroupSelected(event: string, index: number) {
     this.ingredients[index].group = event;
+  }
+
+  onLongPress(i: number) {
+    this.editStepIndex = i;
+  }
+  saveStep(){
+    this.editStepIndex = null;
   }
 }

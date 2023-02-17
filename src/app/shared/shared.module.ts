@@ -1,3 +1,4 @@
+import { LongPressDirective } from './directives/long-press.directive';
 import { ProductAutocompleteComponent } from './components/product-autocomplete/product-autocomplete.component';
 import { AddGroupModalComponent } from './components/recipy-constructor/add-group-modal/add-group-modal.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
@@ -46,7 +47,8 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
     AddStepComponent,
     FileUploadComponent,
     AddGroupModalComponent,
-    ProductAutocompleteComponent
+    ProductAutocompleteComponent,
+    LongPressDirective
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule,],
   exports: [
@@ -65,7 +67,8 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
     AddIngredientComponent,
     AddStepComponent,
     FileUploadComponent,
-    ProductAutocompleteComponent
+    ProductAutocompleteComponent,
+    LongPressDirective
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

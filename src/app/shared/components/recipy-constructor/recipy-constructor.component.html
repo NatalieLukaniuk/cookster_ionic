@@ -81,7 +81,7 @@
       <ion-item
         swipeLeftNoConfirmation
         *ngFor="let ingredient of ingredients; let index = index"
-        (itemSwiped)="onDeleteIngr(ingredient)"
+        (itemSwiped)="onDeleteIngr(index)"
       >
         <ion-label class="ingredient-item-content">
           <span>{{ getIngredient(ingredient.product) }}</span>
@@ -135,12 +135,18 @@
         (ionItemReorder)="handleReorder($any($event))"
       >
         <ion-item
+          class="step"
+          *ngFor="let step of steps; let index = index"
           swipeLeftNoConfirmation
-          *ngFor="let step of steps"
           (itemSwiped)="onDeleteStep(step)"
         >
           <ion-label class="ingredient-item-content">
-            <span class="step-description">{{ step.description }}</span>
+            <span
+              class="step-description"
+              appLongPress
+              (press)="onLongPress(index)"
+              >{{ step.description }}</span
+            >
             <span class="step-time"
               ><ion-icon name="american-football-outline"></ion-icon
               >{{ step.timeActive | normalizeTime }}
@@ -152,6 +158,36 @@
         </ion-item>
       </ion-reorder-group>
     </ion-list>
+    <div *ngIf="editStepIndex !== null">
+      <ion-list [inset]="true">
+        <ion-list-header>Редагування</ion-list-header>
+        <ion-item color="light">
+          <ion-label position="floating" class="edit-input">Опис</ion-label>
+          <ion-textarea
+            placeholder="Type something here"
+            [autoGrow]="true"
+            [(ngModel)]="steps[editStepIndex].description"
+          >
+          </ion-textarea>
+        </ion-item>
+        <ion-item color="light">
+          <ion-label position="floating">Активний час в хвилинах</ion-label>
+          <ion-input
+            type="tel"
+            [(ngModel)]="steps[editStepIndex].timeActive"
+          ></ion-input>
+        </ion-item>
+        <ion-item color="light">
+          <ion-label position="floating">Пасивний час в хвилинах</ion-label>
+          <ion-input
+            type="tel"
+            [(ngModel)]="steps[editStepIndex].timePassive"
+          ></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-button expand="full" (click)="saveStep()">Зберегти</ion-button>
+    </div>
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="light">
