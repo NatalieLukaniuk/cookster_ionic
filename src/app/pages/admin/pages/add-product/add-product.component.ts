@@ -1,3 +1,4 @@
+import { ShowSuccessMessageAction } from './../../../../store/actions/ui.actions';
 import { AddNewIngredientAction } from './../../../../store/actions/recipies.actions';
 import { Store } from '@ngrx/store';
 import { ProductsApiService } from './../../../../services/products-api.service';
@@ -10,6 +11,7 @@ import {
 import {
   MeasuringUnit,
   MeasuringUnitOptions,
+  MeasuringUnitText,
   Product,
   ProductTypeOptions,
   ProductTypeText,
@@ -29,6 +31,10 @@ export class AddProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initForm();
+  }
+
+  initForm() {
     this.productForm = new UntypedFormGroup({
       name: new UntypedFormControl('', Validators.required),
       density: new UntypedFormControl('', Validators.required),
@@ -45,7 +51,7 @@ export class AddProductComponent implements OnInit {
   }
 
   getMeasuringUnitText(unit: any) {
-    return MeasuringUnit[unit];
+    return MeasuringUnitText[unit];
   }
 
   get productTypes() {
@@ -64,16 +70,22 @@ export class AddProductComponent implements OnInit {
       defaultUnit: this.productForm.controls['defaultUnit'].value,
       type: this.productForm.controls['type'].value,
       sizeChangeCoef: this.productForm.controls['sizeChangeCoef'].value,
-    }
-    this.productsApi
-      .addProduct(product)
-      .subscribe((res: { name: string }) => {
-        this.store.dispatch(
-          new AddNewIngredientAction({
-            ...this.productForm.value,
-            product: res.name,
-          })
-        );
-      });
+    };
+    this.productsApi.addProduct(product).subscribe((res: { name: string }) => {
+      this.store.dispatch(
+        new AddNewIngredientAction({
+          ...this.productForm.value,
+          product: res.name,
+        })
+      );
+      this.store.dispatch(
+        new ShowSuccessMessageAction(`${product.name} додано`)
+      );
+    });
+    this.clearForm();
+  }
+
+  clearForm() {
+    this.initForm();
   }
 }

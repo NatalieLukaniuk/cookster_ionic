@@ -66,14 +66,6 @@ export interface Ingredient {
   prep?: string[];
 }
 
-export enum IngredientsGroup {
-  Main = 'main',
-  Filling = 'filling',
-  Souce = 'souce',
-  Dough = 'dough',
-  Decoration = 'decoration',
-}
-
 export enum Complexity {
   simple = 1,
   medium = 2,
@@ -91,7 +83,6 @@ export interface PreparationStep {
   description: string;
   timeActive: number; // minutes
   timePassive: number; // minutes
-  group?: IngredientsGroup; // FIXME: not needed, delete
 }
 
 export enum DishType {
