@@ -11,7 +11,7 @@ import {
 @Component({
   selector: 'app-product-autocomplete',
   templateUrl: './product-autocomplete.component.html',
-  styleUrls: ['./product-autocomplete.component.css'],
+  styleUrls: ['./product-autocomplete.component.scss'],
 })
 export class ProductAutocompleteComponent implements OnInit {
   @Input() products: Product[] = [];
