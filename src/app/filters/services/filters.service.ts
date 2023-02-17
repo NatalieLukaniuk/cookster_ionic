@@ -1,7 +1,5 @@
 import { Filters } from 'src/app/models/filters.models';
-import {
-  BehaviorSubject, shareReplay, tap,
-} from 'rxjs';
+import { BehaviorSubject, shareReplay, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Recipy } from 'src/app/models/recipies.models';
 import { Store, select } from '@ngrx/store';
@@ -74,7 +72,7 @@ export class FiltersService {
     }
     if (filters.search.length) {
       _recipies = _recipies.filter((recipy) =>
-        recipy.name.includes(filters.search)
+        recipy.name.toLowerCase().includes(filters.search.toLowerCase())
       );
     }
     this.filteredRecipies = _recipies.length;
