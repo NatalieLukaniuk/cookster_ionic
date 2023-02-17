@@ -1,3 +1,4 @@
+import { DensityCalcComponent } from './pages/density-calc/density-calc.component';
 import { AddProductComponent } from './pages/add-product/add-product.component';
 import { UpdateProductsComponent } from './pages/update-products/update-products.component';
 import { RecipiesCommentsComponent } from './pages/recipies-comments/recipies-comments.component';
@@ -31,7 +32,8 @@ import { AdminTableComponent } from './components/admin-table/admin-table.compon
     RecipiesCommentsComponent,
     UpdateProductsComponent,
     AdminTableComponent,
-    AddProductComponent
+    AddProductComponent,
+    DensityCalcComponent
   ],
 })
 export class AdminPageModule {}

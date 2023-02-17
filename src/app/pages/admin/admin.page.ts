@@ -16,6 +16,7 @@ export class AdminPage implements OnInit {
     { name: 'Редагування продуктів', path: 'update-products' },
     { name: 'Коментарі до рецептів', path: 'recipies-comments' },
     { name: 'Додати продукт', path: 'add-product' },
+    { name: 'Калькулятор щільності', path: 'density-calculator' },
   ];
 
   recipies$ = this.store.pipe(select(getAllRecipies));

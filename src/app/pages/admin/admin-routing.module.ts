@@ -1,3 +1,4 @@
+import { DensityCalcComponent } from './pages/density-calc/density-calc.component';
 import { AddProductComponent } from './pages/add-product/add-product.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -11,7 +12,7 @@ import { UpdateProductsComponent } from './pages/update-products/update-products
 const routes: Routes = [
   {
     path: '',
-    component: AdminPage
+    component: AdminPage,
   },
   {
     path: 'recipies',
@@ -37,7 +38,12 @@ const routes: Routes = [
     path: 'add-product',
     component: AddProductComponent,
     pathMatch: 'full',
-  }
+  },
+  {
+    path: 'density-calculator',
+    component: DensityCalcComponent,
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({

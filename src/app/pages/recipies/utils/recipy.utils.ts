@@ -91,34 +91,15 @@ export function convertAmountToSelectedUnit(
         amount = grToKg(amountInGr);
         break;
       case MeasuringUnit.l:
-        amount = grToLiter(amountInGr, getDensity(ingredientId, allProducts));
-        break;
       case MeasuringUnit.ml:
-        amount = grToMl(amountInGr, getDensity(ingredientId, allProducts));
-        break;
       case MeasuringUnit.tableSpoon:
-        amount = grToTableSpoons(
-          amountInGr,
-          getDensity(ingredientId, allProducts)
-        );
-        break;
       case MeasuringUnit.dessertSpoon:
-        amount = grToDessertSpoons(
-          amountInGr,
-          getDensity(ingredientId, allProducts)
-        );
-        break;
       case MeasuringUnit.teaSpoon:
-        amount = grToTeaSpoons(
-          amountInGr,
-          getDensity(ingredientId, allProducts)
-        );
-        break;
       case MeasuringUnit.coffeeSpoon:
-        amount = grToCoffeeSpoons(
-          amountInGr,
-          getDensity(ingredientId, allProducts)
-        );
+      case MeasuringUnit.cup:
+        amount =
+          (amountInGr * getAmountInL(unit)) /
+          getDensity(ingredientId, allProducts);
         break;
       case MeasuringUnit.pinch:
         amount = grToPinch(amountInGr, getDensity(ingredientId, allProducts));
@@ -128,11 +109,29 @@ export function convertAmountToSelectedUnit(
         break;
       case MeasuringUnit.item:
         amount = grToItems(amountInGr, getGrPerItem(ingredientId, allProducts));
-        break;
-      case MeasuringUnit.cup:
-        amount = grToGlass(amountInGr, getDensity(ingredientId, allProducts));
     }
     return amount;
+  }
+}
+
+export function getAmountInL(unit: MeasuringUnit) {
+  switch (unit) {
+    case MeasuringUnit.l:
+      return 1;
+    case MeasuringUnit.ml:
+      return 1000;
+    case MeasuringUnit.tableSpoon:
+      return 67;
+    case MeasuringUnit.dessertSpoon:
+      return 100;
+    case MeasuringUnit.teaSpoon:
+      return 203;
+    case MeasuringUnit.cup:
+      return 5;
+    case MeasuringUnit.coffeeSpoon:
+      return 405;
+    default:
+      return 1;
   }
 }
 
@@ -380,28 +379,25 @@ export function transformToGr(
     case MeasuringUnit.bunch:
       return bunchToGr(amount);
     case MeasuringUnit.coffeeSpoon:
-      return coffeeSpoonsToGr(amount, density);
     case MeasuringUnit.dessertSpoon:
-      return dessertSpoonsToGr(amount, density);
-    case MeasuringUnit.l:
-      return literToGr(amount, density);
+    case MeasuringUnit.tableSpoon:
+    case MeasuringUnit.teaSpoon:
     case MeasuringUnit.ml:
-      return mlToGr(amount, density);
+    case MeasuringUnit.l:
+    case MeasuringUnit.cup:
+      return (amount * density) / getAmountInL(unit);
     case MeasuringUnit.pinch:
       return pinchToGr(amount, density);
-    case MeasuringUnit.tableSpoon:
-      return tableSpoonsToGr(amount, density);
-    case MeasuringUnit.teaSpoon:
-      return teaSpoonsToGr(amount, density);
     case MeasuringUnit.item:
       return itemsToGr(amount, grInOneItem);
-    case MeasuringUnit.cup:
-      return glassToGr(amount, density);
     default:
       return 0;
   }
 }
 
-export function getCalorificValue(ingr: Ingredient, allProducts: Product[]): number {
-  return allProducts.find(product => product.id == ingr.product)!.calories
+export function getCalorificValue(
+  ingr: Ingredient,
+  allProducts: Product[]
+): number {
+  return allProducts.find((product) => product.id == ingr.product)!.calories;
 }
