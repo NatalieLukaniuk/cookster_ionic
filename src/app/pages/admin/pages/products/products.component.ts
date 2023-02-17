@@ -39,9 +39,11 @@ export class ProductsComponent implements OnInit {
   recursiveUpdate(i: number, products: Product[]) {
     if (i < products.length) {
       setTimeout(() => {
-        let update = this.updateScript(products[i]);
+        if(!products[i].sizeChangeCoef){
+          let update = this.updateScript(products[i]);
         console.log(update);
-        this.store.dispatch(new UpdateProductAction(update));
+        this.store.dispatch(new UpdateProductAction(update));        }
+        console.log(i + ' of ' + products.length)
         i++;
         this.recursiveUpdate(i, products);
       }, 1000);
