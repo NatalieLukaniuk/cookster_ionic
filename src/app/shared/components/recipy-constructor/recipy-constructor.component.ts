@@ -1,5 +1,6 @@
+import { areObjectsEqual } from 'src/app/services/comparison';
 import { DataMappingService } from './../../../services/data-mapping.service';
-import { NewRecipy } from './../../../models/recipies.models';
+import { MeasuringUnit, NewRecipy } from './../../../models/recipies.models';
 import {
   UpdateDraftRecipyAction,
   AddNewRecipyAction,
@@ -14,7 +15,13 @@ import {
   PreparationStep,
   Recipy,
 } from '../../../models/recipies.models';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import * as _ from 'lodash';
 import { User } from 'src/app/models/auth.models';
 import {
@@ -29,7 +36,7 @@ import { ItemReorderEventDetail } from '@ionic/angular';
   templateUrl: './recipy-constructor.component.html',
   styleUrls: ['./recipy-constructor.component.scss'],
 })
-export class RecipyConstructorComponent implements OnInit {
+export class RecipyConstructorComponent implements OnChanges, OnInit {
   @Input() recipyToPatch: DraftRecipy | Recipy | undefined | null;
   @Input() recipyToPatchOrder: number | undefined;
   @Input() currentUser!: User | null;
@@ -66,6 +73,8 @@ export class RecipyConstructorComponent implements OnInit {
 
   tags: number[] = [];
 
+  MeasuringUnit = MeasuringUnit;
+
   get groups(): Set<string> {
     let mappedArray = this.ingredients.map((ingr) => ingr.group);
     let filteredarray = mappedArray.filter((group) => group !== undefined);
@@ -75,13 +84,25 @@ export class RecipyConstructorComponent implements OnInit {
   editStepIndex: number | null = null;
 
   constructor(private store: Store, private dataMapping: DataMappingService) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      !areObjectsEqual(
+        changes['recipyToPatch']?.currentValue,
+        changes['recipyToPatch']?.previousValue
+      )
+    ) {
+      this.patchExistingRecipy();
+    }
+  }
 
   getUnitText = getUnitText;
 
   ngOnInit(): void {
     this.tags = this.gettags();
+  }
+
+  patchExistingRecipy() {
     if (this.recipyToPatch) {
-      console.log(this.recipyToPatch);
       this.recipyName = this.recipyToPatch.name;
       this.isBaseRecipy = this.recipyToPatch.isBaseRecipy;
       this.complexity = this.recipyToPatch.complexity;

@@ -37,7 +37,7 @@ export class ProductsComponent implements OnInit {
   }
 
   recursiveUpdate(i: number, products: Product[]) {
-    if (i < products.length - 1) {
+    if (i < products.length) {
       setTimeout(() => {
         let update = this.updateScript(products[i]);
         console.log(update);
@@ -49,7 +49,7 @@ export class ProductsComponent implements OnInit {
   }
 
   updateScript(product: Product): Product {
-    let _product = _.cloneDeep(product)
+    let _product = _.cloneDeep(product);
     _product.sizeChangeCoef = 1;
     return _product;
   }

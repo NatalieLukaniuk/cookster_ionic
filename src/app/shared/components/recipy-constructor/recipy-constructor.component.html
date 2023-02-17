@@ -99,16 +99,16 @@
             [groups]="groups"
             (onGroupSelected)="onGroupSelected($event, index)"
           ></app-add-group-modal>
-          <span
-            >{{
+          <div>
+            <span *ngIf="ingredient.defaultUnit !== MeasuringUnit.none">{{
               ingredient.amount
                 | convertToSelectedUnit
                   : ingredient.product
                   : ingredient.defaultUnit
                 | normalizeDisplayedAmount : ingredient.defaultUnit
-            }}
-            {{ getUnitText(ingredient.defaultUnit) }}</span
-          >
+            }}</span>
+            <span> {{ getUnitText(ingredient.defaultUnit) }}</span>
+          </div>
         </ion-label>
       </ion-item>
     </ion-list>

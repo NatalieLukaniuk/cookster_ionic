@@ -41,7 +41,7 @@ export class RecipiesComponent implements OnInit {
   }
 
   recursiveUpdate(i: number, recipies: Recipy[]) {
-    if (i < recipies.length - 1) {
+    if (i < recipies.length) {
       setTimeout(() => {
         let update = this.updateScript(recipies[i]);
         console.log(update);
