@@ -22,6 +22,12 @@
           ></ion-icon>
         </div>
       </div>
+      <div class="collection-tags" *ngIf="includedInCollections.length">
+        <span>Мої колекції: </span>
+        <ion-chip class="collection-chip" *ngFor="let collection of includedInCollections">{{
+          collection
+        }}</ion-chip>
+      </div>
     </ion-card-subtitle>
   </ion-card-header>
 
@@ -67,13 +73,7 @@
     </div>
     <div *ngIf="recipy.calorificValue">
       Калорійність: {{ Math.round(recipy.calorificValue) }} ккал в 100гр.
-    </div>
-    <div class="collection-tags" *ngIf="includedInCollections.length">
-      <span>Колекції: </span>
-      <ion-chip *ngFor="let collection of includedInCollections">{{
-        collection
-      }}</ion-chip>
-    </div>
+    </div>    
     <div>
       Автор: {{ recipy.author }}
     </div>
