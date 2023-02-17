@@ -50,13 +50,14 @@
             <ion-label>Пошук за типом страв</ion-label>
           </ion-item>
           <div class="ion-padding" slot="content">
-            <ion-list>
+            <ion-list *ngIf="checkedTags$ | async">
               <ion-item *ngFor="let tag of tags" (click)="onTagCheck(tag)">
                 <ion-label>{{ getTagsText(tag) }}</ion-label>
-                <ion-checkbox
+                <ion-icon
+                  *ngIf="checkedTags.includes(tag)"
                   slot="end"
-                  [checked]="(checkedTags$ | async)?.includes(tag)"                  
-                ></ion-checkbox>
+                  name="checkmark-outline"
+                ></ion-icon>
               </ion-item>
             </ion-list>
           </div>

@@ -63,6 +63,8 @@ export class RecipyConstructorComponent implements OnInit {
 
   currentTab = this.tabs[0].value;
 
+  tags: number[] = [];
+
   get groups(): Set<string> {
     let mappedArray = this.ingredients.map((ingr) => ingr.group);
     let filteredarray = mappedArray.filter((group) => group !== undefined);
@@ -76,6 +78,7 @@ export class RecipyConstructorComponent implements OnInit {
   getUnitText = getUnitText;
 
   ngOnInit(): void {
+    this.tags = this.gettags();
     if (this.recipyToPatch) {
       console.log(this.recipyToPatch);
       this.recipyName = this.recipyToPatch.name;
@@ -111,7 +114,7 @@ export class RecipyConstructorComponent implements OnInit {
     return ComplexityDescription[unit];
   }
 
-  get tags() {
+  gettags() {
     let tags: number[] = [];
     tags = Object.values(DishType).filter(
       (value) => typeof value === 'number'
@@ -192,8 +195,8 @@ export class RecipyConstructorComponent implements OnInit {
     this.isBaseRecipy = event.detail.checked;
   }
 
-  onTagClicked(event: any, tag: DishType) {
-    if (event.detail.checked) {
+  onTagClicked(tag: DishType) {
+    if (!this.selectedTags.includes(tag)) {
       this.selectedTags.push(tag);
     } else {
       this.selectedTags = this.selectedTags.filter((item) => item !== tag);
@@ -289,7 +292,7 @@ export class RecipyConstructorComponent implements OnInit {
   onLongPress(i: number) {
     this.editStepIndex = i;
   }
-  saveStep(){
+  saveStep() {
     this.editStepIndex = null;
   }
 }

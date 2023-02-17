@@ -4,7 +4,7 @@ import { FiltersService } from './../../services/filters.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { select, Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 
@@ -27,7 +27,11 @@ export class FiltersComponent implements OnInit {
     })
   );
 
-  get tags() {
+  checkedTags: number[] = [];
+
+  tags: number[] = [];
+
+  gettags() {
     let tags: number[] = [];
     tags = Object.values(DishType).filter(
       (value) => typeof value === 'number'
@@ -35,7 +39,10 @@ export class FiltersComponent implements OnInit {
     return tags;
   }
 
-  checkedTags$ = this.filtersService.getFilters.pipe(map((res) => res.tags));
+  checkedTags$ = this.filtersService.getFilters.pipe(
+    map((res) => res.tags),
+    tap((res) => (this.checkedTags = res))
+  );
 
   constructor(
     public filtersService: FiltersService,
@@ -43,7 +50,9 @@ export class FiltersComponent implements OnInit {
     private datamapping: DataMappingService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.tags = this.gettags();
+  }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
 
