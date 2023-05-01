@@ -1,0 +1,22 @@
+@use "src/assets/styles/variables" as variables;
+
+.logo {
+  height: 40px;
+  width: auto;
+  margin: 0 10px;
+}
+
+.title {
+  &-main {
+    font-family: variables.$lobster;
+    font-size: 36px;
+    line-height: 1;
+  }
+
+  &-sub {
+    font-family: variables.$robotoSlab;
+    font-size: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+  }
+}
