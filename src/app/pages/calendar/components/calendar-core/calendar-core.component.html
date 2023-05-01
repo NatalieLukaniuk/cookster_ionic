@@ -16,7 +16,14 @@
     (ionChange)="onTabChange($event)"
   >
     <ion-segment-button *ngFor="let tab of tabs" [value]="tab.value">
-      <ion-label>{{ tab.name }}</ion-label>
+      <ion-label
+        >{{ tab.name
+        }}<span
+          class="preps-number"
+          *ngIf="tab.value === 'preps' && prepsNumber > 0"
+          >: {{ prepsNumber }}</span
+        ></ion-label
+      >
     </ion-segment-button>
   </ion-segment>
 
