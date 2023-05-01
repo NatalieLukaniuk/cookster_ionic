@@ -3,9 +3,13 @@
 .logo {
   height: 40px;
   width: auto;
-  margin: 0 10px;
+  margin: auto 10px;
 }
 
+.main-header {
+  display: flex;
+  justify-content: center;
+}
 .title {
   &-main {
     font-family: variables.$lobster;

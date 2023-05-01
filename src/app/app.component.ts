@@ -40,6 +40,9 @@ export class AppComponent implements OnInit {
   isLoading$ = this.store.pipe(select(getIsLoading));
   user$ = this.store.pipe(select(getCurrentUser));
 
+  isAuthCheckComplete = false;
+  isLoggedIn = false;
+
   Role = Role;
 
   constructor(
@@ -91,6 +94,8 @@ export class AppComponent implements OnInit {
 
   subscribeIsLoggedIn() {
     getAuth().onAuthStateChanged((user: { email: any; uid: any } | null) => {
+      this.isAuthCheckComplete = true;
+      this.isLoggedIn = !!user;
       if (user) {
         this.authService.processIsLoggedIn(user);
       } else {
