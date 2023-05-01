@@ -16,17 +16,33 @@ const routes: Routes = [
         loadChildren: () => import('../pages/add-recipy/add-recipy.module').then(m => m.AddRecipyPageModule)
       },
       {
-        path: 'planner',
-        loadChildren: () => import('../pages/planner/planner.module').then(m => m.PlannerPageModule)
+        path: 'calendar',
+        loadChildren: () => import('../pages/calendar/calendar.module').then(m => m.CalendarPageModule)
       },
       {
         path: 'shopping-list',
         loadChildren: () => import('../pages/shopping-list/shopping-list.module').then( m => m.ShoppingListPageModule)
       },
       {
+        path: 'auth',
+        loadChildren: () => import('../pages/login/login.module').then(m => m.LoginPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/recipies',
         pathMatch: 'full'
+      },
+      {
+        path: 'planner',
+        loadChildren: () => import('../pages/planner/planner.module').then(m => m.PlannerPageModule)
+      },
+      {
+        path: 'draft-recipies',
+        loadChildren: () => import('../pages/draft-recipies/draft-recipies.module').then( m => m.DraftRecipiesPageModule)
+      },
+      {
+        path: 'admin',
+        loadChildren: () => import('../pages/admin/admin.module').then( m => m.AdminPageModule)
       }
     ]
   },

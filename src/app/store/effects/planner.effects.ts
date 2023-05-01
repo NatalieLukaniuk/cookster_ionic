@@ -2,10 +2,6 @@ import { PlannerByDate } from './../../models/planner.models';
 import { ErrorAction } from './../actions/ui.actions';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { map, switchMap, take } from 'rxjs/operators';
-import {
-  PlannerActionTypes,
-  SetCurrentPlannerByDateAction,
-} from './../actions/planner.actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -18,8 +14,8 @@ export class PlannerEffects {
 
   setCurrentPlanner$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(PlannerActionTypes.SET_CURRENT_PLANNER_BY_DATE),
-      switchMap((action: SetCurrentPlannerByDateAction) =>
+      ofType(PlannerActions.PlannerActionTypes.SET_CURRENT_PLANNER_BY_DATE),
+      switchMap((action: PlannerActions.SetCurrentPlannerByDateAction) =>
         this.store.pipe(
           select(getCurrentUser),
           take(1),

@@ -1,0 +1,40 @@
+<div
+  cdkDropList
+  [id]="mealtime + '_' + day.details.day"
+  *ngIf="!!_day"
+  class="meal-time"
+>
+  <div class="meal-header">
+    <div class="title">
+      <span>{{ mealtimeText }}</span>
+    </div>
+
+    <div class="details" *ngIf="!!detailedRecipiesList.length">
+      <span *ngIf="!!getPortions()"> {{ getPortions() }} персони </span>
+
+      <span *ngIf="!!getAmountPerPerson()">
+        {{ getAmountPerPerson() }} гр/чол
+      </span>
+
+      <span *ngIf="getCalories()">{{ getCalories() }} ккал/порцію</span>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!!detailedRecipiesList">
+    <ng-container>
+      <div *ngFor="let item of detailedRecipiesList">
+        <app-calendar-recipy
+          [recipy]="item"
+          [day]="day"
+          [mealtime]="mealtime"
+        ></app-calendar-recipy>
+      </div>
+    </ng-container>
+  </ng-container>
+  <app-add-recipy-modal
+    *ngIf="addRecipies"
+    [meatime]="mealtime"
+    (recipyToAdd)="onRecipySelected($event)"
+  ></app-add-recipy-modal>
+  <app-select-option-dialog #selectOption></app-select-option-dialog>
+</div>

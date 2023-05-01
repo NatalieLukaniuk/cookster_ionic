@@ -10,7 +10,7 @@ export interface NewRecipy {
   clonedBy?: string;
   clonedOn?: number;
   originalRecipy?: string;
-  isSplitIntoGroups: IngredientsGroup[];
+  isSplitIntoGroups: boolean;
   isBaseRecipy: boolean;
   notApproved?: boolean;
   source?: string;
@@ -32,27 +32,38 @@ export interface Recipy extends NewRecipy {
   clonedBy?: string;
   clonedOn?: number;
   originalRecipy?: string;
-  isSplitIntoGroups: IngredientsGroup[];
+  isSplitIntoGroups: boolean;
   isCheckedAndApproved?: boolean;
   calorificValue?: number;
   source?: string;
+}
+
+export interface DraftRecipy {
+  name: string;
+  ingrediends?: Ingredient[];
+  complexity: Complexity;
+  steps?: PreparationStep[];
+  type?: DishType[];
+  photo?: string;
+  author: string;
+  createdOn: number;
+  clonedBy?: string;
+  clonedOn?: number;
+  originalRecipy?: string;
+  isSplitIntoGroups: boolean;
+  isBaseRecipy: boolean;
+  notApproved?: boolean;
+  source?: string;
+  isCheckedAndApproved?: boolean;
 }
 
 export interface Ingredient {
   product: string; // product id in the firebase db // FIXME: rename to productID
   amount: number; // gramm
   defaultUnit: MeasuringUnit;
-  group?: IngredientsGroup;
+  group?: string;
   ingredient?: string;
   prep?: string[];
-}
-
-export enum IngredientsGroup {
-  Main = 'main',
-  Filling = 'filling',
-  Souce = 'souce',
-  Dough = 'dough',
-  Decoration = 'decoration',
 }
 
 export enum Complexity {
@@ -68,11 +79,10 @@ export enum ComplexityDescription {
 }
 
 export interface PreparationStep {
-  id: number;
+  id?: number;
   description: string;
   timeActive: number; // minutes
   timePassive: number; // minutes
-  group?: IngredientsGroup; // FIXME: not needed, delete
 }
 
 export enum DishType {
@@ -118,6 +128,22 @@ export enum MeasuringUnit {
   none,
 }
 
+export enum MeasuringUnitText {
+  'гр' = 1,
+  'кг',
+  'л',
+  'мл',
+  'ст.л.',
+  'дес.л.',
+  'ч.л.',
+  'коф.л.',
+  'дрібка',
+  'пучок',
+  'шт.',
+  'склянка',
+  'за смаком',
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -126,6 +152,7 @@ export interface Product {
   calories: number; //kKal,
   defaultUnit: MeasuringUnit;
   type: ProductType;
+  sizeChangeCoef: number
 }
 
 export enum ProductType {
@@ -140,4 +167,92 @@ export enum ProductType {
 export interface RecipyCollection {
   name: string;
   recipies: string[];
+}
+
+export const MeasuringUnitOptions = [
+  MeasuringUnit.gr,
+  MeasuringUnit.kg,
+  MeasuringUnit.l,
+  MeasuringUnit.ml,
+  MeasuringUnit.tableSpoon,
+  MeasuringUnit.dessertSpoon,
+  MeasuringUnit.teaSpoon,
+  MeasuringUnit.coffeeSpoon,
+  MeasuringUnit.pinch,
+  MeasuringUnit.bunch,
+  MeasuringUnit.item,
+  MeasuringUnit.cup,
+  MeasuringUnit.none,
+];
+
+export const MeasuringUnitOptionsFluid = [
+  MeasuringUnit.gr,
+  MeasuringUnit.l,
+  MeasuringUnit.ml,
+  MeasuringUnit.tableSpoon,
+  MeasuringUnit.dessertSpoon,
+  MeasuringUnit.teaSpoon,
+  MeasuringUnit.coffeeSpoon,
+  MeasuringUnit.cup,
+  MeasuringUnit.none
+];
+
+export const MeasuringUnitOptionsSpice = [
+  MeasuringUnit.gr,
+  MeasuringUnit.teaSpoon,
+  MeasuringUnit.tableSpoon,
+  MeasuringUnit.coffeeSpoon,
+  MeasuringUnit.pinch,
+  MeasuringUnit.cup,
+  MeasuringUnit.none
+];
+
+export const MeasuringUnitOptionsHerbs = [
+  MeasuringUnit.gr,
+  MeasuringUnit.teaSpoon,
+  MeasuringUnit.pinch,
+  MeasuringUnit.bunch,
+  MeasuringUnit.cup,
+  MeasuringUnit.none
+];
+
+export const MeasuringUnitOptionsHardItems = [
+  MeasuringUnit.gr,
+  MeasuringUnit.kg,
+  MeasuringUnit.item,
+  MeasuringUnit.none
+];
+
+export const MeasuringUnitOptionsGranular = [
+  MeasuringUnit.gr,
+  MeasuringUnit.kg,
+  MeasuringUnit.dessertSpoon,
+  MeasuringUnit.tableSpoon,
+  MeasuringUnit.cup,
+  MeasuringUnit.none
+];
+
+export const MeasuringUnitOptionsHardHomogeneous = [
+  MeasuringUnit.gr,
+  MeasuringUnit.kg,
+  MeasuringUnit.none
+];
+
+
+export const ProductTypeOptions = [
+  ProductType.fluid,
+  ProductType.spice,
+  ProductType.herb,
+  ProductType.hardItem,
+  ProductType.hardHomogenious,
+  ProductType.granular
+];
+
+export enum ProductTypeText {
+  'рідкий продукт' = 1,
+  'подрібнена спеція',
+  'трава',
+  'твердий продукт',
+  'твердий однорідний',
+  'сипучий продукт (крупа, борошно)'
 }

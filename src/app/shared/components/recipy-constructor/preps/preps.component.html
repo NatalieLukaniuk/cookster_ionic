@@ -1,0 +1,84 @@
+<ion-list>
+  <ion-list-header>Додані заготовки:</ion-list-header>
+  <ion-item
+    *ngFor="let prep of preps"
+    swipeLeftDelete
+    (deleteItem)="onDeletePrep(prep)"
+  >
+    <ion-label>
+      <h2>{{ prep.description }}</h2>
+      <h2>{{ getIngredient(prep.ingredient.product) }}</h2>
+      <p>
+        <span
+          >{{
+            prep.ingredient.amount
+              | convertToSelectedUnit
+                : prep.ingredient.product
+                : prep.ingredient.defaultUnit
+              | normalizeDisplayedAmount : prep.ingredient.defaultUnit
+          }}
+          {{ getUnitText(prep.ingredient.defaultUnit) }}</span
+        >
+        <span *ngIf="isSplitIntoGroups && prep.ingredient.group">{{
+          prep.ingredient.group
+        }}</span>
+      </p>
+    </ion-label>
+  </ion-item>
+</ion-list>
+
+<ion-accordion-group>
+  <ion-accordion value="first">
+    <ion-item slot="header" color="light">
+      <ion-label>Додати заготовку</ion-label>
+    </ion-item>
+    <div class="ion-padding" slot="content">
+      <ion-item>
+        <ion-label position="floating" class="edit-input"
+          >Опис заготовки:</ion-label
+        >
+        <ion-textarea
+          placeholder="Type something here"
+          [autoGrow]="true"
+          [(ngModel)]="newPrep"
+        >
+        </ion-textarea>
+      </ion-item>
+      <ion-list>
+        <ion-list-header>Виберіть інгридієнт</ion-list-header>
+        <ion-radio-group
+          value="strawberries"
+          (ionChange)="ingredSelected($event)"
+        >
+          <ion-item *ngFor="let ingredient of ingredients">
+            <ion-label>
+              <h2>{{ getIngredient(ingredient.product) }}</h2>
+              <p>
+                <span
+                  >{{
+                    ingredient.amount
+                      | convertToSelectedUnit
+                        : ingredient.product
+                        : ingredient.defaultUnit
+                      | normalizeDisplayedAmount : ingredient.defaultUnit
+                  }}
+                  {{ getUnitText(ingredient.defaultUnit) }}</span
+                >
+                <span *ngIf="isSplitIntoGroups && ingredient.group">{{
+                  ingredient.group
+                }}</span>
+              </p>
+            </ion-label>
+            <ion-radio slot="end" [value]="ingredient"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
+      <ion-button
+        expand="full"
+        [disabled]="newPrep.length < 3 || !selectedIngred"
+        (click)="add()"
+        >Додати</ion-button
+      >
+    </div>
+  </ion-accordion>
+</ion-accordion-group>

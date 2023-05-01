@@ -1,0 +1,68 @@
+<ion-button id="filters-modal">
+  <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+</ion-button>
+
+<ion-modal trigger="filters-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Скинути</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button (click)="confirm()">Застосувати</ion-button>
+        </ion-buttons>
+        <ion-title>Фільтри</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <app-active-filters-widget></app-active-filters-widget>
+      <h3>Знайдено {{ filtersService.filteredRecipies }} рецептів</h3>
+      <ion-accordion-group>
+        <ion-accordion value="first">
+          <ion-item slot="header" color="light">
+            <ion-label>Показати рецепти з інгридієнтами:</ion-label>
+          </ion-item>
+          <div class="ion-padding accordion-content" slot="content">
+            <app-product-autocomplete
+              #withAutocomplete
+              *ngIf="products$ | async"
+              [products]="products"
+              (productSelected)="addToDisplayWith($event)"
+            ></app-product-autocomplete>
+          </div>
+        </ion-accordion>
+        <ion-accordion value="second">
+          <ion-item slot="header" color="light">
+            <ion-label>Не показувати рецепти з інгридієнтами:</ion-label>
+          </ion-item>
+          <div class="ion-padding accordion-content" slot="content">
+            <app-product-autocomplete
+              #withoutAutocomplete
+              *ngIf="products$ | async"
+              [products]="products"
+              (productSelected)="addToDisplayWithout($event)"
+            ></app-product-autocomplete>
+          </div>
+        </ion-accordion>
+        <ion-accordion value="third">
+          <ion-item slot="header" color="light">
+            <ion-label>Пошук за типом страв</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ion-list *ngIf="checkedTags$ | async">
+              <ion-item *ngFor="let tag of tags" (click)="onTagCheck(tag)">
+                <ion-label>{{ getTagsText(tag) }}</ion-label>
+                <ion-icon
+                  *ngIf="checkedTags.includes(tag)"
+                  slot="end"
+                  name="checkmark-outline"
+                ></ion-icon>
+              </ion-item>
+            </ion-list>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+    </ion-content>
+  </ng-template>
+</ion-modal>

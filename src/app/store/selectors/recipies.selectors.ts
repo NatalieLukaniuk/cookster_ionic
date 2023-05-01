@@ -8,3 +8,7 @@ export const getAllRecipies = createSelector(
   getRecipiesState,
   (state) => state.allRecipies
 );
+export const getAllProducts = createSelector(
+  getRecipiesState,
+  (state) => state.allProducts
+);

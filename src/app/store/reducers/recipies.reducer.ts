@@ -1,4 +1,4 @@
-import { Recipy } from 'src/app/models/recipies.models';
+import { Product, Recipy } from 'src/app/models/recipies.models';
 import {
   RecipiesActions,
   RecipiesActionTypes,
@@ -6,11 +6,13 @@ import {
 
 export interface IRecipiesState {
   allRecipies: Recipy[];
+  allProducts: Product[];
   ingredientsToAdd: string[];
 }
 
 export const InitialRecipiesState: IRecipiesState = {
   allRecipies: [],
+  allProducts: [],
   ingredientsToAdd: [],
 };
 
@@ -23,6 +25,13 @@ export function RecipiesReducers(
       return {
         ...state,
         allRecipies: action.recipies,
+      };
+    }
+
+    case RecipiesActionTypes.PRODUCTS_LOADED: {
+      return {
+        ...state,
+        allProducts: action.products,
       };
     }
 
@@ -44,6 +53,13 @@ export function RecipiesReducers(
       return {
         ...state,
         ingredientsToAdd: action.nameArray,
+      };
+    }
+
+    case RecipiesActionTypes.ADD_NEW_INGREDIENT: {
+      return {
+        ...state,
+        allProducts: addProduct(state.allProducts, action.ingredient),
       };
     }
     default:
@@ -69,5 +85,14 @@ export function updateRecipy(
       return updatedRecipy;
     } else return recipy;
   });
+  return _array;
+}
+
+export function addProduct(
+  allProducts: Product[],
+  ingredient: Product
+): Product[] {
+  let _array = allProducts.map((product) => product);
+  _array.unshift(ingredient);
   return _array;
 }

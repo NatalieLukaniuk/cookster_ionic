@@ -1,0 +1,73 @@
+<app-header>
+  <ion-back-button left-button defaultHref="tabs/admin"></ion-back-button>
+  <span title>Додати продукт</span>
+</app-header>
+
+<ion-content [fullscreen]="true">
+  <form [formGroup]="productForm" novalidate class="add-product-wrapper">
+    <ion-item>
+      <ion-label position="floating">Назва</ion-label>
+      <ion-input formControlName="name" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Щільність в кг/дм3</ion-label>
+      <ion-input formControlName="density" type="tel"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating"
+        >Грамів в одній штуці середньої величини</ion-label
+      >
+      <ion-input formControlName="grInOneItem" type="tel"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Ккал в 100гр</ion-label>
+      <ion-input formControlName="calories" type="tel"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Коефіцієнт зміни кількості при приготуванні</ion-label>
+      <ion-input formControlName="sizeChangeCoef" type="tel"></ion-input>
+    </ion-item>
+
+    <ion-accordion-group>
+      <ion-accordion value="first">
+        <ion-item
+          slot="header"
+          [color]="
+            productForm.controls['defaultUnit'].valid ? 'tertiary' : 'light'
+          "
+        >
+          <ion-label>Виберіть одиницю виміру</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-radio-group formControlName="defaultUnit">
+            <ion-item *ngFor="let unit of measuringUnits">
+              <ion-label>{{ getMeasuringUnitText(unit) }}</ion-label>
+              <ion-radio slot="end" [value]="unit"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </div>
+      </ion-accordion>
+      <ion-accordion value="second">
+        <ion-item
+          slot="header"
+          [color]="productForm.controls['type'].valid ? 'tertiary' : 'light'"
+        >
+          <ion-label>Виберіть тип продукту</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-radio-group formControlName="type">
+            <ion-item *ngFor="let type of productTypes">
+              <ion-label>{{ getProductTypeText(type) }}</ion-label>
+              <ion-radio slot="end" [value]="type"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </form>
+  <ion-button expand="full" [disabled]="productForm.invalid" (click)="submit()"
+    >Зберегти</ion-button
+  >
+</ion-content>

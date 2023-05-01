@@ -1,0 +1,12 @@
+<app-header>
+  <ion-back-button left-button defaultHref="tabs/admin"></ion-back-button>
+  <span title>Рецепти</span>
+</app-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-button (click)="runUpdate()">Update</ion-button> -->
+  <app-admin-table
+    *ngIf="!!(recipies$ | async)"
+    [data]="recipiesTableData"
+  ></app-admin-table>
+</ion-content>

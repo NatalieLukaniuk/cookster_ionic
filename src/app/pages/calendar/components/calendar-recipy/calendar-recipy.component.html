@@ -1,0 +1,51 @@
+<div class="recipy-name">
+  <ion-item
+    detail="false"
+    button
+    (click)="viewRecipy()"
+    swipeLeftDelete
+    (deleteItem)="onDelete()"
+  >
+    <ion-label class="recipy-content">
+      <div class="recipy-text">
+        <h2>{{ recipy.name }}</h2>
+        <div class="additional-info">
+          <span>{{ recipy.portions }} порцій</span>
+          <span>{{ recipy.amountPerPortion }} гр/порцію</span>
+          <span *ngIf="recipy.calorificValue">
+            {{
+              Math.round(
+                (recipy.calorificValue * recipy.amountPerPortion) / 100
+              )
+            }}
+            ккал/порцію
+          </span>
+          <span class="icons">
+            <ion-icon
+              name="alarm"
+              *ngIf="showNeedsAdvancePreparation"
+            ></ion-icon>
+            <ion-icon name="bulb" *ngIf="hasPrepSuggestions"></ion-icon>
+            <ion-icon
+              name="checkmark-done"
+              *ngIf="recipy.isCheckedAndApproved"
+            ></ion-icon>
+          </span>
+          <div>
+            <span>
+              <ion-icon name="american-football-outline"></ion-icon>
+              {{ activePreparationTime() | normalizeTime }}
+            </span>
+            <span>
+              <ion-icon name="beer-outline"></ion-icon>
+              {{ passivePreparationTime() | normalizeTime }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="recipy-photo" *ngIf="recipy.photo">
+        <app-image [imagePath]="recipy.photo"></app-image>
+      </div>
+    </ion-label>
+  </ion-item>
+</div>

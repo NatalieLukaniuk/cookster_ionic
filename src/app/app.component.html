@@ -1,3 +1,54 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-split-pane contentId="main-content">
+
+  <ion-menu contentId="main-content">
+    <ion-content>
+
+      <ion-list *ngIf="user$ | async" lines="none">
+        <!-- <ion-list-header>
+          Рецепти
+        </ion-list-header> -->
+
+        <ion-menu-toggle autoHide="false">
+          <ion-item routerLink="/tabs/add-recipy" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+            <ion-label>
+              Додати рецепт
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>    
+        <ion-menu-toggle autoHide="false">
+          <ion-item routerLink="/tabs/draft-recipies" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-icon slot="start" name="document-text-outline"></ion-icon>
+            <ion-label>
+              Чернетки рецептів
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>     
+        <ion-menu-toggle autoHide="false" *ngIf="(user$ | async)?.role == Role.Admin">
+          <ion-item routerLink="/tabs/admin" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-icon slot="start" name="cog-outline"></ion-icon>
+            <ion-label>
+              Адмін панель
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle autoHide="false">
+          <ion-item button (click)="logout()" detail="false">
+            <ion-icon slot="start" name="log-out"></ion-icon>
+            <ion-label>
+              Вийти
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        
+      </ion-list>
+      
+    </ion-content>
+  </ion-menu>
+  <app-loading-overlay *ngIf="(isLoading$ | async) || !isAuthCheckComplete || isLoggedIn && !(user$ | async)"></app-loading-overlay>
+
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+
+</ion-split-pane>
 </ion-app>
