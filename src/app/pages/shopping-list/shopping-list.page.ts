@@ -31,8 +31,14 @@ export class ShoppingListPage implements OnInit, OnDestroy {
         this.planner = user.planner?.find(
           (planner) => planner.isShoppingListActive
         );
-        let list = this.planner!.shoppingLists;
-        this.activeList = list!;
+        let list: ShoppingList[];
+        if(this.planner!.shoppingLists){
+          list = this.planner!.shoppingLists;
+        } else {
+          list = [];
+        }
+        
+        this.activeList = list;
         return list;
       } else return [];
     })

@@ -41,8 +41,17 @@ export class ShoppingComponent implements OnInit {
 
   currentUser$ = this.store.pipe(select(getCurrentUser));
 
-  planner$: Observable<PlannerByDate | null> = this.store.pipe(
-    select(getCurrentPlanner)
+  planner$: Observable<PlannerByDate | null> = this.currentUser$.pipe(
+    map((user) => {
+      let found = user?.planner?.find(
+        (planner) =>
+          planner.endDate === this.currentPlanner.endDate &&
+          planner.startDate === this.currentPlanner.startDate
+      );
+      if (!!found) {
+        return found;
+      } else return null;
+    })
   );
   calendar$: Observable<Day[] | null> = this.store.pipe(select(getCalendar));
 
