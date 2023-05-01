@@ -129,11 +129,20 @@ export class AddToListModalComponent implements OnInit {
   }
 
   addList() {
-    this.lists.push({
+    if(this.lists){
+      this.lists.push({
       name: this.newList,
       isExpanded: false,
       items: [],
     });
+    } else {
+      this.lists = [{
+        name: this.newList,
+        isExpanded: false,
+        items: [],
+      }]
+    }
+    
     this.isAddNewList = false;
   }
 
