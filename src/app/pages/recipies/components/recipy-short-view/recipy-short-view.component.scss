@@ -1,5 +1,7 @@
 ion-card {
   position: relative;
+  margin: 10px 0;
+  border-radius: 0;
 }
 
 ion-card-subtitle {
@@ -10,6 +12,7 @@ ion-card-subtitle {
 
 ion-card-content {
   height: 250px;
+  padding-inline: 0;
 }
 
 .flex-container {
@@ -42,6 +45,10 @@ ion-card-content {
       flex-direction: row-reverse;
       opacity: 0;
       transition: all 300ms ease-in-out;
+
+      &>ion-button {
+        width: 45%;
+      }
     }
   }
 
@@ -70,6 +77,8 @@ ion-card-content {
 }
 
 .ingredients-wrapper {
+  padding-inline: 20px;
+  padding-bottom: 0;
   h6 {
     margin-block: 5px;
   }
@@ -78,6 +87,7 @@ ion-card-content {
     flex-direction: column;
     font-size: 12px;
     font-weight: 600;
+    
   }
 }
 
