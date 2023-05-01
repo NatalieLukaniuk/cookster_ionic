@@ -1,0 +1,11 @@
+<div>
+  <input
+    type="file"
+    (change)="onFileSelected($event)"
+    class="file-input"
+    #fileUpload
+  />
+  <ion-button expand="full" (click)="fileUpload.click()">
+    <ion-icon name="camera-outline"></ion-icon> Завантажити фото рецепту
+  </ion-button>
+</div>

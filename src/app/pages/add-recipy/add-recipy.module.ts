@@ -13,8 +13,8 @@ import { AddRecipyPageRoutingModule } from './add-recipy-routing.module';
     CommonModule,
     FormsModule,
     AddRecipyPageRoutingModule,
-    SharedModule
+    SharedModule,
   ],
-  declarations: [AddRecipyPage]
+  declarations: [AddRecipyPage],
 })
 export class AddRecipyPageModule {}

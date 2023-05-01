@@ -1,5 +1,69 @@
-<app-header></app-header>
+<app-header>
+  <span title>Список покупок</span>
+</app-header>
 
 <ion-content>
+  <ion-segment [value]="currentTab" (ionChange)="onTabChange($event)">
+    <ion-segment-button [value]="tab.name" *ngFor="let tab of tabs">
+      {{tab.name}}
+    </ion-segment-button>
+  </ion-segment>
 
+  <ng-container [ngSwitch]="currentTab">
+    <ng-container *ngSwitchCase="tabs[0].name">
+      <ion-accordion-group>
+        <ng-container *ngFor="let list of (activeList$ | async)">
+          <ion-accordion [value]="list.name" *ngIf="hasNotBought(list)">
+            <ion-item slot="header" color="primary">
+              <ion-label>{{list.name}}</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-list>
+                <ng-container *ngFor="let item of list.items">
+                  <ion-item
+                    swipeLeftNoConfirmation
+                    *ngIf="!item.completed"
+                    (itemSwiped)="onSwiped(item, list.name)"
+                  >
+                    <ion-label>{{item.title}}</ion-label>
+                    <ion-chip>{{ getAmountInList(item) }}</ion-chip>
+                  </ion-item>
+                </ng-container>
+              </ion-list>
+            </div>
+          </ion-accordion>
+        </ng-container>
+      </ion-accordion-group>
+    </ng-container>
+    <ng-container *ngSwitchCase="tabs[1].name">
+      <ion-accordion-group>
+        <ng-container *ngFor="let list of (activeList$ | async)">
+          <ion-accordion [value]="list.name" *ngIf="hasBought(list)">
+            <ion-item slot="header" color="primary">
+              <ion-label>{{list.name}}</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-list>
+                <ng-container *ngFor="let item of list.items">
+                  <ion-item
+                    swipeLeftNoConfirmation
+                    *ngIf="item.completed"
+                    (itemSwiped)="onSwiped(item, list.name)"
+                  >
+                    <ion-label>{{item.title}}</ion-label>
+                    <ion-chip>{{ getAmountInList(item) }}</ion-chip>
+                  </ion-item>
+                </ng-container>
+              </ion-list>
+            </div>
+          </ion-accordion>
+        </ng-container>
+      </ion-accordion-group>
+    </ng-container>
+  </ng-container>
+  <ion-fab slot="fixed" vertical="top" horizontal="end">
+    <ion-fab-button (click)="addCustomItem()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

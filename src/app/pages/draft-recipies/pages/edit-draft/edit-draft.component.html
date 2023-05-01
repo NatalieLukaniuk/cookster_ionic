@@ -1,0 +1,17 @@
+<app-header>
+  <ion-back-button
+    left-button
+    defaultHref="tabs/draft-recipies"
+  ></ion-back-button>
+  <span title>Редагування рецепту</span>
+</app-header>
+
+<ion-content [fullscreen]="true">
+  <app-recipy-constructor
+    *ngIf="recipy$ | async"
+    [recipyToPatch]="recipy$ | async"
+    [recipyToPatchOrder]="currentDraftOrder$ | async"
+    [currentUser]="currentUser$ | async"
+  >
+  </app-recipy-constructor>
+</ion-content>

@@ -1,0 +1,22 @@
+<app-header>
+  <ion-back-button left-button defaultHref="tabs/calendar"></ion-back-button>
+  <p title>{{ (recipy$ | async)!.name }}</p>
+</app-header>
+
+<ion-content>
+  <app-recipy-full-view
+    *ngIf="
+      (recipy$ | async) && (amountPerPortion$ | async) && (portions$ | async);
+      else loading
+    "
+    [recipy]="recipy$ | async"
+    [currentUser]="user$ | async"
+    [amountPerPortion]="amountPerPortion$ | async"
+    [portions]="portions$ | async"
+    (portionsChanged)="onPortionsChanged($event)"
+  ></app-recipy-full-view>
+</ion-content>
+
+<ng-template #loading>
+  <app-loading-overlay></app-loading-overlay>
+</ng-template>

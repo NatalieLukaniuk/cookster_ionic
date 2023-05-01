@@ -1,6 +1,7 @@
-<app-header></app-header>
+<app-header>
+    <span title>Додати рецепт</span>
+</app-header>
 
 <ion-content [fullscreen]="true">
-
-
+<app-recipy-constructor [currentUser]="currentUser$ | async"></app-recipy-constructor>
 </ion-content>

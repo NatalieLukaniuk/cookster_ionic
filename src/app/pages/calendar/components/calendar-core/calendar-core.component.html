@@ -1,0 +1,34 @@
+<div class="calendar-by-day page-container" *ngIf="currentDay">
+  <div class="current-day-selector">
+    <ion-button size="small" (click)="goPreviousDay()">
+      <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+    </ion-button>
+    <span [class.in-date-range]="isWithinDateRange">{{
+      currentDay.toString() | date : "EEEE, d MMMM"
+    }}</span>
+    <ion-button size="small" (click)="goNextDay()">
+      <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+    </ion-button>
+  </div>
+  <ion-segment
+    *ngIf="showPreps"
+    [value]="currentTab"
+    (ionChange)="onTabChange($event)"
+  >
+    <ion-segment-button *ngFor="let tab of tabs" [value]="tab.value">
+      <ion-label>{{ tab.name }}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ng-container *ngIf="currentTab === tabs[0].value">
+    <div *ngIf="!!_day">
+      <app-day [day]="_day" [addRecipies]="addRecipies"></app-day>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="currentTab === tabs[1].value">
+    <app-advance-preparation
+      *ngIf="_day"
+      [day]="_day"
+    ></app-advance-preparation>
+  </ng-container>
+</div>

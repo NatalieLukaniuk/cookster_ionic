@@ -1,0 +1,21 @@
+<ion-item>
+  <ion-label position="floating">Опис</ion-label>
+  <ion-textarea
+    placeholder="Type something here"
+    [autoGrow]="true"
+    [(ngModel)]="description"
+  >
+  </ion-textarea>
+</ion-item>
+<ion-item>
+  <ion-label position="floating">Активний час в хвилинах</ion-label>
+  <ion-input type="tel" [(ngModel)]="activeTime"></ion-input>
+</ion-item>
+<ion-item>
+  <ion-label position="floating">Пасивний час в хвилинах</ion-label>
+  <ion-input type="tel" [(ngModel)]="passivetime"></ion-input>
+</ion-item>
+
+<ion-button expand="full" [disabled]="isAddDisabled" (click)="addStep()"
+  >Додати</ion-button
+>

@@ -1,0 +1,10 @@
+<div class="table-container">
+  <div class="legend">
+    <ion-chip [color]="item.active? 'primary' : 'light'" *ngFor="let item of legendItems" (click)="onLegendClick(item)">{{item.name}}</ion-chip>
+  </div>
+  <table>
+    <tr *ngFor="let item of data">
+      <td *ngFor="let property of item; let index = index" [ngClass]="{'hidden': !legendItems[index].active}">{{ property }}</td>
+    </tr>
+  </table>
+</div>

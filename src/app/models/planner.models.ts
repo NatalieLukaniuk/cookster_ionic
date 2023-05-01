@@ -1,11 +1,12 @@
-import { SuggestionList } from './calendar.models';
+import { Suggestion } from './calendar.models';
+import { MeasuringUnit } from './recipies.models';
 
 export interface Planner {
   id: string;
   startDate: string;
   endDate: string;
   shoppingLists: ShoppingList[];
-  preps: SuggestionList[];
+  preps: Suggestion[];
   isShoppingListActive: boolean;
 }
 
@@ -14,7 +15,7 @@ export class PlannerByDate implements Planner {
   startDate: string;
   endDate: string;
   shoppingLists: ShoppingList[];
-  preps: SuggestionList[];
+  preps: Suggestion[];
   isShoppingListActive: boolean;
   constructor(startDate: string, endDate: string) {
     this.startDate = startDate;
@@ -38,4 +39,18 @@ export interface ShoppingListItem {
   comment?: string;
   editMode: boolean;
   completed: boolean;
+}
+
+export interface SLItem {
+  total: number;
+  name: string;
+  id: string;
+  unit: MeasuringUnit;
+  items: {
+    product: string;
+    amount: string;
+    defaultUnit: number;
+    recipyId: string;
+    day: { day: string; meal: string }[];
+  }[];
 }

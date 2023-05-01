@@ -1,17 +1,21 @@
+import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { SetIsLoadingAction } from './../actions/ui.actions';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 
 import { RecipiesActionTypes } from '../actions/recipies.actions';
 import * as RecipiesActions from '../actions/recipies.actions';
 import * as UiActions from '../actions/ui.actions';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { RecipiesApiService } from 'src/app/services/recipies-api.service';
-import { Recipy } from 'src/app/models/recipies.models';
+import { Product, Recipy } from 'src/app/models/recipies.models';
 import { ProductsApiService } from 'src/app/services/products-api.service';
+import { getCurrentUser } from '../selectors/user.selectors';
+import * as _ from 'lodash';
+import { UpdateUserAction } from '../actions/user.actions';
 
 @Injectable()
 export class RecipiesEffects {
@@ -35,7 +39,33 @@ export class RecipiesEffects {
           }),
           map((res: Recipy[]) => new RecipiesActions.RecipiesLoadedAction(res))
         )
-      )
+      ),
+      catchError((error) => of(new UiActions.ErrorAction(error)))
+    )
+  );
+
+  getProducts$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RecipiesActionTypes.GET_PRODUCTS),
+      switchMap((action: RecipiesActions.GetProductsAction) =>
+        this.productsApiService.getProducts().pipe(
+          map((res: Object) => {
+            let array = Object.entries(res);
+            let products: any = [];
+            for (let entry of array) {
+              let product: any = {
+                id: entry[0],
+                ...entry[1],
+              };
+              products.push(product);
+            }
+            products.reverse();
+            return products;
+          }),
+          map((res: Product[]) => new RecipiesActions.ProductsLoadedAction(res))
+        )
+      ),
+      catchError((error) => of(new UiActions.ErrorAction(error)))
     )
   );
 
@@ -47,11 +77,13 @@ export class RecipiesEffects {
           ...action,
           recipy: {
             ...action.recipy,
-            // calorificValue: this.recService.countRecipyCalorificValue(action.recipy.ingrediends) FIXME
-          }
-        }
-        this.store.dispatch(new SetIsLoadingAction())
-        return updated
+            calorificValue: this.dataMapping.countRecipyCalorificValue(
+              action.recipy.ingrediends
+            ),
+          },
+        };
+        this.store.dispatch(new SetIsLoadingAction());
+        return updated;
       }),
       switchMap((action: RecipiesActions.AddNewRecipyAction) =>
         this.recipiesService.addRecipy(action.recipy).pipe(
@@ -60,7 +92,6 @@ export class RecipiesEffects {
               ...action.recipy,
               id: res.name,
             };
-            this.router.navigate(['cookster']);
             return [
               new RecipiesActions.AddNewRecipySuccessAction(recipy),
               new UiActions.ShowSuccessMessageAction(
@@ -75,23 +106,106 @@ export class RecipiesEffects {
     )
   );
 
+  addDraftRecipy$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RecipiesActionTypes.ADD_DRAFT_RECIPY),
+      switchMap((action: RecipiesActions.AddDraftRecipyAction) =>
+        this.store.pipe(
+          select(getCurrentUser),
+          take(1),
+          map((user) => {
+            if (user) {
+              let updatedUser = _.cloneDeep(user);
+              if (updatedUser.draftRecipies) {
+                updatedUser.draftRecipies!.push(action.recipy);
+              } else {
+                updatedUser.draftRecipies = [action.recipy];
+              }
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipy.name} додано в чернетки`
+              );
+            } else return new UiActions.ErrorAction('no user');
+          })
+        )
+      )
+    )
+  );
+
+  updateDraftRecipy$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RecipiesActionTypes.UPDATE_DRAFT_RECIPY),
+      switchMap((action: RecipiesActions.UpdateDraftRecipyAction) =>
+        this.store.pipe(
+          select(getCurrentUser),
+          take(1),
+          map((user) => {
+            if (user) {
+              let updatedUser = _.cloneDeep(user);
+              if (updatedUser.draftRecipies) {
+                updatedUser.draftRecipies[action.order] = action.recipy;
+              }
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipy.name} - чернетку оновлено`
+              );
+            } else return new UiActions.ErrorAction('no user');
+          })
+        )
+      )
+    )
+  );
+
+  deleteDraftRecipy$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RecipiesActionTypes.DELETE_DRAFT_RECIPY),
+      switchMap((action: RecipiesActions.DeleteDraftRecipyAction) =>
+        this.store.pipe(
+          select(getCurrentUser),
+          take(1),
+          map((user) => {
+            if (user) {
+              let updatedUser = _.cloneDeep(user);
+              if (updatedUser.draftRecipies) {
+                updatedUser.draftRecipies! = updatedUser.draftRecipies.filter(
+                  (item, i) => i !== action.index
+                );
+              }
+              return new UpdateUserAction(
+                updatedUser,
+                `Чернетку видалено`
+              );
+            } else return new UiActions.ErrorAction('no user');
+          })
+        )
+      )
+    )
+  );
+
   updateRecipy$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RecipiesActionTypes.UPDATE_RECIPY),
       map((action: RecipiesActions.UpdateRecipyAction) => {
-        this.store.dispatch(new SetIsLoadingAction())
+        this.store.dispatch(new SetIsLoadingAction());
         let updated = {
           ...action,
           recipy: {
             ...action.recipy,
-            // calorificValue: this.recService.countRecipyCalorificValue(action.recipy.ingrediends) FIXME
-          }
-        }
-        return updated
+            calorificValue: this.dataMapping.countRecipyCalorificValue(
+              action.recipy.ingrediends
+            ),
+          },
+        };
+        return updated;
       }),
       switchMap((action: RecipiesActions.UpdateRecipyAction) =>
         this.recipiesService.updateRecipy(action.recipy.id, action.recipy).pipe(
-          switchMap((res: any) => {return [new RecipiesActions.UpdateRecipySuccessAction(res), new UiActions.SetIsLoadingFalseAction()]}),
+          switchMap((res: any) => {
+            return [
+              new RecipiesActions.UpdateRecipySuccessAction(res),
+              new UiActions.SetIsLoadingFalseAction(),
+            ];
+          }),
           catchError((error) => of(new UiActions.ErrorAction(error)))
         )
       )
@@ -106,9 +220,12 @@ export class RecipiesEffects {
         this.productsApiService
           .updateProduct(action.product.id, action.product)
           .pipe(
-            switchMap(
-              (res: any) => {return [new RecipiesActions.UpdateProductSuccessAction(res), new UiActions.SetIsLoadingFalseAction()]}
-            ),
+            switchMap((res: any) => {
+              return [
+                new RecipiesActions.UpdateProductSuccessAction(res),
+                new UiActions.SetIsLoadingFalseAction(),
+              ];
+            }),
             catchError((error) => of(new UiActions.ErrorAction(error)))
           )
       )
@@ -131,25 +248,10 @@ export class RecipiesEffects {
     )
   );
 
-  saveUnknownIngredient$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(RecipiesActionTypes.ADD_NEW_INGREDIENT),
-      switchMap((action: RecipiesActions.AddNewIngredientAction) =>
-        this.recipiesService
-          .saveToIngredientsToAddArray(action.ingredientName)
-          .pipe(
-            map((res) => new RecipiesActions.NewIngredientSavedAction()),
-            catchError((error) => of(new UiActions.ErrorAction(error)))
-          )
-      )
-    )
-  );
-
   constructor(
     private actions$: Actions,
     private recipiesService: RecipiesApiService,
-    // private recService: RecipiesService, FIXME
-    private router: Router,
+    private dataMapping: DataMappingService,
     private productsApiService: ProductsApiService,
     private store: Store
   ) {}

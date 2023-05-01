@@ -1,25 +1,37 @@
 <ion-tabs>
-
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="recipies">
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>Всі рецепти</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="add-recipy">
-      <ion-icon name="add-circle-outline"></ion-icon>
-      <ion-label>Додати рецепт</ion-label>
-    </ion-tab-button>
+    <ng-container *ngIf="isLoggedIn$ | async">
+      <!-- <ion-tab-button tab="add-recipy"> TODO: this should be in a menu or in all recipies
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <ion-label>Додати рецепт</ion-label>
+      </ion-tab-button> -->
 
-    <ion-tab-button tab="planner">
-      <ion-icon name="calendar-outline"></ion-icon>
-      <ion-label>Календар</ion-label>
-    </ion-tab-button>
+      <ion-tab-button tab="calendar">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-label>Календар</ion-label>
+      </ion-tab-button>
 
-    <ion-tab-button tab="shopping-list">
-      <ion-icon name="bag-handle-outline"></ion-icon>
-      <ion-label>Список покупок</ion-label>
-    </ion-tab-button>
+      <ion-tab-button tab="shopping-list">
+        <ion-icon name="bag-handle-outline"></ion-icon>
+        <ion-label>Список покупок</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="planner">
+        <ion-icon name="briefcase-outline"></ion-icon>
+        <ion-label>Планер</ion-label>
+      </ion-tab-button>    
+    </ng-container>
+    <ng-container *ngIf="!(isLoggedIn$ | async)">
+      <ion-tab-button tab="auth">
+        <ion-icon name="person-outline"></ion-icon>
+        <ion-label>Авторизація</ion-label>
+      </ion-tab-button>
+    </ng-container>
   </ion-tab-bar>
-
 </ion-tabs>
+

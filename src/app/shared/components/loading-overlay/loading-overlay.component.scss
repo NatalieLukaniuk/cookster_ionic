@@ -1,0 +1,38 @@
+@use "src/assets/styles/variables" as variables;
+
+:host {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #FCD786;
+    z-index: 100000;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.humster {
+    height: 30vh;
+    width: auto;
+}
+
+.title {
+    text-align: center;
+    margin: 14px auto;
+    color: #3E1000;
+    &-main {
+      font-family: variables.$lobster;
+      font-size: 40px;
+      line-height: 1;
+    }
+  
+    &-sub {
+      font-family: variables.$robotoSlab;
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1.1px;
+    }
+  }

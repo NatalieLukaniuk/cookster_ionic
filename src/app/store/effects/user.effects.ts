@@ -21,7 +21,10 @@ export class UserEffects {
       ofType(UserActionTypes.UPDATE_USER),
       switchMap((action: UserActions.UpdateUserAction) =>
         this.authService.updateUser(action.user.id!, action.user).pipe(
-          map((res: User) => new UserActions.UpdateUserSuccessfulAction(res)),
+          switchMap((res: User) => [
+            new UserActions.UpdateUserSuccessfulAction(res),
+            new UiActions.ShowSuccessMessageAction(action.successMessage),
+          ]),
           catchError((error) => of(new UiActions.ErrorAction(error)))
         )
       )
@@ -47,7 +50,10 @@ export class UserEffects {
                 updatedUser.collections = [
                   { name: action.collectionName, recipies: [] },
                 ];
-              return new UserActions.UpdateUserAction(updatedUser);
+              return new UserActions.UpdateUserAction(
+                updatedUser,
+                `Колекція ${action.collectionName} створена`
+              );
             } else return new UiActions.ErrorAction('no user');
           }),
           catchError((error) => of(new UiActions.ErrorAction(error)))
