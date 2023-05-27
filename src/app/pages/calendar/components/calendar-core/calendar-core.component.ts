@@ -33,6 +33,7 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
   tabs = [
     { value: 'menu', icon: '', name: 'Меню' },
     { value: 'preps', icon: '', name: 'Заготовки' },
+    { value: 'products', icon: '', name: 'Продукти' },
   ];
 
   prepsNumber = 0;

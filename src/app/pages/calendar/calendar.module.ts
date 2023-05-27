@@ -15,6 +15,7 @@ import { IonicModule } from '@ionic/angular';
 import { CalendarPageRoutingModule } from './calendar-routing.module';
 
 import { CalendarPage } from './calendar.page';
+import { ProductsPerDayComponent } from './components/products-per-day/products-per-day.component';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { CalendarPage } from './calendar.page';
     CalendarRecipyFullViewComponent,
     CalendarCoreComponent,
     AddRecipyModalComponent,
-    AdvancePreparationComponent
+    AdvancePreparationComponent,
+    ProductsPerDayComponent
   ],
   exports: [CalendarCoreComponent]
 })
