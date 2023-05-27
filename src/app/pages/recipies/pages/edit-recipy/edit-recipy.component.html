@@ -1,5 +1,4 @@
-<app-header>
-  <ion-back-button left-button defaultHref="tabs/recipies"></ion-back-button>
+<app-header [isShowBackButton]="true">
   <p title *ngIf="recipy$ | async">{{ (recipy$ | async)!.name }}</p>
 </app-header>
 

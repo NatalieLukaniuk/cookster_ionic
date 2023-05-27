@@ -20,6 +20,7 @@ import { IAppState } from './store/reducers';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { Role } from './models/auth.models';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -45,11 +46,21 @@ export class AppComponent implements OnInit {
 
   Role = Role;
 
+  adminPages = [
+    { name: 'Рецепти', path: `recipies` },
+    { name: 'Продукти', path: 'products' },
+    { name: 'Редагування продуктів', path: 'update-products' },
+    { name: 'Коментарі до рецептів', path: 'recipies-comments' },
+    { name: 'Додати продукт', path: 'add-product' },
+    { name: 'Калькулятор щільності', path: 'density-calculator' },
+  ];
+
   constructor(
     private store: Store<IAppState>,
     private authService: AuthService,
     private dataMappingService: DataMappingService,
-    private dialog: DialogsService
+    private dialog: DialogsService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.loadData();
@@ -71,6 +82,13 @@ export class AppComponent implements OnInit {
         this.store.dispatch(new UiActions.DismissSuccessMessageAction());
       }
     });
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd){
+        this.store.dispatch(new UiActions.SetCurrentRouteAction(event.url));
+      }
+    })
+
   }
 
   loadData() {

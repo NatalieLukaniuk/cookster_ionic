@@ -1,5 +1,4 @@
-<app-header>
-  <ion-back-button left-button defaultHref="tabs/planner"></ion-back-button>
+<app-header [isShowBackButton]="true">
   <ion-segment title [value]="currentTab" (ionChange)="onTabChange($event)">
     <ion-segment-button [value]="tab.name" *ngFor="let tab of tabs">
       <ion-icon [name]="tab.icon"></ion-icon>

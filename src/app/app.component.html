@@ -5,9 +5,7 @@
     <ion-content>
 
       <ion-list *ngIf="user$ | async" lines="none">
-        <!-- <ion-list-header>
-          Рецепти
-        </ion-list-header> -->
+        
 
         <ion-menu-toggle autoHide="false">
           <ion-item routerLink="/tabs/add-recipy" routerLinkActive="active" routerDirection="root" detail="false">
@@ -25,14 +23,7 @@
             </ion-label>
           </ion-item>
         </ion-menu-toggle>     
-        <ion-menu-toggle autoHide="false" *ngIf="(user$ | async)?.role == Role.Admin">
-          <ion-item routerLink="/tabs/admin" routerLinkActive="active" routerDirection="root" detail="false">
-            <ion-icon slot="start" name="cog-outline"></ion-icon>
-            <ion-label>
-              Адмін панель
-            </ion-label>
-          </ion-item>
-        </ion-menu-toggle>
+        
         <ion-menu-toggle autoHide="false">
           <ion-item button (click)="logout()" detail="false">
             <ion-icon slot="start" name="log-out"></ion-icon>
@@ -41,6 +32,19 @@
             </ion-label>
           </ion-item>
         </ion-menu-toggle>
+        <ng-container *ngIf="(user$ | async)?.role == Role.Admin">
+          <ion-list-header>
+          Адмін панель
+        </ion-list-header>
+        <ion-menu-toggle *ngFor="let page of adminPages" autoHide="false">
+          <ion-item [routerLink]="'/tabs/admin/' + page.path" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-label>
+              {{page.name}}
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        </ng-container>
+        
         
       </ion-list>
       
