@@ -6,17 +6,22 @@
       | convertToSelectedUnit : ingredient.product : measuringUnit
       | normalizeDisplayedAmount : measuringUnit
   }}</ion-text>
+  <div>
+    <ion-select
+      *ngIf="measuringUnit !== MeasuringUnit.none"
+      interface="popover"
+      [value]="measuringUnit"
+      (ionChange)="unitChanged($event)"
+    >
+      <ion-select-option *ngFor="let unit of measurementUnits" [value]="unit">{{
+        getUnitText(unit)
+      }}</ion-select-option>
+    </ion-select>
+    <ion-text *ngIf="measuringUnit === MeasuringUnit.none">за смаком</ion-text>
+  </div>
 
-  <ion-select
-    *ngIf="measuringUnit !== MeasuringUnit.none"
-    interface="popover"
-    [value]="measuringUnit"
-    (ionChange)="unitChanged($event)"
-  >
-    <ion-select-option *ngFor="let unit of measurementUnits" [value]="unit">{{
-      getUnitText(unit)
-    }}</ion-select-option>
-  </ion-select>
+  <div>
+    <ng-content select="[action-buttons]"></ng-content>
+  </div>
   
-  <ion-text *ngIf="measuringUnit === MeasuringUnit.none">за смаком</ion-text>
 </ion-item>
