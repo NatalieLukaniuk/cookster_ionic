@@ -69,8 +69,8 @@ export class AddProductComponent implements OnInit {
       calories: +this.productForm.controls['calories'].value,
       defaultUnit: this.productForm.controls['defaultUnit'].value,
       type: this.productForm.controls['type'].value,
-      sizeChangeCoef: this.productForm.controls['sizeChangeCoef'].value,
-      grInOneItem: this.productForm.controls['grInOneItem'].value
+      sizeChangeCoef: +this.productForm.controls['sizeChangeCoef'].value,
+      grInOneItem: +this.productForm.controls['grInOneItem'].value
     };
     this.productsApi.addProduct(product).subscribe((res: { name: string }) => {
       this.store.dispatch(
