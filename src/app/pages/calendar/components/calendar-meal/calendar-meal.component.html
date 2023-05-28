@@ -38,6 +38,7 @@
   <app-add-recipy-modal
     *ngIf="addRecipies"
     [meatime]="mealtime"
+    [date]="day.details.day"
     (recipyToAdd)="onRecipySelected($event)"
   ></app-add-recipy-modal>
   <app-select-option-dialog #selectOption></app-select-option-dialog>
