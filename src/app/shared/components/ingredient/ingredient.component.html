@@ -9,7 +9,7 @@
   <div>
     <ion-select
       *ngIf="measuringUnit !== MeasuringUnit.none"
-      interface="popover"
+      interface="action-sheet"
       [value]="measuringUnit"
       (ionChange)="unitChanged($event)"
     >

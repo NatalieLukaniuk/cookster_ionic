@@ -144,6 +144,22 @@ export enum MeasuringUnitText {
   'за смаком',
 }
 
+export enum MeasuringUnitTextFull {
+  'грами' = 1,
+  'кілограми',
+  'літри',
+  'мілілітри',
+  'столові ложки',
+  'десертні ложки',
+  'чайні ложки',
+  'кофейні ложки',
+  'дрібки',
+  'пучок',
+  'штуки',
+  'склянка',
+  'за смаком',
+}
+
 export interface Product {
   id: string;
   name: string;
