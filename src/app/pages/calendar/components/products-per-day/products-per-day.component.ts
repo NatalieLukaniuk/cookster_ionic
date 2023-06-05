@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import { Day, RecipyForCalendar } from 'src/app/models/calendar.models';
@@ -7,7 +7,7 @@ import { AddToListModalComponent } from 'src/app/pages/planner/components/add-to
 import { areObjectsEqual } from 'src/app/services/comparison';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { IAppState } from 'src/app/store/reducers';
-import { take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { PlannerByDate, ShoppingList } from 'src/app/models/planner.models';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { PlannerService } from 'src/app/services/planner.service';
@@ -19,7 +19,7 @@ import * as _ from 'lodash';
   templateUrl: './products-per-day.component.html',
   styleUrls: ['./products-per-day.component.scss'],
 })
-export class ProductsPerDayComponent implements OnChanges {
+export class ProductsPerDayComponent implements OnChanges, OnDestroy {
   @Input() day!: Day;
 
   products: Ingredient[] = [];
@@ -27,6 +27,8 @@ export class ProductsPerDayComponent implements OnChanges {
   plannerWithActiveList: PlannerByDate | undefined;
 
   activeList: ShoppingList[] | undefined;
+
+  destroy$ = new Subject<void>();
   constructor(
     private datamapping: DataMappingService,
     private modalCtrl: ModalController,
@@ -36,7 +38,7 @@ export class ProductsPerDayComponent implements OnChanges {
 
     this.store.pipe(
       select(getCurrentUser),
-      take(1),
+      takeUntil(this.destroy$),
     ).subscribe((user) => {
       if (user) {
         this.plannerWithActiveList = user.planner?.find(
@@ -47,6 +49,9 @@ export class ProductsPerDayComponent implements OnChanges {
         } 
       };
     });
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next()
   }
 
   ngOnChanges(changes: SimpleChanges) {
