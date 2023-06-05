@@ -1,6 +1,6 @@
 import { FiltersService } from './../../../../filters/services/filters.service';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
@@ -18,10 +18,22 @@ export class RecipiesContainer {
     this.filters$,
   ]).pipe(map((res) => this.filtersService.applyFilters(res[0], res[1])));
 
+  showGoTop = false;
+
   user$ = this.store.pipe(select(getCurrentUser));
 
   constructor(
     private store: Store<IAppState>,
     private filtersService: FiltersService
   ) {}
+
+  onscroll(event: any){
+    this.showGoTop = event.detail.scrollTop > 500;
+  }
+
+  @ViewChild('scrollingContainer') scrollingContainer: any;
+
+  goTop(){
+    this.scrollingContainer.scrollToTop()
+  }
 }

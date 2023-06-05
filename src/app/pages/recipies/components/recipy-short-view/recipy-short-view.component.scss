@@ -2,6 +2,7 @@ ion-card {
   position: relative;
   margin: 10px 0;
   border-radius: 0;
+  box-shadow: none;
 }
 
 ion-card-subtitle {
@@ -12,7 +13,7 @@ ion-card-subtitle {
 
 ion-card-content {
   height: 250px;
-  padding-inline: 0;
+  padding: 0;
 }
 
 .flex-container {
@@ -22,7 +23,7 @@ ion-card-content {
 
 .overlay {
   position: absolute;
-  bottom: 0;
+  bottom: -20px;
   height: 0;
   width: 100%;
   z-index: -1;
@@ -64,6 +65,7 @@ ion-card-content {
   &.visible {
     height: 260px;
     z-index: 2;
+    bottom: 0;
 
     &.collections {
       ion-list {

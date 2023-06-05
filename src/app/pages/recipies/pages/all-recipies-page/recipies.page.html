@@ -1,15 +1,21 @@
 <app-header>
-  <span title>Всі рецепти</span>
+  <span left-button><app-search-recipies-filter></app-search-recipies-filter></span>
   <app-filters right-button></app-filters>
 </app-header>
 
-<ion-content [fullscreen]="true">
-  <app-search-recipies-filter></app-search-recipies-filter>
-  <div>
+<ion-content #scrollingContainer [fullscreen]="true" (ionScroll)="onscroll($event)" [scrollEvents]="true">  
+  <div class="recipies-background">
+    <span id="top-anchor"></span>    
     <app-recipy-short-view
       *ngFor="let recipy of (recipies$ |async)"
       [currentUser]="user$ | async"
       [recipy]="recipy"
     ></app-recipy-short-view>
   </div>
+
+  <ion-fab *ngIf="showGoTop" (click)="goTop()"  slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>    
+  </ion-fab>
 </ion-content>
