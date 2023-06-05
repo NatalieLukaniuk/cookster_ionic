@@ -46,6 +46,9 @@ export class AppComponent implements OnInit {
 
   Role = Role;
 
+  products$ = this.store.pipe(select(getAllProducts));
+  recipies$ = this.store.pipe(select(getAllRecipies));
+
   adminPages = [
     { name: 'Рецепти', path: `recipies` },
     { name: 'Продукти', path: 'products' },
@@ -97,8 +100,8 @@ export class AppComponent implements OnInit {
     this.store.dispatch(new RecipiesActions.GetProductsAction());
 
     combineLatest([
-      this.store.pipe(select(getAllProducts)),
-      this.store.pipe(select(getAllRecipies)),
+      this.products$,
+      this.recipies$,
     ]).subscribe((res) => {
       let [products, recipies] = res;
       if (products.length) {
