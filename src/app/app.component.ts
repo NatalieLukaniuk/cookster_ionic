@@ -56,6 +56,7 @@ export class AppComponent implements OnInit {
     { name: 'Коментарі до рецептів', path: 'recipies-comments' },
     { name: 'Додати продукт', path: 'add-product' },
     { name: 'Калькулятор щільності', path: 'density-calculator' },
+    { name: 'Налаштування користувача', path: 'user' },
   ];
 
   constructor(
