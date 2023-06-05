@@ -32,7 +32,7 @@
             </ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ng-container *ngIf="(user$ | async)?.role == Role.Admin">
+        <ng-container *ngIf="(user$ | async)?.role === Role.Admin">
           <ion-list-header>
           Адмін панель
         </ion-list-header>
