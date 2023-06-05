@@ -97,7 +97,7 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
         if (user) {
           this.currentUser = user;
           let details = user.details?.find(
-            (day: DayDetails) => day.day == stringDay
+            (day: DayDetails) => day?.day == stringDay
           );
           if (details) {
             let newDayDetails = new DayDetails(
@@ -120,6 +120,7 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
               .subscribe((res) => {
                 if (res) {
                   this._day = res;
+                  debugger
                 }
               });
           } else {
