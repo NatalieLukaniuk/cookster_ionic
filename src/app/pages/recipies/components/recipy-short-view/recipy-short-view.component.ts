@@ -86,7 +86,7 @@ export class RecipyShortViewComponent implements OnInit {
     private datamapping: DataMappingService,
     private store: Store<IAppState>,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -143,10 +143,6 @@ export class RecipyShortViewComponent implements OnInit {
         .find((coll) => coll.name == collection)
         ?.recipies?.find((recipy) => recipy == this.recipy.id);
     } else return false;
-  }
-
-  addCollection() {
-    console.log('not implemented yet'); // TODO: implement adding new collection
   }
 
   goFullRecipy() {

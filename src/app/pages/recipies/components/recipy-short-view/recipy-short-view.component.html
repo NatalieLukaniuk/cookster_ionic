@@ -16,17 +16,14 @@
         <div>
           <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
           <ion-icon name="bulb" *ngIf="isPrepSuggestions"></ion-icon>
-          <ion-icon
-            name="checkmark-done"
-            *ngIf="recipy.isCheckedAndApproved"
-          ></ion-icon>
+          <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
         </div>
       </div>
       <div class="collection-tags" *ngIf="includedInCollections.length">
         <span>Мої колекції: </span>
         <ion-chip class="collection-chip" *ngFor="let collection of includedInCollections">{{
           collection
-        }}</ion-chip>
+          }}</ion-chip>
       </div>
     </ion-card-subtitle>
   </ion-card-header>
@@ -39,7 +36,7 @@
         <ng-container *ngFor="let ingredient of topIngredients">
           <span class="ingredient-text">{{
             getIngredientText(ingredient).toLowerCase()
-          }}</span>
+            }}</span>
         </ng-container>
       </div>
     </div>
@@ -48,10 +45,8 @@
   <div class="overlay once" [class.visible]="isRecipyClicked">
     <div class="time-details">
       <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
-      
-      <span *ngIf="isNeedsAdvancePreparation"
-        >потребує попередньої підготовки</span
-      >
+
+      <span *ngIf="isNeedsAdvancePreparation">потребує попередньої підготовки</span>
     </div>
     <div>{{ complexity }} рецепт</div>
     <div class="advance-prep" *ngIf="isPrepSuggestions">
@@ -63,7 +58,7 @@
     </div>
     <div *ngIf="recipy.calorificValue">
       Калорійність: {{ Math.round(recipy.calorificValue) }} ккал в 100гр.
-    </div>    
+    </div>
     <div>
       Автор: {{ recipy.author }}
     </div>
@@ -73,37 +68,29 @@
         <ng-container *ngFor="let ingredient of topIngredients">
           <span class="ingredient-text">{{
             getIngredientText(ingredient).toLowerCase()
-          }}</span>
+            }}</span>
         </ng-container>
       </div>
     </div>
 
     <div class="actions-pane">
       <ion-button (click)="goFullRecipy()">
-        
+
         Перейти до рецепту
       </ion-button>
       <ion-button *ngIf="currentUser" (click)="showCollections()">
-        
+
         Колекції
       </ion-button>
     </div>
   </div>
   <div class="overlay collections" [class.visible]="isShowCollections">
     <ion-list>
-      <ion-item
-      color="tertiary"
-        *ngFor="let collection of recipyCollections"
-        (click)="onCollectionSelected(collection)"
-      >
-        <ion-label
-          >{{ getIsInCollection(collection) ? "✓" : "" }}
-          {{ collection }}</ion-label
-        >
-      </ion-item>
-      <!-- <ion-item (click)="addCollection()" color="tertiary">
-        <ion-label> + Додати колекцію </ion-label>
-      </ion-item> -->
+      <ion-item color="tertiary" *ngFor="let collection of recipyCollections"
+        (click)="onCollectionSelected(collection)">
+        <ion-label>{{ getIsInCollection(collection) ? "✓" : "" }}
+          {{ collection }}</ion-label>
+      </ion-item>      
     </ion-list>
   </div>
 </ion-card>

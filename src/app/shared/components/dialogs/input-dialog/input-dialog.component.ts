@@ -12,6 +12,7 @@ import {
   styleUrls: ['./input-dialog.component.scss'],
 })
 export class InputDialogComponent implements OnInit {
+  @Input() id!: string;
   @Input() buttonText: string = 'open'
   @Input() inputFieldLabel!: string;
   @Input() inputType: string = 'string';
