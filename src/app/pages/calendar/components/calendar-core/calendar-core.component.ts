@@ -32,8 +32,11 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
 
   tabs = [
     { value: 'menu', icon: '', name: 'Меню' },
-    { value: 'preps', icon: '', name: 'Попереднє приготування' },
+    { value: 'preps', icon: '', name: 'Заготовки' },
+    { value: 'products', icon: '', name: 'Продукти' },
   ];
+
+  prepsNumber = 0;
 
   currentTab = this.tabs[0].value;
 
@@ -135,6 +138,10 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
                 dinner: [],
               },
             };
+          }
+
+          if(user.savedPreps){
+            this.prepsNumber = user.savedPreps.filter(prep => moment(prep.day).dayOfYear() === this._day?.value.dayOfYear()).length;
           }
         }
       });

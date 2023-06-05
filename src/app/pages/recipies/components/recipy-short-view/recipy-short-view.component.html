@@ -33,7 +33,7 @@
 
   <ion-card-content>
     <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
-    <div *ngIf="!recipy.photo" class="ingredients-wrapper">
+    <div *ngIf="!recipy.photo" class="ingredients-wrapper no-photo">
       <h6>Основні інгридієнти</h6>
       <div>
         <ng-container *ngFor="let ingredient of topIngredients">
@@ -53,16 +53,6 @@
         >потребує попередньої підготовки</span
       >
     </div>
-    <div class="time">
-      <span>
-        <ion-icon name="american-football-outline"></ion-icon>
-        {{ activePreparationTime() | normalizeTime }}
-      </span>
-      <span>
-        <ion-icon name="beer-outline"></ion-icon>
-        {{ passivePreparationTime() | normalizeTime }}
-      </span>
-    </div>
     <div>{{ complexity }} рецепт</div>
     <div class="advance-prep" *ngIf="isPrepSuggestions">
       <ion-icon name="bulb"></ion-icon> дещо можна приготувати заздалегіть
@@ -77,21 +67,32 @@
     <div>
       Автор: {{ recipy.author }}
     </div>
+    <div *ngIf="recipy.photo" class="ingredients-wrapper">
+      <h6>Основні інгридієнти</h6>
+      <div>
+        <ng-container *ngFor="let ingredient of topIngredients">
+          <span class="ingredient-text">{{
+            getIngredientText(ingredient).toLowerCase()
+          }}</span>
+        </ng-container>
+      </div>
+    </div>
 
     <div class="actions-pane">
       <ion-button (click)="goFullRecipy()">
-        <ion-icon slot="start" name="star"></ion-icon>
+        
         Перейти до рецепту
       </ion-button>
       <ion-button *ngIf="currentUser" (click)="showCollections()">
-        <ion-icon slot="start" name="star"></ion-icon>
+        
         Колекції
       </ion-button>
     </div>
   </div>
   <div class="overlay collections" [class.visible]="isShowCollections">
-    <ion-list lines="none">
+    <ion-list>
       <ion-item
+      color="tertiary"
         *ngFor="let collection of recipyCollections"
         (click)="onCollectionSelected(collection)"
       >
@@ -100,9 +101,9 @@
           {{ collection }}</ion-label
         >
       </ion-item>
-      <ion-item (click)="addCollection()">
+      <!-- <ion-item (click)="addCollection()" color="tertiary">
         <ion-label> + Додати колекцію </ion-label>
-      </ion-item>
+      </ion-item> -->
     </ion-list>
   </div>
 </ion-card>

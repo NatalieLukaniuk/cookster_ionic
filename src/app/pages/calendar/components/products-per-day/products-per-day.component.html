@@ -1,0 +1,11 @@
+<ion-list>
+  <app-ingredient
+    *ngFor="let product of products"
+    [ingredient]="product"
+    [coefficient]="1"
+  >
+    <ion-button class="add-to-shopping-list" action-buttons size="small" (click)="addToList(product)"
+      ><ion-icon name="add" slot="icon-only"></ion-icon
+    ></ion-button>
+  </app-ingredient>
+</ion-list>

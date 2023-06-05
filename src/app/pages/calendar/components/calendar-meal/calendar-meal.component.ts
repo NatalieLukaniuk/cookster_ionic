@@ -67,22 +67,42 @@ export class CalendarMealComponent implements OnInit, OnChanges {
       if (this._day.details) {
         switch (this.mealtime) {
           case MealTime.Breakfast:
-            return !!this._day.details.breakfastRecipies[0]
-              ? this._day.details.breakfastRecipies[0].portions
+            return !!this._day.details.breakfastRecipies.length
+              ? this._day.details.breakfastRecipies.reduce(
+                  (prev, cur) => Math.max(prev, cur.portions),
+                  0
+                )
               : null;
           case MealTime.Lunch:
-            return !!this._day.details.lunchRecipies[0]
-              ? this._day.details.lunchRecipies[0].portions
+            return !!this._day.details.lunchRecipies.length
+              ? this._day.details.lunchRecipies.reduce(
+                  (prev, cur) => Math.max(prev, cur.portions),
+                  0
+                )
               : null;
           case MealTime.Dinner:
-            return !!this.day.details.dinnerRecipies[0]
-              ? this._day.details.dinnerRecipies[0].portions
+            return !!this.day.details.dinnerRecipies.length
+              ? this._day.details.dinnerRecipies.reduce(
+                  (prev, cur) => Math.max(prev, cur.portions),
+                  0
+                )
               : null;
           default:
             return null;
         }
       } else return null;
     } else return null;
+  }
+
+  portionsText(portionsNumber: number | null) {
+    if (!portionsNumber) {
+      return '';
+    }
+    if (portionsNumber <= 1) {
+      return 'порція';
+    } else if (portionsNumber > 1 && portionsNumber < 5) {
+      return 'порції';
+    } else return 'порцій';
   }
 
   getAmountPerPerson() {

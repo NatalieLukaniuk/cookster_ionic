@@ -1,5 +1,7 @@
 ion-card {
   position: relative;
+  margin: 10px 0;
+  border-radius: 0;
 }
 
 ion-card-subtitle {
@@ -10,6 +12,7 @@ ion-card-subtitle {
 
 ion-card-content {
   height: 250px;
+  padding-inline: 0;
 }
 
 .flex-container {
@@ -26,10 +29,12 @@ ion-card-content {
   transition: all 200ms ease-in-out;
   background-color: var(--ion-color-tertiary);
   padding: 10px;
-  & > div {
+  & > div:not(.ingredients-wrapper) {
     margin-bottom: 5px;
     display: flex;
     align-items: center;
+    font-size: 10px;
+    line-height: 1.2;
     ion-icon {
       margin-right: 5px;
     }
@@ -42,6 +47,10 @@ ion-card-content {
       flex-direction: row-reverse;
       opacity: 0;
       transition: all 300ms ease-in-out;
+
+      & > ion-button {
+        width: 45%;
+      }
     }
   }
 
@@ -55,6 +64,12 @@ ion-card-content {
   &.visible {
     height: 260px;
     z-index: 2;
+
+    &.collections {
+      ion-list {
+        padding-block: 0;
+      }
+    }
 
     & > div.actions-pane {
       opacity: 1;
@@ -70,6 +85,22 @@ ion-card-content {
 }
 
 .ingredients-wrapper {
+  &.no-photo {
+    padding-inline: 20px;
+    padding-bottom: 0;
+  }
+  &:not(.no-photo) {
+    h6 {
+      margin-top: 15px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    div {
+      font-size: 10px;
+      font-weight: normal;
+    }
+  }
+
   h6 {
     margin-block: 5px;
   }

@@ -1,5 +1,11 @@
 <app-header>
   <span title>Список покупок</span>
+  <ion-button    
+    right-button
+    size="small"
+    (click)="addCustomItem()"
+    ><ion-icon name="add" slot="icon-only"></ion-icon
+  ></ion-button>
 </app-header>
 
 <ion-content>
@@ -26,7 +32,7 @@
                     (itemSwiped)="onSwiped(item, list.name)"
                   >
                     <ion-label>{{item.title}}</ion-label>
-                    <ion-chip>{{ getAmountInList(item) }}</ion-chip>
+                    <ion-chip>{{ item.amount }}</ion-chip>
                   </ion-item>
                 </ng-container>
               </ion-list>
@@ -61,9 +67,4 @@
       </ion-accordion-group>
     </ng-container>
   </ng-container>
-  <ion-fab slot="fixed" vertical="top" horizontal="end">
-    <ion-fab-button (click)="addCustomItem()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

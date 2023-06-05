@@ -22,6 +22,7 @@ import { take, map, combineLatest, BehaviorSubject } from 'rxjs';
 })
 export class AddRecipyModalComponent {
   @Input() meatime!: MealTime;
+  @Input() date!: string;
   @Output() recipyToAdd = new EventEmitter<string>();
 
   collections$ = this.store.pipe(
@@ -91,5 +92,16 @@ export class AddRecipyModalComponent {
 
   isPrepSuggestions(recipy: Recipy) {
     return !!recipy.ingrediends.find((ingr) => !!ingr.prep);
+  }
+
+  get mealtimeText() {
+    switch (this.meatime) {
+      case MealTime.Breakfast:
+        return 'Сніданок';
+      case MealTime.Lunch:
+        return 'Обід';
+      case MealTime.Dinner:
+        return 'Вечеря';
+    }
   }
 }

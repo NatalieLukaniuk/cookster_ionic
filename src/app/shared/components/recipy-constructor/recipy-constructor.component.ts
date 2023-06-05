@@ -199,6 +199,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
   saveNewRecipy() {
     let recipy: NewRecipy = this.collectDataNewRecipyOrDraft();
     this.store.dispatch(new AddNewRecipyAction(recipy));
+    this.reset()
   }
 
   updateRecipy() {
@@ -339,5 +340,17 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
       }
       return ingred;
     });
+  }
+
+  reset(){
+    this.recipyName = '';
+    this.isSplitIntoGroups = false;
+    this.complexity = Complexity.simple;
+    this.selectedTags = [];
+    this.recipySource = '';
+    this.isBaseRecipy = false;
+    this.ingredients = [];
+    this.steps = [];
+    this.photo = '';
   }
 }

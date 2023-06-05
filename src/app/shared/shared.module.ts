@@ -71,7 +71,8 @@ import { PrepsComponent } from './components/recipy-constructor/preps/preps.comp
     AddStepComponent,
     FileUploadComponent,
     ProductAutocompleteComponent,
-    LongPressDirective
+    LongPressDirective,
+    IngredientComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

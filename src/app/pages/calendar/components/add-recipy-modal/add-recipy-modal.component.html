@@ -13,6 +13,8 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
+      <h6>{{date.toString() | date : "EE, MMM d"}}, {{mealtimeText.toLowerCase()}}</h6>
+
       <ng-container *ngIf="!(collectionSelected$ | async)">
         <ion-list>
           <ion-item

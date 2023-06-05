@@ -10,13 +10,17 @@
     </div>
 
     <div class="details" *ngIf="!!detailedRecipiesList.length">
-      <span *ngIf="!!getPortions()"> {{ getPortions() }} персони </span>
+      <span *ngIf="!!getPortions()">
+        {{ getPortions() }} {{ portionsText(getPortions()) }}
+      </span>
 
+      <!-- TODO: what is the logical way to display amount per person when there
+      are several dishes with different amount of portions?
       <span *ngIf="!!getAmountPerPerson()">
         {{ getAmountPerPerson() }} гр/чол
       </span>
 
-      <span *ngIf="getCalories()">{{ getCalories() }} ккал/порцію</span>
+      <span *ngIf="getCalories()">{{ getCalories() }} ккал/порцію</span> -->
     </div>
   </div>
 
@@ -34,6 +38,7 @@
   <app-add-recipy-modal
     *ngIf="addRecipies"
     [meatime]="mealtime"
+    [date]="day.details.day"
     (recipyToAdd)="onRecipySelected($event)"
   ></app-add-recipy-modal>
   <app-select-option-dialog #selectOption></app-select-option-dialog>

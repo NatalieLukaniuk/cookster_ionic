@@ -58,7 +58,7 @@
     <ion-input [(ngModel)]="amountToAdd"></ion-input>
   </ion-item>
 
-  <ng-container *ngIf="isPlannedIngredient">
+  <ng-container *ngIf="isPlannedIngredient && ingredient.items.length">
     <h3>Використовується в:</h3>
     <ion-list class="used-in">
       <ng-container *ngFor="let childItem of ingredient.items">
