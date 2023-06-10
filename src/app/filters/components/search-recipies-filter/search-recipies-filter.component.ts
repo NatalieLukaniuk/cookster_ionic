@@ -4,7 +4,7 @@ import { FiltersService } from '../../services/filters.service';
 @Component({
   selector: 'app-search-recipies-filter',
   templateUrl: './search-recipies-filter.component.html',
-  styleUrls: ['./search-recipies-filter.component.css'],
+  styleUrls: ['./search-recipies-filter.component.scss'],
 })
 export class SearchRecipiesFilterComponent implements OnInit {
   constructor(private filtersService: FiltersService) {}

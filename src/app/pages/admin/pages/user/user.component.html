@@ -1,0 +1,9 @@
+<div *ngIf="isOlDataAvailable">
+<p>You have data older than three months available which slows down the app</p>
+<ion-item>
+    <ion-label position="floating">Enter amount of months to store:</ion-label>
+   <ion-input [(ngModel)]="numberOfMonthsToStore"></ion-input> 
+</ion-item>
+<ion-button (click)="deleteOldData()">Delete</ion-button>
+
+</div>

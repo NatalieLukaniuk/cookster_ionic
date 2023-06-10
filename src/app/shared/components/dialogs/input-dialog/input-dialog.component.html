@@ -1,9 +1,9 @@
-<ion-button id="open-modal" expand="block">{{ buttonText }}</ion-button>
+<ion-button [id]="'open-input-dialog-' + id" expand="block">{{ buttonText }}</ion-button>
 <ion-modal
+[initialBreakpoint]="0.5" [breakpoints]="[0, 0.25, 0.5, 0.75]"
   #modal
-  trigger="open-modal"
-  [swipeToClose]="true"
-  [presentingElement]="presentingElement"
+  [trigger]="'open-input-dialog-' + id"
+  [presentingElement]="presentingElement" 
   (didDismiss)="onDismissed()"
 >
   <ng-template>
