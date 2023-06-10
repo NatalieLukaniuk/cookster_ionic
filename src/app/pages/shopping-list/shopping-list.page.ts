@@ -1,17 +1,17 @@
-import { PlannerByDate } from 'src/app/models/planner.models';
 import {
   ShoppingList,
   ShoppingListItem,
 } from './../../models/planner.models';
 import { map, Subject, takeUntil } from 'rxjs';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
-import { PlannerService } from 'src/app/services/planner.service';
 import * as _ from 'lodash';
-import { ModalController } from '@ionic/angular';
+import { IonModal, ModalController } from '@ionic/angular';
 import { AddToListModalComponent } from '../planner/components/add-to-list-modal/add-to-list-modal.component';
+import { OverlayEventDetail } from '@ionic/core/components';
+import { ShoppingListService } from 'src/app/services/shopping-list.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -21,25 +21,14 @@ import { AddToListModalComponent } from '../planner/components/add-to-list-modal
 export class ShoppingListPage implements OnInit, OnDestroy {
   destroyed$ = new Subject<void>();
   activeList: ShoppingList[] | undefined;
-  planner: PlannerByDate | undefined;
 
   activeList$ = this.store.pipe(
     select(getCurrentUser),
     takeUntil(this.destroyed$),
     map((user) => {
-      if (user) {
-        this.planner = user.planner?.find(
-          (planner) => planner.isShoppingListActive
-        );
-        let list: ShoppingList[];
-        if(this.planner!.shoppingLists){
-          list = this.planner!.shoppingLists;
-        } else {
-          list = [];
-        }
-        
-        this.activeList = list;
-        return list;
+      if (user && user.shoppingLists) {
+        this.activeList = user.shoppingLists;
+        return user.shoppingLists;
       } else return [];
     })
   );
@@ -52,11 +41,11 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<IAppState>,
-    private plannerService: PlannerService,
+    private shoppingListService: ShoppingListService,
     private modalCtrl: ModalController
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngOnDestroy(): void {
     this.destroyed$.next();
@@ -96,7 +85,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
       }
       return ls;
     });
-    this.plannerService.updateShoppingLists(updatedList, this.planner!);
+    this.shoppingListService.updateShoppingList(updatedList);
   }
 
   async addCustomItem() {
@@ -114,7 +103,37 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.plannerService.updateShoppingLists(data, this.planner!);
+      this.shoppingListService.updateShoppingList(data);
+    }
+  }
+
+  removeBought() {
+
+  }
+
+  addFromCalendar(dates: string[]) {
+    console.log(dates)
+  }
+
+  @ViewChild(IonModal) modal: IonModal | undefined;
+
+  selectedDates: [] = [];
+  selectedDateChanged(event: any) {
+    this.selectedDates = event.detail.value;
+  }
+
+  cancel() {
+    this.modal?.dismiss(null, 'cancel');
+  }
+
+  confirm() {
+    this.modal?.dismiss(this.selectedDates, 'confirm');
+  }
+
+  onWillDismiss(event: Event) {
+    const ev = event as CustomEvent<OverlayEventDetail<string[]>>;
+    if (ev.detail.role === 'confirm' && ev.detail.data) {
+      this.addFromCalendar(ev.detail.data)
     }
   }
 }

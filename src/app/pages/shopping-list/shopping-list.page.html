@@ -1,11 +1,11 @@
 <app-header>
   <span title>Список покупок</span>
-  <ion-button    
-    right-button
-    size="small"
-    (click)="addCustomItem()"
-    ><ion-icon name="add" slot="icon-only"></ion-icon
-  ></ion-button>
+  <ion-button right-button size="small" (click)="addCustomItem()"><ion-icon name="add"
+      slot="icon-only"></ion-icon></ion-button>
+  <ion-button *ngIf="currentTab === tabs[0].name" right-button size="small" id="open-datepicker-modal"><ion-icon
+      name="add-circle-outline" slot="icon-only"></ion-icon></ion-button>
+  <ion-button *ngIf="currentTab === tabs[1].name" right-button size="small" (click)="removeBought()"><ion-icon
+      name="trash-bin-outline" slot="icon-only"></ion-icon></ion-button>
 </app-header>
 
 <ion-content>
@@ -26,11 +26,7 @@
             <div class="ion-padding" slot="content">
               <ion-list>
                 <ng-container *ngFor="let item of list.items">
-                  <ion-item
-                    swipeLeftNoConfirmation
-                    *ngIf="!item.completed"
-                    (itemSwiped)="onSwiped(item, list.name)"
-                  >
+                  <ion-item swipeLeftNoConfirmation *ngIf="!item.completed" (itemSwiped)="onSwiped(item, list.name)">
                     <ion-label>{{item.title}}</ion-label>
                     <ion-chip>{{ item.amount }}</ion-chip>
                   </ion-item>
@@ -51,11 +47,7 @@
             <div class="ion-padding" slot="content">
               <ion-list>
                 <ng-container *ngFor="let item of list.items">
-                  <ion-item
-                    swipeLeftNoConfirmation
-                    *ngIf="item.completed"
-                    (itemSwiped)="onSwiped(item, list.name)"
-                  >
+                  <ion-item swipeLeftNoConfirmation *ngIf="item.completed" (itemSwiped)="onSwiped(item, list.name)">
                     <ion-label>{{item.title}}</ion-label>
                     <ion-chip>{{ getAmountInList(item) }}</ion-chip>
                   </ion-item>
@@ -67,4 +59,26 @@
       </ion-accordion-group>
     </ng-container>
   </ng-container>
+
+
+
+  <ion-modal trigger="open-datepicker-modal" (willDismiss)="onWillDismiss($event)" [initialBreakpoint]="0.5"
+    [breakpoints]="[0.5, 0.75]">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Скасувати</ion-button>
+          </ion-buttons>
+          <ion-title>Виберіть дати</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" [strong]="true">Ок</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-datetime presentation="date" [multiple]="true" (ionChange)="selectedDateChanged($event)"></ion-datetime>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
