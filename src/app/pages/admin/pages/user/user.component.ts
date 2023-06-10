@@ -36,7 +36,6 @@ export class UserComponent implements OnInit {
         ...user,
         details: user!.details!.filter(day => !this.getIsOlderThan(day.day, this.numberOfMonthsToStore))
       }
-      debugger
       this.store.dispatch(new UpdateUserAction(updatedUser, 'Old data deleted'))
     })
   }

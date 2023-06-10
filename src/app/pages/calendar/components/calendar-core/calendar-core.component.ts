@@ -120,7 +120,6 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
               .subscribe((res) => {
                 if (res) {
                   this._day = res;
-                  debugger
                 }
               });
           } else {
