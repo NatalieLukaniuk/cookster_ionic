@@ -12,6 +12,7 @@ import { IonModal, ModalController } from '@ionic/angular';
 import { AddToListModalComponent } from '../planner/components/add-to-list-modal/add-to-list-modal.component';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shopping-list',
@@ -42,7 +43,8 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   constructor(
     private store: Store<IAppState>,
     private shoppingListService: ShoppingListService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private router: Router
   ) { }
 
   ngOnInit() { }
@@ -112,7 +114,8 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   }
 
   addFromCalendar(dates: string[]) {
-    console.log(dates)
+    const datesToString = dates.join('&');
+    this.router.navigate(['tabs', 'shopping-list', 'dates', datesToString]);
   }
 
   @ViewChild(IonModal) modal: IonModal | undefined;

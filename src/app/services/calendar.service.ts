@@ -142,6 +142,46 @@ export class CalendarService {
     return calendar;
   }
 
+  generateForDates(dates: string[]): Day[] {
+    // format: YYYYMMDD
+    const calendar: Day[] = [];
+    const currentDay = moment().subtract(1, 'day');
+    for (const date of dates) {
+      const momentDate = moment(date).subtract(1, 'day');
+      const value = momentDate.add(1, 'day').clone();
+      const active = moment().isSame(value, 'date');
+      const disabled = value.isBefore(currentDay);
+      const selected = value.isSame(currentDay);
+      let det = new DayDetails(value.format('DDMMYYYY'));
+      const details: DayDetailsExtended = {
+        ...det,
+        breakfastRecipies: [],
+        lunchRecipies: [],
+        dinnerRecipies: [],
+      };
+      calendar.push({ value, active, disabled, selected, details });
+    }    
+    return calendar;
+  }
+
+  buildCalendarForDates(
+    dates: string[],
+    userCalendarData: DayDetails[],
+    allRecipies: Recipy[]
+  ) {
+    let calendar = this.generateForDates(dates);
+
+    calendar = calendar.map((day: Day) => {
+      let foundDay = userCalendarData.find(
+        (item: IDayDetails) => item.day == day.details.day
+      );
+      if (!!foundDay) {
+        return this.buildDay(foundDay, day, allRecipies);
+      } else return day;
+    });
+    this.store.dispatch(new LoadCalendarAction(calendar));
+  }
+
   buildCalendarInRange(
     start: string,
     end: string,
