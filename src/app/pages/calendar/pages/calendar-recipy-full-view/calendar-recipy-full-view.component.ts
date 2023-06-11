@@ -1,12 +1,12 @@
-import { MealTime } from 'src/app/models/calendar.models';
+import { MealTime, Suggestion } from 'src/app/models/calendar.models';
 import {
   UpdateRecipyInCalendarAction,
 } from './../../../../store/actions/calendar.actions';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
-import { tap, map } from 'rxjs';
+import { tap, map, take } from 'rxjs';
 import {
   SetIsLoadingAction,
   SetIsLoadingFalseAction,
@@ -14,13 +14,15 @@ import {
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { transfromMomentToDate } from 'src/app/pages/planner/planner.utils';
+import { UpdateUserAction } from 'src/app/store/actions/user.actions';
 
 @Component({
   selector: 'app-calendar-recipy-full-view',
   templateUrl: './calendar-recipy-full-view.component.html',
   styleUrls: ['./calendar-recipy-full-view.component.scss'],
 })
-export class CalendarRecipyFullViewComponent implements OnInit {
+export class CalendarRecipyFullViewComponent {
   recipyId: string;
 
   recipy$ = this.store.pipe(
@@ -62,7 +64,6 @@ export class CalendarRecipyFullViewComponent implements OnInit {
     this.recipyId = path[path.length - 1];
   }
 
-  ngOnInit() {}
 
   onPortionsChanged(event: { portions: number; amountPerPortion: number }) {
     const queryParams: Params = {
@@ -75,7 +76,7 @@ export class CalendarRecipyFullViewComponent implements OnInit {
       queryParams: queryParams,
       queryParamsHandling: 'merge',
     });
-    
+
     if (this.mealtime && this.day) {
       this.store.dispatch(
         new UpdateRecipyInCalendarAction(
@@ -87,5 +88,27 @@ export class CalendarRecipyFullViewComponent implements OnInit {
         )
       );
     }
+  }
+
+  getDay() {
+    if (this.day) {
+      return new Date(transfromMomentToDate(this.day));
+    } else {
+      return new Date()
+    }
+  }
+
+  addPrep(prep: Suggestion) {
+    this.user$.pipe(take(1)).subscribe(user => {
+      if(user){
+        const updatedUser = _.cloneDeep(user);
+        if(updatedUser.savedPreps){
+          updatedUser.savedPreps.push(prep)
+        } else {
+          updatedUser.savedPreps = [prep];
+        }
+        this.store.dispatch(new UpdateUserAction(updatedUser, 'Заготовку додано'))
+      }
+    })
   }
 }

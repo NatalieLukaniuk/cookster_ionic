@@ -11,7 +11,10 @@
         [recipy]="recipy"
         [portions]="portions"
         [amountPerPortion]="amountPerPortion"
+        [ingredStartOptions]="ingredStartOptions"
+        [day]="day"
         (portionsChanged)="onPortionsChanged($event)"
+        (addPrep)="addPrep($event)"
       ></app-ingredients-tab>
     </ng-container>
 

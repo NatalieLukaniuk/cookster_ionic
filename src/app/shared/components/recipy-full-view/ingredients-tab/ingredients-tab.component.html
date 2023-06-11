@@ -35,6 +35,8 @@
       *ngFor="let ingredient of recipy.ingrediends"
       [ingredient]="ingredient"
       [coefficient]="coeficient"
+      [startOptions]="ingredStartOptions"
+      (emitEvent)="onEventEmitted($event, ingredient)"
     >
     </app-ingredient>
   </ion-list>
@@ -48,6 +50,8 @@
       *ngFor="let ingredient of item.value"
       [ingredient]="ingredient"
       [coefficient]="coeficient"
+      [startOptions]="ingredStartOptions"
+      (emitEvent)="onEventEmitted($event, ingredient)"
     ></app-ingredient>
-  </ion-item-group>
+  </ion-item-group>  
 </ng-container>

@@ -10,8 +10,22 @@ import {
   MeasuringUnitText,
   ProductType,
 } from '../../../models/recipies.models';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
+
+export interface ItemOption {
+  name: string,
+  color: string,
+  action: ItemOptionActions
+}
+
+export enum ItemOptionActions {
+  Edit = 'edit',
+  Delete = 'delete-no-confirm',
+  DeleteWithConfirmation = 'delete-with-confirm',
+  Move = 'move',
+  AddPrep = 'add-prep'
+}
 
 @Component({
   selector: 'app-ingredient',
@@ -21,6 +35,10 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 export class IngredientComponent implements OnInit {
   @Input() ingredient!: Ingredient;
   @Input() coefficient!: number;
+  @Input() startOptions: ItemOption[] = [];
+  @Input() endOptions: ItemOption[] = [];
+
+  @Output() emitEvent = new EventEmitter<ItemOptionActions>();
 
   measuringUnit: MeasuringUnit = MeasuringUnit.gr;
   MeasuringUnit = MeasuringUnit;
@@ -63,7 +81,7 @@ export class IngredientComponent implements OnInit {
     return MeasuringUnitText[unit];
   }
 
-  constructor(private datamapping: DataMappingService) {}
+  constructor(private datamapping: DataMappingService) { }
 
   ngOnInit() {
     this.measuringUnit = this.ingredient.defaultUnit;
@@ -73,7 +91,11 @@ export class IngredientComponent implements OnInit {
     return this.datamapping.getIngredientText(ingredient);
   }
 
-  unitChanged(event: any){
+  unitChanged(event: any) {
     this.measuringUnit = event.detail.value;
+  }
+
+  onOptionClicked(action: ItemOptionActions) {
+    this.emitEvent.emit(action);
   }
 }

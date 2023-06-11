@@ -1,27 +1,37 @@
-<ion-item>
-  <ion-label>{{ getIngredientText(ingredient) }}</ion-label>
+<ion-item-sliding>
+  <ion-item-options side="start" *ngIf="startOptions.length">
+    <ion-item-option *ngFor="let option of startOptions" [color]="option.color" (click)="onOptionClicked(option.action)">{{option.name}}</ion-item-option>
+  </ion-item-options>
 
-  <ion-text *ngIf="measuringUnit !== MeasuringUnit.none">{{
-    ingredient.amount * coefficient
+  <ion-item>
+    <ion-label>{{ getIngredientText(ingredient) }}</ion-label>
+
+    <ion-text *ngIf="measuringUnit !== MeasuringUnit.none">{{
+      ingredient.amount * coefficient
       | convertToSelectedUnit : ingredient.product : measuringUnit
       | normalizeDisplayedAmount : measuringUnit
-  }}</ion-text>
-  <div>
-    <ion-select
-      *ngIf="measuringUnit !== MeasuringUnit.none"
-      interface="action-sheet"
-      [value]="measuringUnit"
-      (ionChange)="unitChanged($event)"
-    >
-      <ion-select-option *ngFor="let unit of measurementUnits" [value]="unit">{{
-        getUnitText(unit)
-      }}</ion-select-option>
-    </ion-select>
-    <ion-text *ngIf="measuringUnit === MeasuringUnit.none">за смаком</ion-text>
-  </div>
+      }}</ion-text>
+    <div>
+      <ion-select *ngIf="measuringUnit !== MeasuringUnit.none" interface="action-sheet" [value]="measuringUnit"
+        (ionChange)="unitChanged($event)">
+        <ion-select-option *ngFor="let unit of measurementUnits" [value]="unit">{{
+          getUnitText(unit)
+          }}</ion-select-option>
+      </ion-select>
+      <ion-text *ngIf="measuringUnit === MeasuringUnit.none">за смаком</ion-text>
+    </div>
 
-  <div>
-    <ng-content select="[action-buttons]"></ng-content>
-  </div>
-  
-</ion-item>
+    <div>
+      <ng-content select="[action-buttons]"></ng-content>
+    </div>
+  </ion-item>
+
+
+
+  <ion-item-options side="end" *ngIf="endOptions.length">
+    <ion-item-option *ngFor="let option of endOptions" [color]="option.color">{{option.name}}</ion-item-option>
+  </ion-item-options>
+
+
+
+</ion-item-sliding>
