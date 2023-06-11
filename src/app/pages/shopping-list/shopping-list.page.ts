@@ -13,6 +13,7 @@ import { AddToListModalComponent } from '../planner/components/add-to-list-modal
 import { OverlayEventDetail } from '@ionic/core/components';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { Router } from '@angular/router';
+import { DialogsService } from 'src/app/services/dialogs.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -44,7 +45,8 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     private store: Store<IAppState>,
     private shoppingListService: ShoppingListService,
     private modalCtrl: ModalController,
-    private router: Router
+    private router: Router,
+    private dialog: DialogsService
   ) { }
 
   ngOnInit() { }
@@ -110,7 +112,25 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   }
 
   removeBought() {
-
+    this.dialog
+    .openConfirmationDialog(
+      `Очистити список куплених інгридієнтів?`,
+      'Ця дія незворотня'
+    )
+    .then((res) => {
+      if (res.role === 'confirm') {
+        const list = this.activeList?.map(listItem => {
+          const updated = {
+            ...listItem,
+            items: listItem.items.filter(item => !item.completed)
+          }
+          return updated
+        })
+        if(list){
+          this.shoppingListService.updateShoppingList(list)
+        }        
+      }
+    });
   }
 
   addFromCalendar(dates: string[]) {
