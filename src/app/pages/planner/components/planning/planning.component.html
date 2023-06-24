@@ -1,8 +1,6 @@
 <ion-content [fullscreen]="true">
   <div *ngIf="!!currentPlanner; else noPlanner">
     <app-calendar-core
-      [setCurrentDay]="moment(currentPlanner.startDate, 'DDMMYYYY')"
-      [setEndDate]="moment(currentPlanner.endDate, 'DDMMYYYY')"
       [showPreps]="false"
       [addRecipies]="true"
     ></app-calendar-core>

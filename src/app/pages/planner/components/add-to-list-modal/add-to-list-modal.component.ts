@@ -66,6 +66,9 @@ export class AddToListModalComponent implements OnInit {
     if (this.isPlannedIngredient) {
       this.lists.forEach((list) => {
         if (list.name === this.selectedList) {
+          if(!list.items){
+            list.items = []
+          }
           list.items.push({
             title: this.ingredient.name,
             amount: this.amountToAdd,
@@ -77,6 +80,9 @@ export class AddToListModalComponent implements OnInit {
     } else {
       this.lists.forEach((list) => {
         if (list.name === this.selectedList) {
+          if(!list.items){
+            list.items = []
+          }
           list.items.push({
             title: this.newItemName,
             amount: this.amountToAdd,

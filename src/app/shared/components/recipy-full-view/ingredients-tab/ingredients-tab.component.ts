@@ -135,7 +135,7 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
         prepDescription: data,
         recipyId: this.recipy.id,
         recipyTitle: this.recipy.name,
-        day: this.day
+        day: this.day // TODO: this doesn't need to be passed down from parent components, user should be able to select it
       }
       this.addPrep.emit(prep);
     }

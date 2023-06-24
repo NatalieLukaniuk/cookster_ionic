@@ -57,7 +57,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   getAmountInList(item: ShoppingListItem): string | undefined {
     let ls = this.activeList!.find((list) =>
-      list.items.find((ingr) => ingr.title == item.title)
+      list.items?.find((ingr) => ingr.title == item.title)
     );
     if (ls) {
       return ls.items.find((ingr) => ingr.title == item.title)?.amount;
@@ -69,11 +69,11 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   }
 
   hasNotBought(list: ShoppingList) {
-    return list.items.some((item) => !item.completed);
+    return list.items?.some((item) => !item.completed);
   }
 
   hasBought(list: ShoppingList) {
-    return list.items.some((item) => item.completed);
+    return list.items?.some((item) => item.completed);
   }
 
   onSwiped(item: ShoppingListItem, list: string) {
@@ -113,24 +113,24 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   removeBought() {
     this.dialog
-    .openConfirmationDialog(
-      `Очистити список куплених інгридієнтів?`,
-      'Ця дія незворотня'
-    )
-    .then((res) => {
-      if (res.role === 'confirm') {
-        const list = this.activeList?.map(listItem => {
-          const updated = {
-            ...listItem,
-            items: listItem.items.filter(item => !item.completed)
+      .openConfirmationDialog(
+        `Очистити список куплених інгридієнтів?`,
+        'Ця дія незворотня'
+      )
+      .then((res) => {
+        if (res.role === 'confirm') {
+          const list = this.activeList?.map(listItem => {
+            const updated = {
+              ...listItem,
+              items: listItem.items?.filter(item => !item.completed)
+            }
+            return updated
+          })
+          if (list) {
+            this.shoppingListService.updateShoppingList(list)
           }
-          return updated
-        })
-        if(list){
-          this.shoppingListService.updateShoppingList(list)
-        }        
-      }
-    });
+        }
+      });
   }
 
   addFromCalendar(dates: string[]) {

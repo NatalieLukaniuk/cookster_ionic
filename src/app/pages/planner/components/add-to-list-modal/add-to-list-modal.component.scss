@@ -6,3 +6,8 @@
 .add-new-list {
     align-items: center;
 }
+
+.lists-container {
+    max-height: 50vh;
+    overflow-y: auto;
+}
