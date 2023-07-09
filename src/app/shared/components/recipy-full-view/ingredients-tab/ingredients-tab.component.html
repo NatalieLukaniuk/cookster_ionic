@@ -1,27 +1,15 @@
 <div class="portions padding-inline">
-  <div
-    class="portions-info"
-    *ngIf="!isEditPortions"
-    (click)="isEditPortions = true"
-  >
+  <div class="portions-info" *ngIf="!isEditPortions" (click)="isEditPortions = true">
     {{ portionsToServe }} порції по {{ portionSize }} грам
   </div>
   <div *ngIf="isEditPortions" class="portions-edit">
     <ion-item>
       <ion-label position="floating">Кількість порцій</ion-label>
-      <ion-input
-        type="number"
-        [(ngModel)]="portionsToServe"
-        (ngModelChange)="getCoeficient()"
-      ></ion-input>
+      <ion-input type="number" [(ngModel)]="portionsToServe" (ngModelChange)="getCoeficient()"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Розмір порції</ion-label>
-      <ion-input
-        type="number"
-        [(ngModel)]="portionSize"
-        (ngModelChange)="getCoeficient()"
-      ></ion-input>
+      <ion-input type="number" [(ngModel)]="portionSize" (ngModelChange)="getCoeficient()"></ion-input>
     </ion-item>
     <ion-button size="small" (click)="onPortionsChanged()">
       <ion-icon slot="icon-only" name="checkmark"></ion-icon>
@@ -31,27 +19,20 @@
 
 <ng-container *ngIf="!isSplitToGroups">
   <ion-list>
-    <app-ingredient
-      *ngFor="let ingredient of recipy.ingrediends"
-      [ingredient]="ingredient"
-      [coefficient]="coeficient"
-      [startOptions]="ingredStartOptions"
-      (emitEvent)="onEventEmitted($event, ingredient)"
-    >
+    <app-ingredient *ngFor="let ingredient of recipy.ingrediends" [ingredient]="ingredient" [coefficient]="coeficient"
+      [startOptions]="ingredStartOptions" (emitEvent)="onEventEmitted($event, ingredient)">
     </app-ingredient>
   </ion-list>
 </ng-container>
 <ng-container>
-  <ion-item-group *ngFor="let item of ingredientsByGroup | keyvalue">
-    <ion-item-divider sticky="true">
-      <ion-label>{{ item.key }}</ion-label>
+  <ion-item-group *ngFor="let group of groups">
+    <ion-item-divider sticky="true" color="primary">
+      <ion-label>{{ group }}</ion-label>
     </ion-item-divider>
-    <app-ingredient
-      *ngFor="let ingredient of item.value"
-      [ingredient]="ingredient"
-      [coefficient]="coeficient"
-      [startOptions]="ingredStartOptions"
-      (emitEvent)="onEventEmitted($event, ingredient)"
-    ></app-ingredient>
-  </ion-item-group>  
+    <ng-container *ngFor="let ingredient of recipy.ingrediends">
+      <app-ingredient *ngIf="ingredient.group === group" [ingredient]="ingredient" [coefficient]="coeficient"
+        [startOptions]="ingredStartOptions" (emitEvent)="onEventEmitted($event, ingredient)"></app-ingredient>
+    </ng-container>
+
+  </ion-item-group>
 </ng-container>

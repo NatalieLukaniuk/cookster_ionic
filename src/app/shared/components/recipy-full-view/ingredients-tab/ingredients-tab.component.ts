@@ -38,7 +38,7 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
   isEditPortions = false;
 
   isSplitToGroups: boolean = false;
-  ingredientsByGroup = <Record<string, any>>{};
+  groups: string[] = [];
 
   portionsToServe: number = 4;
   portionSize: number = AVERAGE_PORTION;
@@ -67,15 +67,9 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
   }
 
   getIngredientsByGroup() {
+    this.groups = [];
     if (!!this.recipy && this.recipy.isSplitIntoGroups) {
-      let ingredients = this.recipy.ingrediends;
-      let groups = this.getGroups();
-
-      groups.forEach((group) => {
-        this.ingredientsByGroup[group] = ingredients.filter(
-          (ingredient) => ingredient.group == group
-        );
-      });
+      this.groups = this.getGroups();
     }
   }
 
