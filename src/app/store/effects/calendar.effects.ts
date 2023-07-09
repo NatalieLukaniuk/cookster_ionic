@@ -1,4 +1,4 @@
-import { UpdateRecipyInCalendarAction, AddCommentToCalendarAction } from './../actions/calendar.actions';
+import { UpdateRecipyInCalendarAction, AddCommentToCalendarAction, RemoveCommentFromCalendarAction } from './../actions/calendar.actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -87,7 +87,7 @@ export class CalendarEffects {
                   }
                 );
               } else {
-                let newDay = new DayDetails(action.day);
+                let newDay = new DayDetails(action.day, []);
                 newDay = this.updateDayOnAddRecipy(
                   newDay,
                   action.mealtime,
@@ -116,28 +116,49 @@ export class CalendarEffects {
     ofType(CalendarActionTypes.ADD_COMMENT_TO_CALENDAR),
     switchMap((action: AddCommentToCalendarAction) => this.store.pipe(
       select(getCurrentUser),
-          take(1),
-          map((user: User | null) => {
-            if (user && user.details){
-              let updatedUser = _.cloneDeep(user);
-              const foundDay = updatedUser.details?.find((day) => day.day == action.day)
-              if (foundDay){
-                if(!foundDay.comments){
-                  foundDay.comments = []
-                }
-                foundDay.comments.push({comment: action.comment, mealTime: action.mealtime})
-              } else {
-                let newDay = new DayDetails(action.day);
-                newDay.comments.push({comment: action.comment, mealTime: action.mealtime});
-                updatedUser.details?.push(newDay);
-              }
-              return new UpdateUserAction(
-                updatedUser,
-                `${action.comment} додано`
-              );
+      take(1),
+      map((user: User | null) => {
+        if (user && user.details) {
+          let updatedUser = _.cloneDeep(user);
+          const foundDay = updatedUser.details?.find((day) => day.day == action.day)
+          if (foundDay) {
+            if (!foundDay.comments) {
+              foundDay.comments = []
+            }
+            foundDay.comments.push({ comment: action.comment, mealTime: action.mealtime })
+          } else {
+            let newDay = new DayDetails(action.day, []);
+            newDay.comments.push({ comment: action.comment, mealTime: action.mealtime });
+            updatedUser.details?.push(newDay);
+          }
+          return new UpdateUserAction(
+            updatedUser,
+            `${action.comment} додано`
+          );
 
-            } else return new ErrorAction('no user');
-          })
+        } else return new ErrorAction('no user');
+      })
+    ))
+  ))
+
+  deleteComment$ = createEffect(() => this.actions$.pipe(
+    ofType(CalendarActionTypes.REMOVE_COMMENT_FROM_CALENDAR),
+    switchMap((action: RemoveCommentFromCalendarAction) => this.store.pipe(
+      select(getCurrentUser),
+      take(1),
+      map((user: User | null) => {
+        if (user && user.details) {
+          let updatedUser = _.cloneDeep(user);
+          const foundDay = updatedUser.details?.find((day) => day.day == action.day);
+          if (foundDay && foundDay.comments) {
+            foundDay.comments = foundDay.comments.filter(commentItem => commentItem.comment !== action.comment || commentItem.mealTime !== action.mealtime);
+          }
+          return new UpdateUserAction(
+            updatedUser,
+            `${action.comment} видалено`
+          );
+        } else return new ErrorAction('no user');
+      })
     ))
   ))
 
@@ -294,5 +315,5 @@ export class CalendarEffects {
     return calWithAdded;
   }
 
-  constructor(private actions$: Actions, private store: Store<IAppState>) {}
+  constructor(private actions$: Actions, private store: Store<IAppState>) { }
 }

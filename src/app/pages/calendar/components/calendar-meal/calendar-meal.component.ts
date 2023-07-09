@@ -1,4 +1,4 @@
-import { AddCommentToCalendarAction, AddRecipyToCalendarAction } from './../../../../store/actions/calendar.actions';
+import { AddCommentToCalendarAction, AddRecipyToCalendarAction, RemoveCommentFromCalendarAction } from './../../../../store/actions/calendar.actions';
 import {
   Component,
   Input,
@@ -27,6 +27,12 @@ export class CalendarMealComponent implements OnInit, OnChanges {
   @Input() addRecipies!: boolean;
 
   _day: Day | undefined;
+
+  get isComments() {
+    if (this._day) {
+      return this._day.details.comments.find(commentItem => commentItem.mealTime === this.mealtime);
+    } else return false
+  }
 
   get mealtimeText() {
     switch (this.mealtime) {
@@ -57,7 +63,8 @@ export class CalendarMealComponent implements OnInit, OnChanges {
   ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['day'].currentValue) {
+    if (changes['day']?.currentValue) {
+      debugger
       this._day = _.cloneDeep(this.day);
     }
   }
@@ -199,6 +206,7 @@ export class CalendarMealComponent implements OnInit, OnChanges {
     });
   }
 
+  @ViewChild('addCommentModal') addCommentModal: any;
   onAddComment(comment: string) {
     this.store.dispatch(
       new AddCommentToCalendarAction(
@@ -206,6 +214,17 @@ export class CalendarMealComponent implements OnInit, OnChanges {
         this.day.details.day,
         this.mealtime,
         0
+      )
+    );
+    this.addCommentModal.comment = '';
+  }
+
+  onDeleteComment(comment: any){
+    this.store.dispatch(
+      new RemoveCommentFromCalendarAction(
+        comment.comment,
+        this.day.details.day,
+        comment.mealTime,
       )
     );
   }

@@ -34,9 +34,9 @@ export class DayDetails implements IDayDetails {
   breakfast: CalendarRecipyInDatabase[] = [];
   lunch: CalendarRecipyInDatabase[] = [];
   dinner: CalendarRecipyInDatabase[] = [];
-  comments: {comment: string, mealTime: string}[] = [];
-  constructor(public day: string) {
+  constructor(public day: string, public comments: {comment: string, mealTime: string}[]) {
     this.day = day;
+    this.comments = comments
   }
 }
 

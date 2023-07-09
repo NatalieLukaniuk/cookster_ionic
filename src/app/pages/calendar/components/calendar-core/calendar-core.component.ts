@@ -81,9 +81,10 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
           let details = user.details?.find(
             (day: DayDetails) => day?.day == stringDay
           );
-          if (details) {
+          if (details) {            
             let newDayDetails = new DayDetails(
-              this.currentDay!.format('DDMMYYYY')
+              this.currentDay!.format('DDMMYYYY'),
+              details.comments? details.comments : []
             );
             let dayTemplate: Day = {
               value: this.currentDay!,

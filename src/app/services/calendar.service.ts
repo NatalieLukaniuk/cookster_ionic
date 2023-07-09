@@ -71,7 +71,7 @@ export class CalendarService {
         new UpdateUserAction(userToSave, `${recipyId} збережено для ${day}`)
       );
     } else if (!!day) {
-      let itemToSave: DayDetails = new DayDetails(day);
+      let itemToSave: DayDetails = new DayDetails(day, []);
       switch (mealTime) {
         case 'breakfast':
           itemToSave.breakfast.push({ recipyId, portions, amountPerPortion });
@@ -130,7 +130,7 @@ export class CalendarService {
       const active = moment().isSame(value, 'date');
       const disabled = value.isBefore(currentDay);
       const selected = value.isSame(currentDay);
-      let det = new DayDetails(value.format('DDMMYYYY'));
+      let det = new DayDetails(value.format('DDMMYYYY'), []);
       const details: DayDetailsExtended = {
         ...det,
         breakfastRecipies: [],
@@ -152,7 +152,7 @@ export class CalendarService {
       const active = moment().isSame(value, 'date');
       const disabled = value.isBefore(currentDay);
       const selected = value.isSame(currentDay);
-      let det = new DayDetails(value.format('DDMMYYYY'));
+      let det = new DayDetails(value.format('DDMMYYYY'), []);
       const details: DayDetailsExtended = {
         ...det,
         breakfastRecipies: [],
