@@ -1,9 +1,4 @@
-<div
-  cdkDropList
-  [id]="mealtime + '_' + day.details.day"
-  *ngIf="!!_day"
-  class="meal-time"
->
+<div cdkDropList [id]="mealtime + '_' + day.details.day" *ngIf="!!_day" class="meal-time">
   <div class="meal-header">
     <div class="title">
       <span>{{ mealtimeText }}</span>
@@ -27,19 +22,19 @@
   <ng-container *ngIf="!!detailedRecipiesList">
     <ng-container>
       <div *ngFor="let item of detailedRecipiesList">
-        <app-calendar-recipy
-          [recipy]="item"
-          [day]="day"
-          [mealtime]="mealtime"
-        ></app-calendar-recipy>
+        <app-calendar-recipy [recipy]="item" [day]="day" [mealtime]="mealtime"></app-calendar-recipy>
       </div>
     </ng-container>
   </ng-container>
-  <app-add-recipy-modal
-    *ngIf="addRecipies"
-    [meatime]="mealtime"
-    [date]="day.details.day"
-    (recipyToAdd)="onRecipySelected($event)"
-  ></app-add-recipy-modal>
+
+  <div class="action-buttons">
+    <app-add-recipy-modal *ngIf="addRecipies" [meatime]="mealtime" [date]="day.details.day"
+      (recipyToAdd)="onRecipySelected($event)"></app-add-recipy-modal>
+    <app-add-comment-modal *ngIf="addRecipies" [meatime]="mealtime" [date]="day.details.day"
+      (commentToAdd)="onAddComment($event)">
+
+    </app-add-comment-modal>
+  </div>
+
   <app-select-option-dialog #selectOption></app-select-option-dialog>
 </div>
