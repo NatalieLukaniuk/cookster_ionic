@@ -26,6 +26,7 @@ export interface IDayDetails {
   breakfast: CalendarRecipyInDatabase[];
   lunch: CalendarRecipyInDatabase[];
   dinner: CalendarRecipyInDatabase[];
+  comments: {comment: string, mealTime: string}[];
   day: string; // 2 digits of day, 2 digits of month, 4 digits of year
 }
 
@@ -33,6 +34,7 @@ export class DayDetails implements IDayDetails {
   breakfast: CalendarRecipyInDatabase[] = [];
   lunch: CalendarRecipyInDatabase[] = [];
   dinner: CalendarRecipyInDatabase[] = [];
+  comments: {comment: string, mealTime: string}[] = [];
   constructor(public day: string) {
     this.day = day;
   }

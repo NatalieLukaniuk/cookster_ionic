@@ -118,6 +118,7 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
                 breakfast: [],
                 lunch: [],
                 dinner: [],
+                comments: []
               },
             };
           }

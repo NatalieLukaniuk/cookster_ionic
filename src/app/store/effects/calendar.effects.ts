@@ -1,4 +1,4 @@
-import { UpdateRecipyInCalendarAction } from './../actions/calendar.actions';
+import { UpdateRecipyInCalendarAction, AddCommentToCalendarAction } from './../actions/calendar.actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -111,6 +111,35 @@ export class CalendarEffects {
       )
     )
   );
+
+  addCommentToCal$ = createEffect(() => this.actions$.pipe(
+    ofType(CalendarActionTypes.ADD_COMMENT_TO_CALENDAR),
+    switchMap((action: AddCommentToCalendarAction) => this.store.pipe(
+      select(getCurrentUser),
+          take(1),
+          map((user: User | null) => {
+            if (user && user.details){
+              let updatedUser = _.cloneDeep(user);
+              const foundDay = updatedUser.details?.find((day) => day.day == action.day)
+              if (foundDay){
+                if(!foundDay.comments){
+                  foundDay.comments = []
+                }
+                foundDay.comments.push({comment: action.comment, mealTime: action.mealtime})
+              } else {
+                let newDay = new DayDetails(action.day);
+                newDay.comments.push({comment: action.comment, mealTime: action.mealtime});
+                updatedUser.details?.push(newDay);
+              }
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.comment} додано`
+              );
+
+            } else return new ErrorAction('no user');
+          })
+    ))
+  ))
 
   updateRecipyInCalendar$ = createEffect(() =>
     this.actions$.pipe(
