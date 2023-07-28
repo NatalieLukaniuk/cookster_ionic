@@ -50,12 +50,12 @@
         </ion-list>
 
       </ion-content>
-    </ion-menu>
-    <app-loading-overlay [isUserLoaded]="isAuthCheckComplete && ((isLoggedIn && !!(user$ | async)) || !isLoggedIn)"
-      [isRecipiesLoaded]="!!(recipies$ | async)" [isProductsLoaded]="!!(products$ | async)" *ngIf="(isLoading$ | async)
-  || !isAuthCheckComplete || isLoggedIn && !(user$ | async)"></app-loading-overlay>
+    </ion-menu>    
 
     <ion-router-outlet id="main-content"></ion-router-outlet>
 
   </ion-split-pane>
+  <app-loading-overlay [isUserLoaded]="isAuthCheckComplete && ((isLoggedIn && !!(user$ | async)) || !isLoggedIn)"
+      [isRecipiesLoaded]="!!(recipies$ | async)" [isProductsLoaded]="!!(products$ | async)" *ngIf="(isLoading$ | async)
+  || !isAuthCheckComplete || isLoggedIn && !(user$ | async)"></app-loading-overlay>
 </ion-app>
