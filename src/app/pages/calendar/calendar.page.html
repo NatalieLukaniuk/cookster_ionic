@@ -1,7 +1,9 @@
 <app-header>
   <span title>Заплановані рецепти</span>
+  <ion-button right-button (click)="togglePlannerMode()"><ion-icon slot="icon-only"
+      name="construct-outline"></ion-icon></ion-button>
 </app-header>
 
 <ion-content>
-  <app-calendar-core></app-calendar-core>
+  <app-calendar-core [addRecipies]="isPlannerMode" (currentTabChanged)="currentTab = $event"></app-calendar-core>
 </ion-content>

@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { ShoppingListPageRoutingModule } from './shopping-list-routing.module';
 
 import { ShoppingListPage } from './shopping-list.page';
+import { IngredientsForDatesArrayComponent } from './components/ingredients-for-dates-array/ingredients-for-dates-array.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { ShoppingListPage } from './shopping-list.page';
     ShoppingListPageRoutingModule,
     SharedModule
   ],
-  declarations: [ShoppingListPage]
+  declarations: [ShoppingListPage, IngredientsForDatesArrayComponent]
 })
 export class ShoppingListPageModule {}

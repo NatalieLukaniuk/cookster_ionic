@@ -1,17 +1,19 @@
-import { PlannerByDate } from 'src/app/models/planner.models';
 import {
   ShoppingList,
   ShoppingListItem,
 } from './../../models/planner.models';
 import { map, Subject, takeUntil } from 'rxjs';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
-import { PlannerService } from 'src/app/services/planner.service';
 import * as _ from 'lodash';
-import { ModalController } from '@ionic/angular';
+import { IonModal, ModalController } from '@ionic/angular';
 import { AddToListModalComponent } from '../planner/components/add-to-list-modal/add-to-list-modal.component';
+import { OverlayEventDetail } from '@ionic/core/components';
+import { ShoppingListService } from 'src/app/services/shopping-list.service';
+import { Router } from '@angular/router';
+import { DialogsService } from 'src/app/services/dialogs.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -21,25 +23,14 @@ import { AddToListModalComponent } from '../planner/components/add-to-list-modal
 export class ShoppingListPage implements OnInit, OnDestroy {
   destroyed$ = new Subject<void>();
   activeList: ShoppingList[] | undefined;
-  planner: PlannerByDate | undefined;
 
   activeList$ = this.store.pipe(
     select(getCurrentUser),
     takeUntil(this.destroyed$),
     map((user) => {
-      if (user) {
-        this.planner = user.planner?.find(
-          (planner) => planner.isShoppingListActive
-        );
-        let list: ShoppingList[];
-        if(this.planner!.shoppingLists){
-          list = this.planner!.shoppingLists;
-        } else {
-          list = [];
-        }
-        
-        this.activeList = list;
-        return list;
+      if (user && user.shoppingLists) {
+        this.activeList = user.shoppingLists;
+        return user.shoppingLists;
       } else return [];
     })
   );
@@ -52,11 +43,13 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<IAppState>,
-    private plannerService: PlannerService,
-    private modalCtrl: ModalController
-  ) {}
+    private shoppingListService: ShoppingListService,
+    private modalCtrl: ModalController,
+    private router: Router,
+    private dialog: DialogsService
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngOnDestroy(): void {
     this.destroyed$.next();
@@ -64,7 +57,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   getAmountInList(item: ShoppingListItem): string | undefined {
     let ls = this.activeList!.find((list) =>
-      list.items.find((ingr) => ingr.title == item.title)
+      list.items?.find((ingr) => ingr.title == item.title)
     );
     if (ls) {
       return ls.items.find((ingr) => ingr.title == item.title)?.amount;
@@ -76,11 +69,11 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   }
 
   hasNotBought(list: ShoppingList) {
-    return list.items.some((item) => !item.completed);
+    return list.items?.some((item) => !item.completed);
   }
 
   hasBought(list: ShoppingList) {
-    return list.items.some((item) => item.completed);
+    return list.items?.some((item) => item.completed);
   }
 
   onSwiped(item: ShoppingListItem, list: string) {
@@ -96,7 +89,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
       }
       return ls;
     });
-    this.plannerService.updateShoppingLists(updatedList, this.planner!);
+    this.shoppingListService.updateShoppingList(updatedList);
   }
 
   async addCustomItem() {
@@ -114,7 +107,56 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.plannerService.updateShoppingLists(data, this.planner!);
+      this.shoppingListService.updateShoppingList(data);
+    }
+  }
+
+  removeBought() {
+    this.dialog
+      .openConfirmationDialog(
+        `Очистити список куплених інгридієнтів?`,
+        'Ця дія незворотня'
+      )
+      .then((res) => {
+        if (res.role === 'confirm') {
+          const list = this.activeList?.map(listItem => {
+            const updated = {
+              ...listItem,
+              items: listItem.items?.filter(item => !item.completed)
+            }
+            return updated
+          })
+          if (list) {
+            this.shoppingListService.updateShoppingList(list)
+          }
+        }
+      });
+  }
+
+  addFromCalendar(dates: string[]) {
+    const datesToString = dates.join('&');
+    this.router.navigate(['tabs', 'shopping-list', 'dates', datesToString]);
+  }
+
+  @ViewChild(IonModal) modal: IonModal | undefined;
+
+  selectedDates: [] = [];
+  selectedDateChanged(event: any) {
+    this.selectedDates = event.detail.value;
+  }
+
+  cancel() {
+    this.modal?.dismiss(null, 'cancel');
+  }
+
+  confirm() {
+    this.modal?.dismiss(this.selectedDates, 'confirm');
+  }
+
+  onWillDismiss(event: Event) {
+    const ev = event as CustomEvent<OverlayEventDetail<string[]>>;
+    if (ev.detail.role === 'confirm' && ev.detail.data) {
+      this.addFromCalendar(ev.detail.data)
     }
   }
 }

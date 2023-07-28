@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import * as moment from 'moment';
 import { Subject, takeUntil } from 'rxjs';
@@ -14,10 +14,9 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
   styleUrls: ['./calendar-core.component.scss'],
 })
 export class CalendarCoreComponent implements OnInit, OnDestroy {
-  @Input() setCurrentDay: moment.Moment | undefined;
-  @Input() setEndDate: moment.Moment | undefined;
   @Input() showPreps: boolean = true;
   @Input() addRecipies: boolean = false;
+  @Output() currentTabChanged = new EventEmitter<string>()
 
   currentDay: moment.Moment | undefined;
   _day: Day | undefined;
@@ -46,29 +45,11 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
   ) {
     this.dayChanged$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.getDayDetails();
-      this.updateVariables();
     });
   }
 
-  updateVariables() {
-    if (this.currentDay && this.setCurrentDay && this.setEndDate) {
-      this.isWithinDateRange = this.currentDay.isBetween(
-        this.setCurrentDay.clone().subtract(1, 'day'),
-        this.setEndDate.clone().add(1, 'day')
-      );
-    } else {
-      this.isWithinDateRange = false;
-    }
-  }
-
   ngOnInit() {
-    if (!this.setCurrentDay) {
-      this.currentDay = moment().clone();
-    } else {
-      console.log(this.setCurrentDay);
-      this.currentDay = this.setCurrentDay.clone();
-    }
-
+    this.currentDay = moment().clone();
     this.dayChanged$.next();
   }
 
@@ -88,6 +69,7 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
 
   onTabChange(event: any) {
     this.currentTab = event.detail.value;
+    this.currentTabChanged.emit(event.detail.value)
   }
 
   getDayDetails() {
@@ -99,9 +81,10 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
           let details = user.details?.find(
             (day: DayDetails) => day?.day == stringDay
           );
-          if (details) {
+          if (details) {            
             let newDayDetails = new DayDetails(
-              this.currentDay!.format('DDMMYYYY')
+              this.currentDay!.format('DDMMYYYY'),
+              details.comments? details.comments : []
             );
             let dayTemplate: Day = {
               value: this.currentDay!,
@@ -120,7 +103,6 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
               .subscribe((res) => {
                 if (res) {
                   this._day = res;
-                  debugger
                 }
               });
           } else {
@@ -137,11 +119,12 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
                 breakfast: [],
                 lunch: [],
                 dinner: [],
+                comments: []
               },
             };
           }
 
-          if(user.savedPreps){
+          if (user.savedPreps) {
             this.prepsNumber = user.savedPreps.filter(prep => moment(prep.day).dayOfYear() === this._day?.value.dayOfYear()).length;
           }
         }

@@ -17,3 +17,8 @@ export const getUserPlanners = createSelector(
   getUserState,
   (state) => state.currentUser?.planner
 );
+
+export const getUserShoppingList = createSelector(
+  getUserState,
+  (state) => state.currentUser?.shoppingLists
+);

@@ -1,4 +1,4 @@
-import { AddRecipyToCalendarAction } from './../../../../store/actions/calendar.actions';
+import { AddCommentToCalendarAction, AddRecipyToCalendarAction, RemoveCommentFromCalendarAction } from './../../../../store/actions/calendar.actions';
 import {
   Component,
   Input,
@@ -28,6 +28,12 @@ export class CalendarMealComponent implements OnInit, OnChanges {
 
   _day: Day | undefined;
 
+  get isComments() {
+    if (this._day) {
+      return this._day.details.comments.find(commentItem => commentItem.mealTime === this.mealtime);
+    } else return false
+  }
+
   get mealtimeText() {
     switch (this.mealtime) {
       case MealTime.Breakfast:
@@ -52,12 +58,13 @@ export class CalendarMealComponent implements OnInit, OnChanges {
     } else return [];
   }
 
-  constructor(private store: Store<IAppState>) {}
+  constructor(private store: Store<IAppState>) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['day'].currentValue) {
+    if (changes['day']?.currentValue) {
+      debugger
       this._day = _.cloneDeep(this.day);
     }
   }
@@ -69,23 +76,23 @@ export class CalendarMealComponent implements OnInit, OnChanges {
           case MealTime.Breakfast:
             return !!this._day.details.breakfastRecipies.length
               ? this._day.details.breakfastRecipies.reduce(
-                  (prev, cur) => Math.max(prev, cur.portions),
-                  0
-                )
+                (prev, cur) => Math.max(prev, cur.portions),
+                0
+              )
               : null;
           case MealTime.Lunch:
             return !!this._day.details.lunchRecipies.length
               ? this._day.details.lunchRecipies.reduce(
-                  (prev, cur) => Math.max(prev, cur.portions),
-                  0
-                )
+                (prev, cur) => Math.max(prev, cur.portions),
+                0
+              )
               : null;
           case MealTime.Dinner:
             return !!this.day.details.dinnerRecipies.length
               ? this._day.details.dinnerRecipies.reduce(
-                  (prev, cur) => Math.max(prev, cur.portions),
-                  0
-                )
+                (prev, cur) => Math.max(prev, cur.portions),
+                0
+              )
               : null;
           default:
             return null;
@@ -170,9 +177,9 @@ export class CalendarMealComponent implements OnInit, OnChanges {
     let total = 0;
     recipies.forEach(
       (recipy) =>
-        (total += Math.round(
-          (recipy.calorificValue! * recipy.amountPerPortion) / 100
-        ))
+      (total += Math.round(
+        (recipy.calorificValue! * recipy.amountPerPortion) / 100
+      ))
     );
     return total;
   }
@@ -197,5 +204,28 @@ export class CalendarMealComponent implements OnInit, OnChanges {
         );
       }
     });
+  }
+
+  @ViewChild('addCommentModal') addCommentModal: any;
+  onAddComment(comment: string) {
+    this.store.dispatch(
+      new AddCommentToCalendarAction(
+        comment,
+        this.day.details.day,
+        this.mealtime,
+        0
+      )
+    );
+    this.addCommentModal.comment = '';
+  }
+
+  onDeleteComment(comment: any){
+    this.store.dispatch(
+      new RemoveCommentFromCalendarAction(
+        comment.comment,
+        this.day.details.day,
+        comment.mealTime,
+      )
+    );
   }
 }

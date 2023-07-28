@@ -4,15 +4,14 @@ import { Store, select } from '@ngrx/store';
 import { Day, RecipyForCalendar } from 'src/app/models/calendar.models';
 import { Ingredient } from 'src/app/models/recipies.models';
 import { AddToListModalComponent } from 'src/app/pages/planner/components/add-to-list-modal/add-to-list-modal.component';
-import { areObjectsEqual } from 'src/app/services/comparison';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { IAppState } from 'src/app/store/reducers';
 import { Subject, take, takeUntil } from 'rxjs';
 import { PlannerByDate, ShoppingList } from 'src/app/models/planner.models';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { PlannerService } from 'src/app/services/planner.service';
 import { SLItem } from 'src/app/models/planner.models';
 import * as _ from 'lodash';
+import { ShoppingListService } from 'src/app/services/shopping-list.service';
 
 @Component({
   selector: 'app-products-per-day',
@@ -33,7 +32,7 @@ export class ProductsPerDayComponent implements OnChanges, OnDestroy {
     private datamapping: DataMappingService,
     private modalCtrl: ModalController,
     private store: Store<IAppState>,
-    private plannerService: PlannerService,
+    private shoppingListService: ShoppingListService,
   ) {
 
     this.store.pipe(
@@ -41,12 +40,7 @@ export class ProductsPerDayComponent implements OnChanges, OnDestroy {
       takeUntil(this.destroy$),
     ).subscribe((user) => {
       if (user) {
-        this.plannerWithActiveList = user.planner?.find(
-          (planner) => planner.isShoppingListActive
-        );
-        if(this.plannerWithActiveList && this.plannerWithActiveList.shoppingLists){
-          this.activeList = this.plannerWithActiveList.shoppingLists;
-        } 
+        this.activeList = user.shoppingLists;
       };
     });
   }
@@ -56,23 +50,16 @@ export class ProductsPerDayComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     this.products = [];
-    if (
-      changes['day'].currentValue &&
-      (!changes['day'].previousValue ||
-        !areObjectsEqual(
-          changes['day'].currentValue,
-          changes['day'].previousValue
-        ))
-    )
-      this.day.details.breakfastRecipies.forEach((recipy) =>
-        this.processRecipy(recipy)
-      );
+    this.day.details.breakfastRecipies.forEach((recipy) =>
+      this.processRecipy(recipy)
+    );
     this.day.details.lunchRecipies.forEach((recipy) =>
       this.processRecipy(recipy)
     );
     this.day.details.dinnerRecipies.forEach((recipy) =>
       this.processRecipy(recipy)
     );
+    this.products.sort((a, b) => a.ingredient!.localeCompare(b.ingredient!));
   }
 
   processRecipy(recipy: RecipyForCalendar) {
@@ -111,7 +98,7 @@ export class ProductsPerDayComponent implements OnChanges, OnDestroy {
     let cloned = _.cloneDeep(this.activeList);
     const ingredToSlItem: SLItem = {
       total: ingred.amount,
-      name: ingred.ingredient? ingred.ingredient : '',
+      name: ingred.ingredient ? ingred.ingredient : '',
       id: ingred.product,
       unit: ingred.defaultUnit,
       items: []
@@ -129,7 +116,7 @@ export class ProductsPerDayComponent implements OnChanges, OnDestroy {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.plannerService.updateShoppingLists(data, this.plannerWithActiveList!);
+      this.shoppingListService.updateShoppingList(data);
     }
   }
 }

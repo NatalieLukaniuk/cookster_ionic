@@ -13,6 +13,10 @@ export function transformDate(date: Date): string {
   );
 }
 
+export function transfromMomentToDate(date: string){
+  return moment(date, 'DDMMYYYY').format('YYYY-MM-DD')
+}
+
 export function getTwoDigitValue(value: string): string {
   if (value.length < 2) {
     return '0' + value;

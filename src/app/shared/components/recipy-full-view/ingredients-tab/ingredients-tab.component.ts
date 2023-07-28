@@ -7,9 +7,13 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { Recipy } from 'src/app/models/recipies.models';
+import { Ingredient, Recipy } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { AVERAGE_PORTION } from 'src/app/shared/constants';
+import { ItemOption, ItemOptionActions } from '../../ingredient/ingredient.component';
+import { Suggestion } from 'src/app/models/calendar.models';
+import { ModalController } from '@ionic/angular';
+import { ControllerInputDialogComponent } from '../../dialogs/controller-input-dialog/controller-input-dialog.component';
 
 @Component({
   selector: 'app-ingredients-tab',
@@ -21,23 +25,27 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
 
   @Input() portions?: number;
   @Input() amountPerPortion?: number;
+  @Input() ingredStartOptions: ItemOption[] = [];
+  @Input() day: Date = new Date();
 
   @Output() portionsChanged = new EventEmitter<{
     portions: number;
     amountPerPortion: number;
   }>();
 
+  @Output() addPrep = new EventEmitter<Suggestion>()
+
   isEditPortions = false;
 
   isSplitToGroups: boolean = false;
-  ingredientsByGroup = <Record<string, any>>{};
+  groups: string[] = [];
 
   portionsToServe: number = 4;
   portionSize: number = AVERAGE_PORTION;
 
   coeficient: number = 1;
 
-  constructor(private datamapping: DataMappingService) {}
+  constructor(private datamapping: DataMappingService, private modalCtrl: ModalController) { }
 
   ngOnInit() {
     if (this.portions) {
@@ -59,15 +67,9 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
   }
 
   getIngredientsByGroup() {
+    this.groups = [];
     if (!!this.recipy && this.recipy.isSplitIntoGroups) {
-      let ingredients = this.recipy.ingrediends;
-      let groups = this.getGroups();
-
-      groups.forEach((group) => {
-        this.ingredientsByGroup[group] = ingredients.filter(
-          (ingredient) => ingredient.group == group
-        );
-      });
+      this.groups = this.getGroups();
     }
   }
 
@@ -98,5 +100,38 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
     });
 
     this.isEditPortions = false;
+  }
+
+  async onEventEmitted(action: ItemOptionActions, ingredient: Ingredient) {
+    const modal = await this.modalCtrl.create({
+      component: ControllerInputDialogComponent,
+      componentProps: {
+        inputFieldLabel: 'Enter description',
+      },
+      breakpoints: [0.5, 0.75],
+      initialBreakpoint: 0.5
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+
+    if (role === 'confirm') {
+      const prep: Suggestion = {
+        ingredients: [
+          {
+            productId: ingredient.product,
+            productName: ingredient.ingredient!,
+            amount: ingredient.amount * this.coeficient,
+            unit: ingredient.defaultUnit
+          }
+        ],
+        prepDescription: data,
+        recipyId: this.recipy.id,
+        recipyTitle: this.recipy.name,
+        day: this.day // TODO: this doesn't need to be passed down from parent components, user should be able to select it
+      }
+      this.addPrep.emit(prep);
+    }
   }
 }

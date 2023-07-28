@@ -19,6 +19,27 @@ export enum CalendarActionTypes {
   ADD_RECIPY_TO_CALENDAR = '[CLANEDAR] Add Recipy To Calendar',
   MOVE_RECIPY_IN_CALENDAR = '[CLANEDAR] Move Recipy In Calendar',
   UPDATE_RECIPY_IN_CALENDAR = '[CLANEDAR] Update Recipy In Calendar',
+  ADD_COMMENT_TO_CALENDAR = '[CALENDAR] Add Comment To Calendar',
+  REMOVE_COMMENT_FROM_CALENDAR = '[CLANEDAR] Remove Comment From Calendar',
+}
+
+export class RemoveCommentFromCalendarAction implements Action {
+  readonly type = CalendarActionTypes.REMOVE_COMMENT_FROM_CALENDAR;
+  constructor(
+    public comment: string,
+    public day: string,
+    public mealtime: MealTime
+  ) {}
+}
+
+export class AddCommentToCalendarAction implements Action {
+  readonly type = CalendarActionTypes.ADD_COMMENT_TO_CALENDAR;
+  constructor(
+    public comment: string,
+    public day: string,
+    public mealtime: MealTime,
+    public order: number
+  ) {}
 }
 
 export class MoveRecipyInCalendarAction implements Action {
@@ -122,4 +143,4 @@ export type CalendarActions =
   | RemoveRecipyFromCalendarAction
   | AddRecipyToCalendarAction
   | MoveRecipyInCalendarAction
-  | UpdateRecipyInCalendarAction;
+  | UpdateRecipyInCalendarAction | AddCommentToCalendarAction | RemoveCommentFromCalendarAction;

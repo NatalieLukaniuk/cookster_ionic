@@ -1,0 +1,18 @@
+ion-item-option {
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      max-height: 45px;
+    }
+  
+    .item {
+      font-size: 8px;
+      margin-block: 0;
+    }
+  }
+
+  .header-title {
+    white-space: break-spaces;
+    font-size: 14px;
+  }

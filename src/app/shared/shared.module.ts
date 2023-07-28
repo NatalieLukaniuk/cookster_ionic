@@ -27,6 +27,7 @@ import { AddIngredientComponent } from './components/recipy-constructor/add-ingr
 import { AddStepComponent } from './components/recipy-constructor/add-step/add-step.component';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { PrepsComponent } from './components/recipy-constructor/preps/preps.component';
+import { ControllerInputDialogComponent } from './components/dialogs/controller-input-dialog/controller-input-dialog.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { PrepsComponent } from './components/recipy-constructor/preps/preps.comp
     AddGroupModalComponent,
     ProductAutocompleteComponent,
     LongPressDirective,
-    PrepsComponent
+    PrepsComponent,
+    ControllerInputDialogComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule,],
   exports: [

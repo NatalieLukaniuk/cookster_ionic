@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./calendar.page.scss'],
 })
 export class CalendarPage {
+  currentTab = 'menu'
+  isPlannerMode = false;
 
+  togglePlannerMode() {
+    this.isPlannerMode = !this.isPlannerMode;
+  }
 }
