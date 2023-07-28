@@ -5,6 +5,10 @@ ion-card {
   box-shadow: none;
 }
 
+ion-card-header {
+  flex-direction: column;
+}
+
 ion-card-subtitle {
   ion-icon {
     font-size: 16px;
@@ -30,6 +34,7 @@ ion-card-content {
   transition: all 200ms ease-in-out;
   background-color: var(--ion-color-tertiary);
   padding: 10px;
+  opacity: 0.9;
   & > div:not(.ingredients-wrapper) {
     margin-bottom: 5px;
     display: flex;
@@ -50,7 +55,7 @@ ion-card-content {
       transition: all 300ms ease-in-out;
 
       & > ion-button {
-        width: 45%;
+        flex-grow: 1;
       }
     }
   }
