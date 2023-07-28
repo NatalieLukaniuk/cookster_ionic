@@ -67,5 +67,15 @@ ion-button {
 
 .collection-chip {
   font-size: 8px;
-  height: auto;
+  height: 10px;
+  padding-inline: 5px;
+  border-radius: 3px;
+  margin: 0;
+}
+
+.collection-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
 }
