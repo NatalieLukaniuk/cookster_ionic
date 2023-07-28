@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActionSheetController, ModalController, ToastController } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core';
+import { RecipyModalComponent } from '../shared/components/dialogs/recipy-modal/recipy-modal.component';
 
 export interface ActionsheetButton {
   text: string;
@@ -26,11 +27,16 @@ export const CancelButton: ActionsheetButton = {
   },
 };
 
+export enum ModalType {
+  ViewRecipy,
+  EditRecipy
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class DialogsService {
-  constructor(private actionSheetCtrl: ActionSheetController, private toastController: ToastController) {}
+  constructor(private actionSheetCtrl: ActionSheetController, private toastController: ToastController, private modalCtrl: ModalController) {}
 
   async presentActionSheet(
     title: string,
@@ -89,5 +95,23 @@ export class DialogsService {
     });
 
     await toast.present();
+  }
+
+  async openModal(type: ModalType, data: any) {
+    const modal = await this.modalCtrl.create({
+      component: RecipyModalComponent,
+      componentProps: {
+        modalType: type,
+        data
+      },
+      cssClass: 'recipy-modal'
+    });
+    modal.present();
+
+    const { role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      
+    }
   }
 }

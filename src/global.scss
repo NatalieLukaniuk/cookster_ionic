@@ -59,3 +59,8 @@ ion-button {
 .trigger-btn {
   width: 100%;
 }
+
+.recipy-modal {
+  --height: 80vh;
+  --width: min(80vw, 800px);
+}

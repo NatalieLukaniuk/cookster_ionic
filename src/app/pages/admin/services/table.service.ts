@@ -1,14 +1,16 @@
-import { DishType, Product } from './../../../models/recipies.models';
+import { DishType, Ingredient, Product } from './../../../models/recipies.models';
 import { Injectable } from '@angular/core';
 import { Recipy } from 'src/app/models/recipies.models';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
+import { DialogsService, ModalType } from 'src/app/services/dialogs.service';
+import { DataMappingService } from 'src/app/services/data-mapping.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TableService {
-  constructor(private router: Router) {}
+  constructor(private dialog: DialogsService, private datamapping: DataMappingService) {}
 
   buildTable(object: Object[]): string[][] {
     let data = [];
@@ -50,10 +52,10 @@ export class TableService {
       row.push(moment(recipy.createdOn).format('MMM Do YYYY'));
       row.push(recipy.isSplitIntoGroups);
       row.push(recipy.type.map((tag: DishType) => DishType[tag]));
-      row.push(recipy.ingrediends.map(ingr => ingr.ingredient));
+      row.push(recipy.ingrediends.map(ingr => this.getIngredientText(ingr)));
       row.push(recipy.isCheckedAndApproved);
-      row.push({action: () => this.router.navigate(['tabs', 'recipies', 'recipy', recipy.id]), title: 'view'})
-      row.push({action: () => this.router.navigate(['tabs', 'recipies', 'edit-recipy', recipy.id]), title: 'edit'})
+      row.push({action: () => this.dialog.openModal(ModalType.ViewRecipy, {recipyId: recipy.id}), title: 'view'})
+      row.push({action: () => this.dialog.openModal(ModalType.EditRecipy, {recipyId: recipy.id}), title: 'edit'})
       data.push(row);
     }
     return data;
@@ -83,5 +85,9 @@ export class TableService {
       data.push(row);
     }
     return data;
+  }
+
+  getIngredientText(ingredient: Ingredient): string {
+    return this.datamapping.getIngredientText(ingredient);
   }
 }

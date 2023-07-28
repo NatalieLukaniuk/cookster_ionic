@@ -28,6 +28,7 @@ import { AddStepComponent } from './components/recipy-constructor/add-step/add-s
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { PrepsComponent } from './components/recipy-constructor/preps/preps.component';
 import { ControllerInputDialogComponent } from './components/dialogs/controller-input-dialog/controller-input-dialog.component';
+import { RecipyModalComponent } from './components/dialogs/recipy-modal/recipy-modal.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { ControllerInputDialogComponent } from './components/dialogs/controller-
     ProductAutocompleteComponent,
     LongPressDirective,
     PrepsComponent,
-    ControllerInputDialogComponent
+    ControllerInputDialogComponent,
+    RecipyModalComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule,],
   exports: [
