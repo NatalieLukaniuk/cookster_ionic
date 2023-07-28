@@ -38,6 +38,7 @@ export class RecipyShortViewComponent implements OnInit {
   ];
 
   Math = Math;
+  DishType = DishType;
 
   get preparationTime() {
     let time = 0;

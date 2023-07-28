@@ -79,6 +79,12 @@
                     >{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span
                   >
                   <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
+                  <div class="collection-tags">
+                    <span>Теги: </span>
+                    <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+                      DishType[tag]
+                      }}</ion-chip>
+                  </div>
                 </div>
               </div>
               <div class="recipy-photo" *ngIf="recipy.photo">

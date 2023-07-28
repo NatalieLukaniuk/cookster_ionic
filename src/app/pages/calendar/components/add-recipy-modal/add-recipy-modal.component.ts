@@ -49,6 +49,7 @@ export class AddRecipyModalComponent {
   );
 
   Math = Math;
+  DishType = DishType;
   constructor(private store: Store<IAppState>) {}
 
   @ViewChild(IonModal) modal: IonModal | undefined;

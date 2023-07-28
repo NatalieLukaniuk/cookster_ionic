@@ -26,6 +26,12 @@
           }}</ion-chip>
       </div>
       <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
+      <div class="collection-tags">
+        <span>Теги: </span>
+        <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+          DishType[tag]
+          }}</ion-chip>
+      </div>
     </ion-card-subtitle>
   </ion-card-header>
 
