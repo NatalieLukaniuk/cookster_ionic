@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
     private dataMappingService: DataMappingService,
     private dialog: DialogsService,
     private router: Router
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.loadData();
 
@@ -88,8 +88,15 @@ export class AppComponent implements OnInit {
     });
 
     this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd){
+      if (event instanceof NavigationEnd) {
         this.store.dispatch(new UiActions.SetCurrentRouteAction(event.url));
+
+        let root = document.documentElement;
+        if (event.url.includes('admin')) {
+          root.style.setProperty('--app-width', 100 + "vw");
+        } else {
+          root.style.setProperty('--app-width', 900 + "px");
+        }
       }
     })
 
