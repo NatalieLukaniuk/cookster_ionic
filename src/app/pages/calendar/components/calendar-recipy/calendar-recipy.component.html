@@ -41,6 +41,7 @@
               {{ passivePreparationTime() | normalizeTime }}
             </span>
           </div>
+          <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
         </div>
       </div>
       <div class="recipy-photo" *ngIf="recipy.photo">

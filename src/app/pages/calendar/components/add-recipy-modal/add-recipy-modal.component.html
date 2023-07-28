@@ -78,6 +78,7 @@
                   <span *ngIf="recipy.calorificValue"
                     >{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span
                   >
+                  <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
                 </div>
               </div>
               <div class="recipy-photo" *ngIf="recipy.photo">
