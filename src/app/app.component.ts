@@ -21,6 +21,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { Role } from './models/auth.models';
 import { NavigationEnd, Router } from '@angular/router';
+import { AngularDeviceInformationService } from 'angular-device-information';
 
 @Component({
   selector: 'app-root',
@@ -64,7 +65,8 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private dataMappingService: DataMappingService,
     private dialog: DialogsService,
-    private router: Router
+    private router: Router,
+    private deviceInformationService: AngularDeviceInformationService
   ) { }
   ngOnInit(): void {
     this.loadData();
@@ -92,13 +94,18 @@ export class AppComponent implements OnInit {
         this.store.dispatch(new UiActions.SetCurrentRouteAction(event.url));
 
         let root = document.documentElement;
-        if (event.url.includes('admin')) {
-          root.style.setProperty('--app-width', 100 + "vw");
-        } else {
-          root.style.setProperty('--app-width', 900 + "px");
+        if (this.deviceInformationService.isDesktop()) {
+          if (event.url.includes('admin')) {
+            root.style.setProperty('--app-width', 100 + "vw");
+          } else {
+            root.style.setProperty('--app-width', 900 + "px");
+          }
         }
+
       }
     })
+
+
 
   }
 
