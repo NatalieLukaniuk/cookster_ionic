@@ -17,7 +17,7 @@
       <ion-item fill="solid">
         <ion-label position="floating">Пароль</ion-label>
         <ion-input type="password" formControlName="password"></ion-input>
-        <ion-note slot="helper">Мінімальна довжина: 3 символи</ion-note>
+        <ion-note slot="helper">Мінімальна довжина: 6 символів</ion-note>
         <ion-note slot="error" *ngIf="loginForm.controls['username'].touched && !loginForm.controls['username'].valid">Мінімальна довжина: 3 символи</ion-note>
       </ion-item>
 

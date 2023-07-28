@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -14,7 +14,7 @@ import {
 })
 export class LoginPage implements OnInit {
   loginForm!: UntypedFormGroup;
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.loginForm = new UntypedFormGroup({
@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
       ]),
       password: new UntypedFormControl('', [
         Validators.required,
-        Validators.minLength(3),
+        Validators.minLength(6),
       ]),
     });
   }
@@ -38,6 +38,8 @@ export class LoginPage implements OnInit {
   }
 
   goRegistration() {
-    this.router.navigate(['register']);
+    this.router.navigate(['register'], {
+      relativeTo: this.route,
+    });
   }
 }
