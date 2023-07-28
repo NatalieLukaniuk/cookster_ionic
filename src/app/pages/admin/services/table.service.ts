@@ -35,6 +35,7 @@ export class TableService {
       "тип",
       "інгридієнти",
       "перевірений",
+      "розмір порції",
       "Перегляд",
       "Редагування",
 
@@ -54,6 +55,7 @@ export class TableService {
       row.push(recipy.type.map((tag: DishType) => DishType[tag]));
       row.push(recipy.ingrediends.map(ingr => this.getIngredientText(ingr)));
       row.push(recipy.isCheckedAndApproved);
+      row.push(recipy.portionSize);
       row.push({action: () => this.dialog.openModal(ModalType.ViewRecipy, {recipyId: recipy.id}), title: 'view'})
       row.push({action: () => this.dialog.openModal(ModalType.EditRecipy, {recipyId: recipy.id}), title: 'edit'})
       data.push(row);
