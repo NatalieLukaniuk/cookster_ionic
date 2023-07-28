@@ -15,6 +15,7 @@ export interface NewRecipy {
   notApproved?: boolean;
   source?: string;
   isCheckedAndApproved?: boolean;
+  portionSize?: number;
 }
 
 export interface Recipy extends NewRecipy {
@@ -36,6 +37,7 @@ export interface Recipy extends NewRecipy {
   isCheckedAndApproved?: boolean;
   calorificValue?: number;
   source?: string;
+  portionSize?: number;
 }
 
 export interface DraftRecipy {
@@ -55,6 +57,7 @@ export interface DraftRecipy {
   notApproved?: boolean;
   source?: string;
   isCheckedAndApproved?: boolean;
+  portionSize?: number;
 }
 
 export interface Ingredient {

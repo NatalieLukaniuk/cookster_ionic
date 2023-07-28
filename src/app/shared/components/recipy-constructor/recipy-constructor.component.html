@@ -14,7 +14,10 @@
       <ion-label position="floating">Джерело рецепту</ion-label>
       <ion-input [(ngModel)]="recipySource"></ion-input>
     </ion-item>
-
+    <ion-item>
+      <ion-label position="floating">Рекомендований розмір порції (для дорослого):</ion-label>
+      <ion-input [(ngModel)]="portionSize" type="number"></ion-input>
+    </ion-item>
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="tertiary">

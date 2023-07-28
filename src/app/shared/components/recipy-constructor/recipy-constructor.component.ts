@@ -66,6 +66,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
   isBaseRecipy = false;
   ingredients: Ingredient[] = [];
   steps: PreparationStep[] = [];
+  portionSize: string = '';
 
   photo: string = '';
 
@@ -122,6 +123,9 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
       if (this.recipyToPatch.photo) {
         this.photo = this.recipyToPatch.photo;
       }
+      if(this.recipyToPatch.portionSize){
+        this.portionSize = this.recipyToPatch.portionSize.toString();
+      }
     }
   }
 
@@ -175,6 +179,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
       isBaseRecipy: this.isBaseRecipy,
       source: this.recipySource,
       photo: this.photo,
+      portionSize: +this.portionSize
     };
   }
   collectDataExistingRecipy(): Recipy | null {
@@ -192,6 +197,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
         editedBy: this.currentUser!.email,
         photo: this.photo,
         lastEdited: Date.now(),
+        portionSize: +this.portionSize
       };
     } else return null;
   }
@@ -234,6 +240,9 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     let list: string[] = [];
     if (this.recipyName.length < 3) {
       list.push('Введіть назву, мінімум 3 символи');
+    }
+    if(this.portionSize.length < 1){
+      list.push('Вкажіть рекомендований розмір порції');
     }
     if (this.selectedTags.length < 1) {
       list.push('Виберіть хоча б один тег');
@@ -352,5 +361,6 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     this.ingredients = [];
     this.steps = [];
     this.photo = '';
+    this.portionSize = '';
   }
 }
