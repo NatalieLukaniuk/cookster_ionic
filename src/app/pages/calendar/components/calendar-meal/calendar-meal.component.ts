@@ -64,7 +64,6 @@ export class CalendarMealComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['day']?.currentValue) {
-      debugger
       this._day = _.cloneDeep(this.day);
     }
   }
