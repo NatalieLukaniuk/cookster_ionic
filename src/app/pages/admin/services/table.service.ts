@@ -1,13 +1,14 @@
-import { Product } from './../../../models/recipies.models';
+import { DishType, Product } from './../../../models/recipies.models';
 import { Injectable } from '@angular/core';
 import { Recipy } from 'src/app/models/recipies.models';
 import * as moment from 'moment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TableService {
-  constructor() {}
+  constructor(private router: Router) {}
 
   buildTable(object: Object[]): string[][] {
     let data = [];
@@ -29,6 +30,12 @@ export class TableService {
       'автор',
       'створений',
       'розділений на групи',
+      "тип",
+      "інгридієнти",
+      "перевірений",
+      "Перегляд",
+      "Редагування",
+
     ];
     data.push(firstRow);
     for (let recipy of recipies) {
@@ -42,6 +49,11 @@ export class TableService {
       row.push(recipy.author);
       row.push(moment(recipy.createdOn).format('MMM Do YYYY'));
       row.push(recipy.isSplitIntoGroups);
+      row.push(recipy.type.map((tag: DishType) => DishType[tag]));
+      row.push(recipy.ingrediends.map(ingr => ingr.ingredient));
+      row.push(recipy.isCheckedAndApproved);
+      row.push({action: () => this.router.navigate(['tabs', 'recipies', 'recipy', recipy.id]), title: 'view'})
+      row.push({action: () => this.router.navigate(['tabs', 'recipies', 'edit-recipy', recipy.id]), title: 'edit'})
       data.push(row);
     }
     return data;

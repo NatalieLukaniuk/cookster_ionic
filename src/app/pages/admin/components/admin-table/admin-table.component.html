@@ -1,10 +1,21 @@
 <div class="table-container">
   <div class="legend">
-    <ion-chip [color]="item.active? 'primary' : 'light'" *ngFor="let item of legendItems" (click)="onLegendClick(item)">{{item.name}}</ion-chip>
+    <ng-container *ngFor="let item of legendItems">
+      <ion-chip *ngIf="item.name !=='Редагування' && item.name !=='Перегляд'" [color]="item.active? 'primary' : 'light'"
+        (click)="onLegendClick(item)">{{item.name}}</ion-chip>
+    </ng-container>
+
   </div>
   <table>
     <tr *ngFor="let item of data">
-      <td *ngFor="let property of item; let index = index" [ngClass]="{'hidden': !legendItems[index].active}">{{ property }}</td>
+      <ng-container *ngFor="let property of item; let index = index">
+        <td *ngIf="!isActionItem(property)" [ngClass]="{'hidden': !legendItems[index].active}">{{ property }}
+        </td>
+        <td *ngIf="property && isActionItem(property)">
+          <ion-button (click)="property.action()">{{property.title}}</ion-button>
+        </td>
+      </ng-container>
+
     </tr>
   </table>
 </div>
