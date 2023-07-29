@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularDeviceInformationService } from 'angular-device-information';
 
 @Component({
   selector: 'app-header',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  isDesktop = this.deviceInformationService.isDesktop();
+  
+  constructor(private deviceInformationService: AngularDeviceInformationService) { }
 
   ngOnInit() {}
 

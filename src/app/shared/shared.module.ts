@@ -29,6 +29,7 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { PrepsComponent } from './components/recipy-constructor/preps/preps.component';
 import { ControllerInputDialogComponent } from './components/dialogs/controller-input-dialog/controller-input-dialog.component';
 import { RecipyModalComponent } from './components/dialogs/recipy-modal/recipy-modal.component';
+import { AngularDeviceInformationService } from 'angular-device-information';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,6 @@ import { RecipyModalComponent } from './components/dialogs/recipy-modal/recipy-m
     LongPressDirective,
     IngredientComponent
   ],
-  providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
+  providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe, AngularDeviceInformationService],
 })
 export class SharedModule {}
