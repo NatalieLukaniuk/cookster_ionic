@@ -10,20 +10,17 @@
   <ion-accordion-group>
     <ion-accordion value="first">
       <ion-item slot="header" color="tertiary">
-        <ion-label>Виберіть одиницю виміру</ion-label>
+        <ion-label>Одиниця виміру: {{ getMeasuringUnitText(unit)}}</ion-label>
       </ion-item>
-      <div class="ion-padding" slot="content">
-        <ion-radio-group [(ngModel)]="unit">
-          <ion-item *ngFor="let unit of measuringUnitsOptions">
-            <ion-label>{{ getMeasuringUnitText(unit) }}</ion-label>
-            <ion-radio slot="end" [value]="unit"></ion-radio>
-          </ion-item>
-        </ion-radio-group>
+      <div class="chip-selection-list" slot="content">
+        <ion-chip *ngFor="let unitTag of measuringUnitsOptions" (click)="unit = unitTag" [color]="unit === unitTag? 'primary' : 'secondary'">
+          <span>{{ getMeasuringUnitText(unitTag)}}</span>
+          </ion-chip>
       </div>
     </ion-accordion>
     <ion-accordion value="second" *ngIf="isSplitIntoGroups">
       <ion-item slot="header" color="tertiary">
-        <ion-label>Виберіть групу</ion-label>
+        <ion-label>Група: {{ selectedgroup }}</ion-label>
       </ion-item>
       <div class="ion-padding" slot="content">
         <ion-radio-group [(ngModel)]="selectedgroup">
