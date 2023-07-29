@@ -79,3 +79,17 @@ ion-button {
   align-items: center;
   gap: 3px;
 }
+
+.chip-selection-list {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding: 10px 5px;
+
+  ion-chip {
+    border-radius: 3px;
+    font-size: 12px;
+    height: 22px;
+    padding-inline: 5px;
+  }
+}
