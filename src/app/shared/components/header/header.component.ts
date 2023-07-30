@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularDeviceInformationService } from 'angular-device-information';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { SIDEBAR_EXPANDED_WIDTH } from '../../constants';
 
 @Component({
   selector: 'app-header',
@@ -8,10 +8,15 @@ import { AngularDeviceInformationService } from 'angular-device-information';
 })
 export class HeaderComponent implements OnInit {
 
-  isDesktop = this.deviceInformationService.isDesktop();
+  isDesktop = window.innerWidth >= SIDEBAR_EXPANDED_WIDTH;
   
-  constructor(private deviceInformationService: AngularDeviceInformationService) { }
+  constructor() { }
 
   ngOnInit() {}
+
+  @HostListener('window:resize')
+  onResize(){
+    this.isDesktop = window.innerWidth >= SIDEBAR_EXPANDED_WIDTH;
+  }
 
 }
