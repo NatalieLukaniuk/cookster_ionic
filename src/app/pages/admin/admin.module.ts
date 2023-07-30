@@ -15,7 +15,6 @@ import { AdminPageRoutingModule } from './admin-routing.module';
 
 import { AdminPage } from './admin.page';
 import { AdminTableComponent } from './components/admin-table/admin-table.component';
-import { UserComponent } from './pages/user/user.component';
 
 @NgModule({
   imports: [
@@ -34,8 +33,7 @@ import { UserComponent } from './pages/user/user.component';
     UpdateProductsComponent,
     AdminTableComponent,
     AddProductComponent,
-    DensityCalcComponent,
-    UserComponent
+    DensityCalcComponent
   ],
 })
 export class AdminPageModule {}

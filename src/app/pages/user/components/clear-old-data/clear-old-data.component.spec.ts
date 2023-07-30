@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserComponent } from './user.component';
+import { ClearOldDataComponent } from './clear-old-data.component';
 
-describe('UserComponent', () => {
-  let component: UserComponent;
-  let fixture: ComponentFixture<UserComponent>;
+describe('ClearOldDataComponent', () => {
+  let component: ClearOldDataComponent;
+  let fixture: ComponentFixture<ClearOldDataComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserComponent ]
+      declarations: [ ClearOldDataComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UserComponent);
+    fixture = TestBed.createComponent(ClearOldDataComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

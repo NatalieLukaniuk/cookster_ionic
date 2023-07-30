@@ -7,11 +7,11 @@ import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  selector: 'app-clear-old-data',
+  templateUrl: './clear-old-data.component.html',
+  styleUrls: ['./clear-old-data.component.scss']
 })
-export class UserComponent implements OnInit {
+export class ClearOldDataComponent implements OnInit {
 
   isOlDataAvailable = false;
   numberOfMonthsToStore = 3;

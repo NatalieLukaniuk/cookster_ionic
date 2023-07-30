@@ -33,6 +33,10 @@ const routes: Routes = [
         pathMatch: 'full'
       },
       {
+        path: 'profile',
+        loadChildren: () => import('../pages/user/user.module').then(m => m.UserPageModule)
+      },
+      {
         path: 'planner',
         loadChildren: () => import('../pages/planner/planner.module').then(m => m.PlannerPageModule)
       },
