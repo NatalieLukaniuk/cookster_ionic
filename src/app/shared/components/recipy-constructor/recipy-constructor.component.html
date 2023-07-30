@@ -75,6 +75,7 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[1].value">
+    <h4 *ngIf="ingredients.length" class="padding-inline">Додані:</h4>
     <ion-list>
       <ion-item
         swipeLeftNoConfirmation
@@ -110,7 +111,14 @@
         </ion-label>
       </ion-item>
     </ion-list>
-    <ion-accordion-group>
+    <h4 class="padding-inline">Додати:</h4>
+    <app-add-ingredient
+            [isSplitIntoGroups]="isSplitIntoGroups"
+            [groups]="groups"
+            (addNewIngredient)="onAddIngredient($event)"
+          ></app-add-ingredient>
+
+    <!-- <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="light">
           <ion-label>Додати інгридієнт</ion-label>
@@ -123,7 +131,7 @@
           ></app-add-ingredient>
         </div>
       </ion-accordion>
-    </ion-accordion-group>
+    </ion-accordion-group> -->
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[2].value">

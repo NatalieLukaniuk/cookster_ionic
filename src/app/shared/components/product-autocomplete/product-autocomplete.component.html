@@ -1,9 +1,9 @@
-<div class="ng-autocomplete">
+<div class="ng-autocomplete" [ngClass]="{'product-selected': isSelected}">
   <ng-autocomplete
   #autocomplete
   [data]="products"
   [searchKeyword]="keyword"
-  placeholder="Виберіть інгридієнт"
+  placeholder="Введіть назву продукту"
   (selected)="selectEvent($event)"
   (inputCleared)="onClearSearch()"
   [itemTemplate]="itemTemplate"
