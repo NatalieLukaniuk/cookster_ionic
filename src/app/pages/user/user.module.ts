@@ -9,6 +9,7 @@ import { UserPageRoutingModule } from './user-routing.module';
 import { UserPage } from './user.page';
 import { ClearOldDataComponent } from './components/clear-old-data/clear-old-data.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { GenericSettingsComponent } from './components/generic-settings/generic-settings.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     UserPageRoutingModule,
     SharedModule
   ],
-  declarations: [UserPage, ClearOldDataComponent]
+  declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent]
 })
 export class UserPageModule {}

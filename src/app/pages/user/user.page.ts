@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IonModal } from '@ionic/angular';
 
 @Component({
   selector: 'app-user',
@@ -7,9 +9,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserPage implements OnInit {
 
-  constructor() { }
+  settingOptions = [
+    {
+      title: 'Загальні налаштування',
+      link: 'settings'
+    }
+  ]
+
+  constructor(private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
+  }
+
+  @ViewChild(IonModal) settingsModal: IonModal | undefined;
+
+  dismissSettingsModal() {
+    this.settingsModal?.dismiss();
+  }
+
+  goSettings(link: string) {
+    this.dismissSettingsModal();
+    this.router.navigate([link], {relativeTo: this.route});
   }
 
 }

@@ -1,8 +1,35 @@
 <app-header>
-
-  <p title>Профіль</p>
+  <p title>Особиста сторінка</p>
 </app-header>
 
 <ion-content>
-  tada
+  <div class="user-header">
+    <div class="user-info"></div>
+    <ion-button slot="icon-only" color="secondary" id="user-settings-bottomsheet">
+      <ion-icon name="settings-outline"></ion-icon>
+    </ion-button>
+  </div>
+  <ng-container *ngTemplateOutlet="settingsBottomsheet"></ng-container>
 </ion-content>
+
+<ng-template #settingsBottomsheet>
+  <ion-modal trigger="user-settings-bottomsheet" [backdropDismiss]="true" [breakpoints]="[0.25, 0.5, 0.75]"
+    [initialBreakpoint]="0.25">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Welcome</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+
+        <ion-list lines="full">
+          <ion-item *ngFor="let option of settingOptions" (click)="goSettings(option.link)">
+            <ion-label>{{option.title}}</ion-label>
+          </ion-item>
+        </ion-list>
+        
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ng-template>
