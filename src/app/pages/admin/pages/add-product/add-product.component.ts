@@ -1,6 +1,6 @@
 import { ShowSuccessMessageAction } from './../../../../store/actions/ui.actions';
 import { AddNewIngredientAction } from './../../../../store/actions/recipies.actions';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { ProductsApiService } from './../../../../services/products-api.service';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -17,6 +17,8 @@ import {
   ProductTypeText,
 } from 'src/app/models/recipies.models';
 import { IAppState } from 'src/app/store/reducers';
+import { Observable, map } from 'rxjs';
+import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 
 @Component({
   selector: 'app-add-product',
@@ -25,6 +27,20 @@ import { IAppState } from 'src/app/store/reducers';
 })
 export class AddProductComponent implements OnInit {
   productForm!: UntypedFormGroup;
+
+  products: Product[] = [];
+  products$: Observable<Product[]> = this.store.pipe(
+    select(getAllProducts),
+    map((res) => {
+      if (res) {
+        let products = res.map((i) => i);
+        products.sort((a, b) => a.name.localeCompare(b.name));
+        this.products = products;
+        return products;
+      } else return [];
+    })
+  );
+  
   constructor(
     private productsApi: ProductsApiService,
     private store: Store<IAppState>

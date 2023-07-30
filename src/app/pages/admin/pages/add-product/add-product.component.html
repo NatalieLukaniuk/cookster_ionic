@@ -70,4 +70,12 @@
   <ion-button expand="full" [disabled]="productForm.invalid" (click)="submit()"
     >Зберегти</ion-button
   >
+  <div class="check-exists">
+    <h4 class="padding-inline">Перевірити чи продукт вже доданий:</h4>
+    <app-product-autocomplete
+              #withAutocomplete
+              *ngIf="products$ | async"
+              [products]="products"
+            ></app-product-autocomplete>
+  </div>
 </ion-content>
