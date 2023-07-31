@@ -14,10 +14,27 @@ export interface User {
   planner?: PlannerByDate[];
   collections?: RecipyCollection[];
   draftRecipies?: DraftRecipy[];
+  preferences: Preferences;
+  family: FamilyMember[]
   // scenarios?: SuggestionList[];
 }
 
 export enum Role {
   Admin = 'admin',
   User = 'user',
+}
+
+export interface Preferences {
+  isUseRecommendedPortionSize: boolean;
+  defaultPortionSize: number;
+  isUsePersonalizedPortionSize: boolean;
+  noShowProducts: string[];
+}
+
+export interface FamilyMember {
+  name: string,
+  id: string, // generated with Math.random * 100
+  noEat: string[], // product id array
+  noLike: string[], // product id array
+  like: string[] // product id array
 }

@@ -17,6 +17,8 @@ export class UserService {
   allUsers: User[] | undefined;
   userAtFirebaseAuth: User | undefined;
 
+  currentUserId = '';
+
   constructor(private authApiService: AuthApiService, private store: Store) {}
 
   getAllUsers() { // FIXME: might be not needed anymore
@@ -82,6 +84,9 @@ export class UserService {
         if (userAtFirebaseAuth.email === user.email) {
           console.log(user);
           this.currentUser = user;
+          if(user.id){
+            this.currentUserId = user.id;
+          }          
           if (!('details' in this.currentUser!)) {
             this.currentUser!.details = [];
           }
