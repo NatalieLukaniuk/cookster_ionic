@@ -22,3 +22,5 @@ export const getUserShoppingList = createSelector(
   getUserState,
   (state) => state.currentUser?.shoppingLists
 );
+
+export const getFamilyMembers = createSelector(getUserState, (state) => state.currentUser?.family);

@@ -38,3 +38,13 @@ export interface FamilyMember {
   noLike: string[], // product id array
   like: string[] // product id array
 }
+
+export class NewFamilyMember implements FamilyMember {
+  id = Math.round(Math.random() * 100000000).toString();
+  like = [];
+  noEat: string[] = [];
+  noLike: string[] = [];
+  constructor(public name: string) {
+    name = this.name;
+  }
+}

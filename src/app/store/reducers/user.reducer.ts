@@ -1,5 +1,6 @@
-import { User } from 'src/app/models/auth.models';
+import { FamilyMember, User } from 'src/app/models/auth.models';
 import { UserActions, UserActionTypes } from '../actions/user.actions';
+import * as _ from 'lodash';
 
 export interface IUserState {
   currentUser: User | null;
@@ -14,6 +15,13 @@ export function UserReducers(
   action: UserActions
 ): IUserState {
   switch (action.type) {
+    case UserActionTypes.UPDATE_FAMILY_SUCCESSFUL: {
+      return {
+        ...state,
+        currentUser: updateUserOnFamilyUpdated(action.family, state.currentUser)
+      }
+    }
+
     case UserActionTypes.USER_LOADED: {
       return {
         ...state,
@@ -27,7 +35,7 @@ export function UserReducers(
         currentUser: null,
       };
     }
-    
+
     case UserActionTypes.UPDATE_USER_SUCCESSFUL: {
       return {
         ...state,
@@ -37,4 +45,15 @@ export function UserReducers(
     default:
       return { ...state };
   }
+}
+
+export const updateUserOnFamilyUpdated = (family: FamilyMember[], currentUser: User | null) => {
+  if (currentUser) {
+    let updatedUser = _.cloneDeep(currentUser);
+    updatedUser.family = family;
+    return updatedUser;
+  } else {
+    return null
+  }
+
 }

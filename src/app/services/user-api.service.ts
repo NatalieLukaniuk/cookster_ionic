@@ -16,19 +16,15 @@ export class UserApiService {
     return this.userService.currentUserId;
   }
 
+  getUserUrl(){
+    return `${this.baseUrl}/${this.userId}.json`;
+  }
+
   getPreferencesUrl(){
     return `${this.baseUrl}/${this.userId}/preferences.json`;
   }
 
-  getFamilyUrl(){
-    return `${this.baseUrl}/${this.userId}/family.json`;
-  }
-
   updatePreferences(data: Preferences){
     return this.http.patch<Preferences>(this.getPreferencesUrl(), data);
-  }
-
-  updateFamily(family: FamilyMember[]){
-    return this.http.patch<FamilyMember[]>(this.getFamilyUrl(), family);
   }
 }

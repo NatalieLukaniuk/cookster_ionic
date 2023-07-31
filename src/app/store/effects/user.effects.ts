@@ -44,10 +44,21 @@ export class UserEffects {
 
   updateFamily$ = createEffect(() => this.actions$.pipe(
     ofType(UserActionTypes.UPDATE_FAMILY),
-    switchMap((action: UserActions.UpdateFamilyAction) => this.userService.updateFamily(action.family).pipe(
-      switchMap((res: FamilyMember[]) => [
-        new UiActions.ShowSuccessMessageAction('Налаштування сім\'ї збережено'),
-      ]),
+    switchMap((action: UserActions.UpdateFamilyAction) => this.store.pipe(select(getCurrentUser), take(1)).pipe(
+      map(user => {
+        if (user) {
+          let updatedUser = _.cloneDeep(user);
+          updatedUser.family = action.family;
+          return updatedUser
+        } else {
+          return user
+        }
+      }),
+      switchMap(user => {
+        if (user) {
+          return [new UserActions.UpdateUserAction(user, 'Налаштування сім\'ї збережено')]
+        } else return of(new UiActions.ErrorAction('user is null'))
+      }),
       catchError((error) => of(new UiActions.ErrorAction(error)))
     ))
   ))
@@ -88,5 +99,5 @@ export class UserEffects {
     private userService: UserApiService,
     private authService: AuthApiService,
     private store: Store<IAppState>,
-  ) {}
+  ) { }
 }
