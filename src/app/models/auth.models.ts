@@ -14,8 +14,8 @@ export interface User {
   planner?: PlannerByDate[];
   collections?: RecipyCollection[];
   draftRecipies?: DraftRecipy[];
-  preferences: Preferences;
-  family: FamilyMember[]
+  preferences?: Preferences;
+  family?: FamilyMember[]
   // scenarios?: SuggestionList[];
 }
 
