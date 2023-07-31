@@ -29,6 +29,6 @@ export class UserApiService {
   }
 
   updateFamily(family: FamilyMember[]){
-    return this.http.patch<Preferences>(this.getFamilyUrl(), family);
+    return this.http.patch<FamilyMember[]>(this.getFamilyUrl(), family);
   }
 }

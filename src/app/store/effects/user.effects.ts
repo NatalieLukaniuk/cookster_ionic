@@ -9,9 +9,10 @@ import { UserActionTypes } from '../actions/user.actions';
 import * as UiActions from '../actions/ui.actions';
 import { IAppState } from '../reducers';
 import * as _ from 'lodash';
-import { User } from 'src/app/models/auth.models';
+import { FamilyMember, Preferences, User } from 'src/app/models/auth.models';
 import { UserService } from 'src/app/services/user.service';
 import { AuthApiService } from 'src/app/services/auth-api.service';
+import { UserApiService } from 'src/app/services/user-api.service';
 
 // TODO: registration should be done in effects too
 @Injectable()
@@ -30,6 +31,26 @@ export class UserEffects {
       )
     )
   );
+
+  updatePreferences$ = createEffect(() => this.actions$.pipe(
+    ofType(UserActionTypes.UPDATE_PREFERENCES),
+    switchMap((action: UserActions.UpdatePreferencesAction) => this.userService.updatePreferences(action.preferences).pipe(
+      switchMap((res: Preferences) => [
+        new UiActions.ShowSuccessMessageAction('Налаштування збережено'),
+      ]),
+      catchError((error) => of(new UiActions.ErrorAction(error)))
+    ))
+  ))
+
+  updateFamily$ = createEffect(() => this.actions$.pipe(
+    ofType(UserActionTypes.UPDATE_FAMILY),
+    switchMap((action: UserActions.UpdateFamilyAction) => this.userService.updateFamily(action.family).pipe(
+      switchMap((res: FamilyMember[]) => [
+        new UiActions.ShowSuccessMessageAction('Налаштування сім\'ї збережено'),
+      ]),
+      catchError((error) => of(new UiActions.ErrorAction(error)))
+    ))
+  ))
 
   createCollection$ = createEffect(() =>
     this.actions$.pipe(
@@ -64,8 +85,8 @@ export class UserEffects {
 
   constructor(
     private actions$: Actions,
-    private userService: UserService,
+    private userService: UserApiService,
     private authService: AuthApiService,
-    private store: Store<IAppState>
+    private store: Store<IAppState>,
   ) {}
 }

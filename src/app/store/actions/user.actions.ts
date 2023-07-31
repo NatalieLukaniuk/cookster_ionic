@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { User } from 'src/app/models/auth.models';
+import { FamilyMember, Preferences, User } from 'src/app/models/auth.models';
 
 export enum UserActionTypes {
   USER_LOADED = '[USER] User Loaded',
@@ -8,8 +8,18 @@ export enum UserActionTypes {
   UPDATE_USER = '[USER] Update User',
   UPDATE_USER_SUCCESSFUL = '[USER] User Has Been Updated',
   CREATE_RECIPY_COLLECTION = '[USER] Create Recipy Collection',
+  UPDATE_PREFERENCES = '[USER] Update preferences',
+  UPDATE_FAMILY = '[USER] Update family',
 }
 
+export class UpdateFamilyAction implements Action {
+  readonly type = UserActionTypes.UPDATE_FAMILY;
+  constructor(public family: FamilyMember[]){}
+}
+export class UpdatePreferencesAction implements Action {
+  readonly type = UserActionTypes.UPDATE_PREFERENCES;
+  constructor(public preferences: Preferences){}
+}
 export class UserLoggedOutAction implements Action {
   readonly type = UserActionTypes.USER_LOGGED_OUT;
   constructor() {}
@@ -46,4 +56,4 @@ export type UserActions =
   | UpdateUserAction
   | UpdateUserSuccessfulAction
   | CreateRecipyCollection
-  | UserLoggedOutAction;
+  | UserLoggedOutAction | UpdatePreferencesAction | UpdateFamilyAction;
