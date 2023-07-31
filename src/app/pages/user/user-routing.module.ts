@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { UserPage } from './user.page';
+import { EditFamilyComponent } from './components/edit-family/edit-family.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,13 @@ const routes: Routes = [
   },
   {
     path: 'settings',
+    pathMatch: 'full',
     component: GenericSettingsComponent
+  },
+  {
+    path: 'family-settings',
+    pathMatch: 'full',
+    component: EditFamilyComponent
   }
 ];
 

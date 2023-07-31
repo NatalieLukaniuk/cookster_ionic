@@ -1,0 +1,31 @@
+<app-header>
+    <ion-back-button left-button defaultHref="tabs/profile"></ion-back-button>
+    <p title>Налаштування сім'ї</p>
+  </app-header>
+  
+  <ion-content>
+    <ion-button id="add-family-member-bottomsheet" expand="full">
+        Додати члена сім'ї
+    </ion-button>
+    <ng-container *ngTemplateOutlet="addFamilyBottomsheet"></ng-container>
+
+  </ion-content>
+
+
+  <ng-template #addFamilyBottomsheet>
+    <ion-modal trigger="add-family-member-bottomsheet" [backdropDismiss]="true" [breakpoints]="[0.25, 0.5, 0.75]"
+      [initialBreakpoint]="0.5">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Додати члена сім'ї</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+  
+          
+          
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  </ng-template>

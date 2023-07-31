@@ -11,6 +11,10 @@ export class UserPage implements OnInit {
 
   settingOptions = [
     {
+      title: 'Налаштування сім\'ї',
+      link: 'family-settings'
+    },
+    {
       title: 'Загальні налаштування',
       link: 'settings'
     }

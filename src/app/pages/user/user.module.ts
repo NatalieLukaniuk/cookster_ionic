@@ -10,6 +10,7 @@ import { UserPage } from './user.page';
 import { ClearOldDataComponent } from './components/clear-old-data/clear-old-data.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { GenericSettingsComponent } from './components/generic-settings/generic-settings.component';
+import { EditFamilyComponent } from './components/edit-family/edit-family.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { GenericSettingsComponent } from './components/generic-settings/generic-
     UserPageRoutingModule,
     SharedModule
   ],
-  declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent]
+  declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent, EditFamilyComponent]
 })
 export class UserPageModule {}
