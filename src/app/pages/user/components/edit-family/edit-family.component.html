@@ -1,31 +1,68 @@
 <app-header>
     <ion-back-button left-button defaultHref="tabs/profile"></ion-back-button>
     <p title>Налаштування сім'ї</p>
-  </app-header>
-  
-  <ion-content>
+</app-header>
+
+<ion-content>
     <ion-button id="add-family-member-bottomsheet" expand="full">
         Додати члена сім'ї
     </ion-button>
     <ng-container *ngTemplateOutlet="addFamilyBottomsheet"></ng-container>
 
-  </ion-content>
+    <ion-segment [value]="activeMember" [scrollable]="true" *ngIf="familyMembers" (ionChange)="onTabChange($event)">
+        <ion-segment-button [value]="member.id" *ngFor="let member of (familyMembers$ | async)">
+            <ion-label>{{member.name}}</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+
+    <div *ngFor="let member of (familyMembers$ | async)">
+        <ng-container *ngIf="member.id === activeMember">
+            <h4 class="padding-inline">{{member.name}}</h4>
+        <ng-container  *ngIf="products$ | async">
+            <h5 class="padding-inline">Любить:</h5>
+            <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'like' }"></ng-container>
+            <h5 class="padding-inline">Не любить:</h5>
+            <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noLike' }"></ng-container>
+            <h5 class="padding-inline">Не їсть:</h5>
+            <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noEat' }"></ng-container>
+        </ng-container>  
+        </ng-container>
+    </div>
+</ion-content>
 
 
-  <ng-template #addFamilyBottomsheet>
+<ng-template #addFamilyBottomsheet>
     <ion-modal trigger="add-family-member-bottomsheet" [backdropDismiss]="true" [breakpoints]="[0.25, 0.5, 0.75]"
-      [initialBreakpoint]="0.5">
-      <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>Додати члена сім'ї</ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-  
-          
-          
-        </ion-content>
-      </ng-template>
+        [initialBreakpoint]="0.5" #newMemberModal>
+        <ng-template>
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>Додати члена сім'ї</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+                <ion-item>
+                    <ion-input label="Ім'я:" placeholder="Введіть ім'я" [(ngModel)]="newMember"></ion-input>
+                </ion-item>
+                <ion-button (click)="addNewMember()" [disabled]="newMember.length < 3" expand="full">Додати</ion-button>
+
+            </ion-content>
+        </ng-template>
     </ion-modal>
-  </ng-template>
+</ng-template>
+
+<ng-template #accContent let-member="member" let-key="key">
+    <div class="limited-height-autcomplete" slot="content">
+        <div class="chip-selection-list">
+            <ng-container *ngFor="let product of (products$ | async)">
+                <ion-chip *ngIf="member[key] && member[key].includes(product.id)"
+                    (click)="onProductCheck(product, key, member.id)" [color]="'primary'">
+                    <span>{{ getProductText(product) }}</span>
+                    <ion-icon name="close-outline"></ion-icon>
+                </ion-chip>
+            </ng-container>
+        </div>
+        <app-product-autocomplete *ngIf="products$ | async" [products]="getFilteredProducts(key, member.id)"
+            (productSelected)="onProductCheck($event, key, member.id)"></app-product-autocomplete>
+    </div>
+</ng-template>
