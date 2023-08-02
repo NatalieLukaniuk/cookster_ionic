@@ -6,21 +6,27 @@ import {
   SimpleChanges,
   Output,
   EventEmitter,
+  OnDestroy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Ingredient, Recipy } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { AVERAGE_PORTION } from 'src/app/shared/constants';
 import { ItemOption, ItemOptionActions } from '../../ingredient/ingredient.component';
 import { Suggestion } from 'src/app/models/calendar.models';
 import { ModalController } from '@ionic/angular';
 import { ControllerInputDialogComponent } from '../../dialogs/controller-input-dialog/controller-input-dialog.component';
+import { IAppState } from 'src/app/store/reducers';
+import { Store, select } from '@ngrx/store';
+import { getFamilyMembers, getUserPreferences } from 'src/app/store/selectors/user.selectors';
+import { Subject, takeUntil } from 'rxjs';
+import { AVERAGE_PORTION } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-ingredients-tab',
   templateUrl: './ingredients-tab.component.html',
   styleUrls: ['./ingredients-tab.component.scss'],
 })
-export class IngredientsTabComponent implements OnInit, OnChanges {
+export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
   @Input() recipy!: Recipy;
 
   @Input() portions?: number;
@@ -45,7 +51,14 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
 
   coeficient: number = 1;
 
-  constructor(private datamapping: DataMappingService, private modalCtrl: ModalController) { }
+  destroy$ = new Subject<void>();
+
+  constructor(private datamapping: DataMappingService, private modalCtrl: ModalController, private store: Store<IAppState>, private cdr: ChangeDetectorRef) {
+
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+  }
 
   ngOnInit() {
     if (this.portions) {
@@ -55,6 +68,25 @@ export class IngredientsTabComponent implements OnInit, OnChanges {
     if (this.amountPerPortion) {
       this.portionSize = this.amountPerPortion;
     }
+
+    if (!this.portions && !this.amountPerPortion) {
+      this.store.pipe(select(getUserPreferences), takeUntil(this.destroy$)).subscribe(preferences => {
+        if (preferences && !preferences.isUsePersonalizedPortionSize && (!preferences.isUseRecommendedPortionSize || !this.recipy.portionSize)) {
+          this.portionSize = preferences.defaultPortionSize;
+          this.getCoeficient()
+        } else if (preferences && preferences.isUseRecommendedPortionSize && this.recipy.portionSize) {
+          this.portionSize = this.recipy.portionSize;
+          this.getCoeficient()
+        }
+      })
+      this.store.pipe(select(getFamilyMembers), takeUntil(this.destroy$)).subscribe(members => {
+        if (members && members.length) {
+          this.portionsToServe = members.length
+          this.getCoeficient()
+        }
+      })
+    }
+
 
     this.getCoeficient();
   }
