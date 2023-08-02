@@ -15,7 +15,6 @@
         </div>
         <div>
           <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
-          <ion-icon name="bulb" *ngIf="isPrepSuggestions"></ion-icon>
           <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
         </div>
       </div>
@@ -25,13 +24,7 @@
           collection
           }}</ion-chip>
       </div>
-      <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
-      <div class="collection-tags">
-        <span>Теги: </span>
-        <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
-          DishType[tag]
-          }}</ion-chip>
-      </div>      
+
     </ion-card-subtitle>
   </ion-card-header>
 
@@ -50,44 +43,54 @@
   </ion-card-content>
 
   <div class="overlay once" [class.visible]="isRecipyClicked">
-    <div class="time-details">
-      <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
-
-      <span *ngIf="isNeedsAdvancePreparation">потребує попередньої підготовки</span>
-    </div>
-    <div>{{ complexity }} рецепт</div>
-    <div class="advance-prep" *ngIf="isPrepSuggestions">
-      <ion-icon name="bulb"></ion-icon> дещо можна приготувати заздалегіть
-    </div>
-    <div class="advance-prep" *ngIf="recipy.isCheckedAndApproved">
-      <ion-icon name="checkmark-done"></ion-icon>
-      рецепт перевірений на практиці
-    </div>
-    <div *ngIf="recipy.calorificValue">
-      Калорійність: {{ Math.round(recipy.calorificValue) }} ккал в 100гр.
-    </div>
-    <div>
-      Автор: {{ recipy.author }}
-    </div>
-    <div class="collection-tags">
-      <ng-container *ngIf="productPreferencesChips?.length">
-        <ng-container *ngFor="let item of productPreferencesChips">
-          <ion-chip *ngIf="getIsInRecipy(item.productId)" class="collection-chip" [color]="item.color">
-            {{item.name}}: {{getProductText(item.productId)}}
-          </ion-chip>
-        </ng-container>
-
-      </ng-container>
-
-    </div>
-    <div class="ingredients-wrapper">
-      <h6>Основні інгридієнти</h6>
+    <div class="overlay-flex-container">
       <div>
-        <ng-container *ngFor="let ingredient of topIngredients">
-          <span class="ingredient-text">{{
-            getIngredientText(ingredient).toLowerCase()
-            }}</span>
-        </ng-container>
+        <div class="time-details overlay-row">
+          <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
+
+          <span *ngIf="isNeedsAdvancePreparation">потребує попередньої підготовки</span>
+        </div>
+        <div class="overlay-row">{{ complexity }} рецепт</div>
+
+        <div class="advance-prep overlay-row" *ngIf="recipy.isCheckedAndApproved">
+          <ion-icon name="checkmark-done"></ion-icon>
+          рецепт перевірений на практиці
+        </div>
+        <div *ngIf="recipy.calorificValue" class="overlay-row">
+          Калорійність: {{ Math.round(recipy.calorificValue) }} ккал в 100гр.
+        </div>
+        <div class="overlay-row">
+          Автор: {{ recipy.author }}
+        </div>
+        <div *ngIf="recipy.portionSize" class="overlay-row">Рекомендований розмір порції: {{recipy.portionSize}}гр.
+        </div>
+        <div class="collection-tags overlay-row">
+          <span>Теги: </span>
+          <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+            DishType[tag]
+            }}</ion-chip>
+        </div>
+        <div class="collection-tags overlay-row">
+          <ng-container *ngIf="productPreferencesChips?.length">
+            <ng-container *ngFor="let item of productPreferencesChips">
+              <ion-chip *ngIf="getIsInRecipy(item.productId)" class="collection-chip" [color]="item.color">
+                {{item.name}}: {{getProductText(item.productId)}}
+              </ion-chip>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+      <div>
+        <div class="ingredients-wrapper">
+          <h6>Основні інгридієнти</h6>
+          <div>
+            <ng-container *ngFor="let ingredient of topIngredients">
+              <span class="ingredient-text">{{
+                getIngredientText(ingredient).toLowerCase()
+                }}</span>
+            </ng-container>
+          </div>
+        </div>
       </div>
     </div>
 

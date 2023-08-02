@@ -4,8 +4,8 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { Subject, combineLatest, map, takeUntil } from 'rxjs';
-import { productPreferencesChip } from 'src/app/models/recipies.models';
+import { Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
+import { Recipy, productPreferencesChip } from 'src/app/models/recipies.models';
 
 @Component({
   selector: 'app-recipies',
@@ -14,6 +14,7 @@ import { productPreferencesChip } from 'src/app/models/recipies.models';
 })
 export class RecipiesContainer implements OnDestroy {
   filters$ = this.filtersService.getFilters;
+  recipies: Recipy[] = []
   recipies$ = combineLatest([
     this.store.pipe(select(getAllRecipies)),
     this.filters$,
@@ -30,6 +31,14 @@ export class RecipiesContainer implements OnDestroy {
     private store: Store<IAppState>,
     private filtersService: FiltersService
   ) {
+    this.subscribeForProductChips();
+    this.subscribeForRecipies()
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next()
+  }
+
+  subscribeForProductChips() {
     this.store.pipe(select(getFamilyMembers), takeUntil(this.destroy$), map(familyMembers => {
       if (familyMembers && familyMembers.length) {
         let likeChips = familyMembers.map(member => {
@@ -46,7 +55,7 @@ export class RecipiesContainer implements OnDestroy {
         }
         ).flat().filter(i => !!i.productId);
 
-       let noEatChips = familyMembers.map(member => {
+        let noEatChips = familyMembers.map(member => {
           if (member.noEat) {
             return member.noEat.map(item => ({ name: member.name, productId: item, color: 'danger' }))
           } else return []
@@ -58,8 +67,16 @@ export class RecipiesContainer implements OnDestroy {
       }
     })).subscribe()
   }
-  ngOnDestroy(): void {
-    this.destroy$.next()
+
+  subscribeForRecipies() {
+    combineLatest([
+      this.store.pipe(select(getAllRecipies)),
+      this.filters$,
+    ]).pipe(
+      takeUntil(this.destroy$),
+      map((res) => this.filtersService.applyFilters(res[0], res[1])),
+      tap(recipies => this.recipies = recipies)
+    ).subscribe()
   }
 
   onscroll(event: any) {
