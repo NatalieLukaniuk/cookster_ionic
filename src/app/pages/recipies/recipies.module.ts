@@ -1,6 +1,6 @@
 import { FiltersModule } from './../../filters/filters.module';
 import { EditRecipyComponent } from './pages/edit-recipy/edit-recipy.component';
-import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-short-view.component';
+import { RecipyShortViewComponent } from '../../shared/components/recipy-short-view/recipy-short-view.component';
 import { SharedModule } from '../../shared/shared.module';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
@@ -22,7 +22,6 @@ import { RecipiesContainer } from './pages/all-recipies-page/recipies.page';
   ],
   declarations: [
     RecipiesContainer,
-    RecipyShortViewComponent,
     FullRecipyPageComponent,
     EditRecipyComponent
   ],

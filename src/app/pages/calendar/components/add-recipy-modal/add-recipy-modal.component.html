@@ -44,7 +44,7 @@
             detail="false"
             button
             *ngFor="let recipy of recipies$ | async"
-            (click)="onRecipyClicked(recipy.id)"
+            (click)="onRecipyClicked(recipy)"
           >
             <ion-label class="recipy-content">
               <div class="recipy-text">

@@ -6,8 +6,13 @@ import {
   Output,
   EventEmitter,
   ViewChild,
+  Input,
 } from '@angular/core';
 import { AVERAGE_PORTION } from 'src/app/shared/constants';
+import { Recipy } from 'src/app/models/recipies.models';
+import { select, Store } from '@ngrx/store';
+import { IAppState } from 'src/app/store/reducers';
+import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 export interface DialogData {
   title: string;
@@ -20,6 +25,9 @@ export interface DialogData {
   styleUrls: ['./select-option-dialog.component.scss'],
 })
 export class SelectOptionDialogComponent implements OnInit {
+  @Input() recipy!: Recipy;
+  @Input() meatime!: MealTime;
+  @Input() date!: string;
   selectedPortionOption: number = 4;
   amountPerPortion: number = AVERAGE_PORTION;
 
@@ -30,11 +38,24 @@ export class SelectOptionDialogComponent implements OnInit {
     amountPerPortion: number;
   }>();
 
+  user$ = this.store.pipe(select(getCurrentUser));
+
   @ViewChild('selectOption') modal: IonModal | undefined;
 
-  constructor() {}
+  constructor(private store: Store<IAppState>) { }
 
   ngOnInit() {
     this.presentingElement = document.querySelector('.ion-page');
+  }
+
+  get mealtimeText() {
+    switch (this.meatime) {
+      case MealTime.Breakfast:
+        return 'Сніданок';
+      case MealTime.Lunch:
+        return 'Обід';
+      case MealTime.Dinner:
+        return 'Вечеря';
+    }
   }
 }

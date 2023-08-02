@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { DataMappingService } from './../../../../services/data-mapping.service';
+import { DataMappingService } from '../../../services/data-mapping.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/models/auth.models';
 import {

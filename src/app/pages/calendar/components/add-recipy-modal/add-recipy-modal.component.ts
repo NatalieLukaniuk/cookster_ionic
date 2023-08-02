@@ -23,7 +23,7 @@ import { take, map, combineLatest, BehaviorSubject } from 'rxjs';
 export class AddRecipyModalComponent {
   @Input() meatime!: MealTime;
   @Input() date!: string;
-  @Output() recipyToAdd = new EventEmitter<string>();
+  @Output() recipyToAdd = new EventEmitter<Recipy>();
 
   collections$ = this.store.pipe(
     select(getCurrentUser),
@@ -58,9 +58,9 @@ export class AddRecipyModalComponent {
     this.modal?.dismiss(null, 'cancel');
   }
 
-  onRecipyClicked(recipyid: string) {
-    this.modal?.dismiss(recipyid, 'confirm');
-    this.recipyToAdd.emit(recipyid);
+  onRecipyClicked(recipy: Recipy) {
+    this.modal?.dismiss(recipy, 'confirm');
+    this.recipyToAdd.emit(recipy);
   }
 
   preparationTime(recipy: Recipy) {

@@ -1,75 +1,49 @@
-<ion-button id="open-modal" expand="block" style="display: none"
-  >Open</ion-button
->
-<ion-modal
-  #selectOption
-  trigger="open-modal"
-  [presentingElement]="presentingElement"
->
+<ion-button id="open-add-recipy-to-cal" expand="block" style="display: none">Open</ion-button>
+<ion-modal #selectOption trigger="open-add-recipy-to-cal" [presentingElement]="presentingElement">
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Час та кількість порцій</ion-title>
+        <ion-title>{{date.toString() | date : "EE, MMM d"}}, {{mealtimeText.toLowerCase()}}</ion-title>
         <ion-buttons slot="start">
-          <ion-button (click)="selectOption.dismiss({}, 'cancel')"
-            >Скасувати</ion-button
-          >
+          <ion-button (click)="selectOption.dismiss({}, 'cancel')">Скасувати</ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button
-            (click)="
+          <ion-button (click)="
               selectOption.dismiss(
                 { portions: selectedPortionOption, amount: amountPerPortion },
                 'confirm'
               )
-            "
-            >Додати</ion-button
-          >
+            ">Додати</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <h5>Number of portions</h5>
+      <app-recipy-short-view [currentUser]="user$ | async" [recipy]="recipy"></app-recipy-short-view>
+
+      <h5>Вкажіть кількість порцій:</h5>
       <div class="amount-wrapper">
-        <ion-button
-          size="small"
-          (click)="selectedPortionOption = selectedPortionOption - 1"
-        >
+        <ion-button size="small" (click)="selectedPortionOption = selectedPortionOption - 1">
           <ion-icon slot="icon-only" name="remove"></ion-icon>
         </ion-button>
         <ion-item>
           <ion-label position="floating">Number of portions to serve</ion-label>
-          <ion-input
-            [(ngModel)]="selectedPortionOption"
-            type="number"
-          ></ion-input>
+          <ion-input [(ngModel)]="selectedPortionOption" type="number"></ion-input>
         </ion-item>
-        <ion-button
-          size="small"
-          (click)="selectedPortionOption = selectedPortionOption + 1"
-        >
+        <ion-button size="small" (click)="selectedPortionOption = selectedPortionOption + 1">
           <ion-icon slot="icon-only" name="add"></ion-icon>
         </ion-button>
       </div>
       <div>
-        <h5>Amount per portion</h5>
+        <h5>Вкажіть розмір порції</h5>
         <div class="amount-wrapper">
-          <ion-button
-            size="small"
-            (click)="amountPerPortion = amountPerPortion - 50"
-          >
+          <ion-button size="small" (click)="amountPerPortion = amountPerPortion - 50">
             <ion-icon slot="icon-only" name="remove"></ion-icon>
           </ion-button>
           <ion-item>
-            <ion-label position="floating"
-              >Amount per portion (in gramms)</ion-label
-            >
+            <ion-label position="floating">Amount per portion (in gramms)</ion-label>
             <ion-input [(ngModel)]="amountPerPortion" type="number"></ion-input>
           </ion-item>
-          <ion-button
-            size="small"
-            (click)="amountPerPortion = amountPerPortion + 50"
-          >
+          <ion-button size="small" (click)="amountPerPortion = amountPerPortion + 50">
             <ion-icon slot="icon-only" name="add"></ion-icon>
           </ion-button>
         </div>
