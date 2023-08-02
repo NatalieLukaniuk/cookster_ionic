@@ -1,4 +1,4 @@
-import { FamilyMember, User } from 'src/app/models/auth.models';
+import { FamilyMember, Preferences, User } from 'src/app/models/auth.models';
 import { UserActions, UserActionTypes } from '../actions/user.actions';
 import * as _ from 'lodash';
 
@@ -19,6 +19,13 @@ export function UserReducers(
       return {
         ...state,
         currentUser: updateUserOnFamilyUpdated(action.family, state.currentUser)
+      }
+    }
+
+    case UserActionTypes.UPDATE_PREFERENCES_SUCCESSFUL: {
+      return {
+        ...state,
+        currentUser: updateUserOnPreferencesUpdated(action.preferences, state.currentUser)
       }
     }
 
@@ -55,5 +62,14 @@ export const updateUserOnFamilyUpdated = (family: FamilyMember[], currentUser: U
   } else {
     return null
   }
+}
 
+export const updateUserOnPreferencesUpdated = (preferences: Preferences, currentUser: User | null) => {
+  if (currentUser) {
+    let updatedUser = _.cloneDeep(currentUser);
+    updatedUser.preferences = preferences;
+    return updatedUser;
+  } else {
+    return null
+  }
 }

@@ -1,8 +1,31 @@
 <app-header>
-    <ion-back-button left-button defaultHref="tabs/profile"></ion-back-button>
-    <p title>Загальні налаштування</p>
-  </app-header>
-  
-  <ion-content>
-    tada
-  </ion-content>
+  <ion-back-button left-button defaultHref="tabs/profile"></ion-back-button>
+  <p title>Загальні налаштування</p>
+</app-header>
+
+<ion-content>
+  <ion-list *ngIf="!!(preferences$ | async)">
+    <ion-item>
+      <ion-input [disabled]="!(isEditDefaultPortionEnabled$ | async)" label="Розмір порції по замовчуванню"
+        placeholder="250гр" [(ngModel)]="defaultPortionSize"
+        (ngModelChange)="changeDefaultPortionSize($event)"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-toggle [checked]="this.preferences.isUseRecommendedPortionSize"
+        (ionChange)="onToggled('isUseRecommendedPortionSize', $event)"><label class="wrapped-label">Використовувати
+          рекомендований розмір
+          порції</label></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-toggle [checked]="this.preferences.isUsePersonalizedPortionSize"
+        [disabled]="!(isUseIndividualPortionsEnabled$ | async)"
+        (ionChange)="onToggled('isUsePersonalizedPortionSize', $event)"><label class="wrapped-label">Використовувати
+          індивідуальні налаштування порції для членів сім'ї<span
+            *ngIf="!(isUseIndividualPortionsEnabled$ | async)">*</span></label></ion-toggle>
+    </ion-item>
+    <p *ngIf="!(isUseIndividualPortionsEnabled$ | async)" class="padding-inline footnote">* Щоб використовувати
+      індивідуальні налаштування для членів сім'ї, потрібно вказати % від рекомендованої порції для кожного члена сім'ї
+    </p>
+  </ion-list>
+
+</ion-content>

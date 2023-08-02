@@ -9,6 +9,7 @@ export enum UserActionTypes {
   UPDATE_USER_SUCCESSFUL = '[USER] User Has Been Updated',
   CREATE_RECIPY_COLLECTION = '[USER] Create Recipy Collection',
   UPDATE_PREFERENCES = '[USER] Update preferences',
+  UPDATE_PREFERENCES_SUCCESSFUL = '[USER] Preferences updated',
   UPDATE_FAMILY = '[USER] Update family',
   UPDATE_FAMILY_SUCCESSFUL = '[USER] Family updated',
 }
@@ -24,6 +25,11 @@ export class UpdateFamilySuccessfulAction implements Action {
 
 export class UpdatePreferencesAction implements Action {
   readonly type = UserActionTypes.UPDATE_PREFERENCES;
+  constructor(public preferences: Preferences) { }
+}
+
+export class UpdatePreferencesSuccessfulAction implements Action {
+  readonly type = UserActionTypes.UPDATE_PREFERENCES_SUCCESSFUL;
   constructor(public preferences: Preferences) { }
 }
 export class UserLoggedOutAction implements Action {
@@ -62,4 +68,4 @@ export type UserActions =
   | UpdateUserAction
   | UpdateUserSuccessfulAction
   | CreateRecipyCollection
-  | UserLoggedOutAction | UpdatePreferencesAction | UpdateFamilyAction | UpdateFamilySuccessfulAction;
+  | UserLoggedOutAction | UpdatePreferencesAction | UpdateFamilyAction | UpdateFamilySuccessfulAction | UpdatePreferencesSuccessfulAction;

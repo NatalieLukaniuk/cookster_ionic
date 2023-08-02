@@ -1,11 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
-import { BehaviorSubject, Observable, debounceTime, map, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, debounceTime, map, take, takeUntil, tap } from 'rxjs';
 import { FamilyMember, NewFamilyMember } from 'src/app/models/auth.models';
 import { Product } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
+import { INPUT_DEBOUNCE_TIME } from 'src/app/shared/constants';
 import { UpdateFamilyAction } from 'src/app/store/actions/user.actions';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
@@ -16,7 +17,7 @@ import { getFamilyMembers } from 'src/app/store/selectors/user.selectors';
   templateUrl: './edit-family.component.html',
   styleUrls: ['./edit-family.component.scss']
 })
-export class EditFamilyComponent {
+export class EditFamilyComponent implements OnDestroy {
   newMember = '';
 
   products: Product[] = [];
@@ -25,6 +26,8 @@ export class EditFamilyComponent {
   portionSizePercentage = '';
 
   portionSizePercentage$ = new BehaviorSubject<number>(0);
+
+  destroy$ = new Subject<void>();
 
   calculatedPortionSize$ = this.portionSizePercentage$.pipe(map(portionPercentage => {
     return this.sampleRecommendedPortion * (portionPercentage / 100);
@@ -60,6 +63,9 @@ export class EditFamilyComponent {
 
   constructor(private store: Store<IAppState>, private datamapping: DataMappingService) {
     this.updatePortionSizePercentage();
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 
   @ViewChild(IonModal) newMemberModal: IonModal | undefined;
@@ -119,7 +125,7 @@ export class EditFamilyComponent {
   }
 
   updatePortionSizePercentage() {
-    this.portionSizePercentage$.pipe(debounceTime(700)).subscribe(percentage => {
+    this.portionSizePercentage$.pipe(debounceTime(INPUT_DEBOUNCE_TIME), takeUntil(this.destroy$)).subscribe(percentage => {
 
       const memberToUpdate = this.familyMembers.find(member => member.id === this.activeMember);
       if (memberToUpdate && percentage && memberToUpdate.portionSizePercentage !== +percentage) {

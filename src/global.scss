@@ -93,3 +93,13 @@ ion-button {
     padding-inline: 5px;
   }
 }
+
+.label-text-wrapper .label-text,
+.wrapped-label {
+  white-space: break-spaces;
+}
+
+.footnote {
+  font-size: 10px;
+  color: var(--ion-color-danger);
+}
