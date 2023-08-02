@@ -10,6 +10,7 @@
       *ngFor="let recipy of (recipies$ |async)"
       [currentUser]="user$ | async"
       [recipy]="recipy"
+      [productPreferencesChips]="productChips"
     ></app-recipy-short-view>
   </div>
 

@@ -276,3 +276,9 @@ export enum ProductTypeText {
   'твердий однорідний',
   'сипучий продукт (крупа, борошно)'
 }
+
+export interface productPreferencesChip {
+  name: string,
+  productId: string,
+  color: string
+}

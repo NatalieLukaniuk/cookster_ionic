@@ -31,7 +31,7 @@
         <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
           DishType[tag]
           }}</ion-chip>
-      </div>
+      </div>      
     </ion-card-subtitle>
   </ion-card-header>
 
@@ -69,7 +69,18 @@
     <div>
       Автор: {{ recipy.author }}
     </div>
-    <div *ngIf="recipy.photo" class="ingredients-wrapper">
+    <div class="collection-tags">
+      <ng-container *ngIf="productPreferencesChips?.length">
+        <ng-container *ngFor="let item of productPreferencesChips">
+          <ion-chip *ngIf="getIsInRecipy(item.productId)" class="collection-chip" [color]="item.color">
+            {{item.name}}: {{getProductText(item.productId)}}
+          </ion-chip>
+        </ng-container>
+
+      </ng-container>
+
+    </div>
+    <div class="ingredients-wrapper">
       <h6>Основні інгридієнти</h6>
       <div>
         <ng-container *ngFor="let ingredient of topIngredients">

@@ -1,17 +1,18 @@
 import { FiltersService } from './../../../../filters/services/filters.service';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { Component, ViewChild } from '@angular/core';
+import { getCurrentUser, getFamilyMembers } from 'src/app/store/selectors/user.selectors';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { combineLatest, map } from 'rxjs';
+import { Subject, combineLatest, map, takeUntil } from 'rxjs';
+import { productPreferencesChip } from 'src/app/models/recipies.models';
 
 @Component({
   selector: 'app-recipies',
   templateUrl: 'recipies.page.html',
   styleUrls: ['recipies.page.scss'],
 })
-export class RecipiesContainer {
+export class RecipiesContainer implements OnDestroy {
   filters$ = this.filtersService.getFilters;
   recipies$ = combineLatest([
     this.store.pipe(select(getAllRecipies)),
@@ -21,19 +22,53 @@ export class RecipiesContainer {
   showGoTop = false;
 
   user$ = this.store.pipe(select(getCurrentUser));
+  productChips: productPreferencesChip[] = [];
+
+  destroy$ = new Subject<void>();
 
   constructor(
     private store: Store<IAppState>,
     private filtersService: FiltersService
-  ) {}
+  ) {
+    this.store.pipe(select(getFamilyMembers), takeUntil(this.destroy$), map(familyMembers => {
+      if (familyMembers && familyMembers.length) {
+        let likeChips = familyMembers.map(member => {
+          if (member.like) {
+            return member.like.map(item => ({ name: member.name, productId: item, color: 'success' }))
+          } else return []
+        }
+        ).flat().filter(i => !!i.productId);
 
-  onscroll(event: any){
+        let noLikeChips = familyMembers.map(member => {
+          if (member.noLike) {
+            return member.noLike.map(item => ({ name: member.name, productId: item, color: 'warning' }))
+          } else return []
+        }
+        ).flat().filter(i => !!i.productId);
+
+       let noEatChips = familyMembers.map(member => {
+          if (member.noEat) {
+            return member.noEat.map(item => ({ name: member.name, productId: item, color: 'danger' }))
+          } else return []
+        }
+        ).flat().filter(i => !!i.productId);
+
+        const concatenated = likeChips.concat(noLikeChips).concat(noEatChips);
+        this.productChips = concatenated
+      }
+    })).subscribe()
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next()
+  }
+
+  onscroll(event: any) {
     this.showGoTop = event.detail.scrollTop > 500;
   }
 
   @ViewChild('scrollingContainer') scrollingContainer: any;
 
-  goTop(){
+  goTop() {
     this.scrollingContainer.scrollToTop()
   }
 }
