@@ -70,7 +70,7 @@
             DishType[tag]
             }}</ion-chip>
         </div>
-        <div class="collection-tags overlay-row">
+        <div class="chip-selection-list">
           <ng-container *ngIf="productPreferencesChips?.length">
             <ng-container *ngFor="let item of productPreferencesChips">
               <ion-chip *ngIf="getIsInRecipy(item.productId)" class="collection-chip" [color]="item.color">
