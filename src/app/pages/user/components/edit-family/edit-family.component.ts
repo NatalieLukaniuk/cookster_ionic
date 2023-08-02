@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
-import { Observable, map, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, debounceTime, map, take, tap } from 'rxjs';
 import { FamilyMember, NewFamilyMember } from 'src/app/models/auth.models';
 import { Product } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
@@ -21,11 +21,23 @@ export class EditFamilyComponent {
 
   products: Product[] = [];
 
+  sampleRecommendedPortion = 400;
+  portionSizePercentage = '';
+
+  portionSizePercentage$ = new BehaviorSubject<number>(0);
+
+  calculatedPortionSize$ = this.portionSizePercentage$.pipe(map(portionPercentage => {
+    return this.sampleRecommendedPortion * (portionPercentage / 100);
+  }))
+
   familyMembers$ = this.store.pipe(select(getFamilyMembers), tap(res => {
     if (res) {
-      this.familyMembers = res;
+      this.familyMembers = _.cloneDeep(res);
       if (!this.activeMember.length) {
         this.activeMember = this.familyMembers[0].id;
+        this.portionSizePercentage = this.familyMembers[0].portionSizePercentage ? this.familyMembers[0].portionSizePercentage.toString() : '';
+        this.portionSizePercentage$.next(+this.portionSizePercentage)
+
       }
     }
   }));
@@ -47,7 +59,7 @@ export class EditFamilyComponent {
   );
 
   constructor(private store: Store<IAppState>, private datamapping: DataMappingService) {
-
+    this.updatePortionSizePercentage();
   }
 
   @ViewChild(IonModal) newMemberModal: IonModal | undefined;
@@ -76,8 +88,7 @@ export class EditFamilyComponent {
   }
 
   onProductCheck(product: Product, key: keyof FamilyMember, memberId: string) {
-    const cloned = _.cloneDeep(this.familyMembers);
-    const familyMember = cloned.find(member => member.id === memberId);
+    const familyMember = this.familyMembers.find(member => member.id === memberId);
     if (familyMember) {
       let arrayToUpdate = familyMember[key] as string[];
       if (arrayToUpdate && arrayToUpdate.includes(product.id)) {
@@ -88,15 +99,34 @@ export class EditFamilyComponent {
         (familyMember[key] as string[]) = [product.id];
       }
     }
-    this.store.dispatch(new UpdateFamilyAction(cloned))
+    this.store.dispatch(new UpdateFamilyAction(this.familyMembers))
   }
 
   onTabChange(event: any) {
     this.activeMember = event.detail.value;
+    const found = this.familyMembers.find(member => member.id === this.activeMember);
+    this.portionSizePercentage = found?.portionSizePercentage ? found.portionSizePercentage.toString() : '';
+    this.portionSizePercentage$.next(+this.portionSizePercentage)
   }
 
   getFilteredProducts(key: keyof FamilyMember, memberId: string) {
     const productsToFilterOut = this.familyMembers.find(member => member.id === memberId)?.[key];
-    return this.products.filter(prod => !productsToFilterOut?.includes(prod.id))
+    return this.products.filter(prod => !(productsToFilterOut as string[])?.includes(prod.id))
+  }
+
+  onPortionSizePercentageChange(event: string) {
+    this.portionSizePercentage$.next(+event);
+  }
+
+  updatePortionSizePercentage() {
+    this.portionSizePercentage$.pipe(debounceTime(700)).subscribe(percentage => {
+
+      const memberToUpdate = this.familyMembers.find(member => member.id === this.activeMember);
+      if (memberToUpdate && percentage && memberToUpdate.portionSizePercentage !== +percentage) {
+        memberToUpdate.portionSizePercentage = +percentage;
+        this.store.dispatch(new UpdateFamilyAction(this.familyMembers))
+      }
+
+    })
   }
 }

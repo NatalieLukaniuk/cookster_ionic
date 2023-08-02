@@ -36,7 +36,8 @@ export interface FamilyMember {
   id: string, // generated with Math.random * 100
   noEat: string[], // product id array
   noLike: string[], // product id array
-  like: string[] // product id array
+  like: string[] // product id array,
+  portionSizePercentage: number | null;
 }
 
 export class NewFamilyMember implements FamilyMember {
@@ -44,6 +45,7 @@ export class NewFamilyMember implements FamilyMember {
   like = [];
   noEat: string[] = [];
   noLike: string[] = [];
+  portionSizePercentage = null;
   constructor(public name: string) {
     name = this.name;
   }

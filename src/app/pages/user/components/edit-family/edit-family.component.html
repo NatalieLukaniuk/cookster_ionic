@@ -18,14 +18,23 @@
     <div *ngFor="let member of (familyMembers$ | async)">
         <ng-container *ngIf="member.id === activeMember">
             <h4 class="padding-inline">{{member.name}}</h4>
-        <ng-container  *ngIf="products$ | async">
-            <h5 class="padding-inline">Любить:</h5>
-            <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'like' }"></ng-container>
-            <h5 class="padding-inline">Не любить:</h5>
-            <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noLike' }"></ng-container>
-            <h5 class="padding-inline">Не їсть:</h5>
-            <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noEat' }"></ng-container>
-        </ng-container>  
+            <ion-item>
+                <ion-input label="% від рекомендованої порції" [(ngModel)]="portionSizePercentage"
+                    (ngModelChange)="onPortionSizePercentageChange($event)"></ion-input>
+            </ion-item>
+            <div *ngIf="!!(portionSizePercentage$ | async)" class="padding-inline">
+                <h6>Приклад розрахунку:</h6>
+                <p>Рекомендована порція: {{sampleRecommendedPortion}}гр</p>
+                <p>Порція для {{member.name}}: {{calculatedPortionSize$ | async}}гр</p>
+            </div>
+            <ng-container *ngIf="products$ | async">
+                <h5 class="padding-inline">Любить:</h5>
+                <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'like' }"></ng-container>
+                <h5 class="padding-inline">Не любить:</h5>
+                <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noLike' }"></ng-container>
+                <h5 class="padding-inline">Не їсть:</h5>
+                <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noEat' }"></ng-container>
+            </ng-container>
         </ng-container>
     </div>
 </ion-content>
