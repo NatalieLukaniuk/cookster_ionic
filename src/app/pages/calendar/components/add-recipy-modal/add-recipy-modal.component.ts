@@ -1,5 +1,5 @@
-import { RecipyCollection } from './../../../../models/recipies.models';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { RecipyCollection, productPreferencesChip } from './../../../../models/recipies.models';
+import { getCurrentUser, getFamilyMembers } from 'src/app/store/selectors/user.selectors';
 import { DishType, Recipy } from 'src/app/models/recipies.models';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { MealTime } from 'src/app/models/calendar.models';
@@ -7,20 +7,22 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   Output,
   ViewChild,
 } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
-import { take, map, combineLatest, BehaviorSubject } from 'rxjs';
+import { take, map, combineLatest, BehaviorSubject, takeUntil, Subject } from 'rxjs';
+import { DataMappingService } from 'src/app/services/data-mapping.service';
 
 @Component({
   selector: 'app-add-recipy-modal',
   templateUrl: './add-recipy-modal.component.html',
   styleUrls: ['./add-recipy-modal.component.scss'],
 })
-export class AddRecipyModalComponent {
+export class AddRecipyModalComponent implements OnDestroy {
   @Input() meatime!: MealTime;
   @Input() date!: string;
   @Output() recipyToAdd = new EventEmitter<Recipy>();
@@ -33,6 +35,8 @@ export class AddRecipyModalComponent {
   collectionSelected$ = new BehaviorSubject<
     RecipyCollection | null | { name: 'all'; recipies: any[] }
   >(null);
+
+  destroy$ = new Subject<void>();
 
   recipies$ = combineLatest([
     this.store.pipe(select(getAllRecipies), take(1)),
@@ -50,7 +54,15 @@ export class AddRecipyModalComponent {
 
   Math = Math;
   DishType = DishType;
-  constructor(private store: Store<IAppState>) {}
+
+  productChips: productPreferencesChip[] = [];
+  constructor(private store: Store<IAppState>, private datamapping: DataMappingService,) {
+    this.subscribeForProductChips()
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next()
+  }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
 
@@ -104,5 +116,43 @@ export class AddRecipyModalComponent {
       case MealTime.Dinner:
         return 'Вечеря';
     }
+  }
+
+  subscribeForProductChips() {
+    this.store.pipe(select(getFamilyMembers), takeUntil(this.destroy$), map(familyMembers => {
+      if (familyMembers && familyMembers.length) {
+        let likeChips = familyMembers.map(member => {
+          if (member.like) {
+            return member.like.map(item => ({ name: member.name, productId: item, color: 'success' }))
+          } else return []
+        }
+        ).flat().filter(i => !!i.productId);
+
+        let noLikeChips = familyMembers.map(member => {
+          if (member.noLike) {
+            return member.noLike.map(item => ({ name: member.name, productId: item, color: 'warning' }))
+          } else return []
+        }
+        ).flat().filter(i => !!i.productId);
+
+        let noEatChips = familyMembers.map(member => {
+          if (member.noEat) {
+            return member.noEat.map(item => ({ name: member.name, productId: item, color: 'danger' }))
+          } else return []
+        }
+        ).flat().filter(i => !!i.productId);
+
+        const concatenated = likeChips.concat(noLikeChips).concat(noEatChips);
+        this.productChips = concatenated
+      }
+    })).subscribe()
+  }
+
+  getIsInRecipy(productId: string, recipy: Recipy) {
+    return !!recipy.ingrediends.find(ingred => ingred.product === productId);
+  }
+
+  getProductText(id: string) {
+    return this.datamapping.getProductNameById(id)
   }
 }
