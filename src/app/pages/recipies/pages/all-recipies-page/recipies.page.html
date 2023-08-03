@@ -7,9 +7,10 @@
   <div class="recipies-background">
     <span id="top-anchor"></span>    
     <app-recipy-short-view
-      *ngFor="let recipy of (recipies$ |async)"
+      *ngFor="let recipy of recipies"
       [currentUser]="user$ | async"
       [recipy]="recipy"
+      [productPreferencesChips]="productChips"
     ></app-recipy-short-view>
   </div>
 

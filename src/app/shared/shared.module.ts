@@ -1,4 +1,3 @@
-
 import { LongPressDirective } from './directives/long-press.directive';
 import { ProductAutocompleteComponent } from './components/product-autocomplete/product-autocomplete.component';
 import { AddGroupModalComponent } from './components/recipy-constructor/add-group-modal/add-group-modal.component';
@@ -28,6 +27,8 @@ import { AddStepComponent } from './components/recipy-constructor/add-step/add-s
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { PrepsComponent } from './components/recipy-constructor/preps/preps.component';
 import { ControllerInputDialogComponent } from './components/dialogs/controller-input-dialog/controller-input-dialog.component';
+import { RecipyModalComponent } from './components/dialogs/recipy-modal/recipy-modal.component';
+import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-short-view.component';
 
 @NgModule({
   declarations: [
@@ -53,9 +54,11 @@ import { ControllerInputDialogComponent } from './components/dialogs/controller-
     ProductAutocompleteComponent,
     LongPressDirective,
     PrepsComponent,
-    ControllerInputDialogComponent
+    ControllerInputDialogComponent,
+    RecipyModalComponent,
+    RecipyShortViewComponent
   ],
-  imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule,],
+  imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule],
   exports: [
     HeaderComponent,
     LoadingOverlayComponent,
@@ -74,7 +77,8 @@ import { ControllerInputDialogComponent } from './components/dialogs/controller-
     FileUploadComponent,
     ProductAutocompleteComponent,
     LongPressDirective,
-    IngredientComponent
+    IngredientComponent,
+    RecipyShortViewComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

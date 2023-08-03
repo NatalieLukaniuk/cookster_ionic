@@ -1,0 +1,8 @@
+.check-exists {
+    margin-top: 40px;
+
+    ::ng-deep .suggestions-container ul {
+        max-height: 120px;
+    }
+}
+

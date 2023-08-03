@@ -74,4 +74,9 @@ export class DataMappingService {
     });
     return calories / totalAmount;
   }
+
+  getIngredientType(ingrId: string){
+    return this.products$.value.find((item) => ingrId === item.id)!
+    .type;
+  }
 }

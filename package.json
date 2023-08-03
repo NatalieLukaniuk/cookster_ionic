@@ -9,7 +9,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint --fix"
+    "lint": "ng lint --fix",
+    "hosting": "firebase deploy --only hosting"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +30,7 @@
     "@ngrx/effects": "^15.1.0",
     "@ngrx/store": "^15.1.0",
     "@ngrx/store-devtools": "^15.1.0",
+    "angular-device-information": "^4.0.0",
     "angular-ng-autocomplete": "^2.0.12",
     "firebase": "^9.16.0",
     "ionicons": "^6.0.3",

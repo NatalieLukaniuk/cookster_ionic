@@ -1,0 +1,9 @@
+.limited-height-autcomplete {
+    ::ng-deep .ng-autocomplete {
+        height: 180px;
+
+        ul {
+            max-height: 140px;
+        }
+    }
+}

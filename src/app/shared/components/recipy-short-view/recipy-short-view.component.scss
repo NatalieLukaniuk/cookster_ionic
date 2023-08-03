@@ -5,9 +5,17 @@ ion-card {
   box-shadow: none;
 }
 
+ion-card-header {
+  flex-direction: column;
+}
+
 ion-card-subtitle {
   ion-icon {
     font-size: 16px;
+  }
+
+  &>div {
+    margin-top: 8px;
   }
 }
 
@@ -30,33 +38,42 @@ ion-card-content {
   transition: all 200ms ease-in-out;
   background-color: var(--ion-color-tertiary);
   padding: 10px;
-  & > div:not(.ingredients-wrapper) {
+  opacity: 0.9;
+
+  .actions-pane {
+    position: absolute;
+    bottom: 5px;
+    width: calc(100% - 20px);
+    justify-content: space-evenly;
+    flex-direction: row-reverse;
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+
+    &>ion-button {
+      flex-grow: 1;
+    }
+  }
+
+  .overlay-flex-container {
+    gap: 20px;
+    display: flex;
+  }
+
+  .overlay-row {
     margin-bottom: 5px;
     display: flex;
     align-items: center;
     font-size: 10px;
     line-height: 1.2;
+
     ion-icon {
       margin-right: 5px;
-    }
-
-    &.actions-pane {
-      position: absolute;
-      bottom: 5px;
-      width: calc(100% - 20px);
-      justify-content: space-evenly;
-      flex-direction: row-reverse;
-      opacity: 0;
-      transition: all 300ms ease-in-out;
-
-      & > ion-button {
-        width: 45%;
-      }
     }
   }
 
   .time {
     gap: 20px;
+
     ion-icon {
       margin-right: 0;
     }
@@ -73,8 +90,9 @@ ion-card-content {
       }
     }
 
-    & > div.actions-pane {
+    &>div.actions-pane {
       opacity: 1;
+      display: flex;
     }
   }
 }
@@ -91,12 +109,14 @@ ion-card-content {
     padding-inline: 20px;
     padding-bottom: 0;
   }
+
   &:not(.no-photo) {
     h6 {
       margin-top: 15px;
       font-size: 11px;
       font-weight: 600;
     }
+
     div {
       font-size: 10px;
       font-weight: normal;
@@ -106,15 +126,11 @@ ion-card-content {
   h6 {
     margin-block: 5px;
   }
+
   div {
     display: flex;
     flex-direction: column;
     font-size: 12px;
     font-weight: 600;
   }
-}
-
-.collection-chip {
-  font-size: 8px;
-  height: auto;
 }

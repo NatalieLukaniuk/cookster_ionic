@@ -21,6 +21,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { Role } from './models/auth.models';
 import { NavigationEnd, Router } from '@angular/router';
+import { AngularDeviceInformationService } from 'angular-device-information';
 
 @Component({
   selector: 'app-root',
@@ -56,7 +57,6 @@ export class AppComponent implements OnInit {
     { name: 'Коментарі до рецептів', path: 'recipies-comments' },
     { name: 'Додати продукт', path: 'add-product' },
     { name: 'Калькулятор щільності', path: 'density-calculator' },
-    { name: 'Налаштування користувача', path: 'user' },
   ];
 
   constructor(
@@ -64,8 +64,9 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private dataMappingService: DataMappingService,
     private dialog: DialogsService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private deviceInformationService: AngularDeviceInformationService
+  ) { }
   ngOnInit(): void {
     this.loadData();
 
@@ -88,10 +89,22 @@ export class AppComponent implements OnInit {
     });
 
     this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd){
+      if (event instanceof NavigationEnd) {
         this.store.dispatch(new UiActions.SetCurrentRouteAction(event.url));
+
+        let root = document.documentElement;
+        if (this.deviceInformationService.isDesktop()) {
+          if (event.url.includes('admin')) {
+            root.style.setProperty('--app-width', 100 + "vw");
+          } else {
+            root.style.setProperty('--app-width', 900 + "px");
+          }
+        }
+
       }
     })
+
+
 
   }
 

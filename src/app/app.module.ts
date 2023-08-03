@@ -18,6 +18,7 @@ import { PlannerEffects } from './store/effects/planner.effects';
 import { RecipiesEffects } from './store/effects/recipies.effects';
 import { UserEffects } from './store/effects/user.effects';
 import { reducers } from './store/reducers';
+import { AngularDeviceInformationService } from 'angular-device-information';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,7 +40,7 @@ import { reducers } from './store/reducers';
       logOnly: environment.production,
     }),
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AngularDeviceInformationService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

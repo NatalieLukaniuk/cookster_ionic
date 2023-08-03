@@ -14,11 +14,11 @@ export interface LegendItem {
   styleUrls: ['./admin-table.component.scss'],
 })
 export class AdminTableComponent implements OnChanges {
-  @Input() data!: string[][];
+  @Input() data!: any[][];
 
   legendItems: LegendItem[] = [];
 
-  constructor() {}
+  constructor() { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getLegendItems();
@@ -39,5 +39,9 @@ export class AdminTableComponent implements OnChanges {
 
   onLegendClick(item: LegendItem) {
     item.active = !item.active;
+  }
+
+  isActionItem(item: any) {
+    return item && !!item.title && !!item.action;
   }
 }

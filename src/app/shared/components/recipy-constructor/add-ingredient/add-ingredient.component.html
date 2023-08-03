@@ -1,44 +1,41 @@
 <div class="ng-autocomplete">
-  <app-product-autocomplete #autocomplete [products]="data"
+  <div class="border-bottom">
+    <app-product-autocomplete #autocomplete [products]="data"
     (productSelected)="selectEvent($event)"></app-product-autocomplete>
+  </div>
+  
 
-  <ion-item>
-    <ion-label position="floating">Кількість</ion-label>
+  <ion-item class="quantity-input-item" [color]="quantity? 'tertiary' : ''">
+    <ion-label>Кількість:</ion-label>
     <ion-input type="tel" [(ngModel)]="quantity"></ion-input>
   </ion-item>
 
-  <ion-accordion-group>
-    <ion-accordion value="first">
-      <ion-item slot="header" color="tertiary">
-        <ion-label>Виберіть одиницю виміру</ion-label>
+  <div>
+    <ion-item color="tertiary">
+      <ion-label>Одиниця виміру: {{ getMeasuringUnitText(unit)}}</ion-label>
+    </ion-item>
+    <div class="chip-selection-list">
+      <ion-chip *ngFor="let unitTag of measuringUnitsOptions" (click)="unit = unitTag"
+        [color]="unit === unitTag? 'primary' : 'secondary'">
+        <span>{{ getMeasuringUnitText(unitTag)}}</span>
+      </ion-chip>
+    </div>
+  </div>
+  <div *ngIf="isSplitIntoGroups">
+    <ion-item color="tertiary">
+      <ion-label>Група: {{ selectedgroup }}</ion-label>
+    </ion-item>
+    <div  class="chip-selection-list">
+      <ion-chip *ngFor="let group of _groups" (click)="selectedgroup = group"
+        [color]="selectedgroup === group? 'primary' : 'secondary'">
+        <span>{{ group }}</span>
+      </ion-chip>
+      <ion-item button>
+        <app-input-dialog [id]="'ingred'" [inputFieldLabel]="'Введіть назву групи'" [buttonText]="'Додати нову групу'"
+          (resultReceived)="onGroupName($event)"></app-input-dialog>
       </ion-item>
-      <div class="ion-padding" slot="content">
-        <ion-radio-group [(ngModel)]="unit">
-          <ion-item *ngFor="let unit of measuringUnitsOptions">
-            <ion-label>{{ getMeasuringUnitText(unit) }}</ion-label>
-            <ion-radio slot="end" [value]="unit"></ion-radio>
-          </ion-item>
-        </ion-radio-group>
-      </div>
-    </ion-accordion>
-    <ion-accordion value="second" *ngIf="isSplitIntoGroups">
-      <ion-item slot="header" color="tertiary">
-        <ion-label>Виберіть групу</ion-label>
-      </ion-item>
-      <div class="ion-padding" slot="content">
-        <ion-radio-group [(ngModel)]="selectedgroup">
-          <ion-item *ngFor="let group of _groups">
-            <ion-label>{{ group }}</ion-label>
-            <ion-radio slot="end" [value]="group"></ion-radio>
-          </ion-item>
-          <ion-item button>
-            <app-input-dialog [id]="'ingred'" [inputFieldLabel]="'Введіть назву групи'"
-              [buttonText]="'Додати нову групу'" (resultReceived)="onGroupName($event)"></app-input-dialog>
-          </ion-item>
-        </ion-radio-group>
-      </div>
-    </ion-accordion>
-  </ion-accordion-group>
+    </div>
+  </div>
 
   <ion-button expand="full" [disabled]="isAddDisabled" (click)="addIngredient()">Додати</ion-button>
 </div>

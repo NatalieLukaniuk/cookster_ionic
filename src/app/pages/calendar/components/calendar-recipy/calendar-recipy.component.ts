@@ -26,6 +26,7 @@ export class CalendarRecipyComponent implements OnInit {
   showNeedsAdvancePreparation: boolean = false;
 
   Math = Math;
+  DishType = DishType;
   constructor(
     private router: Router,
     private route: ActivatedRoute,

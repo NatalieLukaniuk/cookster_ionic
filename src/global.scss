@@ -38,6 +38,11 @@
   --ion-text-color: var(--ion-color-dark, #000);
   --ion-background-color: var(--ion-color-secondary);
   --ion-font-family: "Roboto", sans-serif;
+  --app-width: 100vw;
+}
+
+body {
+  background-color: grayscale(lighten(#208000, 40%));
 }
 
 ion-title p {
@@ -45,4 +50,56 @@ ion-title p {
   white-space: normal;
   font-size: 16px;
   font-weight: 600;
+}
+
+ion-button {
+  --border-radius: 3px;
+}
+
+.trigger-btn {
+  width: 100%;
+}
+
+.recipy-modal {
+  --height: 80vh;
+  --width: min(80vw, 800px);
+}
+
+.collection-chip {
+  font-size: 8px;
+  height: 10px;
+  padding-inline: 5px;
+  border-radius: 3px;
+  margin: 0;
+}
+
+.collection-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+}
+
+.chip-selection-list {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding: 10px 5px;
+
+  ion-chip {
+    border-radius: 3px;
+    font-size: 12px;
+    height: 22px;
+    padding-inline: 5px;
+  }
+}
+
+.label-text-wrapper .label-text,
+.wrapped-label {
+  white-space: break-spaces;
+}
+
+.footnote {
+  font-size: 10px;
+  color: var(--ion-color-danger);
 }

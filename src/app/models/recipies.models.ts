@@ -15,6 +15,7 @@ export interface NewRecipy {
   notApproved?: boolean;
   source?: string;
   isCheckedAndApproved?: boolean;
+  portionSize?: number;
 }
 
 export interface Recipy extends NewRecipy {
@@ -36,6 +37,7 @@ export interface Recipy extends NewRecipy {
   isCheckedAndApproved?: boolean;
   calorificValue?: number;
   source?: string;
+  portionSize?: number;
 }
 
 export interface DraftRecipy {
@@ -55,6 +57,7 @@ export interface DraftRecipy {
   notApproved?: boolean;
   source?: string;
   isCheckedAndApproved?: boolean;
+  portionSize?: number;
 }
 
 export interface Ingredient {
@@ -110,6 +113,8 @@ export enum DishType {
   'без термообробки' = 22,
   'гарнір' = 23,
   'риба і морепродукти' = 24,
+  'наука і здоровий глузд' = 25,
+  'напій' = 26
 }
 
 export enum MeasuringUnit {
@@ -126,6 +131,10 @@ export enum MeasuringUnit {
   item,
   cup,
   none,
+  us_cup,
+  oz,
+  lb,
+  cl
 }
 
 export enum MeasuringUnitText {
@@ -142,6 +151,10 @@ export enum MeasuringUnitText {
   'шт.',
   'склянка',
   'за смаком',
+  'cup',
+  'oz',
+  'lb',
+  'cl'
 }
 
 export enum MeasuringUnitTextFull {
@@ -158,6 +171,10 @@ export enum MeasuringUnitTextFull {
   'штуки',
   'склянка',
   'за смаком',
+  'cup (240грамів)',
+  'oz (унція)',
+  'lb (фунт)',
+  'cl (centiliter)'
 }
 
 export interface Product {
@@ -199,6 +216,10 @@ export const MeasuringUnitOptions = [
   MeasuringUnit.item,
   MeasuringUnit.cup,
   MeasuringUnit.none,
+  MeasuringUnit.us_cup,
+  MeasuringUnit.oz,
+  MeasuringUnit.lb,
+  MeasuringUnit.cl
 ];
 
 export const MeasuringUnitOptionsFluid = [
@@ -210,7 +231,10 @@ export const MeasuringUnitOptionsFluid = [
   MeasuringUnit.teaSpoon,
   MeasuringUnit.coffeeSpoon,
   MeasuringUnit.cup,
-  MeasuringUnit.none
+  MeasuringUnit.us_cup,
+  MeasuringUnit.cl,
+  MeasuringUnit.none,
+
 ];
 
 export const MeasuringUnitOptionsSpice = [
@@ -220,6 +244,7 @@ export const MeasuringUnitOptionsSpice = [
   MeasuringUnit.coffeeSpoon,
   MeasuringUnit.pinch,
   MeasuringUnit.cup,
+  MeasuringUnit.us_cup,
   MeasuringUnit.none
 ];
 
@@ -229,6 +254,7 @@ export const MeasuringUnitOptionsHerbs = [
   MeasuringUnit.pinch,
   MeasuringUnit.bunch,
   MeasuringUnit.cup,
+  MeasuringUnit.us_cup,
   MeasuringUnit.none
 ];
 
@@ -236,6 +262,8 @@ export const MeasuringUnitOptionsHardItems = [
   MeasuringUnit.gr,
   MeasuringUnit.kg,
   MeasuringUnit.item,
+  MeasuringUnit.oz,
+  MeasuringUnit.lb,
   MeasuringUnit.none
 ];
 
@@ -245,12 +273,17 @@ export const MeasuringUnitOptionsGranular = [
   MeasuringUnit.dessertSpoon,
   MeasuringUnit.tableSpoon,
   MeasuringUnit.cup,
+  MeasuringUnit.us_cup,
+  MeasuringUnit.oz,
+  MeasuringUnit.lb,
   MeasuringUnit.none
 ];
 
 export const MeasuringUnitOptionsHardHomogeneous = [
   MeasuringUnit.gr,
   MeasuringUnit.kg,
+  MeasuringUnit.oz,
+  MeasuringUnit.lb,
   MeasuringUnit.none
 ];
 
@@ -271,4 +304,10 @@ export enum ProductTypeText {
   'твердий продукт',
   'твердий однорідний',
   'сипучий продукт (крупа, борошно)'
+}
+
+export interface productPreferencesChip {
+  name: string,
+  productId: string,
+  color: string
 }

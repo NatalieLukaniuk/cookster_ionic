@@ -14,7 +14,10 @@
       <ion-label position="floating">Джерело рецепту</ion-label>
       <ion-input [(ngModel)]="recipySource"></ion-input>
     </ion-item>
-
+    <ion-item>
+      <ion-label position="floating">Рекомендований розмір порції (для дорослого):</ion-label>
+      <ion-input [(ngModel)]="portionSize" type="number"></ion-input>
+    </ion-item>
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="tertiary">
@@ -36,18 +39,13 @@
         >
           <ion-label>Виберіть теги</ion-label>
         </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-list>
-            <ion-item *ngFor="let tag of tags" (click)="onTagClicked(tag)">
-              <ion-label>{{ getTagsText(tag) }}</ion-label>
-              <ion-icon
-                *ngIf="selectedTags.includes(tag)"
-                slot="end"
-                name="checkmark-outline"
-              ></ion-icon>
-            </ion-item>
-          </ion-list>
+
+        <div class="chip-selection-list" slot="content">
+            <ion-chip *ngFor="let tag of tags" (click)="onTagClicked(tag)" [color]="selectedTags.includes(tag)? 'primary' : 'secondary'">
+              <span>{{ getTagsText(tag) }}</span>
+            </ion-chip>
         </div>
+
       </ion-accordion>
     </ion-accordion-group>
 
@@ -77,6 +75,7 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[1].value">
+    <h4 *ngIf="ingredients.length" class="padding-inline">Додані:</h4>
     <ion-list>
       <ion-item
         swipeLeftNoConfirmation
@@ -112,7 +111,14 @@
         </ion-label>
       </ion-item>
     </ion-list>
-    <ion-accordion-group>
+    <h4 class="padding-inline">Додати:</h4>
+    <app-add-ingredient
+            [isSplitIntoGroups]="isSplitIntoGroups"
+            [groups]="groups"
+            (addNewIngredient)="onAddIngredient($event)"
+          ></app-add-ingredient>
+
+    <!-- <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="light">
           <ion-label>Додати інгридієнт</ion-label>
@@ -125,7 +131,7 @@
           ></app-add-ingredient>
         </div>
       </ion-accordion>
-    </ion-accordion-group>
+    </ion-accordion-group> -->
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[2].value">

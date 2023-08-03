@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { DataMappingService } from './../../../../services/data-mapping.service';
+import { DataMappingService } from '../../../services/data-mapping.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/models/auth.models';
 import {
@@ -8,6 +8,7 @@ import {
   DishType,
   Ingredient,
   Recipy,
+  productPreferencesChip,
 } from 'src/app/models/recipies.models';
 import * as _ from 'lodash';
 import { IAppState } from 'src/app/store/reducers';
@@ -23,6 +24,7 @@ export class RecipyShortViewComponent implements OnInit {
   recipy!: Recipy;
   @Input()
   currentUser!: User | null;
+  @Input() productPreferencesChips: productPreferencesChip[] | null = []
 
   isNeedsAdvancePreparation: boolean = false;
   isPrepSuggestions: boolean = false;
@@ -38,6 +40,7 @@ export class RecipyShortViewComponent implements OnInit {
   ];
 
   Math = Math;
+  DishType = DishType;
 
   get preparationTime() {
     let time = 0;
@@ -87,7 +90,7 @@ export class RecipyShortViewComponent implements OnInit {
     private store: Store<IAppState>,
     private router: Router,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isNeedsAdvancePreparation = this.recipy.type?.includes(
@@ -165,5 +168,13 @@ export class RecipyShortViewComponent implements OnInit {
       time = time + +step.timePassive;
     }
     return time;
+  }
+
+  getProductText(id: string) {
+    return this.datamapping.getProductNameById(id)
+  }
+
+  getIsInRecipy(productId: string) {
+    return !!this.recipy.ingrediends.find(ingred => ingred.product === productId);
   }
 }

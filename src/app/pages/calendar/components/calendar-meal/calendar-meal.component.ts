@@ -15,6 +15,7 @@ import {
 } from 'src/app/models/calendar.models';
 import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
+import { Recipy } from 'src/app/models/recipies.models';
 
 @Component({
   selector: 'app-calendar-meal',
@@ -25,6 +26,8 @@ export class CalendarMealComponent implements OnInit, OnChanges {
   @Input() day!: Day;
   @Input() mealtime!: MealTime;
   @Input() addRecipies!: boolean;
+
+  selectedRecipyForCalendar: Recipy | null = null;
 
   _day: Day | undefined;
 
@@ -64,7 +67,6 @@ export class CalendarMealComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['day']?.currentValue) {
-      debugger
       this._day = _.cloneDeep(this.day);
     }
   }
@@ -185,8 +187,9 @@ export class CalendarMealComponent implements OnInit, OnChanges {
   }
 
   @ViewChild('selectOption') modal: any;
-  onRecipySelected(recipyId: string) {
-    setTimeout(() => {
+  onRecipySelected(recipy: Recipy) {
+    this.selectedRecipyForCalendar = recipy;
+    setTimeout(() => {      
       this.modal.modal.present();
     }, 200);
 
@@ -194,7 +197,7 @@ export class CalendarMealComponent implements OnInit, OnChanges {
       if (res.role === 'confirm') {
         this.store.dispatch(
           new AddRecipyToCalendarAction(
-            recipyId,
+            recipy.id,
             this.day.details.day,
             this.mealtime,
             res.data.portions,
@@ -203,6 +206,7 @@ export class CalendarMealComponent implements OnInit, OnChanges {
           )
         );
       }
+      this.selectedRecipyForCalendar = null;
     });
   }
 

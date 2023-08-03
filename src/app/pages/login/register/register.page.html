@@ -1,0 +1,35 @@
+<app-header>
+  <span title>Реєстрація</span>
+</app-header>
+
+<ion-content>
+  <div class="page-wrapper">
+    <form [formGroup]="registrationForm" novalidate (ngSubmit)="submit()">
+      <ion-item fill="solid">
+        <ion-label position="floating">Електронна пошта</ion-label>
+        <ion-input type="email" formControlName="username" #username></ion-input>
+        <ion-note slot="helper">Введіть адресу електронної пошти</ion-note>
+        <ion-note slot="error" *ngIf="registrationForm.controls['username'].touched && !registrationForm.controls['username'].valid"
+          >Неправильний формат електронного адресу</ion-note
+        >
+      </ion-item>
+
+      <ion-item fill="solid">
+        <ion-label position="floating">Пароль</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+        <ion-note slot="helper">Мінімальна довжина: 6 символів</ion-note>
+        <ion-note slot="error" *ngIf="registrationForm.controls['username'].touched && !registrationForm.controls['username'].valid">Мінімальна довжина: 3 символи</ion-note>
+      </ion-item>
+
+      <ion-button expand="full" [disabled]="!registrationForm.valid" type="submit"
+        >Зареєструватись</ion-button
+      >
+    </form>
+
+    <div class="notice">
+      <ion-icon name="alert-outline" color="danger"></ion-icon>
+      <p>Обов'язково збережіть пароль, відновлення паролю у випадку його втрати поки що неможливе</p>
+      
+    </div>
+  </div>
+</ion-content>

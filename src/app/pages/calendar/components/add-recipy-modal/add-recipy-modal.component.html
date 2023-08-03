@@ -1,8 +1,6 @@
-<ion-button [id]="'open-modal' + meatime">Додати страву</ion-button>
+<ion-button [id]="'open-modal' + meatime" class="trigger-btn">Додати страву</ion-button>
 
-<ion-modal
-  [trigger]="'open-modal' + meatime"
->
+<ion-modal [trigger]="'open-modal' + meatime">
   <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -17,17 +15,11 @@
 
       <ng-container *ngIf="!(collectionSelected$ | async)">
         <ion-list>
-          <ion-item
-            button
-            *ngFor="let collection of collections$ | async"
-            (click)="collectionSelected$.next(collection)"
-          >
+          <ion-item button *ngFor="let collection of collections$ | async"
+            (click)="collectionSelected$.next(collection)">
             <ion-label>{{ collection.name }}</ion-label>
           </ion-item>
-          <ion-item
-            button
-            (click)="collectionSelected$.next({ name: 'all', recipies: [] })"
-          >
+          <ion-item button (click)="collectionSelected$.next({ name: 'all', recipies: [] })">
             <ion-label>Всі рецепти</ion-label>
           </ion-item>
         </ion-list>
@@ -40,12 +32,7 @@
           <span>Колекція {{ (collectionSelected$ | async)!.name }}</span>
         </h3>
         <ion-list>
-          <ion-item
-            detail="false"
-            button
-            *ngFor="let recipy of recipies$ | async"
-            (click)="onRecipyClicked(recipy.id)"
-          >
+          <ion-item detail="false" button *ngFor="let recipy of recipies$ | async" (click)="onRecipyClicked(recipy)">
             <ion-label class="recipy-content">
               <div class="recipy-text">
                 <h2 class="ion-text-wrap">{{ recipy.name }}</h2>
@@ -61,23 +48,29 @@
                     </span>
                   </div>
                   <span>
-                    <ion-icon
-                      name="alarm"
-                      *ngIf="isNeedsAdvancePreparation(recipy)"
-                    ></ion-icon>
-                    <ion-icon
-                      name="bulb"
-                      *ngIf="isPrepSuggestions(recipy)"
-                    ></ion-icon>
-                    <ion-icon
-                      name="checkmark-done"
-                      *ngIf="recipy.isCheckedAndApproved"
-                    ></ion-icon>
+                    <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation(recipy)"></ion-icon>
+                    <ion-icon name="bulb" *ngIf="isPrepSuggestions(recipy)"></ion-icon>
+                    <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
                   </span>
 
-                  <span *ngIf="recipy.calorificValue"
-                    >{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span
-                  >
+                  <span *ngIf="recipy.calorificValue">{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span>
+                  <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
+                  <div class="collection-tags">
+                    <span>Теги: </span>
+                    <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+                      DishType[tag]
+                      }}</ion-chip>
+                  </div>
+                  <div class="chip-selection-list">
+                    <ng-container *ngIf="productChips?.length">
+                      <ng-container *ngFor="let item of productChips">
+                        <ion-chip *ngIf="getIsInRecipy(item.productId, recipy)" class="collection-chip"
+                          [color]="item.color">
+                          {{item.name}}: {{getProductText(item.productId)}}
+                        </ion-chip>
+                      </ng-container>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
               <div class="recipy-photo" *ngIf="recipy.photo">
