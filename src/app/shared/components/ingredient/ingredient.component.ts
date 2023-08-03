@@ -57,24 +57,32 @@ export class IngredientComponent implements OnInit {
     let optionsArray: MeasuringUnit[] = [];
     switch (this.productType) {
       case ProductType.fluid:
-        optionsArray = MeasuringUnitOptionsFluid;
+        optionsArray = this.filterOutForeignUnits(MeasuringUnitOptionsFluid);
         break;
       case ProductType.hardItem:
-        optionsArray = MeasuringUnitOptionsHardItems;
+        optionsArray = this.filterOutForeignUnits(MeasuringUnitOptionsHardItems);
         break;
       case ProductType.herb:
-        optionsArray = MeasuringUnitOptionsHerbs;
+        optionsArray = this.filterOutForeignUnits(MeasuringUnitOptionsHerbs);
         break;
       case ProductType.spice:
-        optionsArray = MeasuringUnitOptionsSpice;
+        optionsArray = this.filterOutForeignUnits(MeasuringUnitOptionsSpice);
         break;
       case ProductType.granular:
-        optionsArray = MeasuringUnitOptionsGranular;
+        optionsArray = this.filterOutForeignUnits(MeasuringUnitOptionsGranular);
         break;
       case ProductType.hardHomogenious:
-        optionsArray = MeasuringUnitOptionsHardHomogeneous;
+        optionsArray = this.filterOutForeignUnits(MeasuringUnitOptionsHardHomogeneous);
     }
     return optionsArray;
+  }
+
+  filterOutForeignUnits(array: MeasuringUnit[]) {
+    return array.filter(unit => unit !== MeasuringUnit.us_cup &&
+      unit !== MeasuringUnit.oz &&
+      unit !== MeasuringUnit.lb &&
+      unit !== MeasuringUnit.cl &&
+      unit !== MeasuringUnit.none)
   }
 
   getUnitText(unit: MeasuringUnit) {
@@ -84,9 +92,18 @@ export class IngredientComponent implements OnInit {
   constructor(private datamapping: DataMappingService) { }
 
   ngOnInit() {
-    this.measuringUnit = this.ingredient.defaultUnit;
+    if (this.ingredient.defaultUnit === MeasuringUnit.oz ||
+      this.ingredient.defaultUnit === MeasuringUnit.lb ||
+      (this.ingredient.defaultUnit === MeasuringUnit.us_cup &&
+        this.datamapping.getIngredientType(this.ingredient.product) !== ProductType.fluid)) {
+      this.measuringUnit = MeasuringUnit.gr;
+    } else if (this.ingredient.defaultUnit === MeasuringUnit.us_cup) {
+      this.measuringUnit = MeasuringUnit.ml;
+    } else {
+      this.measuringUnit = this.ingredient.defaultUnit;
+    }
   }
-
+  
   getIngredientText(ingredient: Ingredient): string {
     return this.datamapping.getIngredientText(ingredient);
   }

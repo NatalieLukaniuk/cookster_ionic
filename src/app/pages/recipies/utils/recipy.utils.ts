@@ -97,6 +97,8 @@ export function convertAmountToSelectedUnit(
       case MeasuringUnit.teaSpoon:
       case MeasuringUnit.coffeeSpoon:
       case MeasuringUnit.cup:
+      case MeasuringUnit.cl:
+        case MeasuringUnit.us_cup:
         amount =
           (amountInGr * getAmountInL(unit)) /
           getDensity(ingredientId, allProducts);
@@ -109,6 +111,13 @@ export function convertAmountToSelectedUnit(
         break;
       case MeasuringUnit.item:
         amount = grToItems(amountInGr, getGrPerItem(ingredientId, allProducts));
+        break;
+      case MeasuringUnit.oz:
+        amount = grToOZ(amountInGr);
+        break;
+      case MeasuringUnit.lb:
+        amount = grToLb(amountInGr);
+        break;
     }
     return amount;
   }
@@ -130,6 +139,10 @@ export function getAmountInL(unit: MeasuringUnit) {
       return 5;
     case MeasuringUnit.coffeeSpoon:
       return 405;
+    case MeasuringUnit.cl:
+      return 100;
+      case MeasuringUnit.us_cup:
+        return 4;
     default:
       return 1;
   }
@@ -157,6 +170,23 @@ export function getGrPerItem(productId: string, allProducts: Product[]) {
 
 export function grToKg(amount: number) {
   return amount / 1000;
+}
+
+export function grToOZ(amount: number) {
+  return amount / 28.35;
+}
+
+export function grToLb(amount: number) {
+  return amount / 453.6;
+}
+
+
+export function OZToGr(amount: number) {
+  return amount * 28.35;
+}
+
+export function LbToGr(amount: number) {
+  return amount * 453.6;
 }
 
 export function kgToGR(amount: number) {
@@ -324,6 +354,14 @@ export function NormalizeDisplayedAmount(
       return getNiceDecimal(weirdAmount);
     case MeasuringUnit.teaSpoon:
       return getNiceDecimal(weirdAmount);
+    case MeasuringUnit.us_cup:
+      return normalizeDecimal(weirdAmount, 2);
+    case MeasuringUnit.cl:
+      return normalizeDecimal(weirdAmount, 1);
+    case MeasuringUnit.lb:
+      return normalizeDecimal(weirdAmount, 1);
+    case MeasuringUnit.oz:
+      return normalizeDecimal(weirdAmount, 1);
     default:
       return 0;
   }
@@ -385,11 +423,17 @@ export function transformToGr(
     case MeasuringUnit.ml:
     case MeasuringUnit.l:
     case MeasuringUnit.cup:
+    case MeasuringUnit.cl:
+    case MeasuringUnit.us_cup:
       return (amount * density) / getAmountInL(unit);
     case MeasuringUnit.pinch:
       return pinchToGr(amount, density);
     case MeasuringUnit.item:
       return itemsToGr(amount, grInOneItem);
+    case MeasuringUnit.oz:
+      return OZToGr(amount);
+    case MeasuringUnit.lb:
+      return LbToGr(amount);
     default:
       return 0;
   }
