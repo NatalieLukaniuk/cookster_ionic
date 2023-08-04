@@ -3,3 +3,34 @@
     padding: 20px;
     gap: 20px;
 }
+
+.chip-selection-list {
+    align-items: baseline;
+    gap: 0;
+
+    ion-chip {
+       height: auto;
+    }
+}
+
+.portion-example {
+    display: flex;
+    gap: 10px;
+    p:first-child {
+        flex-basis: 20%;
+    }
+}
+
+.member-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.member-block {
+    font-size: 12px;
+    padding-block: 20px;
+    p {
+        margin-block: 5px;
+    }
+}

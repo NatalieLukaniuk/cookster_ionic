@@ -16,6 +16,17 @@
     </div>
 
   </div>
+  <ion-list>
+    <ion-item-divider color="primary" *ngIf="familyMembers$ | async">
+      <ion-label>Члени родини:</ion-label>
+    </ion-item-divider>
+    <ng-container *ngIf="familyMembers$ | async">
+      <ion-item *ngFor="let member of (familyMembers$ | async)" class="family-member">
+        <ng-container *ngTemplateOutlet="familyMemberBlock; context: {member}"></ng-container>
+      </ion-item>
+    </ng-container>
+   
+  </ion-list>
   <ng-container *ngTemplateOutlet="settingsBottomsheet"></ng-container>
 </ion-content>
 
@@ -39,4 +50,47 @@
       </ion-content>
     </ng-template>
   </ion-modal>
+</ng-template>
+
+<ng-template #familyMemberBlock let-member="member">
+  <div class="member-block">
+    <ion-label class="member-name">
+      {{member.name}}
+    </ion-label>
+    <div class="family-member-portion-block">
+      <p>Відсоток від рекомендованої порції:
+        <span *ngIf="!!member.portionSizePercentage">{{member.portionSizePercentage}} %</span>
+        <span *ngIf="!member.portionSizePercentage">не вказано</span>
+      </p>
+      <div *ngIf="!!member.portionSizePercentage" class="portion-example">
+        <p>Приклад розрахунку:</p>
+        <p>Рекомендована порція: {{sampleRecommendedPortion}}гр</p>
+        <p>Порція для {{member.name}}: {{sampleRecommendedPortion * (member.portionSizePercentage / 100)}}гр</p>
+      </div>
+    </div>
+
+
+    <div class="chip-selection-list" *ngIf="member.like?.length">
+      <p>Любить:</p>
+      <ion-chip *ngFor="let item of member.like" color="success">
+        <span>{{ getProductText(item) }}</span>
+      </ion-chip>
+    </div>
+
+
+    <div class="chip-selection-list" *ngIf="member.noLike?.length">
+      <p>Не любить:</p>
+      <ion-chip *ngFor="let item of member.noLike" color="warning">
+        <span>{{ getProductText(item) }}</span>
+      </ion-chip>
+    </div>
+
+
+    <div class="chip-selection-list" *ngIf="member.noEat?.length">
+      <p>Не їсть:</p>
+      <ion-chip *ngFor="let item of member.noEat" color="danger">
+        <span>{{ getProductText(item) }}</span>
+      </ion-chip>
+    </div>
+  </div>
 </ng-template>
