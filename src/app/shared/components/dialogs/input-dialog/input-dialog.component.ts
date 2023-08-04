@@ -32,4 +32,8 @@ export class InputDialogComponent implements OnInit {
   onDismissed() {
     this.resultReceived.emit(this.result);
   }
+
+  clearInput(){
+    this.result = ''
+  }
 }

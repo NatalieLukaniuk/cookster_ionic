@@ -1,0 +1,24 @@
+<app-header>
+    <ion-back-button left-button defaultHref="tabs/profile"></ion-back-button>
+    <p title>Колекції</p>
+</app-header>
+
+<ion-content>
+    <div class="add-collection">
+        <app-input-dialog #newCollectionDialog [id]="'add-collection'" [buttonText]="'Додати колекцію'"
+            [inputFieldLabel]="'Введіть назву колекції'" (resultReceived)="addCollection($event)"></app-input-dialog>
+    </div>
+    <ion-list>
+        <ion-list-header>
+            Всі колекції
+        </ion-list-header>
+        <ng-container *ngIf="!!(collections$ | async)?.length; else noCollections">
+            <ion-item *ngFor="let collection of collections$ | async">{{collection.name}}</ion-item>
+        </ng-container>
+
+    </ion-list>
+</ion-content>
+
+<ng-template #noCollections>
+    <p class="padding-inline">У вас поки що немає колекцій рецептів</p>
+</ng-template>

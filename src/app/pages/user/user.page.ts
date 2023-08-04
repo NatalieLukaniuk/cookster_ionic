@@ -23,7 +23,11 @@ export class UserPage implements OnInit {
     {
       title: 'Загальні налаштування',
       link: 'settings'
-    }
+    },
+    {
+      title: 'Колекції',
+      link: 'manage-collections'
+    },
   ]
 
   currentUser: User | null = null;

@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { UserPage } from './user.page';
 import { EditFamilyComponent } from './components/edit-family/edit-family.component';
+import { ManageCollectionsComponent } from './components/manage-collections/manage-collections.component';
 
 const routes: Routes = [
   {
@@ -19,7 +20,12 @@ const routes: Routes = [
     path: 'family-settings',
     pathMatch: 'full',
     component: EditFamilyComponent
-  }
+  },
+  {
+    path: 'manage-collections',
+    pathMatch: 'full',
+    component: ManageCollectionsComponent
+  },
 ];
 
 @NgModule({
