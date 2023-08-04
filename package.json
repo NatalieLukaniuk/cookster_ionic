@@ -5,12 +5,13 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ionic serve",
+    "build": "ionic build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint --fix",
-    "hosting": "firebase deploy --only hosting"
+    "deploy": "firebase deploy --only hosting",
+    "deploy android": "ionic capacitor build android"
   },
   "private": true,
   "dependencies": {
