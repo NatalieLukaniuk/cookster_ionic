@@ -50,3 +50,5 @@ export class NewFamilyMember implements FamilyMember {
     name = this.name;
   }
 }
+
+export interface UserMappingItem { cooksterId: string, firebaseId: string, email: string }

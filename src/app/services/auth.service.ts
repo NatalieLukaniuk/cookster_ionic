@@ -6,7 +6,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
-import { BehaviorSubject } from 'rxjs';
 import { Role, User } from '../models/auth.models';
 import * as UIActions from '../store/actions/ui.actions';
 import * as UserActions from '../store/actions/user.actions';
