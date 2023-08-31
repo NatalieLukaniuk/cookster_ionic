@@ -6,6 +6,7 @@ import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
 import { Recipy, productPreferencesChip } from 'src/app/models/recipies.models';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-recipies',
@@ -26,6 +27,8 @@ export class RecipiesContainer implements OnDestroy {
   productChips: productPreferencesChip[] = [];
 
   destroy$ = new Subject<void>();
+
+  numberOfRecipiesToDisplay = 10;
 
   constructor(
     private store: Store<IAppState>,
@@ -87,5 +90,10 @@ export class RecipiesContainer implements OnDestroy {
 
   goTop() {
     this.scrollingContainer.scrollToTop()
+  }
+
+  onIonInfinite(event: any){
+    this.numberOfRecipiesToDisplay += 10;
+    (event as InfiniteScrollCustomEvent).target.complete();
   }
 }
