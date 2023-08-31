@@ -3,6 +3,6 @@ class="searchbar"
   placeholder="Пошук за назвою"
   show-clear-button="always"
   [debounce]="500"
-  (ionChange)="onSearch($event)"
+  (ionInput)="onSearch($event)"
   (ionClear)="clear()"
 ></ion-searchbar>

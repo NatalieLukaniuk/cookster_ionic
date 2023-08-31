@@ -7,6 +7,7 @@ import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
 import { Recipy, productPreferencesChip } from 'src/app/models/recipies.models';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-recipies',
@@ -16,10 +17,6 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
 export class RecipiesContainer implements OnDestroy {
   filters$ = this.filtersService.getFilters;
   recipies: Recipy[] = []
-  recipies$ = combineLatest([
-    this.store.pipe(select(getAllRecipies)),
-    this.filters$,
-  ]).pipe(map((res) => this.filtersService.applyFilters(res[0], res[1])));
 
   showGoTop = false;
 
@@ -77,6 +74,7 @@ export class RecipiesContainer implements OnDestroy {
       this.filters$,
     ]).pipe(
       takeUntil(this.destroy$),
+      map(res => _.cloneDeep(res)),
       map((res) => this.filtersService.applyFilters(res[0], res[1])),
       tap(recipies => this.recipies = recipies)
     ).subscribe()
