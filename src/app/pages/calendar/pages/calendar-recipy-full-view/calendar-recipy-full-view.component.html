@@ -12,11 +12,9 @@
     [recipy]="recipy$ | async"
     [currentUser]="user$ | async"
     [amountPerPortion]="amountPerPortion$ | async"
-    [addPreps]="true"
     [portions]="portions$ | async"
     [day]="getDay()"
     (portionsChanged)="onPortionsChanged($event)"
-    (onAddPrep)="addPrep($event)"
   ></app-recipy-full-view>
 </ion-content>
 

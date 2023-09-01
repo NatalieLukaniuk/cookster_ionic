@@ -58,15 +58,7 @@ export interface ISuggestionList {
 }
 
 export interface Suggestion {
-  ingredients: {
-    productId: string;
-    productName: string;
-    amount: number;
-    unit: MeasuringUnit;
-  }[];
   prepDescription: string;
-  recipyId: string;
-  recipyTitle: string;
   day: Date;
   done?: boolean;
 }

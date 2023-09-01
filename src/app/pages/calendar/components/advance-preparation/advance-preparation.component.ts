@@ -107,8 +107,7 @@ export class AdvancePreparationComponent implements OnChanges {
           updatedUser.savedPreps = updatedUser.savedPreps?.filter(
             (item) =>
               !(
-                item.prepDescription === prep.prepDescription &&
-                item.recipyId == prep.recipyId
+                item.prepDescription === prep.prepDescription 
               )
           );
           this.store.dispatch(

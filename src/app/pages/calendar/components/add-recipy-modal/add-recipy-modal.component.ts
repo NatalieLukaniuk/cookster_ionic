@@ -103,9 +103,6 @@ export class AddRecipyModalComponent implements OnDestroy {
     return recipy.type?.includes(DishType['потребує попередньої підготовки']);
   }
 
-  isPrepSuggestions(recipy: Recipy) {
-    return !!recipy.ingrediends.find((ingr) => !!ingr.prep);
-  }
 
   get mealtimeText() {
     switch (this.meatime) {

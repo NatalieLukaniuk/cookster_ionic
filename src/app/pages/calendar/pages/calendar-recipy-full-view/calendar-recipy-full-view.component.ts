@@ -1,4 +1,4 @@
-import { MealTime, Suggestion } from 'src/app/models/calendar.models';
+import { MealTime } from 'src/app/models/calendar.models';
 import {
   UpdateRecipyInCalendarAction,
 } from './../../../../store/actions/calendar.actions';
@@ -15,7 +15,6 @@ import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { transfromMomentToDate } from 'src/app/pages/planner/planner.utils';
-import { UpdateUserAction } from 'src/app/store/actions/user.actions';
 
 @Component({
   selector: 'app-calendar-recipy-full-view',
@@ -96,19 +95,5 @@ export class CalendarRecipyFullViewComponent {
     } else {
       return new Date()
     }
-  }
-
-  addPrep(prep: Suggestion) {
-    this.user$.pipe(take(1)).subscribe(user => {
-      if(user){
-        const updatedUser = _.cloneDeep(user);
-        if(updatedUser.savedPreps){
-          updatedUser.savedPreps.push(prep)
-        } else {
-          updatedUser.savedPreps = [prep];
-        }
-        this.store.dispatch(new UpdateUserAction(updatedUser, 'Заготовку додано'))
-      }
-    })
-  }
+  }  
 }

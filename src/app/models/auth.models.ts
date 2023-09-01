@@ -7,7 +7,7 @@ export interface User {
   uid: string;
   details?: DayDetails[];
   id?: string;
-  shoppingLists?: ShoppingList[]; // FIXME: this is probably no longer used
+  shoppingLists?: ShoppingList[];
   savedPreps?: Suggestion[];
   img?: string;
   role: Role;
@@ -16,7 +16,6 @@ export interface User {
   draftRecipies?: DraftRecipy[];
   preferences?: Preferences;
   family?: FamilyMember[]
-  // scenarios?: SuggestionList[];
 }
 
 export enum Role {

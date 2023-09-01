@@ -39,9 +39,6 @@ export class CalendarRecipyComponent implements OnInit {
     this.showNeedsAdvancePreparation = this.recipy.type.includes(
       DishType['потребує попередньої підготовки']
     );
-    this.hasPrepSuggestions = !!this.recipy.ingrediends.find(
-      (ingr) => !!ingr.prep
-    );
   }
 
   viewRecipy() {

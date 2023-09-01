@@ -8,19 +8,9 @@
       (itemSwiped)="markAsDone(prep)"
     >
       <ion-label>
-        <h3 *ngFor="let ingredient of prep.ingredients">
-          <span class="ingredient-name">{{ ingredient.productName }}</span
-          ><span>{{
-            ingredient.amount
-              | convertToSelectedUnit : ingredient.productId : ingredient.unit
-              | normalizeDisplayedAmount : ingredient.unit
-          }}</span>
-          <span>{{ getUnitText(ingredient.unit) }}</span>
-        </h3>
+        
         <h4>{{ prep.prepDescription }}</h4>
-        <p>
-          {{ prep.recipyTitle }}
-        </p>
+        
         <p>
           {{ prep.day.toString() | date }}
         </p>

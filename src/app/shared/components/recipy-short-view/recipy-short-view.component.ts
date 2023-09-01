@@ -27,7 +27,6 @@ export class RecipyShortViewComponent implements OnInit {
   @Input() productPreferencesChips: productPreferencesChip[] | null = []
 
   isNeedsAdvancePreparation: boolean = false;
-  isPrepSuggestions: boolean = false;
 
   isRecipyClicked: boolean = false;
   isShowCollections: boolean = false;
@@ -95,9 +94,6 @@ export class RecipyShortViewComponent implements OnInit {
   ngOnInit() {
     this.isNeedsAdvancePreparation = this.recipy.type?.includes(
       DishType['потребує попередньої підготовки']
-    );
-    this.isPrepSuggestions = !!this.recipy.ingrediends.find(
-      (ingr) => !!ingr.prep
     );
   }
 
