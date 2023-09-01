@@ -1,6 +1,6 @@
 import { RemoveRecipyFromCalendarAction } from './../../../../store/actions/calendar.actions';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
   Day,
   MealTime,
@@ -9,6 +9,7 @@ import {
 import { DishType } from 'src/app/models/recipies.models';
 import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
+import { DialogsService } from 'src/app/services/dialogs.service';
 
 @Component({
   selector: 'app-calendar-recipy',
@@ -30,8 +31,9 @@ export class CalendarRecipyComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private store: Store<IAppState>
-  ) {}
+    private store: Store<IAppState>,
+    private dialog: DialogsService
+  ) { }
 
   ngOnInit() {
     this.showNeedsAdvancePreparation = this.recipy.type.includes(
@@ -53,7 +55,7 @@ export class CalendarRecipyComponent implements OnInit {
           mealtime: this.mealtime,
         },
       });
-    } else if(window.location.pathname.includes('planner')) {
+    } else if (window.location.pathname.includes('planner')) {
       this.router.navigate(['tabs', 'planner', 'recipy', this.recipy.id], {
         relativeTo: this.route.parent,
         queryParams: {
@@ -64,16 +66,29 @@ export class CalendarRecipyComponent implements OnInit {
         },
       });
     }
+    this.closeSlidingItem();
   }
 
   onDelete() {
-    this.store.dispatch(
-      new RemoveRecipyFromCalendarAction(
-        this.recipy.id,
-        this.day.details.day,
-        this.mealtime
+    this.dialog
+      .openConfirmationDialog(
+        `Видалити ${this.recipy.name}?`,
+        'Ця дія незворотня'
       )
-    );
+      .then((res) => {
+        if (res.role === 'confirm') {
+          this.store.dispatch(
+            new RemoveRecipyFromCalendarAction(
+              this.recipy.id,
+              this.day.details.day,
+              this.mealtime
+            )
+          );
+        } else {
+          this.closeSlidingItem()
+        }
+      });
+
   }
 
   activePreparationTime() {
@@ -90,5 +105,11 @@ export class CalendarRecipyComponent implements OnInit {
       time = time + +step.timePassive;
     }
     return time;
+  }
+
+  @ViewChild('slidingContainer') slidingContainer: any;
+
+  closeSlidingItem(){
+    this.slidingContainer.close()
   }
 }
