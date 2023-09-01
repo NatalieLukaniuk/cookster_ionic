@@ -1,4 +1,4 @@
-import { DayDetails, Suggestion } from './calendar.models';
+import { DayDetails, Reminder } from './calendar.models';
 import { PlannerByDate, ShoppingList, ShoppingListItem } from './planner.models';
 import { DraftRecipy, RecipyCollection } from './recipies.models';
 
@@ -8,7 +8,7 @@ export interface User {
   details?: DayDetails[];
   id?: string;
   shoppingLists?: ShoppingList[];
-  savedPreps?: Suggestion[];
+  savedPreps?: Reminder[];
   img?: string;
   role: Role;
   planner?: PlannerByDate[];

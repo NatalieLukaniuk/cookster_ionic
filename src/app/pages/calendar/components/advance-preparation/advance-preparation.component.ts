@@ -9,9 +9,8 @@ import {
 import { Store, select } from '@ngrx/store';
 
 import * as _ from 'lodash';
-import * as moment from 'moment';
 import { User } from 'src/app/models/auth.models';
-import { Day, Suggestion } from 'src/app/models/calendar.models';
+import { Day, Reminder } from 'src/app/models/calendar.models';
 import {
   MeasuringUnit,
   MeasuringUnitText,
@@ -28,7 +27,7 @@ import * as UserActions from './../../../../store/actions/user.actions';
 export class AdvancePreparationComponent implements OnChanges {
   @Input() day!: Day;
 
-  prepListItems: Suggestion[] = [];
+  prepListItems: Reminder[] = [];
 
   currentUser: User | undefined;
   @Output() hasTimedOutPreps = new EventEmitter();
@@ -50,9 +49,9 @@ export class AdvancePreparationComponent implements OnChanges {
   buildPrepList() {
     this.prepListItems = [];
     if (this.currentUser && this.currentUser.savedPreps?.length) {
-      this.currentUser.savedPreps.forEach((list: Suggestion) => {
-        if (moment(list.day).dayOfYear() == this.day.value.dayOfYear()) {
-          this.prepListItems.push(list);
+      this.currentUser.savedPreps.forEach((reminderItem: Reminder) => {
+        if (reminderItem.calendarDay=== this.day.details.day) {
+          this.prepListItems.push(reminderItem);
         }
       });
     }
@@ -67,7 +66,7 @@ export class AdvancePreparationComponent implements OnChanges {
     return !!this.prepListItems?.find((suggestion) => !suggestion.done);
   }
 
-  isTimePassed(suggestion: Suggestion) {
+  isTimePassed(suggestion: Reminder) {
     // FIXME: needs implementation
     // if(suggestion.time){
     //   let currentDay = moment();
@@ -95,10 +94,10 @@ export class AdvancePreparationComponent implements OnChanges {
     return MeasuringUnitText[unit];
   }
 
-  markAsDone(prep: Suggestion) {
+  markAsDone(prep: Reminder) {
     this.dialog
       .openConfirmationDialog(
-        `Видалити ${prep.prepDescription}?`,
+        `Видалити ${prep.description}?`,
         'Ця дія незворотня'
       )
       .then((res) => {
@@ -107,13 +106,13 @@ export class AdvancePreparationComponent implements OnChanges {
           updatedUser.savedPreps = updatedUser.savedPreps?.filter(
             (item) =>
               !(
-                item.prepDescription === prep.prepDescription 
+                item.description === prep.description 
               )
           );
           this.store.dispatch(
             new UserActions.UpdateUserAction(
               updatedUser,
-              `${prep.prepDescription} видалено`
+              `${prep.description} видалено`
             )
           );
         }

@@ -25,7 +25,7 @@ export class AddReminderModalComponent {
   }
 
   onDateTimeChanged(event: any){
-    this.dateTime = event.detail.value;
+    this.dateTime = new Date(event.detail.value);
     this.date = transformDate(new Date(event.detail.value));
   }
 }

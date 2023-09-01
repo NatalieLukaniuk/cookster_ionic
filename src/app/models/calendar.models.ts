@@ -19,7 +19,7 @@ export interface Day {
   selected: boolean;
   disabled: boolean;
   details: DayDetailsExtended;
-  preps?: Suggestion[];
+  preps?: Reminder[];
 }
 
 export interface IDayDetails {
@@ -52,14 +52,15 @@ export interface RecipyForCalendar extends Recipy {
   amountPerPortion: number;
 }
 
-export interface ISuggestionList {
+export interface IReminderList {
   day: Date;
-  suggestions: Suggestion[];
+  reminders: Reminder[];
 }
 
-export interface Suggestion {
-  prepDescription: string;
-  day: Date;
+export interface Reminder {
+  description: string;
+  calendarDay: string;
+  fullDate: Date;
   done?: boolean;
 }
 

@@ -23,7 +23,6 @@ export class CalendarRecipyComponent implements OnInit {
   @Input()
   mealtime!: MealTime;
 
-  hasPrepSuggestions: boolean = false;
   showNeedsAdvancePreparation: boolean = false;
 
   Math = Math;
