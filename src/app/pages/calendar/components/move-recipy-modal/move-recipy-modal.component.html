@@ -13,7 +13,7 @@
                 {  },
                 'confirm'
               )
-            ">ok</ion-button>
+            " [disabled]="!date">Зберегти</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -21,7 +21,7 @@
       <app-recipy-short-view *ngIf="recipy" [currentUser]="user$ | async" [recipy]="recipy"></app-recipy-short-view>
 
       <h5>Нова дата:</h5>
-      datepicker
+      <ion-datetime presentation="date" (ionChange)="dateSelected($event)"></ion-datetime>
        <h5>Час прийому їжі:</h5>
       <div>
        
