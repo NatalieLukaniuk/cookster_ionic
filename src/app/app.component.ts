@@ -22,6 +22,8 @@ import { getAuth } from 'firebase/auth';
 import { Role } from './models/auth.models';
 import { NavigationEnd, Router } from '@angular/router';
 import { AngularDeviceInformationService } from 'angular-device-information';
+import { ModalController } from '@ionic/angular';
+import { AddReminderModalComponent } from './shared/components/dialogs/add-reminder-modal/add-reminder-modal.component';
 
 @Component({
   selector: 'app-root',
@@ -65,7 +67,8 @@ export class AppComponent implements OnInit {
     private dataMappingService: DataMappingService,
     private dialog: DialogsService,
     private router: Router,
-    private deviceInformationService: AngularDeviceInformationService
+    private deviceInformationService: AngularDeviceInformationService,
+    private modalCtrl: ModalController
   ) { }
   ngOnInit(): void {
     this.loadData();
@@ -141,5 +144,24 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.authService.logoutUser();
+  }
+
+  async onAddReminder(){
+    const modal = await this.modalCtrl.create({
+      component: AddReminderModalComponent,
+      componentProps: {
+        inputFieldLabel: 'Enter description',
+      },
+      breakpoints: [0.5, 0.75],
+      initialBreakpoint: 0.5
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      
+      console.log(data)
+    }
   }
 }

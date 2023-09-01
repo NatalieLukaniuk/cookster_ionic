@@ -1,0 +1,17 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+      </ion-buttons>
+      <ion-title>Додавання нагадування</ion-title>
+      <ion-buttons slot="end">
+        <ion-button [disabled]="!date || !time || description.length < 3" (click)="confirm()" [strong]="true">Confirm</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-item>
+      <ion-label position="floating">Нагадування:</ion-label>
+      <ion-input [(ngModel)]="description" type="text"></ion-input>
+    </ion-item>
+  </ion-content>
