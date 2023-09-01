@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { transformDate } from 'src/app/models/calendar.models';
 
 @Component({
   selector: 'app-add-reminder-modal',
@@ -8,16 +9,23 @@ import { ModalController } from '@ionic/angular';
 })
 export class AddReminderModalComponent {
   date: any;
-  time: any;
   description: string = '';
 
-  constructor(private modalCtrl: ModalController) { }
+  dateTime: Date | undefined;
+
+  constructor(private modalCtrl: ModalController) {
+   }
 
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');
   }
 
   confirm() {
-    return this.modalCtrl.dismiss({ date: this.date, time: this.time, description: this.description }, 'confirm');
+    return this.modalCtrl.dismiss({ date: this.date, fullDate: this.dateTime, description: this.description }, 'confirm');
+  }
+
+  onDateTimeChanged(event: any){
+    this.dateTime = event.detail.value;
+    this.date = transformDate(new Date(event.detail.value));
   }
 }
