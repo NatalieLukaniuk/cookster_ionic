@@ -3,20 +3,21 @@
   <app-filters right-button></app-filters>
 </app-header>
 
-<ion-content #scrollingContainer [fullscreen]="true" (ionScroll)="onscroll($event)" [scrollEvents]="true">  
+<ion-content #scrollingContainer [fullscreen]="true" (ionScroll)="onscroll($event)" [scrollEvents]="true">
   <div class="recipies-background">
-    <span id="top-anchor"></span>    
-    <app-recipy-short-view
-      *ngFor="let recipy of recipies"
-      [currentUser]="user$ | async"
-      [recipy]="recipy"
-      [productPreferencesChips]="productChips"
-    ></app-recipy-short-view>
+    <span id="top-anchor"></span>
+    <ng-container *ngFor="let recipy of recipies; let index = index">
+      <app-recipy-short-view *ngIf="index < numberOfRecipiesToDisplay" [currentUser]="user$ | async" [recipy]="recipy"
+        [productPreferencesChips]="productChips"></app-recipy-short-view>
+    </ng-container>
+    <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= recipies.length" (ionInfinite)="onIonInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </div>
 
-  <ion-fab *ngIf="showGoTop" (click)="goTop()"  slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab *ngIf="showGoTop" (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button>
       <ion-icon name="chevron-up-circle"></ion-icon>
-    </ion-fab-button>    
+    </ion-fab-button>
   </ion-fab>
 </ion-content>

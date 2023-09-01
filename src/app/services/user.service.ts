@@ -1,4 +1,4 @@
-import { Role } from './../models/auth.models';
+import { Role, UserMappingItem } from './../models/auth.models';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -19,44 +19,36 @@ export class UserService {
 
   currentUserId = '';
 
-  constructor(private authApiService: AuthApiService, private store: Store) {}
+  allUsersMapping: UserMappingItem[] = [];
 
-  getAllUsers() { // FIXME: might be not needed anymore
+  constructor(private authApiService: AuthApiService, private store: Store) { }
+
+  getUserData(user: User) {
     this.authApiService
-      .getUsers()
+      .getAllUsers()
       .pipe(take(1))
-      .subscribe((res) => {
-        let array = Object.entries(res);
-        let users: any = [];
-        for (let entry of array) {
-          let user: any = {
-            id: entry[0],
-            ...entry[1],
-          };
-          users.push(user);
+      .subscribe((userMappingData: UserMappingItem[]) => {
+        this.allUsersMapping = userMappingData;
+        const found = userMappingData.find(fbUser => fbUser.firebaseId === user.uid);
+        if (found) {
+          this.getCurrentUserData(found.cooksterId);
+        } else {
+          this.store.dispatch(new UIActions.ErrorAction('no such user found'));
         }
-        this.allUsers = users;
-        this.getCurrentUser(this.userAtFirebaseAuth);
-      });
+      })
   }
 
-  getUserData(user: User){
-    this.authApiService
-    .getUsers()
-    .pipe(take(1))
-    .subscribe((res) => {
-      let array = Object.entries(res);
-      let users: any = [];
-      for (let entry of array) {
-        let user: any = {
-          id: entry[0],
-          ...entry[1],
-        };
-        users.push(user);
+  getCurrentUserData(cooksterId: string) {
+    this.authApiService.getUser(cooksterId).pipe(take(1)).subscribe(user => {
+      this.currentUser = user;
+      if (user.id) {
+        this.currentUserId = user.id;
       }
-      this.allUsers = users;
-      this.getCurrentUser(user);
-    });
+      if (!('details' in this.currentUser!)) {
+        this.currentUser!.details = [];
+      }
+      this.store.dispatch(new UserActions.UserLoadedAction(user));
+    })
   }
 
   addUser(auth: any) {
@@ -69,33 +61,21 @@ export class UserService {
       .addUser(user)
       .pipe(take(1))
       .subscribe((res) => {
-        this.store.dispatch(
-          new UIActions.ShowSuccessMessageAction(
-            'Your registration was successful'
-          )
-        );
-        this.getAllUsers();
-      });
-  }
-
-  getCurrentUser(userAtFirebaseAuth: any) {
-    if (this.allUsers) {
-      for (let user of this.allUsers) {
-        if (userAtFirebaseAuth.email === user.email) {
-          console.log(user);
-          this.currentUser = user;
-          if(user.id){
-            this.currentUserId = user.id;
-          }          
-          if (!('details' in this.currentUser!)) {
-            this.currentUser!.details = [];
-          }
-          this.store.dispatch(new UserActions.UserLoadedAction(user));
+        const userToAdd = {
+          email: user.email,
+          firebaseId: user.uid,
+          cooksterId: res.name
         }
-      }
-    } else {
-      this.store.dispatch(new UIActions.ErrorAction('no users'));
-    }
+        let updatedUsers: UserMappingItem[] = this.allUsersMapping.concat(userToAdd)
+        this.authApiService.addNewUser(updatedUsers).pipe(take(1)).subscribe(() => {
+          this.store.dispatch(
+            new UIActions.ShowSuccessMessageAction(
+              'Your registration was successful'
+            )
+          );
+          this.getCurrentUserData(res.name);
+        })
+      });
   }
 
   updateUserDetailsFromMyDatabase(newData: any) {

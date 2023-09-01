@@ -1,58 +1,72 @@
 <div class="recipy-name">
-  <ion-item
-    detail="false"
-    button
-    (click)="viewRecipy()"
-    swipeLeftDelete
-    (deleteItem)="onDelete()"
-  >
-    <ion-label class="recipy-content">
-      <div class="recipy-text">
-        <h2>{{ recipy.name }}</h2>
-        <div class="additional-info">
-          <span>{{ recipy.portions }} порцій</span>
-          <span>{{ recipy.amountPerPortion }} гр/порцію</span>
-          <span *ngIf="recipy.calorificValue">
-            {{
+  <ion-item-sliding #slidingContainer>
+    <ion-item detail="false">
+      <ion-label class="recipy-content">
+        <div class="recipy-text">
+          <h2>{{ recipy.name }}</h2>
+          <div class="additional-info">
+            <span>{{ recipy.portions }} порцій</span>
+            <span>{{ recipy.amountPerPortion }} гр/порцію</span>
+            <span *ngIf="recipy.calorificValue">
+              {{
               Math.round(
-                (recipy.calorificValue * recipy.amountPerPortion) / 100
+              (recipy.calorificValue * recipy.amountPerPortion) / 100
               )
-            }}
-            ккал/порцію
-          </span>
-          <span class="icons">
-            <ion-icon
-              name="alarm"
-              *ngIf="showNeedsAdvancePreparation"
-            ></ion-icon>
-            <ion-icon name="bulb" *ngIf="hasPrepSuggestions"></ion-icon>
-            <ion-icon
-              name="checkmark-done"
-              *ngIf="recipy.isCheckedAndApproved"
-            ></ion-icon>
-          </span>
-          <div>
-            <span>
-              <ion-icon name="american-football-outline"></ion-icon>
-              {{ activePreparationTime() | normalizeTime }}
+              }}
+              ккал/порцію
             </span>
-            <span>
-              <ion-icon name="beer-outline"></ion-icon>
-              {{ passivePreparationTime() | normalizeTime }}
+            <span class="icons">
+              <ion-icon name="alarm" *ngIf="showNeedsAdvancePreparation"></ion-icon>
+              <ion-icon name="bulb" *ngIf="hasPrepSuggestions"></ion-icon>
+              <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
             </span>
-          </div>
-          <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
-          <div class="collection-tags">
-            <span>Теги: </span>
-            <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
-              DishType[tag]
-              }}</ion-chip>
+            <div>
+              <span>
+                <ion-icon name="american-football-outline"></ion-icon>
+                {{ activePreparationTime() | normalizeTime }}
+              </span>
+              <span>
+                <ion-icon name="beer-outline"></ion-icon>
+                {{ passivePreparationTime() | normalizeTime }}
+              </span>
+            </div>
+            <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
+            <div class="collection-tags">
+              <span>Теги: </span>
+              <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+                DishType[tag]
+                }}</ion-chip>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="recipy-photo" *ngIf="recipy.photo">
-        <app-image [imagePath]="recipy.photo"></app-image>
-      </div>
-    </ion-label>
-  </ion-item>
+        <div class="recipy-photo" *ngIf="recipy.photo">
+          <app-image [imagePath]="recipy.photo"></app-image>
+        </div>
+      </ion-label>
+
+    </ion-item>
+    <ion-item-options>
+      <ion-item-option (click)="viewRecipy()">
+        <div>
+          <ion-icon name="search-outline"></ion-icon>
+          <p>Переглянути</p>
+        </div>
+      </ion-item-option>
+      <ion-item-option (click)="onChangeRecipyDate()">
+        <div>
+          <ion-icon name="move-outline"></ion-icon>
+          <p>Змінити дату</p>
+        </div>
+      </ion-item-option>
+      <ion-item-option color="danger" (click)="onDelete()">
+        <div>
+          <ion-icon name="trash-outline"></ion-icon>
+          <p>Видалити</p>
+        </div>
+      </ion-item-option>
+    </ion-item-options>
+  </ion-item-sliding>
+
 </div>
+
+<app-move-recipy-modal #moveRecipyModal [recipy]="recipy"></app-move-recipy-modal>

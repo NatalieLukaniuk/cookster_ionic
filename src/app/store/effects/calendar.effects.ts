@@ -213,13 +213,13 @@ export class CalendarEffects {
               let updatedUser = _.cloneDeep(user);
               updatedUser.details = this.moveRecipyInCalendar(
                 updatedUser.details!,
-                action.recipy,
+                action.recipyId,
                 action.previousEntry,
                 action.newEntry
               );
               return new UpdateUserAction(
                 updatedUser,
-                `${action.recipy} перенесено`
+                `${action.recipyId} перенесено`
               );
             } else return new ErrorAction('no user');
           })
@@ -282,7 +282,7 @@ export class CalendarEffects {
 
   moveRecipyInCalendar(
     calendar: IDayDetails[],
-    recipy: CalendarRecipyInDatabase,
+    recipyId: string,
     previousEntry: {
       day: string;
       mealtime: MealTime;
@@ -293,25 +293,35 @@ export class CalendarEffects {
       order: number;
     }
   ): IDayDetails[] {
+    let foundRecipy: CalendarRecipyInDatabase | undefined;
     let calWithRemoved = calendar.map((day) => {
       if (day.day == previousEntry.day) {
+        foundRecipy = day[previousEntry.mealtime].find(recipy => recipy.recipyId === recipyId);
         return this.updateDayOnRemoveRecipy(
           day,
           previousEntry.mealtime,
-          recipy.recipyId
+          recipyId
         );
       } else return day;
     });
-    let calWithAdded = calWithRemoved.map((day) => {
-      if (day.day == newEntry.day) {
-        return this.updateDayOnAddRecipy(
-          day,
-          newEntry.mealtime,
-          recipy,
-          newEntry.order
-        );
-      } else return day;
-    });
+    const isDayExists = !!calWithRemoved.find(day => day.day == newEntry.day);
+    let calWithAdded = calWithRemoved;
+    if (isDayExists) {
+      calWithAdded = calWithRemoved.map((day) => {
+        if (day.day == newEntry.day && foundRecipy) {
+          return this.updateDayOnAddRecipy(
+            day,
+            newEntry.mealtime,
+            foundRecipy,
+            newEntry.order
+          );
+        } else return day;
+      });
+    } else if (foundRecipy) {
+      const newDay = new DayDetails(newEntry.day, []);
+      newDay[newEntry.mealtime] = [foundRecipy];
+      calWithAdded = calWithRemoved.concat([newDay])
+    }
     return calWithAdded;
   }
 

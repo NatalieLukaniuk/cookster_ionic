@@ -30,3 +30,18 @@ h2 {
   min-width: 140px;
   margin-left: 10px;
 }
+
+ion-item-option div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ion-icon {
+    font-size: 26px;
+  }
+  p {
+    font-size: 10px;
+    text-transform: lowercase;
+  }
+}
+

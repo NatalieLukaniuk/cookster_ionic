@@ -1,14 +1,32 @@
 <app-header>
   <p title>Особиста сторінка</p>
+  <ion-button right-button slot="icon-only" color="primary" id="user-settings-bottomsheet">
+    <ion-icon name="settings-outline"></ion-icon>
+  </ion-button>
 </app-header>
 
 <ion-content>
-  <div class="user-header">
-    <div class="user-info"></div>
-    <ion-button slot="icon-only" color="secondary" id="user-settings-bottomsheet">
-      <ion-icon name="settings-outline"></ion-icon>
-    </ion-button>
+  <div class="user-header" *ngIf="(user$ | async) && currentUser">
+
+    <ion-avatar>
+      <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+    </ion-avatar>
+    <div class="user-info-details">
+      <p>Email: {{currentUser.email}}</p>
+    </div>
+
   </div>
+  <ion-list>
+    <ion-item-divider color="primary" *ngIf="familyMembers$ | async">
+      <ion-label>Члени родини:</ion-label>
+    </ion-item-divider>
+    <ng-container *ngIf="familyMembers$ | async">
+      <ion-item *ngFor="let member of (familyMembers$ | async)" class="family-member">
+        <ng-container *ngTemplateOutlet="familyMemberBlock; context: {member}"></ng-container>
+      </ion-item>
+    </ng-container>
+   
+  </ion-list>
   <ng-container *ngTemplateOutlet="settingsBottomsheet"></ng-container>
 </ion-content>
 
@@ -28,8 +46,51 @@
             <ion-label>{{option.title}}</ion-label>
           </ion-item>
         </ion-list>
-        
+
       </ion-content>
     </ng-template>
   </ion-modal>
+</ng-template>
+
+<ng-template #familyMemberBlock let-member="member">
+  <div class="member-block">
+    <ion-label class="member-name">
+      {{member.name}}
+    </ion-label>
+    <div class="family-member-portion-block">
+      <p>Відсоток від рекомендованої порції:
+        <span *ngIf="!!member.portionSizePercentage">{{member.portionSizePercentage}} %</span>
+        <span *ngIf="!member.portionSizePercentage">не вказано</span>
+      </p>
+      <div *ngIf="!!member.portionSizePercentage" class="portion-example">
+        <p>Приклад розрахунку:</p>
+        <p>Рекомендована порція: {{sampleRecommendedPortion}}гр</p>
+        <p>Порція для {{member.name}}: {{sampleRecommendedPortion * (member.portionSizePercentage / 100)}}гр</p>
+      </div>
+    </div>
+
+
+    <div class="chip-selection-list" *ngIf="member.like?.length">
+      <p>Любить:</p>
+      <ion-chip *ngFor="let item of member.like" color="success">
+        <span>{{ getProductText(item) }}</span>
+      </ion-chip>
+    </div>
+
+
+    <div class="chip-selection-list" *ngIf="member.noLike?.length">
+      <p>Не любить:</p>
+      <ion-chip *ngFor="let item of member.noLike" color="warning">
+        <span>{{ getProductText(item) }}</span>
+      </ion-chip>
+    </div>
+
+
+    <div class="chip-selection-list" *ngIf="member.noEat?.length">
+      <p>Не їсть:</p>
+      <ion-chip *ngFor="let item of member.noEat" color="danger">
+        <span>{{ getProductText(item) }}</span>
+      </ion-chip>
+    </div>
+  </div>
 </ng-template>
