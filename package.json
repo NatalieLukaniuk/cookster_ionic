@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint --fix",
     "deploy": "firebase deploy --only hosting",
-    "deploy android": "ionic capacitor build android"
+    "android": "ionic capacitor build android"
   },
   "private": true,
   "dependencies": {
