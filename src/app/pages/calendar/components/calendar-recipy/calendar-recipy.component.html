@@ -52,7 +52,7 @@
           <p>Переглянути</p>
         </div>
       </ion-item-option>
-      <ion-item-option>
+      <ion-item-option (click)="onChangeRecipyDate()">
         <div>
           <ion-icon name="move-outline"></ion-icon>
           <p>Змінити дату</p>
@@ -68,3 +68,5 @@
   </ion-item-sliding>
 
 </div>
+
+<app-move-recipy-modal #moveRecipyModal [recipy]="recipy"></app-move-recipy-modal>

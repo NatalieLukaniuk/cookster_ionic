@@ -109,7 +109,16 @@ export class CalendarRecipyComponent implements OnInit {
 
   @ViewChild('slidingContainer') slidingContainer: any;
 
-  closeSlidingItem(){
+  closeSlidingItem() {
     this.slidingContainer.close()
+  }
+
+  @ViewChild('moveRecipyModal') moveRecipyModal: any;
+  onChangeRecipyDate() {
+    this.moveRecipyModal.modal.present();
+
+    this.moveRecipyModal.modal.onDidDismiss().then((res: any) => {
+      if (res.role === 'confirm') {}
+    })
   }
 }

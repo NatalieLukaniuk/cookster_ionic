@@ -1,0 +1,32 @@
+<ion-button id="move-recipy-in-cal" expand="block" style="display: none">Open</ion-button>
+<ion-modal #moveRecipy trigger="move-recipy-in-cal" [presentingElement]="presentingElement">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{recipy?.name}}</ion-title>
+        <ion-buttons slot="start">
+          <ion-button (click)="moveRecipy.dismiss({}, 'cancel')">Скасувати</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button (click)="
+          moveRecipy.dismiss(
+                {  },
+                'confirm'
+              )
+            ">ok</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <app-recipy-short-view *ngIf="recipy" [currentUser]="user$ | async" [recipy]="recipy"></app-recipy-short-view>
+
+      <h5>Нова дата:</h5>
+      datepicker
+       <h5>Час прийому їжі:</h5>
+      <div>
+       
+        meal picker
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

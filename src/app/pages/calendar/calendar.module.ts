@@ -17,6 +17,7 @@ import { CalendarPageRoutingModule } from './calendar-routing.module';
 import { CalendarPage } from './calendar.page';
 import { ProductsPerDayComponent } from './components/products-per-day/products-per-day.component';
 import { AddCommentModalComponent } from './components/add-comment-modal/add-comment-modal.component';
+import { MoveRecipyModalComponent } from './components/move-recipy-modal/move-recipy-modal.component';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { AddCommentModalComponent } from './components/add-comment-modal/add-com
     AddRecipyModalComponent,
     AdvancePreparationComponent,
     ProductsPerDayComponent,
-    AddCommentModalComponent
+    AddCommentModalComponent,
+    MoveRecipyModalComponent
   ],
   exports: [CalendarCoreComponent]
 })
