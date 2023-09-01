@@ -45,7 +45,7 @@ export class AddCommentToCalendarAction implements Action {
 export class MoveRecipyInCalendarAction implements Action {
   readonly type = CalendarActionTypes.MOVE_RECIPY_IN_CALENDAR;
   constructor(
-    public recipy: CalendarRecipyInDatabase,
+    public recipyId: string,
     public previousEntry: {
       day: string;
       mealtime: MealTime;

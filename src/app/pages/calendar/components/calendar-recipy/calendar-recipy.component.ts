@@ -1,4 +1,4 @@
-import { RemoveRecipyFromCalendarAction } from './../../../../store/actions/calendar.actions';
+import { MoveRecipyInCalendarAction, RemoveRecipyFromCalendarAction } from './../../../../store/actions/calendar.actions';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
@@ -118,7 +118,16 @@ export class CalendarRecipyComponent implements OnInit {
     this.moveRecipyModal.modal.present();
 
     this.moveRecipyModal.modal.onDidDismiss().then((res: any) => {
-      if (res.role === 'confirm') {}
+      if (res.role === 'confirm') {
+        this.moveRecipy(res.data.newDate, res.data.mealTime)
+      }
     })
+  }
+
+  moveRecipy(newDate: string, newMealtime: MealTime) {
+    this.store.dispatch(new MoveRecipyInCalendarAction(
+      this.recipy.id,
+      { day: this.day.details.day, mealtime: this.mealtime },
+      { day: newDate, mealtime: newMealtime, order: 0 }))
   }
 }

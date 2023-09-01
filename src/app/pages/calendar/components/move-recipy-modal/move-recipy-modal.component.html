@@ -10,7 +10,7 @@
         <ion-buttons slot="end">
           <ion-button (click)="
           moveRecipy.dismiss(
-                {  },
+                { newDate: date, mealTime },
                 'confirm'
               )
             " [disabled]="!date">Зберегти</ion-button>
@@ -24,8 +24,12 @@
       <ion-datetime presentation="date" (ionChange)="dateSelected($event)"></ion-datetime>
        <h5>Час прийому їжі:</h5>
       <div>
-       
-        meal picker
+        <ion-radio-group [(ngModel)]="mealTime">
+            <ion-item *ngFor="let option of mealTimeOptions">
+              <ion-label>{{ option }}</ion-label>
+              <ion-radio slot="end" [value]="option"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
       </div>
     </ion-content>
   </ng-template>

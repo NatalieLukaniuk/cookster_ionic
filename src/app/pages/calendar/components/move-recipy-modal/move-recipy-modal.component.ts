@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
-import { transformDate } from 'src/app/models/calendar.models';
+import { MealTime, transformDate } from 'src/app/models/calendar.models';
 import { Recipy } from 'src/app/models/recipies.models';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
@@ -20,12 +20,18 @@ export class MoveRecipyModalComponent implements OnInit {
 
   date: string | null = null;
 
+  mealTime: MealTime = MealTime.Breakfast;
+
+  mealTimeOptions: MealTime[] = [];
+
   @ViewChild('moveRecipy') modal: IonModal | undefined;
 
   constructor(private store: Store<IAppState>) { }
 
   ngOnInit(): void {
     this.presentingElement = document.querySelector('.ion-page');
+
+    this.mealTimeOptions = Object.values(MealTime);
   }
 
   dateSelected(event: any) {
