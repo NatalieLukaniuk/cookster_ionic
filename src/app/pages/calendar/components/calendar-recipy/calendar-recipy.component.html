@@ -46,9 +46,24 @@
 
     </ion-item>
     <ion-item-options>
-      <ion-item-option (click)="viewRecipy()">View</ion-item-option>
-      <ion-item-option>Move</ion-item-option>
-      <ion-item-option color="danger" (click)="onDelete()">Delete</ion-item-option>
+      <ion-item-option (click)="viewRecipy()">
+        <div>
+          <ion-icon name="search-outline"></ion-icon>
+          <p>Переглянути</p>
+        </div>
+      </ion-item-option>
+      <ion-item-option>
+        <div>
+          <ion-icon name="move-outline"></ion-icon>
+          <p>Змінити дату</p>
+        </div>
+      </ion-item-option>
+      <ion-item-option color="danger" (click)="onDelete()">
+        <div>
+          <ion-icon name="trash-outline"></ion-icon>
+          <p>Видалити</p>
+        </div>
+      </ion-item-option>
     </ion-item-options>
   </ion-item-sliding>
 
