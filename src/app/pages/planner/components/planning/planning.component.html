@@ -1,7 +1,6 @@
 <ion-content [fullscreen]="true">
   <div *ngIf="!!currentPlanner; else noPlanner">
     <app-calendar-core
-      [showPreps]="false"
       [addRecipies]="true"
     ></app-calendar-core>
   </div>

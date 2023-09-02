@@ -1,3 +1,4 @@
+import { Reminder } from './../../../../models/calendar.models';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import * as moment from 'moment';
@@ -14,7 +15,6 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
   styleUrls: ['./calendar-core.component.scss'],
 })
 export class CalendarCoreComponent implements OnInit, OnDestroy {
-  @Input() showPreps: boolean = true;
   @Input() addRecipies: boolean = false;
   @Output() currentTabChanged = new EventEmitter<string>()
 
@@ -29,9 +29,13 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
 
   destroy$ = new Subject<void>();
 
+  reminders: Reminder[] = [];
+
+  isPassedReminders = false;
+
   tabs = [
     { value: 'menu', icon: '', name: 'Меню' },
-    { value: 'preps', icon: '', name: 'Заготовки' },
+    { value: 'preps', icon: '', name: 'Нагадування' },
     { value: 'products', icon: '', name: 'Продукти' },
   ];
 
@@ -81,10 +85,10 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
           let details = user.details?.find(
             (day: DayDetails) => day?.day == stringDay
           );
-          if (details) {            
+          if (details) {
             let newDayDetails = new DayDetails(
               this.currentDay!.format('DDMMYYYY'),
-              details.comments? details.comments : []
+              details.comments ? details.comments : []
             );
             let dayTemplate: Day = {
               value: this.currentDay!,
@@ -124,11 +128,30 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
             };
           }
 
+          this.reminders = [];
+          this.isPassedReminders = false;
           if (user.savedPreps) {
-            this.prepsNumber = user.savedPreps.filter(prep => moment(prep.day).dayOfYear() === this._day?.value.dayOfYear()).length;
+            this.reminders = user.savedPreps.filter(prep => prep.calendarDay === this._day?.details.day);
+            this.prepsNumber = this.reminders.length;
+            this.isPassedReminders = this.checkTimePassed(this.reminders);
           }
         }
       });
     }
+  }
+
+  isTimePassed(reminder: Reminder) {
+    if (reminder.fullDate) {
+      let now = new Date();
+      if (moment(now).isAfter(moment(reminder.fullDate))) {
+        return true
+      } else {
+        return false
+      }
+    } else return false;
+  }
+
+  checkTimePassed(reminderList: Reminder[]): boolean {
+    return !!reminderList.find((sugg) => this.isTimePassed(sugg));
   }
 }

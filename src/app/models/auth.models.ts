@@ -1,4 +1,4 @@
-import { DayDetails, Suggestion } from './calendar.models';
+import { DayDetails, Reminder } from './calendar.models';
 import { PlannerByDate, ShoppingList, ShoppingListItem } from './planner.models';
 import { DraftRecipy, RecipyCollection } from './recipies.models';
 
@@ -7,8 +7,8 @@ export interface User {
   uid: string;
   details?: DayDetails[];
   id?: string;
-  shoppingLists?: ShoppingList[]; // FIXME: this is probably no longer used
-  savedPreps?: Suggestion[];
+  shoppingLists?: ShoppingList[];
+  savedPreps?: Reminder[];
   img?: string;
   role: Role;
   planner?: PlannerByDate[];
@@ -16,7 +16,6 @@ export interface User {
   draftRecipies?: DraftRecipy[];
   preferences?: Preferences;
   family?: FamilyMember[]
-  // scenarios?: SuggestionList[];
 }
 
 export enum Role {

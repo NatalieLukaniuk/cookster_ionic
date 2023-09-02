@@ -1,30 +1,21 @@
 <ion-list>
   <ng-container *ngFor="let prep of prepListItems">
-    <ion-item
-      button
-      swipeLeftNoConfirmation
-      detail="false"
-      *ngIf="!prep.done"
-      (itemSwiped)="markAsDone(prep)"
-    >
-      <ion-label>
-        <h3 *ngFor="let ingredient of prep.ingredients">
-          <span class="ingredient-name">{{ ingredient.productName }}</span
-          ><span>{{
-            ingredient.amount
-              | convertToSelectedUnit : ingredient.productId : ingredient.unit
-              | normalizeDisplayedAmount : ingredient.unit
-          }}</span>
-          <span>{{ getUnitText(ingredient.unit) }}</span>
-        </h3>
-        <h4>{{ prep.prepDescription }}</h4>
-        <p>
-          {{ prep.recipyTitle }}
-        </p>
-        <p>
-          {{ prep.day.toString() | date }}
-        </p>
-      </ion-label>
-    </ion-item>
+    <ion-item-sliding #slidingContainer>
+      <ion-item button detail="false" *ngIf="!prep.done">
+        <ion-label class="reminder-description">
+          {{ prep.description }}
+        </ion-label>
+        <p [class.timed-out]="isTimePassed(prep)">{{prep.fullDate | date:'shortTime'}}</p>
+      </ion-item>
+      <ion-item-options>
+        <ion-item-option (click)="markAsDone(prep)">
+          <div>
+            <ion-icon name="checkmark-outline" class="small-icon"></ion-icon>
+          </div>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+
   </ng-container>
+
 </ion-list>

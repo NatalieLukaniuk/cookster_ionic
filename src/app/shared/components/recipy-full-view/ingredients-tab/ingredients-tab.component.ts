@@ -9,12 +9,10 @@ import {
   OnDestroy,
   ChangeDetectorRef,
 } from '@angular/core';
-import { Ingredient, Recipy } from 'src/app/models/recipies.models';
+import { Recipy } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { ItemOption, ItemOptionActions } from '../../ingredient/ingredient.component';
-import { Suggestion } from 'src/app/models/calendar.models';
+import { ItemOption } from '../../ingredient/ingredient.component';
 import { ModalController } from '@ionic/angular';
-import { ControllerInputDialogComponent } from '../../dialogs/controller-input-dialog/controller-input-dialog.component';
 import { IAppState } from 'src/app/store/reducers';
 import { Store, select } from '@ngrx/store';
 import { getFamilyMembers, getUserPreferences } from 'src/app/store/selectors/user.selectors';
@@ -39,8 +37,6 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
     amountPerPortion: number;
   }>();
 
-  @Output() addPrep = new EventEmitter<Suggestion>()
-
   isEditPortions = false;
 
   isSplitToGroups: boolean = false;
@@ -53,7 +49,7 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
 
   destroy$ = new Subject<void>();
 
-  constructor(private datamapping: DataMappingService, private modalCtrl: ModalController, private store: Store<IAppState>, private cdr: ChangeDetectorRef) {
+  constructor(private datamapping: DataMappingService, private store: Store<IAppState>) {
 
   }
   ngOnDestroy(): void {
@@ -132,38 +128,5 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this.isEditPortions = false;
-  }
-
-  async onEventEmitted(action: ItemOptionActions, ingredient: Ingredient) {
-    const modal = await this.modalCtrl.create({
-      component: ControllerInputDialogComponent,
-      componentProps: {
-        inputFieldLabel: 'Enter description',
-      },
-      breakpoints: [0.5, 0.75],
-      initialBreakpoint: 0.5
-    });
-    modal.present();
-
-    const { data, role } = await modal.onWillDismiss();
-
-
-    if (role === 'confirm') {
-      const prep: Suggestion = {
-        ingredients: [
-          {
-            productId: ingredient.product,
-            productName: ingredient.ingredient!,
-            amount: ingredient.amount * this.coeficient,
-            unit: ingredient.defaultUnit
-          }
-        ],
-        prepDescription: data,
-        recipyId: this.recipy.id,
-        recipyTitle: this.recipy.name,
-        day: this.day // TODO: this doesn't need to be passed down from parent components, user should be able to select it
-      }
-      this.addPrep.emit(prep);
-    }
   }
 }

@@ -23,7 +23,6 @@ export class CalendarRecipyComponent implements OnInit {
   @Input()
   mealtime!: MealTime;
 
-  hasPrepSuggestions: boolean = false;
   showNeedsAdvancePreparation: boolean = false;
 
   Math = Math;
@@ -38,9 +37,6 @@ export class CalendarRecipyComponent implements OnInit {
   ngOnInit() {
     this.showNeedsAdvancePreparation = this.recipy.type.includes(
       DishType['потребує попередньої підготовки']
-    );
-    this.hasPrepSuggestions = !!this.recipy.ingrediends.find(
-      (ingr) => !!ingr.prep
     );
   }
 

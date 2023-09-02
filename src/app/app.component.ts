@@ -15,13 +15,18 @@ import { Store, select } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import * as RecipiesActions from './store/actions/recipies.actions';
 import * as UiActions from './store/actions/ui.actions';
-import { combineLatest } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import { IAppState } from './store/reducers';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { Role } from './models/auth.models';
 import { NavigationEnd, Router } from '@angular/router';
 import { AngularDeviceInformationService } from 'angular-device-information';
+import { ModalController } from '@ionic/angular';
+import { AddReminderModalComponent } from './shared/components/dialogs/add-reminder-modal/add-reminder-modal.component';
+import { Reminder } from './models/calendar.models';
+import * as _ from 'lodash';
+import { UpdateUserAction } from './store/actions/user.actions';
 
 @Component({
   selector: 'app-root',
@@ -65,7 +70,8 @@ export class AppComponent implements OnInit {
     private dataMappingService: DataMappingService,
     private dialog: DialogsService,
     private router: Router,
-    private deviceInformationService: AngularDeviceInformationService
+    private deviceInformationService: AngularDeviceInformationService,
+    private modalCtrl: ModalController
   ) { }
   ngOnInit(): void {
     this.loadData();
@@ -141,5 +147,38 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.authService.logoutUser();
+  }
+
+  async onAddReminder(){
+    const modal = await this.modalCtrl.create({
+      component: AddReminderModalComponent,
+      breakpoints: [0.5, 0.75],
+      initialBreakpoint: 0.5
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+
+      const reminder: Reminder = {
+        description: data.description,
+        calendarDay: data.date,
+        fullDate: data.fullDate,
+        done: false
+      }
+      
+      this.user$.pipe(take(1)).subscribe(user => {
+        if(user){
+          const updatedUser = _.cloneDeep(user);
+          if(updatedUser.savedPreps){
+            updatedUser.savedPreps.push(reminder)
+          } else {
+            updatedUser.savedPreps = [reminder];
+          }
+          this.store.dispatch(new UpdateUserAction(updatedUser, 'Нагадування додано'))
+        }
+      })
+    }
   }
 }

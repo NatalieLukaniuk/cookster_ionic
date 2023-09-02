@@ -10,8 +10,7 @@ import {
 } from '@angular/core';
 import { User } from 'src/app/models/auth.models';
 import { Recipy } from 'src/app/models/recipies.models';
-import { ItemOption, ItemOptionActions } from '../ingredient/ingredient.component';
-import { Suggestion } from 'src/app/models/calendar.models';
+import { ItemOption } from '../ingredient/ingredient.component';
 @Component({
   selector: 'app-recipy-full-view',
   templateUrl: './recipy-full-view.component.html',
@@ -24,15 +23,12 @@ export class RecipyFullViewComponent implements OnChanges {
   @Input() portions?: number;
   @Input() amountPerPortion?: number;
 
-  @Input() addPreps: boolean = false;
   @Input() day: Date = new Date();
 
   @Output() portionsChanged = new EventEmitter<{
     portions: number;
     amountPerPortion: number;
   }>();
-
-  @Output() onAddPrep = new EventEmitter<Suggestion>()
 
   ingredStartOptions: ItemOption[] = [];
 
@@ -56,20 +52,7 @@ export class RecipyFullViewComponent implements OnChanges {
         '--header-height',
         this.header.nativeElement.offsetHeight + 30 + 'px'
       );
-    }
-    if (changes['addPreps']) {
-      if (this.addPreps) {
-        this.ingredStartOptions = [
-          {
-            name: 'Додати заготовку',
-            color: 'primary',
-            action: ItemOptionActions.AddPrep
-          }
-        ]
-      } else {
-        this.ingredStartOptions = []
-      }
-    }
+    }    
   }
 
   onTabChange(event: any) {
@@ -78,9 +61,5 @@ export class RecipyFullViewComponent implements OnChanges {
 
   onPortionsChanged(event: { portions: number; amountPerPortion: number }) {
     this.portionsChanged.emit(event);
-  }
-
-  addPrep(prep: Suggestion) {
-    this.onAddPrep.emit(prep)
   }
 }

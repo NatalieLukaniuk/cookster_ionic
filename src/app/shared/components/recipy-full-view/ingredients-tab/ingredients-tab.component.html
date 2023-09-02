@@ -20,7 +20,7 @@
 <ng-container *ngIf="!isSplitToGroups">
   <ion-list>
     <app-ingredient *ngFor="let ingredient of recipy.ingrediends" [ingredient]="ingredient" [coefficient]="coeficient"
-      [startOptions]="ingredStartOptions" (emitEvent)="onEventEmitted($event, ingredient)">
+      [startOptions]="ingredStartOptions">
     </app-ingredient>
   </ion-list>
 </ng-container>
@@ -31,7 +31,7 @@
     </ion-item-divider>
     <ng-container *ngFor="let ingredient of recipy.ingrediends">
       <app-ingredient *ngIf="ingredient.group === group" [ingredient]="ingredient" [coefficient]="coeficient"
-        [startOptions]="ingredStartOptions" (emitEvent)="onEventEmitted($event, ingredient)"></app-ingredient>
+        [startOptions]="ingredStartOptions"></app-ingredient>
     </ng-container>
 
   </ion-item-group>
