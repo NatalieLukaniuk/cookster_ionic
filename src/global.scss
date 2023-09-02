@@ -103,3 +103,20 @@ ion-button {
   font-size: 10px;
   color: var(--ion-color-danger);
 }
+
+ion-item-sliding ion-item-option div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ion-icon {
+    font-size: 26px;
+    &.small-icon {
+      font-size: 20px;
+    }
+  }
+  p {
+    font-size: 10px;
+    text-transform: lowercase;
+  }
+}

@@ -5,6 +5,7 @@ import {
   Output,
   SimpleChanges,
   OnChanges,
+  ViewChild,
 } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 
@@ -115,7 +116,15 @@ export class AdvancePreparationComponent implements OnChanges {
               `${prep.description} видалено`
             )
           );
+        } else {
+          this.closeSlidingItem()
         }
       });
+  }
+
+  @ViewChild('slidingContainer') slidingContainer: any;
+
+  closeSlidingItem() {
+    this.slidingContainer.close()
   }
 }
