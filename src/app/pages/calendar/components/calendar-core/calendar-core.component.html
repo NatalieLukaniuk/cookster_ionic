@@ -5,25 +5,18 @@
     </ion-button>
     <span [class.in-date-range]="isWithinDateRange">{{
       currentDay.toString() | date : "EEEE, d MMMM"
-    }}</span>
+      }}</span>
     <ion-button size="small" (click)="goNextDay()">
       <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
     </ion-button>
   </div>
-  <ion-segment
-    *ngIf="showPreps"
-    [value]="currentTab"
-    (ionChange)="onTabChange($event)"
-  >
+  <ion-segment *ngIf="showPreps" [value]="currentTab" (ionChange)="onTabChange($event)">
     <ion-segment-button *ngFor="let tab of tabs" [value]="tab.value">
-      <ion-label
-        >{{ tab.name
-        }}<span
-          class="preps-number"
-          *ngIf="tab.value === 'preps' && prepsNumber > 0"
-          >: {{ prepsNumber }}</span
-        ></ion-label
-      >
+      <ion-label>
+        {{ tab.name }}
+        <span class="preps-number" *ngIf="tab.value === 'preps' && prepsNumber > 0" [class.timed-out]="isPassedReminders">
+          : {{ prepsNumber }}</span>
+      </ion-label>
     </ion-segment-button>
   </ion-segment>
 
@@ -33,10 +26,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="currentTab === tabs[1].value">
-    <app-advance-preparation
-      *ngIf="_day"
-      [day]="_day"
-    ></app-advance-preparation>
+    <app-advance-preparation *ngIf="_day" [day]="_day" [prepListItems]="reminders"></app-advance-preparation>
   </ng-container>
   <ng-container *ngIf="currentTab === tabs[2].value">
     <app-products-per-day *ngIf="!!_day" [day]="_day"></app-products-per-day>

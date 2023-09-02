@@ -1,10 +1,7 @@
 import {
   Component,
   Input,
-  EventEmitter,
-  Output,
-  SimpleChanges,
-  OnChanges,
+  OnDestroy,
   ViewChild,
 } from '@angular/core';
 import { Store, select } from '@ngrx/store';
@@ -19,76 +16,43 @@ import {
 import { DialogsService } from 'src/app/services/dialogs.service';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import * as UserActions from './../../../../store/actions/user.actions';
+import * as moment from 'moment';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-advance-preparation',
   templateUrl: './advance-preparation.component.html',
   styleUrls: ['./advance-preparation.component.scss'],
 })
-export class AdvancePreparationComponent implements OnChanges {
+export class AdvancePreparationComponent implements OnDestroy {
   @Input() day!: Day;
 
-  prepListItems: Reminder[] = [];
+  @Input() prepListItems: Reminder[] = [];
 
   currentUser: User | undefined;
-  @Output() hasTimedOutPreps = new EventEmitter();
+
+  destroy$ = new Subject<void>();
 
   constructor(private store: Store, private dialog: DialogsService) {
-    this.store.pipe(select(getCurrentUser)).subscribe((res) => {
+    this.store.pipe(select(getCurrentUser), takeUntil(this.destroy$)).subscribe((res) => {
       if (res) {
         this.currentUser = res;
       }
     });
   }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['day'].currentValue) {
-      this.buildPrepList();
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next()
   }
 
-  buildPrepList() {
-    this.prepListItems = [];
-    if (this.currentUser && this.currentUser.savedPreps?.length) {
-      this.currentUser.savedPreps.forEach((reminderItem: Reminder) => {
-        if (reminderItem.calendarDay=== this.day.details.day) {
-          this.prepListItems.push(reminderItem);
-        }
-      });
-    }
-    // this.checkTimePassed();
-  }
-
-  hasDoneItems(): boolean {
-    return !!this.prepListItems?.find((suggestion) => suggestion.done);
-  }
-
-  hasIncomplete() {
-    return !!this.prepListItems?.find((suggestion) => !suggestion.done);
-  }
-
-  isTimePassed(suggestion: Reminder) {
-    // FIXME: needs implementation
-    // if(suggestion.time){
-    //   let currentDay = moment();
-    //   if(currentDay.isBefore(this.day.value, 'date')){
-    //     return false
-    //   } else if(currentDay.isAfter(this.day.value, 'date')){
-    //     return true
-    //   } else {
-    //     let timeNow = moment().hour().toString() + moment().minutes().toString()
-    //     let formattedSuggestionTime = suggestion.time.split(':')[0] + suggestion.time.split(':')[1]
-    //     return +timeNow > +formattedSuggestionTime
-    //   }
-    // } else
-    return false;
-  }
-
-  checkTimePassed() {
-    let hasPassed = !!this.prepListItems.find(
-      (sugg) => this.isTimePassed(sugg) && !sugg.done
-    );
-    this.hasTimedOutPreps.emit(hasPassed);
+  isTimePassed(reminder: Reminder) {
+    if (reminder.fullDate) {
+      let now = new Date();
+      if (moment(now).isAfter(moment(reminder.fullDate))) {
+        return true
+      } else {
+        return false
+      }
+    } else return false;
   }
 
   getUnitText(unit: MeasuringUnit) {
@@ -107,7 +71,7 @@ export class AdvancePreparationComponent implements OnChanges {
           updatedUser.savedPreps = updatedUser.savedPreps?.filter(
             (item) =>
               !(
-                item.description === prep.description 
+                item.description === prep.description
               )
           );
           this.store.dispatch(

@@ -5,7 +5,7 @@
         <ion-label class="reminder-description">
           {{ prep.description }}
         </ion-label>
-        <p>{{prep.fullDate | date:'shortTime'}}</p>
+        <p [class.timed-out]="isTimePassed(prep)">{{prep.fullDate | date:'shortTime'}}</p>
       </ion-item>
       <ion-item-options>
         <ion-item-option (click)="markAsDone(prep)">
