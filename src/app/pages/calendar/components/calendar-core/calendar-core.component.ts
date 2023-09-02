@@ -15,7 +15,6 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
   styleUrls: ['./calendar-core.component.scss'],
 })
 export class CalendarCoreComponent implements OnInit, OnDestroy {
-  @Input() showPreps: boolean = true;
   @Input() addRecipies: boolean = false;
   @Output() currentTabChanged = new EventEmitter<string>()
 

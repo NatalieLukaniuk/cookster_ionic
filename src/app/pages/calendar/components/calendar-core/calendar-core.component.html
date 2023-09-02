@@ -10,14 +10,18 @@
       <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
     </ion-button>
   </div>
-  <ion-segment *ngIf="showPreps" [value]="currentTab" (ionChange)="onTabChange($event)">
-    <ion-segment-button *ngFor="let tab of tabs" [value]="tab.value">
-      <ion-label>
-        {{ tab.name }}
-        <span class="preps-number" *ngIf="tab.value === 'preps' && prepsNumber > 0" [class.timed-out]="isPassedReminders">
-          : {{ prepsNumber }}</span>
-      </ion-label>
-    </ion-segment-button>
+  <ion-segment [value]="currentTab" (ionChange)="onTabChange($event)">
+    <ng-container *ngFor="let tab of tabs">
+      <ion-segment-button [value]="tab.value" *ngIf="tab.value !== 'preps' || prepsNumber > 0">
+        <ion-label>
+          {{ tab.name }}
+          <span class="preps-number" *ngIf="tab.value === 'preps' && prepsNumber > 0"
+            [class.timed-out]="isPassedReminders">
+            : {{ prepsNumber }}</span>
+        </ion-label>
+      </ion-segment-button>
+    </ng-container>
+
   </ion-segment>
 
   <ng-container *ngIf="currentTab === tabs[0].value">
