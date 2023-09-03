@@ -55,15 +55,6 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     this.destroyed$.next();
   }
 
-  getAmountInList(item: ShoppingListItem): string | undefined {
-    let ls = this.activeList!.find((list) =>
-      list.items?.find((ingr) => ingr.title == item.title)
-    );
-    if (ls) {
-      return ls.items.find((ingr) => ingr.title == item.title)?.amount;
-    } else return undefined;
-  }
-
   onTabChange(event: any) {
     this.currentTab = event.detail.value;
   }

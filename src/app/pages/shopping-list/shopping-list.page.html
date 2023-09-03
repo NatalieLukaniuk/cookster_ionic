@@ -26,10 +26,20 @@
             <div class="ion-padding" slot="content">
               <ion-list>
                 <ng-container *ngFor="let item of list.items">
-                  <ion-item swipeLeftNoConfirmation *ngIf="!item.completed" (itemSwiped)="onSwiped(item, list.name)">
-                    <ion-label>{{item.title}}</ion-label>
-                    <ion-chip>{{ item.amount }}</ion-chip>
-                  </ion-item>
+                  <ion-item-sliding #slidingContainer *ngIf="!item.completed">
+                    <ion-item>
+                      <ion-label>{{item.title}}</ion-label>
+                      <ion-chip>{{ item.amount }}</ion-chip>
+                    </ion-item>
+                    <ion-item-options>
+                      <ion-item-option (click)="onSwiped(item, list.name)">
+                        <div>
+                          <ion-icon name="checkmark-outline" class="small-icon"></ion-icon>
+                        </div>
+                      </ion-item-option>
+                    </ion-item-options>
+                  </ion-item-sliding>
+
                 </ng-container>
               </ion-list>
             </div>
@@ -47,10 +57,19 @@
             <div class="ion-padding" slot="content">
               <ion-list>
                 <ng-container *ngFor="let item of list.items">
-                  <ion-item swipeLeftNoConfirmation *ngIf="item.completed" (itemSwiped)="onSwiped(item, list.name)">
-                    <ion-label>{{item.title}}</ion-label>
-                    <ion-chip>{{ getAmountInList(item) }}</ion-chip>
-                  </ion-item>
+                  <ion-item-sliding #slidingContainer *ngIf="item.completed">
+                    <ion-item>
+                      <ion-label>{{item.title}}</ion-label>
+                      <ion-chip>{{ item.amount }}</ion-chip>
+                    </ion-item>
+                    <ion-item-options>
+                      <ion-item-option (click)="onSwiped(item, list.name)">
+                        <div>
+                          <ion-icon name="refresh-circle-outline" class="small-icon"></ion-icon>
+                        </div>
+                      </ion-item-option>
+                    </ion-item-options>
+                  </ion-item-sliding>
                 </ng-container>
               </ion-list>
             </div>
