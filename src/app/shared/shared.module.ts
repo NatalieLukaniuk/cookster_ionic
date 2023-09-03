@@ -30,6 +30,7 @@ import { ControllerInputDialogComponent } from './components/dialogs/controller-
 import { RecipyModalComponent } from './components/dialogs/recipy-modal/recipy-modal.component';
 import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-short-view.component';
 import { AddReminderModalComponent } from './components/dialogs/add-reminder-modal/add-reminder-modal.component';
+import { ControllerListSelectDialogComponent } from './components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { AddReminderModalComponent } from './components/dialogs/add-reminder-mod
     ControllerInputDialogComponent,
     RecipyModalComponent,
     RecipyShortViewComponent,
-    AddReminderModalComponent
+    AddReminderModalComponent,
+    ControllerListSelectDialogComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule],
   exports: [
