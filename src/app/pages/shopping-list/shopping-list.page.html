@@ -23,7 +23,7 @@
             <ion-item slot="header" color="primary">
               <ion-label>{{list.name}}</ion-label>
             </ion-item>
-            <div class="ion-padding" slot="content">
+            <div slot="content">
               <ion-list>
                 <ng-container *ngFor="let item of list.items">
                   <ion-item-sliding class="slidingContainer" *ngIf="!item.completed">
@@ -64,7 +64,7 @@
             <ion-item slot="header" color="primary">
               <ion-label>{{list.name}}</ion-label>
             </ion-item>
-            <div class="ion-padding" slot="content">
+            <div slot="content">
               <ion-list>
                 <ng-container *ngFor="let item of list.items">
                   <ion-item-sliding #slidingContainer *ngIf="item.completed">
