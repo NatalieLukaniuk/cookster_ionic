@@ -26,12 +26,22 @@
             <div class="ion-padding" slot="content">
               <ion-list>
                 <ng-container *ngFor="let item of list.items">
-                  <ion-item-sliding #slidingContainer *ngIf="!item.completed">
+                  <ion-item-sliding class="slidingContainer" *ngIf="!item.completed">
                     <ion-item>
                       <ion-label>{{item.title}}</ion-label>
                       <ion-chip>{{ item.amount }}</ion-chip>
                     </ion-item>
                     <ion-item-options>
+                      <ion-item-option (click)="onChangeList(item, list.name)">
+                        <div>
+                          <ion-icon name="move-outline" class="small-icon"></ion-icon>
+                        </div>
+                      </ion-item-option>
+                      <ion-item-option (click)="onEditAmount(item, list.name)">
+                        <div>
+                          <ion-icon name="create-outline" class="small-icon"></ion-icon>
+                        </div>
+                      </ion-item-option>
                       <ion-item-option (click)="onSwiped(item, list.name)">
                         <div>
                           <ion-icon name="checkmark-outline" class="small-icon"></ion-icon>

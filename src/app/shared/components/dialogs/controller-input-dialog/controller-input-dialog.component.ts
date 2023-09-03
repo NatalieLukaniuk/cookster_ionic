@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -6,15 +6,21 @@ import { ModalController } from '@ionic/angular';
   templateUrl: './controller-input-dialog.component.html',
   styleUrls: ['./controller-input-dialog.component.scss']
 })
-export class ControllerInputDialogComponent {
-  @Input() inputFieldLabel!: string;
-  @Input() inputType: string = 'string';
+export class ControllerInputDialogComponent implements OnInit {
+  inputFieldLabel!: string;
+  inputType: string = 'string';
+  fillValue: string = '';
 
   result = '';
 
   presentingElement: Element | undefined | null;
 
   constructor(private modalCtrl: ModalController) {}
+  ngOnInit(): void {
+    if(this.fillValue){
+      this.result = this.fillValue;
+    }
+  }
 
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');

@@ -14,6 +14,7 @@ import { OverlayEventDetail } from '@ionic/core/components';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { Router } from '@angular/router';
 import { DialogsService } from 'src/app/services/dialogs.service';
+import { ControllerInputDialogComponent } from 'src/app/shared/components/dialogs/controller-input-dialog/controller-input-dialog.component';
 
 @Component({
   selector: 'app-shopping-list',
@@ -149,5 +150,56 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     if (ev.detail.role === 'confirm' && ev.detail.data) {
       this.addFromCalendar(ev.detail.data)
     }
+  }
+
+  onChangeList(item: ShoppingListItem, list: string) {
+
+  }
+
+  async onEditAmount(item: ShoppingListItem, listName: string) {
+    const modal = await this.modalCtrl.create({
+      component: ControllerInputDialogComponent,
+      componentProps: {
+        inputFieldLabel: 'Редагувати кількість ' + item.title,
+        fillValue: item.amount
+      },
+      initialBreakpoint: 0.5
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      const list = this.activeList?.map(listItem => {
+        if (listItem.name === listName) {
+          const updated = {
+            ...listItem,
+            items: listItem.items.map(el => {
+              if (el.title === item.title) {
+                return {
+                  ...el,
+                  amount: data
+                }
+              } else {
+                return el;
+              }
+            })
+          }
+          return updated;
+        } else {
+          return listItem;
+        }
+        
+      })
+      if (list) {
+        this.shoppingListService.updateShoppingList(list)
+      }
+    } else {
+      this.closeSlidingItem()
+    }
+  }
+  
+  closeSlidingItem() {
+    document.querySelectorAll('.slidingContainer').forEach((item: any) => item.close())
   }
 }
