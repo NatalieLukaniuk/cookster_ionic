@@ -1,9 +1,9 @@
 <div class="ng-autocomplete">
   <div class="border-bottom">
-    <app-product-autocomplete #autocomplete [products]="data"
-    (productSelected)="selectEvent($event)"></app-product-autocomplete>
+    <app-product-autocomplete #autocomplete [products]="data" [isAddNewProductEnabled]="!!(isAdmin$ | async)"
+      (productSelected)="selectEvent($event)"></app-product-autocomplete>
   </div>
-  
+
 
   <ion-item class="quantity-input-item" [color]="quantity? 'tertiary' : ''">
     <ion-label>Кількість:</ion-label>
@@ -25,7 +25,7 @@
     <ion-item color="tertiary">
       <ion-label>Група: {{ selectedgroup }}</ion-label>
     </ion-item>
-    <div  class="chip-selection-list">
+    <div class="chip-selection-list">
       <ion-chip *ngFor="let group of _groups" (click)="selectedgroup = group"
         [color]="selectedgroup === group? 'primary' : 'secondary'">
         <span>{{ group }}</span>

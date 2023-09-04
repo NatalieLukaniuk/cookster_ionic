@@ -24,8 +24,10 @@ import {
   OnDestroy,
   Input,
 } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Store, select } from '@ngrx/store';
+import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { Role } from 'src/app/models/auth.models';
 
 @Component({
   selector: 'app-add-ingredient',
@@ -47,6 +49,8 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
   quantity: string = '';
   unit: MeasuringUnit = MeasuringUnit.gr;
   selectedgroup: string = this._groups[0];
+
+  isAdmin$: Observable<boolean> = this.store.pipe(select(getCurrentUser), map(user => (!!user && user?.role === Role.Admin)));
 
   @ViewChild('autocomplete') autocomplete: any;
 

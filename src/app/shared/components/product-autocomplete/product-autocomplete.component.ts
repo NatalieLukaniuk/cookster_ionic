@@ -14,12 +14,15 @@ import {
 })
 export class ProductAutocompleteComponent {
   @Input() products: Product[] = [];
+  @Input() isAddNewProductEnabled = false;
 
   @Output() productSelected = new EventEmitter<Product>();
 
   keyword = 'name';
 
   selectedProduct: Product | null = null;
+
+  presentingElement: Element | undefined | null;
 
   isSelected = false;
 
