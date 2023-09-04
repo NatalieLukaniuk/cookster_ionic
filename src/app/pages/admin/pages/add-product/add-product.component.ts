@@ -79,7 +79,7 @@ export class AddProductComponent implements OnInit {
   }
 
   submit() {
-    let product = {
+    let productToAdd = {
       name: this.productForm.controls['name'].value,
       density: +this.productForm.controls['density'].value,
       calories: +this.productForm.controls['calories'].value,
@@ -88,15 +88,15 @@ export class AddProductComponent implements OnInit {
       sizeChangeCoef: +this.productForm.controls['sizeChangeCoef'].value,
       grInOneItem: +this.productForm.controls['grInOneItem'].value
     };
-    this.productsApi.addProduct(product).subscribe((res: { name: string }) => {
+    this.productsApi.addProduct(productToAdd).subscribe((res: { name: string }) => {
       this.store.dispatch(
         new AddNewIngredientAction({
-          ...this.productForm.value,
-          product: res.name,
+          ...productToAdd,
+          id: res.name,
         })
       );
       this.store.dispatch(
-        new ShowSuccessMessageAction(`${product.name} додано`)
+        new ShowSuccessMessageAction(`${productToAdd.name} додано`)
       );
     });
     this.clearForm();
