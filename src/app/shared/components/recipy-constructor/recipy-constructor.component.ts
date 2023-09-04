@@ -44,8 +44,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
   tabs = [
     { value: 'info', icon: '', name: 'Інформація' },
     { value: 'ingredients', icon: '', name: 'Інгридієнти' },
-    { value: 'steps', icon: '', name: 'Приготування' },
-    { value: 'preps', icon: '', name: 'Заготовки' },
+    { value: 'steps', icon: '', name: 'Приготування' }
   ];
 
   get isPublished() {

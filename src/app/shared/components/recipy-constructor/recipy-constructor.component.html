@@ -117,21 +117,6 @@
             [groups]="groups"
             (addNewIngredient)="onAddIngredient($event)"
           ></app-add-ingredient>
-
-    <!-- <ion-accordion-group>
-      <ion-accordion value="first">
-        <ion-item slot="header" color="light">
-          <ion-label>Додати інгридієнт</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <app-add-ingredient
-            [isSplitIntoGroups]="isSplitIntoGroups"
-            [groups]="groups"
-            (addNewIngredient)="onAddIngredient($event)"
-          ></app-add-ingredient>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group> -->
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[2].value">
@@ -205,16 +190,7 @@
         </div>
       </ion-accordion>
     </ion-accordion-group>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="tabs[3].value">
-    <app-preps
-      [ingredients]="ingredients"
-      [isSplitIntoGroups]="isSplitIntoGroups"
-      (deletePrep)="onDeletePrep($event)"
-      (addPrep)="onAddPrep($event)"
-    ></app-preps>
-  </ng-container>
+  </ng-container>  
 </ng-container>
 
 <ion-accordion-group>
