@@ -320,11 +320,12 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     this.ingredients[index].group = event;
   }
 
-  onLongPress(i: number) {
-    this.editStepIndex = i;
-  }
   saveStep() {
     this.editStepIndex = null;
+  }
+
+  editStep(index: number){
+    this.editStepIndex = index;
   }
 
   onDeletePrep(event: { ingredient: Ingredient; description: string }) {
