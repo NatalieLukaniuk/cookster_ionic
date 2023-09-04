@@ -83,7 +83,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   editStepIndex: number | null = null;
 
-  constructor(private store: Store, private dataMapping: DataMappingService) {}
+  constructor(private store: Store, private dataMapping: DataMappingService) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (
       !areObjectsEqual(
@@ -122,7 +122,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
       if (this.recipyToPatch.photo) {
         this.photo = this.recipyToPatch.photo;
       }
-      if(this.recipyToPatch.portionSize){
+      if (this.recipyToPatch.portionSize) {
         this.portionSize = this.recipyToPatch.portionSize.toString();
       }
     }
@@ -240,7 +240,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     if (this.recipyName.length < 3) {
       list.push('Введіть назву, мінімум 3 символи');
     }
-    if(this.portionSize.length < 1){
+    if (this.portionSize.length < 1) {
       list.push('Вкажіть рекомендований розмір порції');
     }
     if (this.selectedTags.length < 1) {
@@ -324,7 +324,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     this.editStepIndex = null;
   }
 
-  editStep(index: number){
+  editStep(index: number) {
     this.editStepIndex = index;
   }
 
@@ -351,7 +351,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     });
   }
 
-  reset(){
+  reset() {
     this.recipyName = '';
     this.isSplitIntoGroups = false;
     this.complexity = Complexity.simple;
@@ -362,5 +362,12 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     this.steps = [];
     this.photo = '';
     this.portionSize = '';
+  }
+  getRecommendedPortion() {
+    const recommendedCaloriesPerPortion = 500;
+    const totalPortion = this.ingredients.map(ingr => ingr.amount).reduce((prev, cur) => cur += prev);
+    const totalCal = this.dataMapping.countRecipyTotalCalories(this.ingredients);
+    const recommended = totalPortion * recommendedCaloriesPerPortion / totalCal;
+    this.portionSize = Math.round(recommended).toString();
   }
 }

@@ -18,6 +18,7 @@
       <ion-label position="floating">Рекомендований розмір порції (для дорослого):</ion-label>
       <ion-input [(ngModel)]="portionSize" type="number"></ion-input>
     </ion-item>
+    <ion-button *ngIf="!!ingredients.length" (click)="getRecommendedPortion()">Порахувати рекомендований розмір порції</ion-button>
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="tertiary">

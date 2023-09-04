@@ -75,6 +75,14 @@ export class DataMappingService {
     return calories / totalAmount;
   }
 
+  countRecipyTotalCalories(ingreds: Ingredient[]){
+    let calories = 0;
+    ingreds.forEach((ingr) => {
+      calories += ingr.amount / 100 * getCalorificValue(ingr, this.products$.value);
+    });
+    return calories;
+  }
+
   getIngredientType(ingrId: string){
     return this.products$.value.find((item) => ingrId === item.id)!
     .type;
