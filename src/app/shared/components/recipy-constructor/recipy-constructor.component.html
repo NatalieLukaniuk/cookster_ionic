@@ -174,22 +174,21 @@
 
 
 <ng-template #editStepTemplate>
-  <ion-list [inset]="true" *ngIf="editStepIndex !== null">
-    <ion-item color="light">
-      <ion-label position="floating" class="edit-input">Опис</ion-label>
-      <ion-textarea placeholder="Type something here" [autoGrow]="true"
+  <div *ngIf="editStepIndex !== null" class="step-edit-container">
+    <div  class="step-edit-textarea">
+      <ion-textarea color="primary" [autoGrow]="true" fill="solid" label="Опис кроку" labelPlacement="floating"
         [(ngModel)]="steps[editStepIndex].description">
       </ion-textarea>
-    </ion-item>
-    <ion-item color="light">
-      <ion-label position="floating">Активний час в хвилинах</ion-label>
-      <ion-input type="tel" [(ngModel)]="steps[editStepIndex].timeActive"></ion-input>
-    </ion-item>
-    <ion-item color="light">
-      <ion-label position="floating">Пасивний час в хвилинах</ion-label>
-      <ion-input type="tel" [(ngModel)]="steps[editStepIndex].timePassive"></ion-input>
-    </ion-item>
-  </ion-list>
+    </div>
+    <div  class="step-edit-time">
+      <ion-icon name="american-football-outline"></ion-icon>
+      <ion-input  fill="solid" type="tel" [(ngModel)]="steps[editStepIndex].timeActive"></ion-input>
+    </div>
+    <div class="step-edit-time">
+      <ion-icon name="beer-outline"></ion-icon>
+      <ion-input  fill="solid" type="tel" [(ngModel)]="steps[editStepIndex].timePassive"></ion-input>
+    </div>
+  </div>
 
   <ion-button expand="full" (click)="saveStep()">Зберегти</ion-button>
 </ng-template>
