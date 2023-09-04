@@ -12,7 +12,7 @@
   </div>
   <ion-segment [value]="currentTab" (ionChange)="onTabChange($event)">
     <ng-container *ngFor="let tab of tabs">
-      <ion-segment-button [value]="tab.value" *ngIf="tab.value !== 'preps' || prepsNumber > 0">
+      <ion-segment-button [value]="tab.value" *ngIf="isTabDisplayed(tab.value)">
         <ion-label>
           {{ tab.name }}
           <span class="preps-number" *ngIf="tab.value === 'preps' && prepsNumber > 0"
@@ -24,15 +24,15 @@
 
   </ion-segment>
 
-  <ng-container *ngIf="currentTab === tabs[0].value">
+  <ng-container *ngIf="currentTab === CalendarTabs.Menu">
     <div *ngIf="!!_day">
       <app-day [day]="_day" [addRecipies]="addRecipies"></app-day>
     </div>
   </ng-container>
-  <ng-container *ngIf="currentTab === tabs[1].value">
+  <ng-container *ngIf="currentTab === CalendarTabs.Reminders">
     <app-advance-preparation *ngIf="_day" [day]="_day" [prepListItems]="reminders"></app-advance-preparation>
   </ng-container>
-  <ng-container *ngIf="currentTab === tabs[2].value">
+  <ng-container *ngIf="currentTab === CalendarTabs.Products">
     <app-products-per-day *ngIf="!!_day" [day]="_day"></app-products-per-day>
   </ng-container>
 </div>
