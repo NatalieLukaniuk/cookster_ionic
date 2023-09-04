@@ -25,9 +25,7 @@ import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.scss'],
 })
-export class AddProductComponent implements OnInit {
-  productForm!: UntypedFormGroup;
-
+export class AddProductComponent {
   products: Product[] = [];
   products$: Observable<Product[]> = this.store.pipe(
     select(getAllProducts),
@@ -41,68 +39,7 @@ export class AddProductComponent implements OnInit {
     })
   );
   
-  constructor(
-    private productsApi: ProductsApiService,
+  constructor(    
     private store: Store<IAppState>
-  ) {}
-
-  ngOnInit(): void {
-    this.initForm();
-  }
-
-  initForm() {
-    this.productForm = new UntypedFormGroup({
-      name: new UntypedFormControl('', Validators.required),
-      density: new UntypedFormControl('', Validators.required),
-      grInOneItem: new UntypedFormControl('', Validators.required),
-      calories: new UntypedFormControl('', Validators.required),
-      defaultUnit: new UntypedFormControl('', Validators.required),
-      type: new UntypedFormControl('', Validators.required),
-      sizeChangeCoef: new UntypedFormControl('', Validators.required),
-    });
-  }
-
-  get measuringUnits(): MeasuringUnit[] {
-    return MeasuringUnitOptions;
-  }
-
-  getMeasuringUnitText(unit: any) {
-    return MeasuringUnitText[unit];
-  }
-
-  get productTypes() {
-    return ProductTypeOptions;
-  }
-
-  getProductTypeText(type: number) {
-    return ProductTypeText[type];
-  }
-
-  submit() {
-    let productToAdd = {
-      name: this.productForm.controls['name'].value,
-      density: +this.productForm.controls['density'].value,
-      calories: +this.productForm.controls['calories'].value,
-      defaultUnit: this.productForm.controls['defaultUnit'].value,
-      type: this.productForm.controls['type'].value,
-      sizeChangeCoef: +this.productForm.controls['sizeChangeCoef'].value,
-      grInOneItem: +this.productForm.controls['grInOneItem'].value
-    };
-    this.productsApi.addProduct(productToAdd).subscribe((res: { name: string }) => {
-      this.store.dispatch(
-        new AddNewIngredientAction({
-          ...productToAdd,
-          id: res.name,
-        })
-      );
-      this.store.dispatch(
-        new ShowSuccessMessageAction(`${productToAdd.name} додано`)
-      );
-    });
-    this.clearForm();
-  }
-
-  clearForm() {
-    this.initForm();
-  }
+  ) {} 
 }

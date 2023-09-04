@@ -17,7 +17,7 @@ import { NormalizeTimePipe } from './pipes/normalize-time.pipe';
 import { RecipyFullViewComponent } from './components/recipy-full-view/recipy-full-view.component';
 import { IngredientsTabComponent } from './components/recipy-full-view/ingredients-tab/ingredients-tab.component';
 import { IngredientComponent } from './components/ingredient/ingredient.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NormalizeDisplayedAmountPipe } from './pipes/normalize-displayed-amount.pipe';
 import { ConvertToSelectedUnitPipe } from './pipes/convert-to-selected-unit.pipe';
 import { SwipeLeftDirective } from './directives/swipe-left.directive';
@@ -31,6 +31,7 @@ import { RecipyModalComponent } from './components/dialogs/recipy-modal/recipy-m
 import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-short-view.component';
 import { AddReminderModalComponent } from './components/dialogs/add-reminder-modal/add-reminder-modal.component';
 import { ControllerListSelectDialogComponent } from './components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
+import { AddProductFormComponent } from './components/add-product-form/add-product-form.component';
 
 @NgModule({
   declarations: [
@@ -60,9 +61,10 @@ import { ControllerListSelectDialogComponent } from './components/dialogs/contro
     RecipyModalComponent,
     RecipyShortViewComponent,
     AddReminderModalComponent,
-    ControllerListSelectDialogComponent
+    ControllerListSelectDialogComponent,
+    AddProductFormComponent
   ],
-  imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule],
+  imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule],
   exports: [
     HeaderComponent,
     LoadingOverlayComponent,
@@ -82,7 +84,8 @@ import { ControllerListSelectDialogComponent } from './components/dialogs/contro
     ProductAutocompleteComponent,
     LongPressDirective,
     IngredientComponent,
-    RecipyShortViewComponent
+    RecipyShortViewComponent,
+    AddProductFormComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
