@@ -1,20 +1,7 @@
-import { ShowSuccessMessageAction } from './../../../../store/actions/ui.actions';
-import { AddNewIngredientAction } from './../../../../store/actions/recipies.actions';
 import { Store, select } from '@ngrx/store';
-import { ProductsApiService } from './../../../../services/products-api.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
-  UntypedFormControl,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
-import {
-  MeasuringUnit,
-  MeasuringUnitOptions,
-  MeasuringUnitText,
   Product,
-  ProductTypeOptions,
-  ProductTypeText,
 } from 'src/app/models/recipies.models';
 import { IAppState } from 'src/app/store/reducers';
 import { Observable, map } from 'rxjs';
