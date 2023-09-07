@@ -136,16 +136,12 @@
       </ion-reorder-group>
     </ion-list>
 
-    <ion-accordion-group>
-      <ion-accordion value="first">
-        <ion-item slot="header" color="light">
-          <ion-label>Додати крок</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <app-add-step (addNewStep)="onAddNewStep($event)"></app-add-step>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group>
+    <div class="padding-inline">
+      <h4 class="padding-inline">Додати крок</h4>
+      <div>
+        <app-add-step (addNewStep)="onAddNewStep($event)"></app-add-step>
+      </div>
+    </div>
   </ng-container>
 </ng-container>
 
