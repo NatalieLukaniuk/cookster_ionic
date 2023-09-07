@@ -94,6 +94,7 @@
     <ng-container *ngIf="isAddNewProduct">
       <h4>Додати новий продукт:</h4>
       <app-add-product-form (productAdded)="isAddNewProduct = false"></app-add-product-form>
+      <ion-button expand="full" (click)="isAddNewProduct = false">Скасувати додавання продукту</ion-button>
     </ng-container>
   </ng-container>
 
