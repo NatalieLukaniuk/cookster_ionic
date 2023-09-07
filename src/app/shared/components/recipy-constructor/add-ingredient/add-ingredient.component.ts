@@ -36,6 +36,7 @@ import { Role } from 'src/app/models/auth.models';
 })
 export class AddIngredientComponent implements OnInit, OnDestroy {
   @Output() addNewIngredient = new EventEmitter<Ingredient>();
+  @Output() onAddProduct = new EventEmitter<void>();
   @Input() isSplitIntoGroups: boolean = false;
   @Input() groups: Set<string> | undefined;
 
@@ -141,5 +142,9 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
   onGroupName(event: string) {
     this._groups.push(event);
     this.selectedgroup = this._groups[this._groups.length - 1];
+  }
+
+  addNewProduct() {
+    this.onAddProduct.emit();
   }
 }

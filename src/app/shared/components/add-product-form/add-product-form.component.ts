@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { MeasuringUnit, MeasuringUnitOptions, MeasuringUnitText, ProductTypeOptions, ProductTypeText } from 'src/app/models/recipies.models';
@@ -14,6 +14,8 @@ import { IAppState } from 'src/app/store/reducers';
 })
 export class AddProductFormComponent implements OnInit {
   productForm!: UntypedFormGroup;
+
+  @Output() productAdded = new EventEmitter<void>();
 
   constructor(private productsApi: ProductsApiService, private store: Store<IAppState>){}
   
@@ -59,6 +61,7 @@ export class AddProductFormComponent implements OnInit {
 
   clearForm() {
     this.initForm();
+    this.productAdded.emit();
   }
 
   get measuringUnits(): MeasuringUnit[] {

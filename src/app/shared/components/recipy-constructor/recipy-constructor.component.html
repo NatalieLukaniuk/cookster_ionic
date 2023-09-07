@@ -18,7 +18,8 @@
       <ion-label position="floating">Рекомендований розмір порції (для дорослого):</ion-label>
       <ion-input [(ngModel)]="portionSize" type="number"></ion-input>
     </ion-item>
-    <ion-button *ngIf="!!ingredients.length" (click)="getRecommendedPortion()">Порахувати рекомендований розмір порції</ion-button>
+    <ion-button *ngIf="!!ingredients.length" (click)="getRecommendedPortion()">Порахувати рекомендований розмір
+      порції</ion-button>
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="tertiary">
@@ -89,7 +90,11 @@
     </ion-list>
     <h4 class="padding-inline">Додати:</h4>
     <app-add-ingredient [isSplitIntoGroups]="isSplitIntoGroups" [groups]="groups"
-      (addNewIngredient)="onAddIngredient($event)"></app-add-ingredient>
+      (addNewIngredient)="onAddIngredient($event)" (onAddProduct)="isAddNewProduct = true"></app-add-ingredient>
+    <ng-container *ngIf="isAddNewProduct">
+      <h4>Додати новий продукт:</h4>
+      <app-add-product-form (productAdded)="isAddNewProduct = false"></app-add-product-form>
+    </ng-container>
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[2].value">
@@ -176,18 +181,18 @@
 
 <ng-template #editStepTemplate>
   <div *ngIf="editStepIndex !== null" class="step-edit-container">
-    <div  class="step-edit-textarea">
+    <div class="step-edit-textarea">
       <ion-textarea color="primary" [autoGrow]="true" fill="solid" label="Опис кроку" labelPlacement="floating"
         [(ngModel)]="steps[editStepIndex].description">
       </ion-textarea>
     </div>
-    <div  class="step-edit-time">
+    <div class="step-edit-time">
       <ion-icon name="american-football-outline"></ion-icon>
-      <ion-input  fill="solid" type="tel" [(ngModel)]="steps[editStepIndex].timeActive"></ion-input>
+      <ion-input fill="solid" type="tel" [(ngModel)]="steps[editStepIndex].timeActive"></ion-input>
     </div>
     <div class="step-edit-time">
       <ion-icon name="beer-outline"></ion-icon>
-      <ion-input  fill="solid" type="tel" [(ngModel)]="steps[editStepIndex].timePassive"></ion-input>
+      <ion-input fill="solid" type="tel" [(ngModel)]="steps[editStepIndex].timePassive"></ion-input>
     </div>
   </div>
 

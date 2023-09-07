@@ -11,23 +11,9 @@
   <ng-template #notFoundTemplate let-notFound>
     <div [innerHTML]="notFound"></div>
   </ng-template>
-
   <ng-template #notFoundAddNewTemplate>
-    <ion-button [id]="'add-newproduct'" expand="block" size="small">Продукт відстуній в базі даних, додати</ion-button>
-    <ion-modal [initialBreakpoint]="0.75" [breakpoints]="[0, 0.25, 0.5, 0.75]" #modal [trigger]="'add-newproduct'"
-      [presentingElement]="presentingElement">
-      <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="end">
-              <ion-button (click)="modal.dismiss()">Закрити</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-          <app-add-product-form></app-add-product-form>
-        </ion-content>
-      </ng-template>
-    </ion-modal>
+    <ion-button (click)="addNewProduct()" expand="block" size="small">
+      Продукт відстуній в базі даних, додати
+    </ion-button>
   </ng-template>
 </div>

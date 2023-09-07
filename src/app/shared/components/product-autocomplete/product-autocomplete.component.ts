@@ -17,6 +17,7 @@ export class ProductAutocompleteComponent {
   @Input() isAddNewProductEnabled = false;
 
   @Output() productSelected = new EventEmitter<Product>();
+  @Output() onAddProduct = new EventEmitter<void>();
 
   keyword = 'name';
 
@@ -39,5 +40,9 @@ export class ProductAutocompleteComponent {
   @ViewChild('autocomplete') autocomplete: any;
   clearSearch() {
     this.autocomplete.clear();
+  }
+
+  addNewProduct() {
+    this.onAddProduct.emit();
   }
 }

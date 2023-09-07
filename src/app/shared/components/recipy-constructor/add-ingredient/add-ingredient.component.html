@@ -1,7 +1,7 @@
 <div class="ng-autocomplete">
   <div class="border-bottom">
     <app-product-autocomplete #autocomplete [products]="data" [isAddNewProductEnabled]="!!(isAdmin$ | async)"
-      (productSelected)="selectEvent($event)"></app-product-autocomplete>
+      (productSelected)="selectEvent($event)" (onAddProduct)="addNewProduct()"></app-product-autocomplete>
   </div>
 
 

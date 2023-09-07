@@ -75,6 +75,8 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   MeasuringUnit = MeasuringUnit;
 
+  isAddNewProduct = false;
+
   get groups(): Set<string> {
     let mappedArray = this.ingredients.map((ingr) => ingr.group);
     let filteredarray = mappedArray.filter((group) => group !== undefined);
