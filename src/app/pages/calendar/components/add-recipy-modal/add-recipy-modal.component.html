@@ -8,14 +8,14 @@
           <ion-button (click)="cancel()">Cancel</ion-button>
         </ion-buttons>
         <ion-title>Виберіть рецепт</ion-title>
-        <ion-buttons slot="end"  *ngIf="(collectionSelected$ | async)">
+        <ion-buttons slot="end" *ngIf="(collectionSelected$ | async)">
           <app-filters></app-filters>
         </ion-buttons>
-        
+
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
-      <app-search-recipies-filter  *ngIf="(collectionSelected$ | async)"></app-search-recipies-filter>
+    <ion-content class="ion-padding" #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
+      <app-search-recipies-filter *ngIf="(collectionSelected$ | async)"></app-search-recipies-filter>
       <h6>{{date.toString() | date : "EE, MMM d"}}, {{mealtimeText.toLowerCase()}}</h6>
 
       <ng-container *ngIf="!(collectionSelected$ | async)">
@@ -38,53 +38,65 @@
           </ion-button>
           <span>Колекція {{ (collectionSelected$ | async)!.name }}</span>
         </h3>
-        <ion-list>
-          <ion-item detail="false" button *ngFor="let recipy of recipies$ | async" (click)="onRecipyClicked(recipy)">
-            <ion-label class="recipy-content">
-              <div class="recipy-text">
-                <h2 class="ion-text-wrap">{{ recipy.name }}</h2>
-                <div class="recipy-details">
-                  <div>
+        <ion-list *ngIf="recipies$ | async">
+          <ng-container *ngFor="let recipy of recipies; let index = index">
+            <ion-item detail="false" button *ngIf="index < numberOfRecipiesToDisplay" (click)="onRecipyClicked(recipy)">
+              <ion-label class="recipy-content">
+                <div class="recipy-text">
+                  <h2 class="ion-text-wrap">{{ recipy.name }}</h2>
+                  <div class="recipy-details">
+                    <div>
+                      <span>
+                        <ion-icon name="american-football-outline"></ion-icon>
+                        {{ activePreparationTime(recipy) | normalizeTime }}
+                      </span>
+                      <span>
+                        <ion-icon name="beer-outline"></ion-icon>
+                        {{ passivePreparationTime(recipy) | normalizeTime }}
+                      </span>
+                    </div>
                     <span>
-                      <ion-icon name="american-football-outline"></ion-icon>
-                      {{ activePreparationTime(recipy) | normalizeTime }}
+                      <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation(recipy)"></ion-icon>
+                      <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
                     </span>
-                    <span>
-                      <ion-icon name="beer-outline"></ion-icon>
-                      {{ passivePreparationTime(recipy) | normalizeTime }}
-                    </span>
-                  </div>
-                  <span>
-                    <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation(recipy)"></ion-icon>
-                    <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
-                  </span>
 
-                  <span *ngIf="recipy.calorificValue">{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span>
-                  <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
-                  <div class="collection-tags">
-                    <span>Теги: </span>
-                    <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
-                      DishType[tag]
-                      }}</ion-chip>
-                  </div>
-                  <div class="chip-selection-list">
-                    <ng-container *ngIf="productChips?.length">
-                      <ng-container *ngFor="let item of productChips">
-                        <ion-chip *ngIf="getIsInRecipy(item.productId, recipy)" class="collection-chip"
-                          [color]="item.color">
-                          {{item.name}}: {{getProductText(item.productId)}}
-                        </ion-chip>
+                    <span *ngIf="recipy.calorificValue">{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span>
+                    <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
+                    <div class="collection-tags">
+                      <span>Теги: </span>
+                      <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+                        DishType[tag]
+                        }}</ion-chip>
+                    </div>
+                    <div class="chip-selection-list">
+                      <ng-container *ngIf="productChips?.length">
+                        <ng-container *ngFor="let item of productChips">
+                          <ion-chip *ngIf="getIsInRecipy(item.productId, recipy)" class="collection-chip"
+                            [color]="item.color">
+                            {{item.name}}: {{getProductText(item.productId)}}
+                          </ion-chip>
+                        </ng-container>
                       </ng-container>
-                    </ng-container>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="recipy-photo" *ngIf="recipy.photo">
-                <app-image [imagePath]="recipy.photo"></app-image>
-              </div>
-            </ion-label>
-          </ion-item>
+                <div class="recipy-photo" *ngIf="recipy.photo">
+                  <app-image [imagePath]="recipy.photo"></app-image>
+                </div>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+
+          <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= recipies.length"
+            (ionInfinite)="onIonInfinite($event)">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+          </ion-infinite-scroll>
         </ion-list>
+        <ion-fab *ngIf="showGoTop" (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button>
+            <ion-icon name="chevron-up-circle"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
       </ng-container>
 
 
