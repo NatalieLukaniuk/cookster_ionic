@@ -8,7 +8,7 @@ import { Day, DayDetails, RecipyForCalendar } from 'src/app/models/calendar.mode
 import { SLItem, ShoppingList, ShoppingListItem } from 'src/app/models/planner.models';
 import { Ingredient, Recipy } from 'src/app/models/recipies.models';
 import { AddToListModalComponent } from 'src/app/pages/planner/components/add-to-list-modal/add-to-list-modal.component';
-import { getRecipyNameById, getUnitText } from 'src/app/pages/recipies/utils/recipy.utils';
+import { NormalizeDisplayedAmountGetNumber, convertAmountToSelectedUnit, getRecipyNameById, getUnitText, transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { DialogsService } from 'src/app/services/dialogs.service';
@@ -185,22 +185,29 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
       ) {
         this.itemsTree = this.itemsTree!.map((it) => {
           if (it.id == item.product) {
+            const convertedToselectedUnit = convertAmountToSelectedUnit(item.amount, item.defaultUnit, item.product, this.dataMapping.products$.value);
+            const normalized = NormalizeDisplayedAmountGetNumber(convertedToselectedUnit, item.defaultUnit)
+            const correctAmmount = transformToGr(item.product, normalized, item.defaultUnit, this.dataMapping.products$.value)
             let updated = { ...it };
-            updated.total = +it.total + +item.amount;
+            updated.total = +it.total + correctAmmount;
             updated.items.push(item);
             return updated;
           } else return it;
         });
       } else if (this.itemsTree) {
+        const convertedToselectedUnit = convertAmountToSelectedUnit(item.amount, item.defaultUnit, item.product, this.dataMapping.products$.value);
+        const normalized = NormalizeDisplayedAmountGetNumber(convertedToselectedUnit, item.defaultUnit)
+        const correctAmmount = transformToGr(item.product, normalized, item.defaultUnit, this.dataMapping.products$.value)
         this.itemsTree.push({
           id: item.product,
-          total: +item.amount,
-          unit: this.dataMapping.getDefaultMU(item.product),
+          total: correctAmmount,
+          unit: item.defaultUnit,
           name: this.dataMapping.getProductNameById(item.product),
           items: [item],
         });
       }
     });
+    this.itemsTree = this.itemsTree.map(item => ({ ...item, unit: this.dataMapping.getDefaultMU(item.id) }))
     this.itemsTree.sort((a, b) => a.name.localeCompare(b.name));
   }
 
@@ -265,7 +272,7 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
     } else return '';
   }
 
-  getDatesForHeader(){
+  getDatesForHeader() {
     const formattedDatesArray = this.datesArray.map(date => moment(date, 'YYYYMMDD').format('DD MMM'))
     return formattedDatesArray.join(', ')
   }

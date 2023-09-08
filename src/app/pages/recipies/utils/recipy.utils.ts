@@ -367,17 +367,70 @@ export function NormalizeDisplayedAmount(
   }
 }
 
+export function NormalizeDisplayedAmountGetNumber(
+  weirdAmount: number,
+  unit: MeasuringUnit
+): number {
+  switch (unit) {
+    case MeasuringUnit.bunch:
+      return getNiceDecimalNumber(weirdAmount);
+    case MeasuringUnit.coffeeSpoon:
+      return getNiceDecimalNumber(weirdAmount);
+    case MeasuringUnit.cup:
+      return normalizeDecimalNumber(weirdAmount, 1);
+    case MeasuringUnit.dessertSpoon:
+      return getNiceDecimalNumber(weirdAmount);
+    case MeasuringUnit.gr:
+      return roundToNoDecimalsNumber(weirdAmount);
+    case MeasuringUnit.item:
+      return getNiceDecimalHalvesOnlyNumber(weirdAmount);
+    case MeasuringUnit.kg:
+      return normalizeDecimalNumber(weirdAmount, 2);
+    case MeasuringUnit.l:
+      return normalizeDecimalNumber(weirdAmount, 2);
+    case MeasuringUnit.ml:
+      return roundToNoDecimalsNumber(weirdAmount);
+    case MeasuringUnit.pinch:
+      return roundToNoDecimalsNumber(weirdAmount);
+    case MeasuringUnit.tableSpoon:
+      return getNiceDecimalNumber(weirdAmount);
+    case MeasuringUnit.teaSpoon:
+      return getNiceDecimalNumber(weirdAmount);
+    case MeasuringUnit.us_cup:
+      return normalizeDecimalNumber(weirdAmount, 2);
+    case MeasuringUnit.cl:
+      return normalizeDecimalNumber(weirdAmount, 1);
+    case MeasuringUnit.lb:
+      return normalizeDecimalNumber(weirdAmount, 1);
+    case MeasuringUnit.oz:
+      return normalizeDecimalNumber(weirdAmount, 1);
+    default:
+      return 0;
+  }
+}
+
 export function roundToNoDecimals(amount: number): string {
   if (amount >= 1) {
     return Math.round(amount).toString();
   } else return '1';
 }
 
+export function roundToNoDecimalsNumber(amount: number): number {
+  if (amount >= 1) {
+    return Math.round(amount);
+  } else return 1;
+}
+
 export function normalizeDecimal(amount: number, places: number): string {
   if ((amount * Math.pow(10, places)) % 0.5) {
-    debugger
     return (Math.round(amount * Math.pow(10, places)) / Math.pow(10, places)).toString();
   } else return amount.toString();
+}
+
+export function normalizeDecimalNumber(amount: number, places: number): number {
+  if ((amount * Math.pow(10, places)) % 0.5) {
+    return Math.round(amount * Math.pow(10, places)) / Math.pow(10, places);
+  } else return amount;
 }
 
 export function getNiceDecimalHalvesOnly(amount: number): string{
@@ -393,10 +446,22 @@ export function getNiceDecimalHalvesOnly(amount: number): string{
   } else return amount.toString();
 }
 
+export function getNiceDecimalHalvesOnlyNumber(amount: number): number{
+  if ((amount * 10) % 10) {
+    let remainder = (amount * 10) % 10;
+    if (remainder > 0 && remainder < 3) {
+      return Math.floor(amount) > 0 ? Math.floor(amount) : 0.5;
+    } else if (remainder >= 3 && remainder < 7) {
+      return Math.floor(amount) + 0.5;
+    } else {
+      return Math.ceil(amount);
+    }
+  } else return amount;
+}
+
 // return 1/2, 1/3, 1/4
 export function getNiceDecimal(amount: number): string {
   let remainder = (amount * 1000) % 1000;
-  debugger
   if(amount < 1 && remainder){    
     if (remainder > 0 && remainder < 125) {
       return '&#188;'
@@ -430,6 +495,27 @@ export function getNiceDecimal(amount: number): string {
       return Math.ceil(amount) > 0? (Math.ceil(amount)).toString() : '&#188;';
     }
   } else return amount.toString();
+}
+
+export function getNiceDecimalNumber(amount: number): number {
+  let remainder = (amount * 1000) % 1000;
+ if (remainder) {
+    if (remainder > 0 && remainder < 125) {
+      return Math.floor(amount) > 0 ? Math.floor(amount) : 0.25;
+    } else if (remainder >= 125 && remainder < 275) {
+      return Math.floor(amount) + 0.25;
+    } else if (remainder >= 275 && remainder < 400) {
+      return Math.floor(amount) + 0.3;
+    } else if (remainder >= 400 && remainder < 550) {
+      return Math.floor(amount) + 0.5;
+    } else if (remainder >= 550 && remainder < 675) {
+      return Math.floor(amount) + 0.6;
+    } else if (remainder >= 675 && remainder < 875) {
+      return Math.floor(amount) + 0.75;
+    } else {
+      return Math.ceil(amount) > 0? Math.ceil(amount) : 0.25;
+    }
+  } else return amount;
 }
 
 export function getRecipyNameById(
