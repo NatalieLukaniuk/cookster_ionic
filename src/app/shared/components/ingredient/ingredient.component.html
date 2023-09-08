@@ -6,11 +6,9 @@
   <ion-item>
     <ion-label>{{ getIngredientText(ingredient) }}</ion-label>
 
-    <ion-text *ngIf="measuringUnit !== MeasuringUnit.none">{{
-      ingredient.amount * coefficient
+    <ion-text *ngIf="measuringUnit !== MeasuringUnit.none" [innerHTML]="ingredient.amount * coefficient
       | convertToSelectedUnit : ingredient.product : measuringUnit
-      | normalizeDisplayedAmount : measuringUnit
-      }}</ion-text>
+      | normalizeDisplayedAmount : measuringUnit"></ion-text>
     <div>
       <ion-select *ngIf="measuringUnit !== MeasuringUnit.none" interface="action-sheet" [value]="measuringUnit"
         (ionChange)="unitChanged($event)">

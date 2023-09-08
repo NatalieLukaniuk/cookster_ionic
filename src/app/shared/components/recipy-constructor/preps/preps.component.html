@@ -9,16 +9,14 @@
       <h2>{{ prep.description }}</h2>
       <h2>{{ getIngredient(prep.ingredient.product) }}</h2>
       <p>
-        <span
-          >{{
-            prep.ingredient.amount
+        <span [innerHTML]="prep.ingredient.amount
               | convertToSelectedUnit
                 : prep.ingredient.product
                 : prep.ingredient.defaultUnit
-              | normalizeDisplayedAmount : prep.ingredient.defaultUnit
-          }}
-          {{ getUnitText(prep.ingredient.defaultUnit) }}</span
-        >
+              | normalizeDisplayedAmount : prep.ingredient.defaultUnit"
+          ></span>
+          <span>
+          {{ getUnitText(prep.ingredient.defaultUnit) }}</span>
         <span *ngIf="isSplitIntoGroups && prep.ingredient.group">{{
           prep.ingredient.group
         }}</span>
@@ -54,14 +52,12 @@
             <ion-label>
               <h2>{{ getIngredient(ingredient.product) }}</h2>
               <p>
-                <span
-                  >{{
-                    ingredient.amount
+                <span [innerHTML]="ingredient.amount
                       | convertToSelectedUnit
                         : ingredient.product
                         : ingredient.defaultUnit
-                      | normalizeDisplayedAmount : ingredient.defaultUnit
-                  }}
+                      | normalizeDisplayedAmount : ingredient.defaultUnit"
+                  ></span><span>
                   {{ getUnitText(ingredient.defaultUnit) }}</span
                 >
                 <span *ngIf="isSplitIntoGroups && ingredient.group">{{

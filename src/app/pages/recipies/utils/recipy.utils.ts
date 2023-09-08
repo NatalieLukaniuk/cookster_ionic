@@ -98,7 +98,7 @@ export function convertAmountToSelectedUnit(
       case MeasuringUnit.coffeeSpoon:
       case MeasuringUnit.cup:
       case MeasuringUnit.cl:
-        case MeasuringUnit.us_cup:
+      case MeasuringUnit.us_cup:
         amount =
           (amountInGr * getAmountInL(unit)) /
           getDensity(ingredientId, allProducts);
@@ -141,8 +141,8 @@ export function getAmountInL(unit: MeasuringUnit) {
       return 405;
     case MeasuringUnit.cl:
       return 100;
-      case MeasuringUnit.us_cup:
-        return 4;
+    case MeasuringUnit.us_cup:
+      return 4;
     default:
       return 1;
   }
@@ -331,7 +331,7 @@ export function NormalizeDisplayedAmount(
 ): string {
   switch (unit) {
     case MeasuringUnit.bunch:
-      return normalizeDecimal(weirdAmount, 1);
+      return getNiceDecimal(weirdAmount);
     case MeasuringUnit.coffeeSpoon:
       return getNiceDecimal(weirdAmount);
     case MeasuringUnit.cup:
@@ -341,7 +341,7 @@ export function NormalizeDisplayedAmount(
     case MeasuringUnit.gr:
       return roundToNoDecimals(weirdAmount);
     case MeasuringUnit.item:
-      return getNiceDecimal(weirdAmount);
+      return getNiceDecimalHalvesOnly(weirdAmount);
     case MeasuringUnit.kg:
       return normalizeDecimal(weirdAmount, 2);
     case MeasuringUnit.l:
@@ -375,19 +375,59 @@ export function roundToNoDecimals(amount: number): string {
 
 export function normalizeDecimal(amount: number, places: number): string {
   if ((amount * Math.pow(10, places)) % 0.5) {
+    debugger
     return (Math.round(amount * Math.pow(10, places)) / Math.pow(10, places)).toString();
   } else return amount.toString();
 }
 
-export function getNiceDecimal(amount: number): string {
+export function getNiceDecimalHalvesOnly(amount: number): string{
   if ((amount * 10) % 10) {
     let remainder = (amount * 10) % 10;
     if (remainder > 0 && remainder < 3) {
-      return (Math.floor(amount) > 0 ? Math.floor(amount) : 0.5).toString();
+      return Math.floor(amount) > 0 ? Math.floor(amount).toString() : '&#189;';
     } else if (remainder >= 3 && remainder < 7) {
-      return (Math.floor(amount) + 0.5).toString();
+      return Math.floor(amount) > 0 ? Math.floor(amount).toString() + ' &#189;' : '&#189;';
     } else {
       return (Math.ceil(amount)).toString();
+    }
+  } else return amount.toString();
+}
+
+// return 1/2, 1/3, 1/4
+export function getNiceDecimal(amount: number): string {
+  let remainder = (amount * 1000) % 1000;
+  debugger
+  if(amount < 1 && remainder){    
+    if (remainder > 0 && remainder < 125) {
+      return '&#188;'
+    } else if (remainder >= 125 && remainder < 275) {
+      return '&#188;';
+    } else if (remainder >= 275 && remainder < 400) {
+      return '&#8531;';
+    } else if (remainder >= 400 && remainder < 550) {
+      return '&#189;';
+    } else if (remainder >= 550 && remainder < 675) {
+      return '&#8532;';
+    } else if (remainder >= 675 && remainder < 875) {
+      return '&#190;';
+    } else {
+      return '1'
+    }
+  } else if (remainder) {
+    if (remainder > 0 && remainder < 125) {
+      return Math.floor(amount) > 0 ? Math.floor(amount).toString() : '&#188;'
+    } else if (remainder >= 125 && remainder < 275) {
+      return (Math.floor(amount)).toString() + ' &#188;';
+    } else if (remainder >= 275 && remainder < 400) {
+      return (Math.floor(amount)).toString() + ' &#8531;';
+    } else if (remainder >= 400 && remainder < 550) {
+      return (Math.floor(amount)).toString() + ' &#189;';
+    } else if (remainder >= 550 && remainder < 675) {
+      return (Math.floor(amount)).toString() + ' &#8532;';
+    } else if (remainder >= 675 && remainder < 875) {
+      return (Math.floor(amount)).toString() + ' &#190;';
+    } else {
+      return Math.ceil(amount) > 0? (Math.ceil(amount)).toString() : '&#188;';
     }
   } else return amount.toString();
 }

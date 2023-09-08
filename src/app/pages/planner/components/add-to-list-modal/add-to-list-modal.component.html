@@ -66,14 +66,11 @@
           <ion-label>
             <h4>
               {{ getrecipyName(id) }}
-              <span *ngIf="ingredient.unit !== 13">
-                {{
-                  +childItem.amount
+              <span *ngIf="ingredient.unit !== 13" [innerHTML]="+childItem.amount
                     | convertToSelectedUnit
                       : childItem.product
                       : ingredient.unit
-                    | normalizeDisplayedAmount : ingredient.unit
-                }}
+                    | normalizeDisplayedAmount : ingredient.unit">                
               </span>
               <span *ngIf="ingredient.unit === 13"> за смаком </span>
               <span>{{ getUnitText(ingredient.unit) }}</span>

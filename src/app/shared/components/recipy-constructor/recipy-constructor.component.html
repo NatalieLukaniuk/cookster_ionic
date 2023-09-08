@@ -76,13 +76,11 @@
           <app-add-group-modal *ngIf="isSplitIntoGroups && !ingredient.group" [ingredindex]="ingredients.length"
             [groups]="groups" (onGroupSelected)="onGroupSelected($event, index)"></app-add-group-modal>
           <div>
-            <span *ngIf="ingredient.defaultUnit !== MeasuringUnit.none">{{
-              ingredient.amount
+            <span *ngIf="ingredient.defaultUnit !== MeasuringUnit.none" [innerHTML]="ingredient.amount
               | convertToSelectedUnit
               : ingredient.product
               : ingredient.defaultUnit
-              | normalizeDisplayedAmount : ingredient.defaultUnit
-              }}</span>
+              | normalizeDisplayedAmount : ingredient.defaultUnit"></span>
             <span> {{ getUnitText(ingredient.defaultUnit) }}</span>
           </div>
         </ion-label>
