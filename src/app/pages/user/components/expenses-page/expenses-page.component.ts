@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-expenses-page',
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./expenses-page.component.scss']
 })
 export class ExpensesPageComponent {
+  constructor(private router: Router, private route: ActivatedRoute,){}
 
+  goRecordExpenses(){
+    this.router.navigate(['tabs','expenses', 'record'], {relativeTo: this.route.parent});
+  }
 }
