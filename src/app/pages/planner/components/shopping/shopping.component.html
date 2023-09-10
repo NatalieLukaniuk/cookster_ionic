@@ -22,12 +22,10 @@
       >
       <ion-label class="ion-text-wrap">
         <h3>{{ ingred.name }}</h3>
-        <p *ngIf="ingred.unit !== 13">
-          {{
-            ingred.total
+        <p *ngIf="ingred.unit !== 13" [innerHTML]="ingred.total
               | convertToSelectedUnit : ingred.id : ingred.unit
-              | normalizeDisplayedAmount : ingred.unit
-          }}
+              | normalizeDisplayedAmount : ingred.unit ">
+          
           {{ getUnitText(ingred.unit) }}
         </p>
       </ion-label>
@@ -40,12 +38,9 @@
               <span>
                 {{ getrecipyName(id) }}
               </span>
-              <span *ngIf="ingred.unit !== 13">
-                {{
-                  +childItem.amount
+              <span *ngIf="ingred.unit !== 13" [innerHTML]=" +childItem.amount
                     | convertToSelectedUnit : childItem.product : ingred.unit
-                    | normalizeDisplayedAmount : ingred.unit
-                }}
+                    | normalizeDisplayedAmount : ingred.unit">                
               </span>
               <span *ngIf="ingred.unit === 13"> за смаком </span>
               <span>{{ getUnitText(ingred.unit) }}</span>

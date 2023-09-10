@@ -16,3 +16,21 @@
     font-size: 14px;
   }
 }
+
+.step-edit {
+  &-container {
+    display: flex;
+    gap: 10px;
+    padding-inline: 5px;
+  }
+
+  &-textarea {
+    flex-grow: 2;
+  }
+
+  &-time {
+    flex-basis: 40px;
+    text-align: center;
+    min-width: 60px;
+  }
+}

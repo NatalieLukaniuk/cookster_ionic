@@ -8,7 +8,7 @@ import {
   convertAmountToSelectedUnit,
   getRecipyNameById,
   getUnitText,
-  NormalizeDisplayedAmount,
+  NormalizeDisplayedAmountGetNumber,
 } from 'src/app/pages/recipies/utils/recipy.utils';
 import * as moment from 'moment';
 import { DialogsService } from 'src/app/services/dialogs.service';
@@ -44,7 +44,7 @@ export class AddToListModalComponent implements OnInit {
         this.ingredient.id,
         this.datamapping.products$.value
       );
-      let normalized = NormalizeDisplayedAmount(
+      let normalized = NormalizeDisplayedAmountGetNumber(
         converted,
         this.ingredient.unit
       );

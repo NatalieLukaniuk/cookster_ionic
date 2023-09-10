@@ -8,6 +8,11 @@
         <p [class.timed-out]="isTimePassed(prep)">{{prep.fullDate | date:'shortTime'}}</p>
       </ion-item>
       <ion-item-options>
+        <ion-item-option (click)="onEditReminder(prep)">
+          <div>
+            <ion-icon name="create-outline" class="small-icon"></ion-icon>
+          </div>
+        </ion-item-option>
         <ion-item-option (click)="markAsDone(prep)">
           <div>
             <ion-icon name="checkmark-outline" class="small-icon"></ion-icon>

@@ -11,11 +11,13 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { IonModal } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, IonModal } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
-import { take, map, combineLatest, BehaviorSubject, takeUntil, Subject } from 'rxjs';
+import { take, map, combineLatest, BehaviorSubject, takeUntil, Subject, tap } from 'rxjs';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
+import { FiltersService } from 'src/app/filters/services/filters.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-add-recipy-modal',
@@ -38,25 +40,41 @@ export class AddRecipyModalComponent implements OnDestroy {
 
   destroy$ = new Subject<void>();
 
+  filters$ = this.filtersService.getFilters;
+
+  recipies: Recipy[] = [];
+
+  numberOfRecipiesToDisplay = 10;
+
   recipies$ = combineLatest([
     this.store.pipe(select(getAllRecipies), take(1)),
     this.collectionSelected$,
+    this.filters$
   ]).pipe(
     map((res) => {
-      let [recipies, collection] = res;
+      let [recipies, collection, filters] = res;
+      const clonedRecipies = _.cloneDeep(recipies);
       if (collection && collection.name === 'all') {
-        return recipies;
+        return this.filtersService.applyFilters(clonedRecipies, filters);
       } else if (collection && collection.name !== 'all') {
-        return recipies.filter((rec) => collection!.recipies!.includes(rec.id));
+        const recipiesInCollection = clonedRecipies.filter((rec) => collection!.recipies!.includes(rec.id));
+        return this.filtersService.applyFilters(recipiesInCollection, filters)
       } else return [];
-    })
+    }),
+    tap(recipies => this.recipies = recipies)
   );
 
   Math = Math;
   DishType = DishType;
 
+  showGoTop = false;
+
   productChips: productPreferencesChip[] = [];
-  constructor(private store: Store<IAppState>, private datamapping: DataMappingService,) {
+  constructor(
+    private store: Store<IAppState>, 
+    private datamapping: DataMappingService,
+    private filtersService: FiltersService
+    ) {
     this.subscribeForProductChips()
   }
 
@@ -151,5 +169,20 @@ export class AddRecipyModalComponent implements OnDestroy {
 
   getProductText(id: string) {
     return this.datamapping.getProductNameById(id)
+  }
+
+  onIonInfinite(event: any){
+    this.numberOfRecipiesToDisplay += 10;
+    (event as InfiniteScrollCustomEvent).target.complete();
+  }
+
+  onscroll(event: any) {
+    this.showGoTop = event.detail.scrollTop > 500;
+  }
+
+  @ViewChild('scrollingContainer') scrollingContainer: any;
+
+  goTop() {
+    this.scrollingContainer.scrollToTop()
   }
 }

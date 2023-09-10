@@ -14,12 +14,16 @@ import {
 })
 export class ProductAutocompleteComponent {
   @Input() products: Product[] = [];
+  @Input() isAddNewProductEnabled = false;
 
   @Output() productSelected = new EventEmitter<Product>();
+  @Output() onAddProduct = new EventEmitter<void>();
 
   keyword = 'name';
 
   selectedProduct: Product | null = null;
+
+  presentingElement: Element | undefined | null;
 
   isSelected = false;
 
@@ -36,5 +40,9 @@ export class ProductAutocompleteComponent {
   @ViewChild('autocomplete') autocomplete: any;
   clearSearch() {
     this.autocomplete.clear();
+  }
+
+  addNewProduct() {
+    this.onAddProduct.emit();
   }
 }

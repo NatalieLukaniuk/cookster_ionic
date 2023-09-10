@@ -9,6 +9,12 @@ import { CalendarService } from 'src/app/services/calendar.service';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
+export enum CalendarTabs {
+  Menu = 'menu',
+  Reminders = 'preps',
+  Products = 'products'
+}
+
 @Component({
   selector: 'app-calendar-core',
   templateUrl: './calendar-core.component.html',
@@ -33,10 +39,12 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
 
   isPassedReminders = false;
 
+  CalendarTabs = CalendarTabs;
+
   tabs = [
-    { value: 'menu', icon: '', name: 'Меню' },
-    { value: 'preps', icon: '', name: 'Нагадування' },
-    { value: 'products', icon: '', name: 'Продукти' },
+    { value: CalendarTabs.Menu, icon: '', name: 'Меню' },
+    { value: CalendarTabs.Reminders, icon: '', name: 'Нагадування' },
+    { value: CalendarTabs.Products, icon: '', name: 'Продукти' },
   ];
 
   prepsNumber = 0;
@@ -78,7 +86,7 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
 
   getDayDetails() {
     if (this.currentDay) {
-      this.store.pipe(select(getCurrentUser)).subscribe((user) => {
+      this.store.pipe(select(getCurrentUser), takeUntil(this.dayChanged$)).subscribe((user) => {
         let stringDay = this.currentDay!.clone().format('DDMMYYYY');
         if (user) {
           this.currentUser = user;
@@ -133,8 +141,9 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
           if (user.savedPreps) {
             this.reminders = user.savedPreps.filter(prep => prep.calendarDay === this._day?.details.day);
             this.prepsNumber = this.reminders.length;
-            this.isPassedReminders = this.checkTimePassed(this.reminders);
+            this.isPassedReminders = this.checkTimePassed(this.reminders);            
           }
+          this.checkCurrentTab()
         }
       });
     }
@@ -153,5 +162,19 @@ export class CalendarCoreComponent implements OnInit, OnDestroy {
 
   checkTimePassed(reminderList: Reminder[]): boolean {
     return !!reminderList.find((sugg) => this.isTimePassed(sugg));
+  }
+
+  isTabDisplayed(tab: CalendarTabs) {
+    switch (tab) {
+      case CalendarTabs.Menu:
+      case CalendarTabs.Products: return true;
+      case CalendarTabs.Reminders: return this.prepsNumber > 0
+    }
+  }
+
+  checkCurrentTab(){
+    if(!this.isTabDisplayed(this.currentTab)){
+      this.currentTab = CalendarTabs.Menu
+    }
   }
 }

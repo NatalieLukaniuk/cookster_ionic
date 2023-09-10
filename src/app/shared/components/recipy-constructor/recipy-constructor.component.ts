@@ -44,8 +44,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
   tabs = [
     { value: 'info', icon: '', name: 'Інформація' },
     { value: 'ingredients', icon: '', name: 'Інгридієнти' },
-    { value: 'steps', icon: '', name: 'Приготування' },
-    { value: 'preps', icon: '', name: 'Заготовки' },
+    { value: 'steps', icon: '', name: 'Приготування' }
   ];
 
   get isPublished() {
@@ -76,6 +75,8 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   MeasuringUnit = MeasuringUnit;
 
+  isAddNewProduct = false;
+
   get groups(): Set<string> {
     let mappedArray = this.ingredients.map((ingr) => ingr.group);
     let filteredarray = mappedArray.filter((group) => group !== undefined);
@@ -84,7 +85,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   editStepIndex: number | null = null;
 
-  constructor(private store: Store, private dataMapping: DataMappingService) {}
+  constructor(private store: Store, private dataMapping: DataMappingService) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (
       !areObjectsEqual(
@@ -123,7 +124,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
       if (this.recipyToPatch.photo) {
         this.photo = this.recipyToPatch.photo;
       }
-      if(this.recipyToPatch.portionSize){
+      if (this.recipyToPatch.portionSize) {
         this.portionSize = this.recipyToPatch.portionSize.toString();
       }
     }
@@ -241,7 +242,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     if (this.recipyName.length < 3) {
       list.push('Введіть назву, мінімум 3 символи');
     }
-    if(this.portionSize.length < 1){
+    if (this.portionSize.length < 1) {
       list.push('Вкажіть рекомендований розмір порції');
     }
     if (this.selectedTags.length < 1) {
@@ -321,11 +322,12 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     this.ingredients[index].group = event;
   }
 
-  onLongPress(i: number) {
-    this.editStepIndex = i;
-  }
   saveStep() {
     this.editStepIndex = null;
+  }
+
+  editStep(index: number) {
+    this.editStepIndex = index;
   }
 
   onDeletePrep(event: { ingredient: Ingredient; description: string }) {
@@ -351,7 +353,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     });
   }
 
-  reset(){
+  reset() {
     this.recipyName = '';
     this.isSplitIntoGroups = false;
     this.complexity = Complexity.simple;
@@ -362,5 +364,12 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     this.steps = [];
     this.photo = '';
     this.portionSize = '';
+  }
+  getRecommendedPortion() {
+    const recommendedCaloriesPerPortion = 500;
+    const totalPortion = this.ingredients.map(ingr => ingr.amount).reduce((prev, cur) => cur += prev);
+    const totalCal = this.dataMapping.countRecipyTotalCalories(this.ingredients);
+    const recommended = totalPortion * recommendedCaloriesPerPortion / totalCal;
+    this.portionSize = Math.round(recommended).toString();
   }
 }

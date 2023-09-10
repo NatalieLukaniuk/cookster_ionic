@@ -18,6 +18,8 @@
       <ion-label position="floating">Рекомендований розмір порції (для дорослого):</ion-label>
       <ion-input [(ngModel)]="portionSize" type="number"></ion-input>
     </ion-item>
+    <ion-button *ngIf="!!ingredients.length" (click)="getRecommendedPortion()">Порахувати рекомендований розмір
+      порції</ion-button>
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="tertiary">
@@ -33,187 +35,111 @@
         </div>
       </ion-accordion>
       <ion-accordion value="second">
-        <ion-item
-          slot="header"
-          [color]="selectedTags.length ? 'tertiary' : 'light'"
-        >
+        <ion-item slot="header" [color]="selectedTags.length ? 'tertiary' : 'light'">
           <ion-label>Виберіть теги</ion-label>
         </ion-item>
 
         <div class="chip-selection-list" slot="content">
-            <ion-chip *ngFor="let tag of tags" (click)="onTagClicked(tag)" [color]="selectedTags.includes(tag)? 'primary' : 'secondary'">
-              <span>{{ getTagsText(tag) }}</span>
-            </ion-chip>
+          <ion-chip *ngFor="let tag of tags" (click)="onTagClicked(tag)"
+            [color]="selectedTags.includes(tag)? 'primary' : 'secondary'">
+            <span>{{ getTagsText(tag) }}</span>
+          </ion-chip>
         </div>
 
       </ion-accordion>
     </ion-accordion-group>
 
     <ion-item>
-      <ion-checkbox
-        slot="start"
-        [checked]="isSplitIntoGroups"
-        (ionChange)="onSplitChange($event)"
-      ></ion-checkbox>
+      <ion-checkbox slot="start" [checked]="isSplitIntoGroups" (ionChange)="onSplitChange($event)"></ion-checkbox>
       <ion-label>Розділити інгридієнти на групи</ion-label>
     </ion-item>
     <ion-item>
-      <ion-checkbox
-        slot="start"
-        [checked]="isBaseRecipy"
-        (ionChange)="onBaseChange($event)"
-      ></ion-checkbox>
+      <ion-checkbox slot="start" [checked]="isBaseRecipy" (ionChange)="onBaseChange($event)"></ion-checkbox>
       <ion-label>Базовий рецепт</ion-label>
     </ion-item>
     <div>
       <app-image *ngIf="photo.length" [imagePath]="photo"></app-image>
-      <app-file-upload
-        *ngIf="!photo.length"
-        (fileUploaded)="onFileUploaded($event)"
-      ></app-file-upload>
+      <app-file-upload *ngIf="!photo.length" (fileUploaded)="onFileUploaded($event)"></app-file-upload>
     </div>
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[1].value">
     <h4 *ngIf="ingredients.length" class="padding-inline">Додані:</h4>
     <ion-list>
-      <ion-item
-        swipeLeftNoConfirmation
-        *ngFor="let ingredient of ingredients; let index = index"
-        (itemSwiped)="onDeleteIngr(index)"
-      >
+      <ion-item swipeLeftNoConfirmation *ngFor="let ingredient of ingredients; let index = index"
+        (itemSwiped)="onDeleteIngr(index)">
         <ion-label class="ingredient-item-content">
           <span>{{ getIngredient(ingredient.product) }}</span>
-          <app-add-group-modal
-            *ngIf="isSplitIntoGroups && ingredient.group"
-            [ingredindex]="index"
-            [groups]="groups"
-            [preselectedGroup]="ingredient.group"
-            [textTitle]="ingredient.group"
-            (onGroupSelected)="onGroupSelected($event, index)"
-          ></app-add-group-modal>
-          <app-add-group-modal
-            *ngIf="isSplitIntoGroups && !ingredient.group"
-            [ingredindex]="ingredients.length"
-            [groups]="groups"
-            (onGroupSelected)="onGroupSelected($event, index)"
-          ></app-add-group-modal>
+          <app-add-group-modal *ngIf="isSplitIntoGroups && ingredient.group" [ingredindex]="index" [groups]="groups"
+            [preselectedGroup]="ingredient.group" [textTitle]="ingredient.group"
+            (onGroupSelected)="onGroupSelected($event, index)"></app-add-group-modal>
+          <app-add-group-modal *ngIf="isSplitIntoGroups && !ingredient.group" [ingredindex]="ingredients.length"
+            [groups]="groups" (onGroupSelected)="onGroupSelected($event, index)"></app-add-group-modal>
           <div>
-            <span *ngIf="ingredient.defaultUnit !== MeasuringUnit.none">{{
-              ingredient.amount
-                | convertToSelectedUnit
-                  : ingredient.product
-                  : ingredient.defaultUnit
-                | normalizeDisplayedAmount : ingredient.defaultUnit
-            }}</span>
+            <span *ngIf="ingredient.defaultUnit !== MeasuringUnit.none" [innerHTML]="ingredient.amount
+              | convertToSelectedUnit
+              : ingredient.product
+              : ingredient.defaultUnit
+              | normalizeDisplayedAmount : ingredient.defaultUnit"></span>
             <span> {{ getUnitText(ingredient.defaultUnit) }}</span>
           </div>
         </ion-label>
       </ion-item>
     </ion-list>
     <h4 class="padding-inline">Додати:</h4>
-    <app-add-ingredient
-            [isSplitIntoGroups]="isSplitIntoGroups"
-            [groups]="groups"
-            (addNewIngredient)="onAddIngredient($event)"
-          ></app-add-ingredient>
-
-    <!-- <ion-accordion-group>
-      <ion-accordion value="first">
-        <ion-item slot="header" color="light">
-          <ion-label>Додати інгридієнт</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <app-add-ingredient
-            [isSplitIntoGroups]="isSplitIntoGroups"
-            [groups]="groups"
-            (addNewIngredient)="onAddIngredient($event)"
-          ></app-add-ingredient>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group> -->
+    <app-add-ingredient [isSplitIntoGroups]="isSplitIntoGroups" [groups]="groups"
+      (addNewIngredient)="onAddIngredient($event)" (onAddProduct)="isAddNewProduct = true"></app-add-ingredient>
+    <ng-container *ngIf="isAddNewProduct">
+      <h4>Додати новий продукт:</h4>
+      <app-add-product-form (productAdded)="isAddNewProduct = false"></app-add-product-form>
+      <ion-button expand="full" (click)="isAddNewProduct = false">Скасувати додавання продукту</ion-button>
+    </ng-container>
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[2].value">
-    <div *ngIf="editStepIndex !== null">
-      <ion-list [inset]="true">
-        <ion-list-header>Редагування</ion-list-header>
-        <ion-item color="light">
-          <ion-label position="floating" class="edit-input">Опис</ion-label>
-          <ion-textarea
-            placeholder="Type something here"
-            [autoGrow]="true"
-            [(ngModel)]="steps[editStepIndex].description"
-          >
-          </ion-textarea>
-        </ion-item>
-        <ion-item color="light">
-          <ion-label position="floating">Активний час в хвилинах</ion-label>
-          <ion-input
-            type="tel"
-            [(ngModel)]="steps[editStepIndex].timeActive"
-          ></ion-input>
-        </ion-item>
-        <ion-item color="light">
-          <ion-label position="floating">Пасивний час в хвилинах</ion-label>
-          <ion-input
-            type="tel"
-            [(ngModel)]="steps[editStepIndex].timePassive"
-          ></ion-input>
-        </ion-item>
-      </ion-list>
-
-      <ion-button expand="full" (click)="saveStep()">Зберегти</ion-button>
-    </div>
     <ion-list>
-      <ion-reorder-group
-        [disabled]="false"
-        (ionItemReorder)="handleReorder($any($event))"
-      >
-        <ion-item
-          class="step"
-          *ngFor="let step of steps; let index = index"
-          swipeLeftNoConfirmation
-          (itemSwiped)="onDeleteStep(step)"
-        >
-          <ion-label class="ingredient-item-content">
-            <span
-              class="step-description"
-              appLongPress
-              (press)="onLongPress(index)"
-              >{{ step.description }}</span
-            >
-            <span class="step-time"
-              ><ion-icon name="american-football-outline"></ion-icon
-              >{{ step.timeActive | normalizeTime }}
-              <ion-icon name="beer-outline"></ion-icon
-              >{{ step.timePassive | normalizeTime }}</span
-            >
-          </ion-label>
-          <ion-reorder slot="end"></ion-reorder>
-        </ion-item>
+      <ion-reorder-group [disabled]="false" (ionItemReorder)="handleReorder($any($event))">
+
+        <ng-container *ngFor="let step of steps; let index = index">
+          <ng-container *ngIf="index !== editStepIndex">
+            <ion-item-sliding class="slidingContainer">
+              <ion-item class="step">
+                <ion-label class="ingredient-item-content">
+                  <span class="step-description">{{ step.description }}</span>
+                  <span class="step-time"><ion-icon name="american-football-outline"></ion-icon>{{ step.timeActive |
+                    normalizeTime }}
+                    <ion-icon name="beer-outline"></ion-icon>{{ step.timePassive | normalizeTime }}</span>
+                </ion-label>
+                <ion-reorder slot="end"></ion-reorder>
+              </ion-item>
+              <ion-item-options>
+                <ion-item-option (click)="editStep(index)">
+                  <div>
+                    <ion-icon name="create-outline" class="small-icon"></ion-icon>
+                  </div>
+                </ion-item-option>
+                <ion-item-option (click)="onDeleteStep(step)">
+                  <div>
+                    <ion-icon name="trash-outline" class="small-icon"></ion-icon>
+                  </div>
+                </ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
+          </ng-container>
+          <ng-container *ngIf="index === editStepIndex">
+            <ng-container *ngTemplateOutlet="editStepTemplate"></ng-container>
+          </ng-container>
+        </ng-container>
+
       </ion-reorder-group>
     </ion-list>
 
-    <ion-accordion-group>
-      <ion-accordion value="first">
-        <ion-item slot="header" color="light">
-          <ion-label>Додати крок</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <app-add-step (addNewStep)="onAddNewStep($event)"></app-add-step>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="tabs[3].value">
-    <app-preps
-      [ingredients]="ingredients"
-      [isSplitIntoGroups]="isSplitIntoGroups"
-      (deletePrep)="onDeletePrep($event)"
-      (addPrep)="onAddPrep($event)"
-    ></app-preps>
+    <div class="padding-inline">
+      <h4 class="padding-inline">Додати крок</h4>
+      <div>
+        <app-add-step (addNewStep)="onAddNewStep($event)"></app-add-step>
+      </div>
+    </div>
   </ng-container>
 </ng-container>
 
@@ -224,17 +150,13 @@
     </ion-item>
     <div class="ion-padding" slot="content">
       <ion-list>
-        <ion-list-header *ngIf="notReadyMandatory.length"
-          >Обов'язково:</ion-list-header
-        >
+        <ion-list-header *ngIf="notReadyMandatory.length">Обов'язково:</ion-list-header>
         <ion-item *ngFor="let item of notReadyMandatory">
           <ion-label>{{ item }}</ion-label>
         </ion-item>
       </ion-list>
       <ion-list>
-        <ion-list-header *ngIf="notReadyOptional.length"
-          >За бажанням:</ion-list-header
-        >
+        <ion-list-header *ngIf="notReadyOptional.length">За бажанням:</ion-list-header>
         <ion-item *ngFor="let item of notReadyOptional">
           <ion-label>{{ item }}</ion-label>
         </ion-item>
@@ -243,18 +165,31 @@
   </ion-accordion>
 </ion-accordion-group>
 
-<ion-button
-  expand="full"
-  (click)="recipyToPatch && isSavedDraft ? saveEditedDraft() : saveDraft()"
-  >{{
-    recipyToPatch && isSavedDraft ? "Оновити чернетку" : "Зберегти в чернетки"
-  }}</ion-button
->
-<ion-button
-  *ngIf="isReadyToPublish"
-  expand="full"
-  (click)="recipyToPatch && isPublished ? updateRecipy() : saveNewRecipy()"
-  >{{
-    recipyToPatch && isPublished ? "Оновити рецепт" : "Опублікувати"
-  }}</ion-button
->
+<ion-button expand="full" (click)="recipyToPatch && isSavedDraft ? saveEditedDraft() : saveDraft()">{{
+  recipyToPatch && isSavedDraft ? "Оновити чернетку" : "Зберегти в чернетки"
+  }}</ion-button>
+<ion-button *ngIf="isReadyToPublish" expand="full"
+  (click)="recipyToPatch && isPublished ? updateRecipy() : saveNewRecipy()">{{
+  recipyToPatch && isPublished ? "Оновити рецепт" : "Опублікувати"
+  }}</ion-button>
+
+
+<ng-template #editStepTemplate>
+  <div *ngIf="editStepIndex !== null" class="step-edit-container">
+    <div class="step-edit-textarea">
+      <ion-textarea color="primary" [autoGrow]="true" fill="solid" label="Опис кроку" labelPlacement="floating"
+        [(ngModel)]="steps[editStepIndex].description">
+      </ion-textarea>
+    </div>
+    <div class="step-edit-time">
+      <ion-icon name="american-football-outline"></ion-icon>
+      <ion-input fill="solid" type="tel" [(ngModel)]="steps[editStepIndex].timeActive"></ion-input>
+    </div>
+    <div class="step-edit-time">
+      <ion-icon name="beer-outline"></ion-icon>
+      <ion-input fill="solid" type="tel" [(ngModel)]="steps[editStepIndex].timePassive"></ion-input>
+    </div>
+  </div>
+
+  <ion-button expand="full" (click)="saveStep()">Зберегти</ion-button>
+</ng-template>

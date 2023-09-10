@@ -1,21 +1,19 @@
 <div class="ng-autocomplete" [ngClass]="{'product-selected': isSelected}">
-  <ng-autocomplete
-  #autocomplete
-  [data]="products"
-  [searchKeyword]="keyword"
-  placeholder="Введіть назву продукту"
-  (selected)="selectEvent($event)"
-  (inputCleared)="onClearSearch()"
-  [itemTemplate]="itemTemplate"
-  [notFoundTemplate]="notFoundTemplate"
->
-</ng-autocomplete>
+  <ng-autocomplete #autocomplete [data]="products" [searchKeyword]="keyword" placeholder="Введіть назву продукту"
+    (selected)="selectEvent($event)" (inputCleared)="onClearSearch()" [itemTemplate]="itemTemplate"
+    [notFoundTemplate]="isAddNewProductEnabled? notFoundAddNewTemplate : notFoundTemplate">
+  </ng-autocomplete>
 
-<ng-template #itemTemplate let-item>
-  <a [innerHTML]="item.name"></a>
-</ng-template>
+  <ng-template #itemTemplate let-item>
+    <a [innerHTML]="item.name"></a>
+  </ng-template>
 
-<ng-template #notFoundTemplate let-notFound>
-  <div [innerHTML]="notFound"></div>
-</ng-template>
+  <ng-template #notFoundTemplate let-notFound>
+    <div [innerHTML]="notFound"></div>
+  </ng-template>
+  <ng-template #notFoundAddNewTemplate>
+    <ion-button (click)="addNewProduct()" expand="block" size="small">
+      Продукт відстуній в базі даних, додати
+    </ion-button>
+  </ng-template>
 </div>

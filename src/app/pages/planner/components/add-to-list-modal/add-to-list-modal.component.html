@@ -65,18 +65,14 @@
         <ion-item *ngFor="let id of childItem.recipyId">
           <ion-label>
             <h4>
-              {{ getrecipyName(id) }}
-              <span *ngIf="ingredient.unit !== 13">
-                {{
-                  +childItem.amount
+              {{ getrecipyName(id) }}<br>
+              <span *ngIf="ingredient.unit !== 13 && +childItem.amount; else noUnit" [innerHTML]="+childItem.amount
                     | convertToSelectedUnit
                       : childItem.product
                       : ingredient.unit
-                    | normalizeDisplayedAmount : ingredient.unit
-                }}
-              </span>
-              <span *ngIf="ingredient.unit === 13"> за смаком </span>
-              <span>{{ getUnitText(ingredient.unit) }}</span>
+                    | normalizeDisplayedAmount : ingredient.unit">                
+              </span>              
+              <span *ngIf="ingredient.unit !== 13 && +childItem.amount"> {{ getUnitText(ingredient.unit) }}</span>
             </h4>
             <p>
               {{
@@ -99,3 +95,7 @@
     >{{ confirmButton }}</ion-button
   >
 </ion-content>
+
+<ng-template #noUnit>
+  <span> за смаком </span>
+</ng-template>

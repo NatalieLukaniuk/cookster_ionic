@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+      </ion-buttons>
+      <!-- <ion-title>Welcome</ion-title> -->
+      <ion-buttons slot="end">
+        <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-item>
+      <ion-label position="floating">Виберіть зі списку:</ion-label>
+      <ion-radio-group [(ngModel)]="selected">
+        <ion-item *ngFor="let item of list">
+            <ion-radio [value]="item">{{item}}</ion-radio>
+        </ion-item>
+        
+        
+      </ion-radio-group>
+    </ion-item>
+  </ion-content>

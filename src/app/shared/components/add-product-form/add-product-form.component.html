@@ -1,0 +1,51 @@
+<form [formGroup]="productForm" novalidate class="add-product-wrapper">
+  <ion-item>
+    <ion-input label="Назва" labelPlacement="floating" formControlName="name" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input label="Щільність в кг/дм3" labelPlacement="floating" formControlName="density" type="tel"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input label="Грамів в одній штуці середньої величини" labelPlacement="floating" formControlName="grInOneItem"
+      type="tel"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input label="Ккал в 100гр" labelPlacement="floating" formControlName="calories" type="tel"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input label="Коефіцієнт зміни кількості при приготуванні" labelPlacement="floating"
+      formControlName="sizeChangeCoef" type="tel"></ion-input>
+  </ion-item>
+
+  <ion-accordion-group>
+    <ion-accordion value="first">
+      <ion-item slot="header" [color]="
+      productForm.controls['defaultUnit'].valid ? 'tertiary' : 'light'
+    ">
+        <ion-label>Виберіть одиницю виміру</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-radio-group formControlName="defaultUnit">
+          <ion-item *ngFor="let unit of measuringUnits">
+            <ion-radio labelPlacement="start" [value]="unit">{{ getMeasuringUnitText(unit) }}</ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="second">
+      <ion-item slot="header" [color]="productForm.controls['type'].valid ? 'tertiary' : 'light'">
+        <ion-label>Виберіть тип продукту</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-radio-group formControlName="type">
+          <ion-item *ngFor="let type of productTypes">
+            <ion-radio labelPlacement="start" [value]="type">{{ getProductTypeText(type) }}</ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+</form>
+<ion-button expand="full" [disabled]="productForm.invalid" (click)="submit()">Зберегти</ion-button>

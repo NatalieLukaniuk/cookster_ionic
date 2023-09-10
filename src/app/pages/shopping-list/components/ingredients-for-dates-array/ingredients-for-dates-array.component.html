@@ -15,13 +15,9 @@
           {{ getAmountInList(ingred) }}</ion-chip>
         <ion-label class="ion-text-wrap">
           <h3>{{ ingred.name }}</h3>
-          <p *ngIf="ingred.unit !== 13">
-            {{
-            ingred.total
+          <p *ngIf="ingred.unit !== 13 && !!ingred.total" [innerHTML]="(ingred.total
             | convertToSelectedUnit : ingred.id : ingred.unit
-            | normalizeDisplayedAmount : ingred.unit
-            }}
-            {{ getUnitText(ingred.unit) }}
+            | normalizeDisplayedAmount : ingred.unit) + ' ' + getUnitText(ingred.unit)">          
           </p>
         </ion-label>
       </ion-item>
@@ -33,15 +29,11 @@
                 <span>
                   {{ getrecipyName(id) }}
                 </span>
-                <span *ngIf="ingred.unit !== 13">
-                  {{
-                  +childItem.amount
+                <span *ngIf="ingred.unit !== 13 && !!+childItem.amount; else noUnit" [innerHTML]="+childItem.amount
                   | convertToSelectedUnit : childItem.product : ingred.unit
-                  | normalizeDisplayedAmount : ingred.unit
-                  }}
-                </span>
-                <span *ngIf="ingred.unit === 13"> за смаком </span>
-                <span>{{ getUnitText(ingred.unit) }}</span>
+                  | normalizeDisplayedAmount : ingred.unit">                  
+                </span>                
+                <span *ngIf="ingred.unit !== 13 && !!+childItem.amount">{{ getUnitText(ingred.unit) }}</span>
               </ng-container>
             </div>
           </div>
@@ -50,3 +42,7 @@
     </ion-item-sliding>
   </ion-list>
 </ion-content>
+
+<ng-template #noUnit>
+  <span> за смаком </span>
+</ng-template>
