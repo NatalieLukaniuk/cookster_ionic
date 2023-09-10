@@ -1,3 +1,4 @@
+import { ExpenseItem } from '../expenses/expenses-models';
 import { DayDetails, Reminder } from './calendar.models';
 import { PlannerByDate, ShoppingList, ShoppingListItem } from './planner.models';
 import { DraftRecipy, RecipyCollection } from './recipies.models';
@@ -15,7 +16,8 @@ export interface User {
   collections?: RecipyCollection[];
   draftRecipies?: DraftRecipy[];
   preferences?: Preferences;
-  family?: FamilyMember[]
+  family?: FamilyMember[];
+  expenses?: ExpenseItem[];
 }
 
 export enum Role {
