@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserPage } from './user.page';
 import { EditFamilyComponent } from './components/edit-family/edit-family.component';
 import { ManageCollectionsComponent } from './components/manage-collections/manage-collections.component';
+import { ExpensesPageComponent } from './components/expenses-page/expenses-page.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,11 @@ const routes: Routes = [
     path: 'manage-collections',
     pathMatch: 'full',
     component: ManageCollectionsComponent
+  },
+  {
+    path: 'manage-expenses',
+    pathMatch: 'full',
+    component: ExpensesPageComponent
   },
 ];
 

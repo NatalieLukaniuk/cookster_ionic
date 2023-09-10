@@ -28,6 +28,10 @@ export class UserPage implements OnInit {
       title: 'Колекції',
       link: 'manage-collections'
     },
+    {
+      title: 'Витрати',
+      link: 'manage-expenses'
+    },
   ]
 
   currentUser: User | null = null;
