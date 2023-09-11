@@ -32,6 +32,7 @@ import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-
 import { AddReminderModalComponent } from './components/dialogs/add-reminder-modal/add-reminder-modal.component';
 import { ControllerListSelectDialogComponent } from './components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { AddProductFormComponent } from './components/add-product-form/add-product-form.component';
+import { InputWithAutocompleteComponent } from './components/input-with-autocomplete/input-with-autocomplete.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { AddProductFormComponent } from './components/add-product-form/add-produ
     RecipyShortViewComponent,
     AddReminderModalComponent,
     ControllerListSelectDialogComponent,
-    AddProductFormComponent
+    AddProductFormComponent,
+    InputWithAutocompleteComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule],
   exports: [
@@ -85,7 +87,8 @@ import { AddProductFormComponent } from './components/add-product-form/add-produ
     LongPressDirective,
     IngredientComponent,
     RecipyShortViewComponent,
-    AddProductFormComponent
+    AddProductFormComponent,
+    InputWithAutocompleteComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
