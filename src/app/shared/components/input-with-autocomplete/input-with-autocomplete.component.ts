@@ -6,7 +6,8 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
   styleUrls: ['./input-with-autocomplete.component.scss']
 })
 export class InputWithAutocompleteComponent {
-  @Input() suggestions: string[] = []
+  @Input() suggestions: string[] = [];
+  @Input() placeholder: string = '';
 
   @Output() itemSelected = new EventEmitter<string>();
   isSelected = false;

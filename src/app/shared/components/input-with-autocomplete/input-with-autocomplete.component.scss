@@ -4,18 +4,28 @@
     overflow-y: visible;
 }
 
-::ng-deep .ng-autocomplete.selected .autocomplete-container .input-container {
-    input {
-        background-color: var(--ion-color-tertiary);
-        color: var(--ion-color-text);
-        font-size: 16px;
-    }
+::ng-deep .ng-autocomplete.selected .autocomplete-container {
 
-    .x i {
-        color: var(--ion-color-text);
+    .input-container {
+        input {
+            background-color: var(--ion-color-tertiary);
+            color: var(--ion-color-text);
+            font-size: 16px;
+        }
+
+        .x i {
+            color: var(--ion-color-text);
+        }
     }
 }
 
-::ng-deep .ng-autocomplete .suggestions-container.is-visible {
-    z-index: 10000;
+::ng-deep .ng-autocomplete {
+
+    .autocomplete-container {
+        box-shadow: none;
+    }
+
+    .suggestions-container.is-visible {
+        z-index: 10000;
+    }
 }

@@ -3,5 +3,56 @@
 </app-header>
 
 <ion-content>
-    record expense form here
+    <div class="form-container">
+        <div>
+            <app-product-autocomplete #withAutocomplete *ngIf="products$ | async" [products]="products"
+                (productSelected)="onProductSelected($event)"></app-product-autocomplete>
+        </div>
+        <div>
+            <app-input-with-autocomplete [suggestions]="brandNames" [placeholder]="'Точна назва товару'"
+                (itemSelected)="title = $event"></app-input-with-autocomplete>
+        </div>
+        <div>
+            <app-input-with-autocomplete [suggestions]="brandNames" [placeholder]="'Торгова марка виробника'"
+                (itemSelected)="brand = $event"></app-input-with-autocomplete>
+        </div>
+        <div>
+            <app-input-with-autocomplete [suggestions]="brandNames" [placeholder]="'Місце придбання'"
+                (itemSelected)="purchasePlace = $event"></app-input-with-autocomplete>
+        </div>
+        <ion-item>
+            <ion-input type="tel" label="Кількість" labelPlacement="floating" [(ngModel)]="amount"></ion-input>
+        </ion-item>
+        <div>
+            <ion-item color="tertiary">
+                <ion-label>Одиниця виміру: {{ getMeasuringUnitText(unit)}}</ion-label>
+            </ion-item>
+            <div class="chip-selection-list">
+                <ion-chip *ngFor="let unitTag of measuringUnitsOptions" (click)="unit = unitTag"
+                    [color]="unit === unitTag? 'primary' : 'secondary'">
+                    <span>{{ getMeasuringUnitText(unitTag)}}</span>
+                </ion-chip>
+            </div>
+        </div>
+        <ion-item>
+            <ion-input type="tel" label="Вартість" labelPlacement="floating" [(ngModel)]="cost"></ion-input>
+        </ion-item>
+        <div>
+            <ion-item color="tertiary">
+                <ion-label>Валюта: {{ getCurrencyText(currency)}}</ion-label>
+            </ion-item>
+            <div class="chip-selection-list">
+                <ion-chip *ngFor="let unitTag of currencyOptions" (click)="currency = unitTag"
+                    [color]="currency === unitTag? 'primary' : 'secondary'">
+                    <span>{{ getCurrencyText(unitTag)}}</span>
+                </ion-chip>
+            </div>
+        </div>
+        <div>
+            <h6 class="padding-inline">Дата:</h6>
+            <ion-datetime presentation="date" [preferWheel]="true" (ionChange)="onDateChanged($event)"></ion-datetime>
+        </div>
+
+    </div>
+
 </ion-content>

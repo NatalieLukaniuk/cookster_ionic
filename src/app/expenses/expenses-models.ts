@@ -18,3 +18,15 @@ export enum Currency {
     Dollar = 'usd',
     Euro = 'eur'
 }
+
+export const CurrencyOptions = [
+    Currency.Hruvnya,
+    Currency.Dollar,
+    Currency.Euro
+]
+
+export enum CurrencyText {
+    hrn = 'Гривня',
+    usd = 'Доллар',
+    eur = 'Євро'
+}
