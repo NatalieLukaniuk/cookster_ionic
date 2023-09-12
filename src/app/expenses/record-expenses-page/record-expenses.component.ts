@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, map, take } from 'rxjs';
 import { MeasuringUnit, MeasuringUnitOptions, MeasuringUnitText, Product, ProductType } from 'src/app/models/recipies.models';
@@ -10,6 +10,8 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import * as _ from 'lodash';
 import { UpdateUserAction } from 'src/app/store/actions/user.actions';
+import { InputWithAutocompleteComponent } from 'src/app/shared/components/input-with-autocomplete/input-with-autocomplete.component';
+import { ProductAutocompleteComponent } from 'src/app/shared/components/product-autocomplete/product-autocomplete.component';
 
 @Component({
   selector: 'app-record-expenses',
@@ -97,6 +99,11 @@ export class RecordExpensesComponent {
     this.unit = MeasuringUnit.gr;
     this.cost = '';
     this.currency = Currency.Hruvnya;
+
+    this.titleAutocomplete?.clearSearch();
+    this.productAutocomplete?.clearSearch();
+    this.brandAutocomplete?.clearSearch();
+    
   }
 
   getcostPerHundredGrInHRN(
@@ -153,4 +160,10 @@ export class RecordExpensesComponent {
     })
     this.clearForm()
   }
+
+  @ViewChild('productAutocomplete') productAutocomplete: ProductAutocompleteComponent | undefined;
+  @ViewChild('titleAutocomplete') titleAutocomplete: InputWithAutocompleteComponent | undefined;
+  @ViewChild('brandAutocomplete') brandAutocomplete: InputWithAutocompleteComponent | undefined;
+  @ViewChild('placeAutocomplete') placeAutocomplete: InputWithAutocompleteComponent | undefined;
+
 }
