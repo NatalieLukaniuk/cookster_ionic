@@ -5,11 +5,12 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { ExpensesRoutingModule } from './expenses-routing.module';
+import { ViewExpensesPageComponent } from './view-expenses-page/view-expenses-page.component';
 
 
 
 @NgModule({
-  declarations: [RecordExpensesComponent],
+  declarations: [RecordExpensesComponent, ViewExpensesPageComponent],
   imports: [
     IonicModule,
     CommonModule,

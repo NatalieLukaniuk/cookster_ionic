@@ -12,4 +12,7 @@ export class ExpensesPageComponent {
   goRecordExpenses(){
     this.router.navigate(['tabs','expenses', 'record'], {relativeTo: this.route.parent});
   }
+  goReviewExpenses(){
+    this.router.navigate(['tabs','expenses', 'view'], {relativeTo: this.route.parent});
+  }
 }
