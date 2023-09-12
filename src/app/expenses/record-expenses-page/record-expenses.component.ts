@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable, map, take } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { MeasuringUnit, MeasuringUnitOptions, MeasuringUnitText, Product, ProductType } from 'src/app/models/recipies.models';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
@@ -12,13 +12,14 @@ import * as _ from 'lodash';
 import { UpdateUserAction } from 'src/app/store/actions/user.actions';
 import { InputWithAutocompleteComponent } from 'src/app/shared/components/input-with-autocomplete/input-with-autocomplete.component';
 import { ProductAutocompleteComponent } from 'src/app/shared/components/product-autocomplete/product-autocomplete.component';
+import { User } from 'src/app/models/auth.models';
 
 @Component({
   selector: 'app-record-expenses',
   templateUrl: './record-expenses.component.html',
   styleUrls: ['./record-expenses.component.scss']
 })
-export class RecordExpensesComponent {
+export class RecordExpensesComponent implements OnInit, OnDestroy {
   productId: string = '';
   title: string = '';
   brand?: string = '';
@@ -33,6 +34,10 @@ export class RecordExpensesComponent {
   isShowDatepicker = false;
   isShowUnitPicker = false;
 
+  currentUser: User | undefined;
+
+  destroy$ = new Subject<void>();
+
   products: Product[] = [];
   products$: Observable<Product[]> = this.store.pipe(
     select(getAllProducts),
@@ -40,7 +45,7 @@ export class RecordExpensesComponent {
       if (res) {
         let products = res.map((i) => i);
         products.sort((a, b) => a.name.localeCompare(b.name));
-        this.products = products;        
+        this.products = products;
         return products;
       } else return [];
     })
@@ -50,14 +55,34 @@ export class RecordExpensesComponent {
     private store: Store<IAppState>,
     private datamapping: DataMappingService
   ) { }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-  brandNames = [
-    'Metro',
-    'Veles',
-    'ATB',
-    'Silpo',
-    'Arsen'
-  ];
+  ngOnInit(): void {
+    this.store.pipe(select(getCurrentUser), takeUntil(this.destroy$)).subscribe(user => {
+      if (user) {
+        this.currentUser = user;
+        if (user.expenses?.length) {
+          const allBrands = user.expenses.filter(expense => !!expense.brand).map(expense => expense.brand)
+          this.brandAutocompleteOptions = this.getUnique(allBrands as string[]);
+          this.titleAutocompleteOptions = this.getUnique(user.expenses.map(expense => expense.title));
+          this.placeAutocomleteOptions = this.getUnique(user.expenses.map(expense => expense.purchasePlace));
+        }
+      }
+    })
+  }
+
+  titleAutocompleteOptions: string[] = [];
+  brandAutocompleteOptions: string[] = [];
+  placeAutocomleteOptions: string[] = [];
+
+  getUnique(array: string[]): string[] {
+    const unique = new Set();
+    array.forEach(item => unique.add(item));
+    return Array.from(unique.values()) as string[];
+  }
 
   onProductSelected(event: Product) {
     this.productId = event.id;
@@ -103,7 +128,7 @@ export class RecordExpensesComponent {
     this.titleAutocomplete?.clearSearch();
     this.productAutocomplete?.clearSearch();
     this.brandAutocomplete?.clearSearch();
-    
+
   }
 
   getcostPerHundredGrInHRN(
@@ -147,17 +172,15 @@ export class RecordExpensesComponent {
       costPerHundredGrInHRN: costPerHundredGrInHRN
     }
 
-    this.store.pipe(select(getCurrentUser), take(1)).subscribe(user => {
-      if (user) {
-        const clonedUser = _.cloneDeep(user);
-        if (clonedUser.expenses) {
-          clonedUser.expenses.push(toAdd)
-        } else {
-          clonedUser.expenses = [toAdd]
-        }
-        this.store.dispatch(new UpdateUserAction(clonedUser, 'expenses record saved'))
+    if (this.currentUser) {
+      const clonedUser = _.cloneDeep(this.currentUser);
+      if (clonedUser.expenses) {
+        clonedUser.expenses.push(toAdd)
+      } else {
+        clonedUser.expenses = [toAdd]
       }
-    })
+      this.store.dispatch(new UpdateUserAction(clonedUser, 'expenses record saved'))
+    }
     this.clearForm()
   }
 

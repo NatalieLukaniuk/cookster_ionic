@@ -9,15 +9,15 @@
                 (productSelected)="onProductSelected($event)"></app-product-autocomplete>
         </div>
         <div>
-            <app-input-with-autocomplete #titleAutocomplete [suggestions]="brandNames" [placeholder]="'Точна назва товару'"
+            <app-input-with-autocomplete #titleAutocomplete [suggestions]="titleAutocompleteOptions" [placeholder]="'Точна назва товару'"
                 (itemSelected)="title = $event"></app-input-with-autocomplete>
         </div>
         <div>
-            <app-input-with-autocomplete #brandAutocomplete [suggestions]="brandNames" [placeholder]="'Торгова марка виробника'"
+            <app-input-with-autocomplete #brandAutocomplete [suggestions]="brandAutocompleteOptions" [placeholder]="'Торгова марка виробника'"
                 (itemSelected)="brand = $event"></app-input-with-autocomplete>
         </div>
         <div>
-            <app-input-with-autocomplete #placeAutocomplete [suggestions]="brandNames" [placeholder]="'Місце придбання'"
+            <app-input-with-autocomplete #placeAutocomplete [suggestions]="placeAutocomleteOptions" [placeholder]="'Місце придбання'"
                 (itemSelected)="purchasePlace = $event"></app-input-with-autocomplete>
         </div>
         <ion-item lines="none" [color]="+amount > 0? 'tertiary':''">
