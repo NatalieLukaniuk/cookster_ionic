@@ -10,7 +10,7 @@ export interface ExpenseItem {
     unit: MeasuringUnit;
     cost: number;
     currency: Currency;
-    costPerHundredGrInHRN: number
+    costPerHundredGrInHRN: number // cost per 100 gr for products in db or per 1 in selected unit for the others
 }
 
 export enum Currency {

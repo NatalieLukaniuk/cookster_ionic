@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable, map } from 'rxjs';
+import { Observable, map, take } from 'rxjs';
 import { MeasuringUnit, MeasuringUnitOptions, MeasuringUnitText, Product, ProductType } from 'src/app/models/recipies.models';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
-import { Currency, CurrencyOptions, CurrencyText } from '../expenses-models';
+import { Currency, CurrencyOptions, CurrencyText, ExpenseItem } from '../expenses-models';
+import { transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
+import { DataMappingService } from 'src/app/services/data-mapping.service';
+import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import * as _ from 'lodash';
+import { UpdateUserAction } from 'src/app/store/actions/user.actions';
 
 @Component({
   selector: 'app-record-expenses',
@@ -49,7 +54,8 @@ export class RecordExpensesComponent {
   );
 
   constructor(
-    private store: Store<IAppState>
+    private store: Store<IAppState>,
+    private datamapping: DataMappingService
   ) { }
 
   brandNames = [
@@ -60,7 +66,6 @@ export class RecordExpensesComponent {
     'Arsen'
   ];
 
-  onItemSelected(event: string) { console.log(event) }
   onProductSelected(event: Product) {
     this.productId = event.id;
   }
@@ -85,13 +90,76 @@ export class RecordExpensesComponent {
     return CurrencyText[curr]
   }
 
-  isFormValid(){
+  isFormValid() {
     return this.productId.length &&
-    this.title.length &&
-    this.purchasePlace.length &&
-    +this.amount > 0 && 
-    +this.cost > 0;
+      this.title.length &&
+      this.purchasePlace.length &&
+      +this.amount > 0 &&
+      +this.cost > 0;
   }
 
-  submit(){}
+  clearForm() {
+    this.productId = '';
+    this.title = '';
+    this.brand = '';
+    this.amount = '';
+    this.unit = MeasuringUnit.gr;
+    this.cost = '';
+    this.currency = Currency.Hruvnya;
+  }
+
+  getcostPerHundredGrInHRN(
+    productId: string,
+    amount: number,
+    unit: MeasuringUnit,
+    cost: number
+  ) {
+    if (this.isValidProduct(productId)) {
+      const totalGr = transformToGr(productId, amount, unit, this.datamapping.products$.getValue());
+      const calculatedCost = (cost / totalGr) * 100;
+      return calculatedCost;
+    } else {
+      const costPerOneSelectedUnit = cost / amount;
+      return costPerOneSelectedUnit;
+    }
+
+  }
+
+  isValidProduct(productId: string) {
+    return productId !== 'other';
+  }
+
+  submit() {
+    const costPerHundredGrInHRN = this.getcostPerHundredGrInHRN(
+      this.productId,
+      +this.amount,
+      this.unit,
+      +this.cost
+    );
+    const toAdd: ExpenseItem = {
+      productId: this.productId,
+      title: this.title,
+      brand: this.brand,
+      purchaseDate: this.purchaseDate,
+      purchasePlace: this.purchasePlace,
+      amount: +this.amount,
+      unit: this.unit,
+      cost: +this.cost,
+      currency: this.currency,
+      costPerHundredGrInHRN: costPerHundredGrInHRN
+    }
+
+    this.store.pipe(select(getCurrentUser), take(1)).subscribe(user => {
+      if (user) {
+        const clonedUser = _.cloneDeep(user);
+        if (clonedUser.expenses) {
+          clonedUser.expenses.push(toAdd)
+        } else {
+          clonedUser.expenses = [toAdd]
+        }
+        this.store.dispatch(new UpdateUserAction(clonedUser, 'expenses record saved'))
+      }
+    })
+    this.clearForm()
+  }
 }
