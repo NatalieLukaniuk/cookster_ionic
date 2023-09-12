@@ -1,0 +1,30 @@
+.text-second-level {
+    font-size: 11px;
+    color: var(--ion-color-primary);
+}
+
+p {
+    margin-block: 5px;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    gap: 0 8px;
+
+    p:first-child {
+        flex-basis: 60%;
+    }
+
+    p:nth-child(2) {
+        flex-basis: 30%;
+    }
+}
+
+.item-wrapper {
+    width: 100%;
+}
+
+ion-item {
+    margin-block: 10px;
+}

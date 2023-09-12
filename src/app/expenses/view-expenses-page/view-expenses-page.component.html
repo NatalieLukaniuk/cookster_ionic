@@ -2,5 +2,9 @@
     <p title>Історія покупок</p>
 </app-header>
 <ion-content>
-
+    <div>
+        <ng-container *ngFor="let item of expenses$ | async">
+            <app-view-expense-item [expenseItem]="item"></app-view-expense-item>
+        </ng-container>
+    </div>
 </ion-content>
