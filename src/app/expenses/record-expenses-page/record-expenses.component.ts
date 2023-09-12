@@ -34,6 +34,10 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   isShowDatepicker = false;
   isShowUnitPicker = false;
   showAddProduct = false;
+  isShowCostCalculator = false;
+
+  originalCost = '';
+  discount = '';
 
   currentUser: User | undefined;
 
@@ -72,7 +76,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
           this.placeAutocomleteOptions = this.getUnique(user.expenses.map(expense => expense.purchasePlace));
         }
       }
-    })
+    })    
   }
 
   titleAutocompleteOptions: string[] = [];
@@ -190,4 +194,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   @ViewChild('brandAutocomplete') brandAutocomplete: InputWithAutocompleteComponent | undefined;
   @ViewChild('placeAutocomplete') placeAutocomplete: InputWithAutocompleteComponent | undefined;
 
+  calculateCost(){
+    this.cost = (+this.originalCost - +this.discount).toString();
+  }
 }
