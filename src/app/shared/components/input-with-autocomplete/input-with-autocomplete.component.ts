@@ -26,5 +26,6 @@ export class InputWithAutocompleteComponent {
   @ViewChild('autocomplete') autocomplete: any;
   clearSearch() {
     this.autocomplete.clear();
+    this.autocomplete.close();
   }
 }
