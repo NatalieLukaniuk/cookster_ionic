@@ -20,39 +20,44 @@
             <app-input-with-autocomplete [suggestions]="brandNames" [placeholder]="'Місце придбання'"
                 (itemSelected)="purchasePlace = $event"></app-input-with-autocomplete>
         </div>
-        <ion-item>
-            <ion-input type="tel" label="Кількість" labelPlacement="floating" [(ngModel)]="amount"></ion-input>
+        <ion-item lines="none" [color]="+amount > 0? 'tertiary':''">
+            <ion-input type="tel" label="Кількість:" [(ngModel)]="amount"></ion-input>
         </ion-item>
         <div>
-            <ion-item color="tertiary">
+            <ion-item color="tertiary" lines="none" (click)="isShowUnitPicker = !isShowUnitPicker">
                 <ion-label>Одиниця виміру: {{ getMeasuringUnitText(unit)}}</ion-label>
             </ion-item>
-            <div class="chip-selection-list">
+            <div *ngIf="isShowUnitPicker" class="chip-selection-list">
                 <ion-chip *ngFor="let unitTag of measuringUnitsOptions" (click)="unit = unitTag"
                     [color]="unit === unitTag? 'primary' : 'secondary'">
                     <span>{{ getMeasuringUnitText(unitTag)}}</span>
                 </ion-chip>
             </div>
         </div>
-        <ion-item>
-            <ion-input type="tel" label="Вартість" labelPlacement="floating" [(ngModel)]="cost"></ion-input>
+        <ion-item lines="none" [color]="+cost > 0? 'tertiary':''">
+            <ion-input type="tel" label="Вартість:" [(ngModel)]="cost"></ion-input>
         </ion-item>
         <div>
-            <ion-item color="tertiary">
+            <ion-item color="tertiary" (click)="isShowCurrencyPicker = !isShowCurrencyPicker" lines="none">
                 <ion-label>Валюта: {{ getCurrencyText(currency)}}</ion-label>
             </ion-item>
-            <div class="chip-selection-list">
+            <div *ngIf="isShowCurrencyPicker" class="chip-selection-list">
                 <ion-chip *ngFor="let unitTag of currencyOptions" (click)="currency = unitTag"
                     [color]="currency === unitTag? 'primary' : 'secondary'">
                     <span>{{ getCurrencyText(unitTag)}}</span>
                 </ion-chip>
             </div>
         </div>
-        <div>
-            <h6 class="padding-inline">Дата:</h6>
-            <ion-datetime presentation="date" [preferWheel]="true" (ionChange)="onDateChanged($event)"></ion-datetime>
-        </div>
-
+        <ion-item color="tertiary" lines="none" (click)="isShowDatepicker = !isShowDatepicker">
+            <div>
+                <h6>
+                    Дата: {{purchaseDate | date}}
+                </h6>
+                <ion-datetime *ngIf="isShowDatepicker" presentation="date" [preferWheel]="true"
+                    (ionChange)="onDateChanged($event)"></ion-datetime>
+            </div>
+        </ion-item>
+        <ion-button expand="full" (click)="submit()" [disabled]="!isFormValid()">Додати</ion-button>
     </div>
 
 </ion-content>

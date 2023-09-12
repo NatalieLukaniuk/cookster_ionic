@@ -17,10 +17,14 @@ export class RecordExpensesComponent {
   brand?: string = '';
   purchasePlace: string = '';
   purchaseDate: Date = new Date();
-  amount: number = 0;
+  amount: string = '';
   unit: MeasuringUnit = MeasuringUnit.gr;
-  cost: number = 0;
+  cost: string = '';
   currency: Currency = Currency.Hruvnya;
+
+  isShowCurrencyPicker = false;
+  isShowDatepicker = false;
+  isShowUnitPicker = false;
 
   products: Product[] = [];
   products$: Observable<Product[]> = this.store.pipe(
@@ -80,4 +84,14 @@ export class RecordExpensesComponent {
   getCurrencyText(curr: Currency) {
     return CurrencyText[curr]
   }
+
+  isFormValid(){
+    return this.productId.length &&
+    this.title.length &&
+    this.purchasePlace.length &&
+    +this.amount > 0 && 
+    +this.cost > 0;
+  }
+
+  submit(){}
 }
