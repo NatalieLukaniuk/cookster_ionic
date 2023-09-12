@@ -129,6 +129,8 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
     this.unit = MeasuringUnit.gr;
     this.cost = '';
     this.currency = Currency.Hruvnya;
+    this.originalCost = '';
+    this.discount = '';
 
     this.titleAutocomplete?.clearSearch();
     this.productAutocomplete?.clearSearch();
@@ -184,7 +186,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
       } else {
         clonedUser.expenses = [toAdd]
       }
-      this.store.dispatch(new UpdateUserAction(clonedUser, 'expenses record saved'))
+      this.store.dispatch(new UpdateUserAction(clonedUser, `${this.title} saved`))
     }
     this.clearForm()
   }
@@ -195,6 +197,6 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   @ViewChild('placeAutocomplete') placeAutocomplete: InputWithAutocompleteComponent | undefined;
 
   calculateCost(){
-    this.cost = (+this.originalCost - +this.discount).toString();
+    this.cost = (Math.round((+this.originalCost - +this.discount) * 100) / 100).toString();
   }
 }

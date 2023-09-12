@@ -17,6 +17,7 @@ export class InputWithAutocompleteComponent {
   selectEvent(item: string) {
     this.isSelected = true;
     this.itemSelected.emit(item);
+    this.autocomplete.close();
   }
 
   onClearSearch() {
