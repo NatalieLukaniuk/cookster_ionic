@@ -22,8 +22,6 @@ export class ProductAutocompleteComponent {
 
   keyword = 'name';
 
-  inputItem: string = '';
-
   selectedProduct: Product | null = null;
 
   presentingElement: Element | undefined | null;

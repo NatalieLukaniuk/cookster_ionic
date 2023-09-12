@@ -33,6 +33,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   isShowCurrencyPicker = false;
   isShowDatepicker = false;
   isShowUnitPicker = false;
+  showAddProduct = false;
 
   currentUser: User | undefined;
 
