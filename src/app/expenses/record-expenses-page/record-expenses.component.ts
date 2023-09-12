@@ -38,16 +38,7 @@ export class RecordExpensesComponent {
       if (res) {
         let products = res.map((i) => i);
         products.sort((a, b) => a.name.localeCompare(b.name));
-        this.products = products;
-        this.products.push({
-          name: 'Інше',
-          id: 'other',
-          density: 1,
-          calories: 0,
-          defaultUnit: MeasuringUnit.gr,
-          type: ProductType.hardItem,
-          sizeChangeCoef: 1
-        })
+        this.products = products;        
         return products;
       } else return [];
     })

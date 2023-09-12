@@ -1,4 +1,4 @@
-import { Product } from 'src/app/models/recipies.models';
+import { MeasuringUnit, Product, ProductType } from 'src/app/models/recipies.models';
 import {
   Component,
   EventEmitter,
@@ -15,11 +15,14 @@ import {
 export class ProductAutocompleteComponent {
   @Input() products: Product[] = [];
   @Input() isAddNewProductEnabled = false;
+  @Input() addNewProductAsOther = false;
 
   @Output() productSelected = new EventEmitter<Product>();
   @Output() onAddProduct = new EventEmitter<void>();
 
   keyword = 'name';
+
+  inputItem: string = '';
 
   selectedProduct: Product | null = null;
 
@@ -44,5 +47,19 @@ export class ProductAutocompleteComponent {
 
   addNewProduct() {
     this.onAddProduct.emit();
+  }
+
+  onAddAsOther(){
+    const other = {
+      name: 'Інше',
+      id: 'other',
+      density: 1,
+      calories: 0,
+      defaultUnit: MeasuringUnit.gr,
+      type: ProductType.hardItem,
+      sizeChangeCoef: 1
+    }
+    this.isSelected = true;
+    this.productSelected.emit(other)
   }
 }

@@ -5,7 +5,7 @@
 <ion-content>
     <div class="form-container">
         <div>
-            <app-product-autocomplete #withAutocomplete *ngIf="products$ | async" [products]="products"
+            <app-product-autocomplete #withAutocomplete *ngIf="products$ | async" [products]="products" [addNewProductAsOther]="true"
                 (productSelected)="onProductSelected($event)"></app-product-autocomplete>
         </div>
         <div>
