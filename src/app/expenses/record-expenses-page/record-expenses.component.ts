@@ -70,10 +70,10 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
       if (user) {
         this.currentUser = user;
         if (user.expenses?.length) {
-          const allBrands = user.expenses.filter(expense => !!expense.brand).map(expense => expense.brand)
+          const allBrands = user.expenses.filter(expense => !!expense?.brand).map(expense => expense.brand)
           this.brandAutocompleteOptions = this.getUnique(allBrands as string[]);
-          this.titleAutocompleteOptions = this.getUnique(user.expenses.map(expense => expense.title));
-          this.placeAutocomleteOptions = this.getUnique(user.expenses.map(expense => expense.purchasePlace));
+          this.titleAutocompleteOptions = this.getUnique(user.expenses.map(expense => expense?.title));
+          this.placeAutocomleteOptions = this.getUnique(user.expenses.map(expense => expense?.purchasePlace));
         }
       }
     })    
@@ -180,8 +180,9 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
     }
 
     if (this.currentUser) {
-      const clonedUser = _.cloneDeep(this.currentUser);
+      const clonedUser = _.cloneDeep(this.currentUser);      
       if (clonedUser.expenses) {
+        clonedUser.expenses = clonedUser.expenses.filter(item => !!item);
         clonedUser.expenses.push(toAdd)
       } else {
         clonedUser.expenses = [toAdd]
