@@ -7,11 +7,12 @@ import { SharedModule } from '../shared/shared.module';
 import { ExpensesRoutingModule } from './expenses-routing.module';
 import { ViewExpensesPageComponent } from './view-expenses-page/view-expenses-page.component';
 import { ViewExpenseItemComponent } from './components/view-expense-item/view-expense-item.component';
+import { CheckPricePageComponent } from './check-price-page/check-price-page.component';
 
 
 
 @NgModule({
-  declarations: [RecordExpensesComponent, ViewExpensesPageComponent, ViewExpenseItemComponent],
+  declarations: [RecordExpensesComponent, ViewExpensesPageComponent, ViewExpenseItemComponent, CheckPricePageComponent],
   imports: [
     IonicModule,
     CommonModule,

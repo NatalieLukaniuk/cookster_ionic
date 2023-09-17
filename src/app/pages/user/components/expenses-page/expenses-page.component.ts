@@ -15,4 +15,7 @@ export class ExpensesPageComponent {
   goReviewExpenses(){
     this.router.navigate(['tabs','expenses', 'view'], {relativeTo: this.route.parent});
   }
+  goCheckPrice(){
+    this.router.navigate(['tabs','expenses', 'check-price'], {relativeTo: this.route.parent});
+  }
 }
