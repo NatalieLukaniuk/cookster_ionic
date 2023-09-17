@@ -1,8 +1,8 @@
-<ion-button id="filters-modal">
+<ion-button [id]="'filters-modal' + pageId">
   <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
 </ion-button>
 
-<ion-modal trigger="filters-modal">
+<ion-modal [trigger]="'filters-modal' + pageId">
   <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -15,7 +15,7 @@
         <ion-title>Фільтри</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
+    <ion-content class="ion-padding" *ngIf="!isExpensePage; else ExpensesTemplate">
       <app-active-filters-widget></app-active-filters-widget>
       <h3>Знайдено {{ filtersService.filteredRecipies }} рецептів</h3>
       <ion-accordion-group>
@@ -24,12 +24,8 @@
             <ion-label>Показати рецепти з інгридієнтами:</ion-label>
           </ion-item>
           <div class="ion-padding accordion-content" slot="content">
-            <app-product-autocomplete
-              #withAutocomplete
-              *ngIf="products$ | async"
-              [products]="products"
-              (productSelected)="addToDisplayWith($event)"
-            ></app-product-autocomplete>
+            <app-product-autocomplete #withAutocomplete *ngIf="products$ | async" [products]="products"
+              (productSelected)="addToDisplayWith($event)"></app-product-autocomplete>
           </div>
         </ion-accordion>
         <ion-accordion value="second">
@@ -37,12 +33,8 @@
             <ion-label>Не показувати рецепти з інгридієнтами:</ion-label>
           </ion-item>
           <div class="ion-padding accordion-content" slot="content">
-            <app-product-autocomplete
-              #withoutAutocomplete
-              *ngIf="products$ | async"
-              [products]="products"
-              (productSelected)="addToDisplayWithout($event)"
-            ></app-product-autocomplete>
+            <app-product-autocomplete #withoutAutocomplete *ngIf="products$ | async" [products]="products"
+              (productSelected)="addToDisplayWithout($event)"></app-product-autocomplete>
           </div>
         </ion-accordion>
         <ion-accordion value="third">
@@ -51,13 +43,47 @@
           </ion-item>
           <div class="ion-padding" slot="content">
             <div class="chip-selection-list" slot="content" *ngIf="checkedTags$ | async">
-              <ion-chip *ngFor="let tag of tags" (click)="onTagCheck(tag)" [color]="checkedTags.includes(tag)? 'primary' : 'secondary'">
+              <ion-chip *ngFor="let tag of tags" (click)="onTagCheck(tag)"
+                [color]="checkedTags.includes(tag)? 'primary' : 'secondary'">
                 <span>{{ getTagsText(tag) }}</span>
               </ion-chip>
-          </div>
+            </div>
           </div>
         </ion-accordion>
       </ion-accordion-group>
     </ion-content>
   </ng-template>
 </ion-modal>
+
+<ng-template #ExpensesTemplate>
+  <ion-content class="ion-padding">
+    <ion-accordion-group>
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label>Фільтрувати за продуктом:</ion-label>
+        </ion-item>
+        <div class="ion-padding accordion-content" slot="content">
+          <app-product-autocomplete #withAutocomplete *ngIf="products$ | async" [products]="products"
+            (productSelected)="addToDisplayWith($event)"></app-product-autocomplete>
+        </div>
+      </ion-accordion>
+      <!-- <ion-accordion value="second">
+        <ion-item slot="header" color="light">
+          <ion-label>Не показувати рецепти з інгридієнтами:</ion-label>
+        </ion-item>
+        <div class="ion-padding accordion-content" slot="content">
+
+        </div>
+      </ion-accordion>
+      <ion-accordion value="third">
+        <ion-item slot="header" color="light">
+          <ion-label>Пошук за типом страв</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+
+        </div>
+      </ion-accordion> -->
+    </ion-accordion-group>
+  </ion-content>
+
+</ng-template>

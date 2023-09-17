@@ -8,6 +8,7 @@ import { ExpensesRoutingModule } from './expenses-routing.module';
 import { ViewExpensesPageComponent } from './view-expenses-page/view-expenses-page.component';
 import { ViewExpenseItemComponent } from './components/view-expense-item/view-expense-item.component';
 import { CheckPricePageComponent } from './check-price-page/check-price-page.component';
+import { FiltersModule } from '../filters/filters.module';
 
 
 
@@ -18,7 +19,8 @@ import { CheckPricePageComponent } from './check-price-page/check-price-page.com
     CommonModule,
     FormsModule,
     SharedModule,
-    ExpensesRoutingModule
+    ExpensesRoutingModule,
+    FiltersModule
   ]
 })
 export class ExpensesModule { }

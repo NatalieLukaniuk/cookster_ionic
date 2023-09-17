@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable, map } from 'rxjs';
+import { IAppState } from 'src/app/store/reducers';
+import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { ExpenseItem } from '../expenses-models';
 
 @Component({
   selector: 'app-check-price-page',
@@ -6,5 +11,17 @@ import { Component } from '@angular/core';
   styleUrls: ['./check-price-page.component.scss']
 })
 export class CheckPricePageComponent {
+  expenses$: Observable<ExpenseItem[]> = this.store.pipe(select(getCurrentUser), map(user => {
+    if (user && user.expenses?.length) {
+      return user.expenses
+    } else {
+      return []
+    }
+  }))
+
+  constructor(
+    private store: Store<IAppState>
+  ) { }
+
 
 }
