@@ -10,6 +10,7 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 })
 export class ViewExpenseItemComponent {
   @Input() expenseItem!: ExpenseItem;
+  @Input() color = 'secondary';
 
   MeasuringUnit = MeasuringUnit;
   constructor(private datamapping: DataMappingService) {

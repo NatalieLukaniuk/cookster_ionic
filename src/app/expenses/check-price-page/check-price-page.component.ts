@@ -30,6 +30,8 @@ export class CheckPricePageComponent {
   selectedQuantity = 100;
 
   averagePrice = 0;
+  lowestPrice = 0;
+  highestPrice = 0;
 
   isEditAverage = false;
 
@@ -50,13 +52,14 @@ export class CheckPricePageComponent {
   ) { }
 
   getAveragePrice() {
-    debugger
-    const price = this.filteredExpenses.map(expense => this.getPricePerSelectedUnitAndQuantity(expense) * (expense.costPerHundredGrInHRN /100)).reduce((a, b) => a + b, 0);
+    const price = this.filteredExpenses.map(expense => this.getInGramsPerSelectQuanityAndMeasuringUnit(expense) * (expense.costPerHundredGrInHRN / 100)).reduce((a, b) => a + b, 0);
     this.averagePrice = Math.round(price / this.filteredExpenses.length * 100) / 100;
+    this.lowestPrice = this.getLowestPrice();
+    this.highestPrice = this.getHighestPrice();
   }
 
-  getPricePerSelectedUnitAndQuantity(expense: ExpenseItem) {
-    return transformToGr(expense.productId, +this.selectedQuantity, this.selectedMeasuringUnit,  this.dataMapping.products$.getValue())
+  getInGramsPerSelectQuanityAndMeasuringUnit(expense: ExpenseItem) {
+    return transformToGr(expense.productId, +this.selectedQuantity, this.selectedMeasuringUnit, this.dataMapping.products$.getValue())
   }
 
   getMeasuringUnitText(unit: MeasuringUnit) {
@@ -65,6 +68,40 @@ export class CheckPricePageComponent {
 
   get measuringUnitsOptions() {
     return MeasuringUnitOptions
+  }
+
+  getIsBelowAverage(expense: ExpenseItem) {
+    const pricePerSelected = this.getInGramsPerSelectQuanityAndMeasuringUnit(expense) * (expense.costPerHundredGrInHRN / 100)
+    return pricePerSelected < this.averagePrice
+  }
+
+  getIsAboveAverage(expense: ExpenseItem){
+    const pricePerSelected = this.getInGramsPerSelectQuanityAndMeasuringUnit(expense) * (expense.costPerHundredGrInHRN / 100)
+    return pricePerSelected > this.averagePrice
+  }
+
+  getLowestPrice(){
+    let lowest = 100000;
+    this.filteredExpenses.forEach(item => {
+      if(item.costPerHundredGrInHRN < lowest){
+        lowest = item.costPerHundredGrInHRN
+      }
+    })
+    return lowest
+  }
+
+  getHighestPrice(){
+    let highest = 0;
+    this.filteredExpenses.forEach(item => {
+      if(item.costPerHundredGrInHRN > highest){
+        highest = item.costPerHundredGrInHRN
+      }
+    })
+    return highest
+  }
+
+  getColor(expense: ExpenseItem){
+    return expense.costPerHundredGrInHRN === this.lowestPrice? 'success' : expense.costPerHundredGrInHRN === this.highestPrice? 'warning' : this.getIsBelowAverage(expense)? 'light' : this.getIsAboveAverage(expense)? 'medium' : 'secondary'
   }
 
 }

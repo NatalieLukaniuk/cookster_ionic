@@ -19,6 +19,7 @@ import { ActiveFiltersExpensesWidgetComponent } from './components/active-filter
     FiltersComponent,
     ActiveFiltersWidgetComponent,
     SearchRecipiesFilterComponent,
+    ActiveFiltersExpensesWidgetComponent,
   ],
 })
 export class FiltersModule {}

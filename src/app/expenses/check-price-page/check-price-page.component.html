@@ -3,31 +3,36 @@
     <app-filters right-button [isExpensePage]="true" [pageId]="'check-price'"></app-filters>
 </app-header>
 <ion-content>
+    <app-active-filters-expenses-widget></app-active-filters-expenses-widget>
     <div class="average-price">
         <ion-item class="average-price-display" lines="none" color="tertiary">
-            <span>Середня ціна {{selectedQuantity}} {{getMeasuringUnitText(selectedMeasuringUnit)}}: {{averagePrice}}грн</span>
-            <ion-button [color]="isEditAverage? 'primary' : 'secondary'" slot="end" size="small" (click)="isEditAverage = !isEditAverage"><ion-icon slot="icon-only" name="create-outline"></ion-icon></ion-button>
+            <p>Середня ціна {{selectedQuantity}} {{getMeasuringUnitText(selectedMeasuringUnit)}}: <span
+                    *ngIf="averagePrice">{{averagePrice}}грн</span><span *ngIf="!averagePrice">Немає даних</span></p>
+            <ion-button [color]="isEditAverage? 'primary' : 'secondary'" slot="end" size="small"
+                (click)="isEditAverage = !isEditAverage"><ion-icon slot="icon-only"
+                    name="create-outline"></ion-icon></ion-button>
         </ion-item>
         <div *ngIf="isEditAverage" class="average-price-edit">
             <ion-item class="quantity-input-item">
                 <ion-label>Кількість:</ion-label>
                 <ion-input type="tel" [(ngModel)]="selectedQuantity" (ngModelChange)="getAveragePrice()"></ion-input>
-              </ion-item>
+            </ion-item>
             <ion-item>
-              <ion-label>Одиниця виміру: {{ getMeasuringUnitText(selectedMeasuringUnit)}}</ion-label>
+                <ion-label>Одиниця виміру: {{ getMeasuringUnitText(selectedMeasuringUnit)}}</ion-label>
             </ion-item>
             <div class="chip-selection-list">
-              <ion-chip *ngFor="let unitTag of measuringUnitsOptions" (click)="selectedMeasuringUnit = unitTag; getAveragePrice()"
-                [color]="selectedMeasuringUnit === unitTag? 'primary' : 'secondary'">
-                <span>{{ getMeasuringUnitText(unitTag)}}</span>
-              </ion-chip>
+                <ion-chip *ngFor="let unitTag of measuringUnitsOptions"
+                    (click)="selectedMeasuringUnit = unitTag; getAveragePrice()"
+                    [color]="selectedMeasuringUnit === unitTag? 'primary' : 'secondary'">
+                    <span>{{ getMeasuringUnitText(unitTag)}}</span>
+                </ion-chip>
             </div>
-          </div>
+        </div>
     </div>
-    
+
     <div class="expense-items-list">
         <ng-container *ngFor="let item of expenseItemsToDisplay$ | async">
-            <app-view-expense-item [expenseItem]="item"></app-view-expense-item>
+            <app-view-expense-item [expenseItem]="item" [color]="getColor(item)"></app-view-expense-item>
         </ng-container>
     </div>
 </ion-content>

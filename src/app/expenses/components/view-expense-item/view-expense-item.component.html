@@ -1,9 +1,9 @@
-<ion-item>
+<ion-item [color]="color">
     <div class="item-wrapper">
         <p class="text-second-level">{{productText()}}</p>
         <div class="flex">
             <p>
-                {{expenseItem.title}}
+                {{expenseItem.title}}, {{expenseItem.brand}}
             </p>
             <p class="text-second-level">
                 {{expenseItem.amount}} {{getUnitText(expenseItem.unit)}} - {{roundToTwoPlaces(expenseItem.cost)}} грн
