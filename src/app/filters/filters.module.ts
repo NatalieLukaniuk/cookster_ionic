@@ -5,12 +5,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { SharedModule } from '../shared/shared.module';
+import { ActiveFiltersExpensesWidgetComponent } from './components/active-filters-expenses-widget/active-filters-expenses-widget.component';
 
 @NgModule({
   declarations: [
     FiltersComponent,
     ActiveFiltersWidgetComponent,
     SearchRecipiesFilterComponent,
+    ActiveFiltersExpensesWidgetComponent,
   ],
   imports: [CommonModule, IonicModule, SharedModule],
   exports: [
