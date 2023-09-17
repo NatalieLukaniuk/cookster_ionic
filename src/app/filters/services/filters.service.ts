@@ -7,13 +7,14 @@ import { IAppState } from 'src/app/store/reducers';
 
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import * as _ from 'lodash';
+import { ExpenseItem } from 'src/app/expenses/expenses-models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FiltersService {
   filteredRecipies: number = 0;
-  constructor(private store: Store<IAppState>) {}
+  constructor(private store: Store<IAppState>) { }
   recipies$ = this.store.pipe(select(getAllRecipies));
 
   clearedFilters: Filters = {
@@ -77,6 +78,15 @@ export class FiltersService {
     }
     this.filteredRecipies = _recipies.length;
     return _recipies;
+  }
+
+  applyFiltersToExpenses(expenseItems: ExpenseItem[], filters: Filters) {
+    let expenses = expenseItems.map(expense => expense);
+    if (!!filters.ingredientsToInclude.length) {
+      expenses = expenses.filter(expenseItem => filters.ingredientsToInclude.includes(expenseItem.productId));
+
+    }
+    return expenses
   }
 
   onFiltersChange() {
