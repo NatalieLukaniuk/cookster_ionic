@@ -38,8 +38,9 @@
                 </ion-chip>
             </div>
         </div>
-        <ion-item lines="none" [color]="+cost > 0? 'tertiary':''" (click)="isShowCostCalculator = !isShowCostCalculator">
+        <ion-item lines="none" [color]="+cost > 0? 'tertiary':''">
             <ion-input type="tel" label="Вартість:" [(ngModel)]="cost"></ion-input>
+            <ion-icon name="calculator-outline" slot="end" (click)="isShowCostCalculator = !isShowCostCalculator"></ion-icon>
         </ion-item>
         <div *ngIf="isShowCostCalculator" class="padding-inline">
             <ion-input type="tel" label="Початкова вартість:" [(ngModel)]="originalCost" (ngModelChange)="calculateCost()"></ion-input>
