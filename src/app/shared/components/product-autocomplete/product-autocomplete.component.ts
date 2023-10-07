@@ -69,6 +69,7 @@ export class ProductAutocompleteComponent implements OnChanges {
   onClearSearch() {
     this.isSelected = false;
     this.selectedProduct = null;
+    this.initialValue = null;
   }
 
   @ViewChild('autocomplete') autocomplete: any;

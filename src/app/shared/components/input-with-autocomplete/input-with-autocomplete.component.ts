@@ -28,6 +28,7 @@ export class InputWithAutocompleteComponent {
 
   onClearSearch() {
     this.isSelected = false;
+    this.initialValue = '';
   }
 
   @ViewChild('autocomplete') autocomplete: any;
