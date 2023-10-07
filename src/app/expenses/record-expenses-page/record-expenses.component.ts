@@ -212,7 +212,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
       if(this.brand){
         this.brandAutocomplete?.setSelected(this.brand);
       }
-      
+      this.unit = found.unit      
     }
   }
 }
