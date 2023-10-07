@@ -76,7 +76,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
           this.placeAutocomleteOptions = this.getUnique(user.expenses.map(expense => expense?.purchasePlace));
         }
       }
-    })    
+    })
   }
 
   titleAutocompleteOptions: string[] = [];
@@ -126,7 +126,6 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
     this.title = '';
     this.brand = '';
     this.amount = '';
-    this.unit = MeasuringUnit.gr;
     this.cost = '';
     this.currency = Currency.Hruvnya;
     this.originalCost = '';
@@ -180,7 +179,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
     }
 
     if (this.currentUser) {
-      const clonedUser = _.cloneDeep(this.currentUser);      
+      const clonedUser = _.cloneDeep(this.currentUser);
       if (clonedUser.expenses) {
         clonedUser.expenses = clonedUser.expenses.filter(item => !!item);
         clonedUser.expenses.push(toAdd)
@@ -197,7 +196,23 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   @ViewChild('brandAutocomplete') brandAutocomplete: InputWithAutocompleteComponent | undefined;
   @ViewChild('placeAutocomplete') placeAutocomplete: InputWithAutocompleteComponent | undefined;
 
-  calculateCost(){
+  calculateCost() {
     this.cost = (Math.round((+this.originalCost - +this.discount) * 100) / 100).toString();
+  }
+
+  onExpenseNameAdded(event: string) {
+    this.title = event;
+    const found = this.currentUser?.expenses?.find((expenseItem: ExpenseItem) => expenseItem.title === event);
+
+    if (found) {
+      const productId = found.productId;      
+      this.productId = productId;
+      this.productAutocomplete?.setSelected(productId);
+      this.brand = found.brand;
+      if(this.brand){
+        this.brandAutocomplete?.setSelected(this.brand);
+      }
+      
+    }
   }
 }

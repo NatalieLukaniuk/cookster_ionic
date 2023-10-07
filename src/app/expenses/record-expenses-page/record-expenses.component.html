@@ -5,17 +5,17 @@
 <ion-content>
     <div class="form-container">
         <div>
+            <app-input-with-autocomplete #titleAutocomplete [suggestions]="titleAutocompleteOptions"
+                [placeholder]="'Точна назва товару'" (itemSelected)="onExpenseNameAdded($event)"></app-input-with-autocomplete>
+        </div>
+        <div>
             <app-product-autocomplete #productAutocomplete *ngIf="products$ | async" [products]="products"
                 [addNewProductAsOther]="true" (onAddProduct)="showAddProduct = true"
                 (productSelected)="onProductSelected($event)"></app-product-autocomplete>
         </div>
         <div *ngIf="showAddProduct">
             <app-add-product-form (productAdded)="showAddProduct = false"></app-add-product-form>
-        </div>
-        <div>
-            <app-input-with-autocomplete #titleAutocomplete [suggestions]="titleAutocompleteOptions"
-                [placeholder]="'Точна назва товару'" (itemSelected)="title = $event"></app-input-with-autocomplete>
-        </div>
+        </div>        
         <div>
             <app-input-with-autocomplete #brandAutocomplete [suggestions]="brandAutocompleteOptions"
                 [placeholder]="'Торгова марка виробника'" (itemSelected)="brand = $event"></app-input-with-autocomplete>

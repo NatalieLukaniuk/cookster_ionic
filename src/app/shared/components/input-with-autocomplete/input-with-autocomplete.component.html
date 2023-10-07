@@ -1,6 +1,7 @@
 <div class="ng-autocomplete" [ngClass]="{'selected': isSelected}">
     <ng-autocomplete #autocomplete [data]="suggestions"
     [placeholder]="placeholder"
+    [initialValue]="initialValue"
     (selected)="selectEvent($event)"
     (inputChanged)="inputItem = $event"
     (inputCleared)="onClearSearch()" [itemTemplate]="itemTemplate"

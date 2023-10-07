@@ -14,6 +14,12 @@ export class InputWithAutocompleteComponent {
 
   inputItem: string = '';
 
+  initialValue: string = ''
+
+  setSelected(value: string) {
+    this.initialValue = value;
+  }
+
   selectEvent(item: string) {
     this.isSelected = true;
     this.itemSelected.emit(item);
