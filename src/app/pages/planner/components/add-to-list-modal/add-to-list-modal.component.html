@@ -10,10 +10,10 @@
 </ion-header>
 <ion-content class="ion-padding">
   <ng-container *ngIf="!isPlannedIngredient">
-    <ion-item class="add-new-list" button detail="false">
-      <ion-label position="floating">Введіть назву:</ion-label>
-      <ion-input [(ngModel)]="newItemName"></ion-input>
-    </ion-item>
+    <div>
+      <app-input-with-autocomplete #titleAutocomplete [suggestions]="titleAutocompleteOptions"
+                [placeholder]="'Введіть назву:'" (itemSelected)="onItemSelected($event)"></app-input-with-autocomplete>
+    </div>
   </ng-container>
   <h3>Виберіть список:</h3>
   <ion-list class="lists-container">

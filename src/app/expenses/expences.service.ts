@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { IAppState } from '../store/reducers';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { ExpenseItem } from './expenses-models';
 import { MeasuringUnit } from '../models/recipies.models';
 import { DataMappingService } from '../services/data-mapping.service';
 import { transformToGr } from '../pages/recipies/utils/recipy.utils';
+import { getCurrentUser } from '../store/selectors/user.selectors';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +45,31 @@ export class ExpencesService {
       }
     })
     return highest
+  }
+
+  getExpenses(): Observable<ExpenseItem[]>{
+    return this.store.pipe(select(getCurrentUser), map(user => {
+      if (user && user.expenses?.length) {
+        return user.expenses
+      } else {
+        return []
+      }
+    }))
+  }
+
+  getTitleOptions(){
+    return this.store.pipe(select(getCurrentUser), map(user => {
+      if (user && user.expenses?.length) {
+        return this.getUnique(user.expenses.map(expense => expense.title))
+      } else {
+        return []
+      }
+    }))
+  }
+
+  getUnique(array: string[]): string[] {
+    const unique = new Set();
+    array.forEach(item => unique.add(item));
+    return Array.from(unique.values()) as string[];
   }
 }
