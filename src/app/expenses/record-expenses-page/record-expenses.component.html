@@ -1,12 +1,16 @@
-<app-header>
+<app-header *ngIf="!isModal">
     <p title>Додати покупку</p>
 </app-header>
 
 <ion-content>
     <div class="form-container">
-        <div>
+        <div *ngIf="!isModal">
             <app-input-with-autocomplete #titleAutocomplete [suggestions]="titleAutocompleteOptions"
-                [placeholder]="'Точна назва товару'" (itemSelected)="onExpenseNameAdded($event)"></app-input-with-autocomplete>
+                [placeholder]="'Точна назва товару'"
+                (itemSelected)="onExpenseNameAdded($event)"></app-input-with-autocomplete>
+        </div>
+        <div *ngIf="isModal">
+            <p class="static-title">{{title}}</p>
         </div>
         <div>
             <app-product-autocomplete #productAutocomplete *ngIf="products$ | async" [products]="products"
@@ -15,7 +19,7 @@
         </div>
         <div *ngIf="showAddProduct">
             <app-add-product-form (productAdded)="showAddProduct = false"></app-add-product-form>
-        </div>        
+        </div>
         <div>
             <app-input-with-autocomplete #brandAutocomplete [suggestions]="brandAutocompleteOptions"
                 [placeholder]="'Торгова марка виробника'" (itemSelected)="brand = $event"></app-input-with-autocomplete>
@@ -40,10 +44,12 @@
         </div>
         <ion-item lines="none" [color]="+cost > 0? 'tertiary':''">
             <ion-input type="tel" label="Вартість:" [(ngModel)]="cost"></ion-input>
-            <ion-icon name="calculator-outline" slot="end" (click)="isShowCostCalculator = !isShowCostCalculator"></ion-icon>
+            <ion-icon name="calculator-outline" slot="end"
+                (click)="isShowCostCalculator = !isShowCostCalculator"></ion-icon>
         </ion-item>
         <div *ngIf="isShowCostCalculator" class="padding-inline">
-            <ion-input type="tel" label="Початкова вартість:" [(ngModel)]="originalCost" (ngModelChange)="calculateCost()"></ion-input>
+            <ion-input type="tel" label="Початкова вартість:" [(ngModel)]="originalCost"
+                (ngModelChange)="calculateCost()"></ion-input>
             <ion-input type="tel" label="Знижка:" [(ngModel)]="discount" (ngModelChange)="calculateCost()"></ion-input>
         </div>
         <div>

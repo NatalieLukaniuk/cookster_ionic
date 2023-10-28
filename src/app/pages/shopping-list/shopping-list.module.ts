@@ -9,6 +9,7 @@ import { ShoppingListPageRoutingModule } from './shopping-list-routing.module';
 
 import { ShoppingListPage } from './shopping-list.page';
 import { IngredientsForDatesArrayComponent } from './components/ingredients-for-dates-array/ingredients-for-dates-array.component';
+import { ExpensesModule } from 'src/app/expenses/expenses.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { IngredientsForDatesArrayComponent } from './components/ingredients-for-
     FormsModule,
     IonicModule,
     ShoppingListPageRoutingModule,
-    SharedModule
+    SharedModule,
+    ExpensesModule
   ],
   declarations: [ShoppingListPage, IngredientsForDatesArrayComponent]
 })

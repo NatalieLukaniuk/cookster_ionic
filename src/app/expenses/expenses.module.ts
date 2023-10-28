@@ -21,6 +21,9 @@ import { FiltersModule } from '../filters/filters.module';
     SharedModule,
     ExpensesRoutingModule,
     FiltersModule
+  ],
+  exports: [
+    RecordExpensesComponent
   ]
 })
 export class ExpensesModule { }

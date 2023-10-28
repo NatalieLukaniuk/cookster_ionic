@@ -36,6 +36,8 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   showAddProduct = false;
   isShowCostCalculator = false;
 
+  isModal = false;
+
   originalCost = '';
   discount = '';
 
@@ -58,7 +60,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<IAppState>,
-    private datamapping: DataMappingService
+    private datamapping: DataMappingService,
   ) { }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -77,6 +79,11 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
         }
       }
     })
+    if(this.isModal){
+      setTimeout(() => {
+        this.onExpenseNameAdded(this.title)
+      }, 200)
+    }
   }
 
   titleAutocompleteOptions: string[] = [];
@@ -205,14 +212,14 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
     const found = this.currentUser?.expenses?.find((expenseItem: ExpenseItem) => expenseItem.title === event);
 
     if (found) {
-      const productId = found.productId;      
-      this.productId = productId;
+        const productId = found.productId;
+        this.productId = productId;
       this.productAutocomplete?.setSelected(productId);
-      this.brand = found.brand;
-      if(this.brand){
-        this.brandAutocomplete?.setSelected(this.brand);
-      }
-      this.unit = found.unit      
+        this.brand = found.brand;
+        if (this.brand) {
+          this.brandAutocomplete?.setSelected(this.brand);
+        }
+        this.unit = found.unit
     }
   }
 }

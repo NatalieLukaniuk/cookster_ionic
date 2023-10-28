@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { DialogsService } from 'src/app/services/dialogs.service';
 import { ControllerInputDialogComponent } from 'src/app/shared/components/dialogs/controller-input-dialog/controller-input-dialog.component';
 import { ControllerListSelectDialogComponent } from 'src/app/shared/components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
+import { RecordExpensesComponent } from 'src/app/expenses/record-expenses-page/record-expenses.component';
 
 @Component({
   selector: 'app-shopping-list',
@@ -42,6 +43,8 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     { name: 'куплені', icon: 'cart-outline' },
   ];
   currentTab = this.tabs[0].name;
+
+  isRecordExpenseOnBought = false;
 
   constructor(
     private store: Store<IAppState>,
@@ -83,6 +86,9 @@ export class ShoppingListPage implements OnInit, OnDestroy {
       return ls;
     });
     this.shoppingListService.updateShoppingList(updatedList);
+    if (this.isRecordExpenseOnBought && !item.completed) {
+      this.recordPrice(item)
+    }
   }
 
   async addCustomItem() {
@@ -153,6 +159,20 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     }
   }
 
+  @ViewChild(RecordExpensesComponent) expensesModal: RecordExpensesComponent | undefined;
+
+  async recordPrice(item: ShoppingListItem) {
+    const modal = await this.modalCtrl.create({
+      component: RecordExpensesComponent,
+      componentProps: {
+        title: item.title,
+        isModal: true
+      },
+      initialBreakpoint: 0.75
+    });
+    modal.present();
+  }
+
   async onChangeList(item: ShoppingListItem, previousListName: string) {
     let cloned = _.cloneDeep(this.activeList);
     const listNames = cloned?.map(list => list.name);
@@ -162,10 +182,10 @@ export class ShoppingListPage implements OnInit, OnDestroy {
         list: listNames,
         selected: previousListName
       },
-      initialBreakpoint: 0.75
+      initialBreakpoint: 0.75,      
     });
-    modal.present();
-
+    modal.present();   
+   
     const { data, role } = await modal.onWillDismiss();
     const newListName = data;
     if (role === 'confirm') {
@@ -177,21 +197,21 @@ export class ShoppingListPage implements OnInit, OnDestroy {
           }
           return updated;
         } else if (listItem.name === newListName && !!listItem.items?.length) {
-         const updated = {
-           ...listItem,
-           items: listItem.items.concat(item)
-         }
-         return updated;
-       } else if(listItem.name === newListName && !listItem.items?.length){
-        const updated = {
-          ...listItem,
-          items: [item]
+          const updated = {
+            ...listItem,
+            items: listItem.items.concat(item)
+          }
+          return updated;
+        } else if (listItem.name === newListName && !listItem.items?.length) {
+          const updated = {
+            ...listItem,
+            items: [item]
+          }
+          return updated;
+        } else {
+          return listItem;
         }
-        return updated;
-       } else {
-         return listItem;
-       }
-     })
+      })
 
       if (updatedList) {
         this.shoppingListService.updateShoppingList(updatedList)

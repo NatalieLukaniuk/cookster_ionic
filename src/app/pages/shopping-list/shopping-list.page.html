@@ -1,5 +1,7 @@
 <app-header>
   <span title>Список покупок</span>
+  <ion-button right-button size="small" [color]="isRecordExpenseOnBought? 'primary' : 'medium'" (click)="isRecordExpenseOnBought = !isRecordExpenseOnBought"><ion-icon name="cash-outline"
+    slot="icon-only"></ion-icon></ion-button>
   <ion-button right-button size="small" (click)="addCustomItem()"><ion-icon name="add"
       slot="icon-only"></ion-icon></ion-button>
   <ion-button *ngIf="currentTab === tabs[0].name" right-button size="small" id="open-datepicker-modal"><ion-icon
