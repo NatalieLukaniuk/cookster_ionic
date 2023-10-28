@@ -10,6 +10,7 @@ import { MeasuringUnit, MeasuringUnitOptions, MeasuringUnitText } from 'src/app/
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
 import { Filters } from 'src/app/models/filters.models';
+import { ExpencesService } from '../expences.service';
 
 @Component({
   selector: 'app-check-price-page',
@@ -65,13 +66,13 @@ export class CheckPricePageComponent {
     private store: Store<IAppState>,
     private filtersService: FiltersService,
     private dataMapping: DataMappingService,
+    private expenceService: ExpencesService
   ) { }
 
   getAveragePrice() {
-    const price = this.filteredExpenses.map(expense => this.getInGramsPerSelectQuanityAndMeasuringUnit(expense) * (expense.costPerHundredGrInHRN / 100)).reduce((a, b) => a + b, 0);
-    this.averagePrice = Math.round(price / this.filteredExpenses.length * 100) / 100;
-    this.lowestPrice = this.getLowestPrice();
-    this.highestPrice = this.getHighestPrice();
+    this.averagePrice = this.expenceService.getAveragePrice(this.filteredExpenses)
+    this.lowestPrice = this.expenceService.getLowestPrice(this.filteredExpenses);
+    this.highestPrice = this.expenceService.getHighestPrice(this.filteredExpenses);
   }
 
   getInGramsPerSelectQuanityAndMeasuringUnit(expense: ExpenseItem) {
@@ -94,26 +95,6 @@ export class CheckPricePageComponent {
   getIsAboveAverage(expense: ExpenseItem) {
     const pricePerSelected = this.getInGramsPerSelectQuanityAndMeasuringUnit(expense) * (expense.costPerHundredGrInHRN / 100)
     return pricePerSelected > this.averagePrice
-  }
-
-  getLowestPrice() {
-    let lowest = 100000;
-    this.filteredExpenses.forEach(item => {
-      if (item.costPerHundredGrInHRN < lowest) {
-        lowest = item.costPerHundredGrInHRN
-      }
-    })
-    return lowest
-  }
-
-  getHighestPrice() {
-    let highest = 0;
-    this.filteredExpenses.forEach(item => {
-      if (item.costPerHundredGrInHRN > highest) {
-        highest = item.costPerHundredGrInHRN
-      }
-    })
-    return highest
   }
 
   getColor(expense: ExpenseItem) {
