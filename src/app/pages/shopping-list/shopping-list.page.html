@@ -29,11 +29,17 @@
               <ion-list>
                 <ng-container *ngFor="let item of list.items">
                   <ion-item-sliding class="slidingContainer" *ngIf="!item.completed">
+                    <ion-item-options side="start">
+                      <div class="price-info">
+                        <p><ion-icon name="arrow-down-outline"></ion-icon> {{getLowestPrice(item.title) | async}}</p>
+                        <p><ion-icon name="arrow-up-outline"></ion-icon>  {{getHighestPrice(item.title) | async}}</p>
+                      </div>
+                    </ion-item-options>
                     <ion-item>
                       <ion-label>{{item.title}}</ion-label>
                       <ion-chip>{{ item.amount }}</ion-chip>
                     </ion-item>
-                    <ion-item-options>
+                    <ion-item-options side="end">
                       <ion-item-option (click)="onChangeList(item, list.name)">
                         <div>
                           <ion-icon name="move-outline" class="small-icon"></ion-icon>

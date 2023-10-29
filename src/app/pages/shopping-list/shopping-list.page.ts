@@ -17,6 +17,7 @@ import { DialogsService } from 'src/app/services/dialogs.service';
 import { ControllerInputDialogComponent } from 'src/app/shared/components/dialogs/controller-input-dialog/controller-input-dialog.component';
 import { ControllerListSelectDialogComponent } from 'src/app/shared/components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { RecordExpensesComponent } from 'src/app/expenses/record-expenses-page/record-expenses.component';
+import { ExpencesService } from 'src/app/expenses/expences.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -51,7 +52,8 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     private shoppingListService: ShoppingListService,
     private modalCtrl: ModalController,
     private router: Router,
-    private dialog: DialogsService
+    private dialog: DialogsService,
+    private expensesService: ExpencesService
   ) { }
 
   ngOnInit() { }
@@ -182,10 +184,10 @@ export class ShoppingListPage implements OnInit, OnDestroy {
         list: listNames,
         selected: previousListName
       },
-      initialBreakpoint: 0.75,      
+      initialBreakpoint: 0.75,
     });
-    modal.present();   
-   
+    modal.present();
+
     const { data, role } = await modal.onWillDismiss();
     const newListName = data;
     if (role === 'confirm') {
@@ -267,5 +269,13 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   closeSlidingItem() {
     document.querySelectorAll('.slidingContainer').forEach((item: any) => item.close())
+  }
+
+  getHighestPrice(title: string) {
+    return this.expensesService.getHighestPriceInfo(title)
+  }
+
+  getLowestPrice(title: string) {
+    return this.expensesService.getLowestPriceInfo(title);
   }
 }
