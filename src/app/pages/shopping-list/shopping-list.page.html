@@ -31,8 +31,8 @@
                   <ion-item-sliding class="slidingContainer" *ngIf="!item.completed">
                     <ion-item-options side="start">
                       <div class="price-info">
-                        <p><ion-icon name="arrow-down-outline"></ion-icon> {{getLowestPrice(item.title) | async}}</p>
-                        <p><ion-icon name="arrow-up-outline"></ion-icon>  {{getHighestPrice(item.title) | async}}</p>
+                        <p><ion-icon color="success" name="arrow-down-outline"></ion-icon> {{getLowestPrice(item.title) | async}}</p>
+                        <p><ion-icon color="danger" name="arrow-up-outline"></ion-icon>  {{getHighestPrice(item.title) | async}}</p>
                       </div>
                     </ion-item-options>
                     <ion-item>

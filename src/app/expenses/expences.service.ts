@@ -65,9 +65,9 @@ export class ExpencesService {
       return 'немає інформації'
     }
     if (item.productId !== 'other') {
-      return Math.round(item.costPerHundredGrInHRN * 100) / 100 + 'грн/100гр ' + item.purchasePlace + ' ' + formatDate(item.purchaseDate, 'shortDate', 'en') + (isIncludeFullTitle? ' ' + item.title : '')
+      return Math.round(item.costPerHundredGrInHRN * 100) / 100 + 'грн/100гр ' + item.purchasePlace + ' ' + formatDate(item.purchaseDate, 'MMM dd, yy', 'en') + (isIncludeFullTitle? ' ' + item.title : '')
     } else {
-      return item.cost + 'грн за ' + item.amount + ' ' + MeasuringUnitText[item.unit] + ' ' + item.purchasePlace + ' ' + formatDate(item.purchaseDate, 'shortDate', 'en');
+      return item.cost + 'грн за ' + item.amount + ' ' + MeasuringUnitText[item.unit] + ' ' + item.purchasePlace + ' ' + formatDate(item.purchaseDate, 'MMM dd, yy', 'en');
     }
   }
 

@@ -15,3 +15,13 @@
 ion-item ion-label {
     white-space: break-spaces;
 }
+
+.price-info {    
+    p {
+        margin-block: 0;
+        font-size: 12px;
+        &:not(:last-child){
+            margin-bottom: 10px;
+        }
+    }
+}

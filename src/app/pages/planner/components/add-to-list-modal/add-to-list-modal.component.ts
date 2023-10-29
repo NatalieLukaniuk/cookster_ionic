@@ -182,4 +182,12 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
   onItemSelected(event: string) {
     this.newItemName = event
   }
+
+  getHighestPrice(title: string) {
+    return this.expensesService.getHighestPriceInfo(title)
+  }
+
+  getLowestPrice(title: string) {
+    return this.expensesService.getLowestPriceInfo(title);
+  }
 }

@@ -46,7 +46,7 @@ export function getProductText(productId: string, allProducts: Product[]) {
 export function getProductIdByName(name: string, allProducts: Product[]){
   let productId = '';
   for (let product of allProducts) {
-    if (product.name === name) {
+    if (product.name.toLowerCase() === name.toLowerCase()) {
       productId = product.id;
     }
   }
