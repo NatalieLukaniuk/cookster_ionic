@@ -13,6 +13,7 @@ import { UpdateUserAction } from 'src/app/store/actions/user.actions';
 import { InputWithAutocompleteComponent } from 'src/app/shared/components/input-with-autocomplete/input-with-autocomplete.component';
 import { ProductAutocompleteComponent } from 'src/app/shared/components/product-autocomplete/product-autocomplete.component';
 import { User } from 'src/app/models/auth.models';
+import { ExpencesService } from '../expences.service';
 
 @Component({
   selector: 'app-record-expenses',
@@ -61,6 +62,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<IAppState>,
     private datamapping: DataMappingService,
+    private expensesService: ExpencesService
   ) { }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -70,15 +72,19 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.pipe(select(getCurrentUser), takeUntil(this.destroy$)).subscribe(user => {
       if (user) {
-        this.currentUser = user;
-        if (user.expenses?.length) {
-          const allBrands = user.expenses.filter(expense => !!expense?.brand).map(expense => expense.brand)
-          this.brandAutocompleteOptions = this.getUnique(allBrands as string[]);
-          this.titleAutocompleteOptions = this.getUnique(user.expenses.map(expense => expense?.title));
-          this.placeAutocomleteOptions = this.getUnique(user.expenses.map(expense => expense?.purchasePlace));
-        }
+        this.currentUser = user;        
       }
     })
+
+    this.expensesService.getExpenses().pipe(takeUntil(this.destroy$)).subscribe(expenses => {
+      if (expenses.length) {
+        const allBrands = expenses.filter(expense => !!expense?.brand).map(expense => expense.brand)
+        this.brandAutocompleteOptions = this.getUnique(allBrands as string[]);
+        this.titleAutocompleteOptions = this.getUnique(expenses.map(expense => expense?.title));
+        this.placeAutocomleteOptions = this.getUnique(expenses.map(expense => expense?.purchasePlace));
+      }
+    })
+
     if(this.isModal){
       setTimeout(() => {
         this.onExpenseNameAdded(this.title)

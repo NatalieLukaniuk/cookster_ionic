@@ -24,6 +24,8 @@ export class ExpencesService {
   selectedQuantity = 100;
   selectedMeasuringUnit: MeasuringUnit = MeasuringUnit.gr;
 
+  purchasePlacesWithNoVat = ['метро']
+
   constructor(private store: Store<IAppState>, private dataMapping: DataMappingService,) { }
 
   getAveragePrice(data: ExpenseItem[]) {
@@ -117,11 +119,23 @@ export class ExpencesService {
   getExpenses(): Observable<ExpenseItem[]> {
     return this.store.pipe(select(getCurrentUser), map(user => {
       if (user && user.expenses?.length) {
-        return user.expenses
+        return user.expenses.map(expense => this.addVat(expense))
       } else {
         return []
       }
     }))
+  }
+
+  addVat(item: ExpenseItem) {
+    if (this.purchasePlacesWithNoVat.includes(item.purchasePlace.toLowerCase())) {
+      const updated = {
+        ...item,
+        costPerHundredGrInHRN: item.costPerHundredGrInHRN * 1.2
+      }      
+      return updated
+    } else {
+      return item
+    }
   }
 
   getTitleOptions() {
@@ -175,7 +189,7 @@ export class ExpencesService {
     ingredients: Ingredient[],
     portionsToServe: number,
     portionSize: number
-  ): Observable<RecipyCostInfo> {    
+  ): Observable<RecipyCostInfo> {
     const coef = this.dataMapping.getCoeficient(
       ingredients,
       portionsToServe,
@@ -219,9 +233,9 @@ export class ExpencesService {
             }
           }
         })
-        if(partWithNoData >= .2){
+        if (partWithNoData >= .2) {
           totalCostInfo.notReliable = true;
-        }            
+        }
         return totalCostInfo;
       }
     ))

@@ -18,13 +18,8 @@ import { ExpencesService } from '../expences.service';
   styleUrls: ['./check-price-page.component.scss']
 })
 export class CheckPricePageComponent {
-  expenses$: Observable<ExpenseItem[]> = this.store.pipe(select(getCurrentUser), map(user => {
-    if (user && user.expenses?.length) {
-      return user.expenses
-    } else {
-      return []
-    }
-  }))
+  expenses$: Observable<ExpenseItem[]> = this.expenceService.getExpenses()
+ 
 
   filteredExpenses: ExpenseItem[] = [];
 
@@ -63,7 +58,6 @@ export class CheckPricePageComponent {
   )
 
   constructor(
-    private store: Store<IAppState>,
     private filtersService: FiltersService,
     private dataMapping: DataMappingService,
     private expenceService: ExpencesService
