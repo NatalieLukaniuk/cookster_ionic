@@ -36,6 +36,7 @@
                 DishType[tag]
                 }}</ion-chip>
             </div>
+            <app-cost-of-recipy [amountPerPortion]="recipy.amountPerPortion" [ingredients]="recipy.ingrediends" [portions]="recipy.portions"></app-cost-of-recipy>
           </div>
         </div>
         <div class="recipy-photo" *ngIf="recipy.photo">

@@ -1,0 +1,33 @@
+<div *ngIf="recipyCostInfo$ | async">
+    <div *ngIf="recipyInfo" class="info-line">
+        Вартість: {{Math.round(recipyInfo.totalCost * 100) / 100}} грн <span *ngIf="isPerHundredGrams">/100гр</span>
+        <ng-container *ngIf="recipyInfo.warnings.length">
+            <ion-button fill="clear" size="small" slot="icon-only" [id]="'warnings-details'+id">
+                <ion-icon name="alert-circle-outline"
+                    [color]="recipyInfo.notReliable? 'warning' : 'primary'"></ion-icon>
+            </ion-button>
+
+            <ion-modal *ngIf="!isFullscreenModal" [trigger]="'warnings-details'+id"
+                [initialBreakpoint]="isFullscreenModal? 1 : 0.75">
+                <ng-template>
+                    <ion-header>
+                        <ion-toolbar>
+                            <ion-buttons slot="end">
+                                <ion-button (click)="confirm()" [strong]="true">Закрити</ion-button>
+                            </ion-buttons>
+                        </ion-toolbar>
+                    </ion-header>
+                    <ion-content class="ion-padding">
+                        <div class="content">
+                            <ion-item *ngFor="let item of recipyInfo.warnings">
+                                {{item}}
+                            </ion-item>
+                        </div>
+
+                    </ion-content>
+                </ng-template>
+            </ion-modal>
+        </ng-container>
+
+    </div>
+</div>

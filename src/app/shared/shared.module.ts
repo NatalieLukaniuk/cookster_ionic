@@ -33,6 +33,7 @@ import { AddReminderModalComponent } from './components/dialogs/add-reminder-mod
 import { ControllerListSelectDialogComponent } from './components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { AddProductFormComponent } from './components/add-product-form/add-product-form.component';
 import { InputWithAutocompleteComponent } from './components/input-with-autocomplete/input-with-autocomplete.component';
+import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recipy.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { InputWithAutocompleteComponent } from './components/input-with-autocomp
     AddReminderModalComponent,
     ControllerListSelectDialogComponent,
     AddProductFormComponent,
-    InputWithAutocompleteComponent
+    InputWithAutocompleteComponent,
+    CostOfRecipyComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule],
   exports: [
@@ -88,7 +90,8 @@ import { InputWithAutocompleteComponent } from './components/input-with-autocomp
     IngredientComponent,
     RecipyShortViewComponent,
     AddProductFormComponent,
-    InputWithAutocompleteComponent
+    InputWithAutocompleteComponent,
+    CostOfRecipyComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

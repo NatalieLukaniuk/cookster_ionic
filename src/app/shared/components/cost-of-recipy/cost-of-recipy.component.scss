@@ -1,0 +1,13 @@
+.content {    
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+ion-item {
+    font-size: 12px;
+}
+
+.info-line {
+    display: flex;
+    align-items: center;
+}
