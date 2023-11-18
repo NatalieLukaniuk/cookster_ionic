@@ -34,6 +34,7 @@ import { ControllerListSelectDialogComponent } from './components/dialogs/contro
 import { AddProductFormComponent } from './components/add-product-form/add-product-form.component';
 import { InputWithAutocompleteComponent } from './components/input-with-autocomplete/input-with-autocomplete.component';
 import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recipy.component';
+import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recip
     ControllerListSelectDialogComponent,
     AddProductFormComponent,
     InputWithAutocompleteComponent,
-    CostOfRecipyComponent
+    CostOfRecipyComponent,
+    LastPreparedDatePipe
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule],
   exports: [
@@ -91,7 +93,8 @@ import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recip
     RecipyShortViewComponent,
     AddProductFormComponent,
     InputWithAutocompleteComponent,
-    CostOfRecipyComponent
+    CostOfRecipyComponent,
+    LastPreparedDatePipe
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
