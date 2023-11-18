@@ -23,7 +23,7 @@ import { UpdateUserAction } from '../store/actions/user.actions';
   providedIn: 'root',
 })
 export class CalendarService {
-  constructor(private store: Store) {}
+  constructor(private store: Store) { }
 
   saveRecipyToCalendar(
     userToSave: User,
@@ -160,7 +160,7 @@ export class CalendarService {
         dinnerRecipies: [],
       };
       calendar.push({ value, active, disabled, selected, details });
-    }    
+    }
     return calendar;
   }
 
@@ -268,5 +268,31 @@ export class CalendarService {
         }
       });
     });
+  }
+
+  getLastPreparedDate(recipyId: string, allPlannedRecipies: IDayDetails[]): string {
+    let lastDate = '';
+    allPlannedRecipies.forEach((dayDetails: IDayDetails) => {
+      const found1 = dayDetails.breakfast?.find(recipy => recipy.recipyId === recipyId);
+      if (found1 && (!lastDate || this.getIsNewer(lastDate, dayDetails.day))) {
+        lastDate = dayDetails.day;
+      }
+      const found2 = dayDetails.lunch?.find(recipy => recipy.recipyId === recipyId);
+      if (found2 && (!lastDate || this.getIsNewer(lastDate, dayDetails.day))) {
+        lastDate = dayDetails.day;
+      }
+      const found3 = dayDetails.dinner?.find(recipy => recipy.recipyId === recipyId);
+      if (found3 && (!lastDate || this.getIsNewer(lastDate, dayDetails.day))) {
+        lastDate = dayDetails.day;
+      }
+    })
+    return lastDate
+  }
+
+  getIsNewer(date1: string, date2: string) {
+    const transf1 = moment(date1, 'DDMMYYYY');
+    const transf3 = moment(date2, 'DDMMYYYY')
+    const isNewer = transf1.isSameOrBefore(transf3)
+    return isNewer
   }
 }
