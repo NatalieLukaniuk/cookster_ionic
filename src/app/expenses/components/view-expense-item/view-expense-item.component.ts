@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ExpenseItem } from '../../expenses-models';
 import { MeasuringUnit, MeasuringUnitText } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
+import { ExpencesService } from '../../expences.service';
 
 @Component({
   selector: 'app-view-expense-item',
@@ -13,7 +14,7 @@ export class ViewExpenseItemComponent {
   @Input() color = 'secondary';
 
   MeasuringUnit = MeasuringUnit;
-  constructor(private datamapping: DataMappingService) {
+  constructor(private datamapping: DataMappingService, private expenseService: ExpencesService) {
 
   }
 
@@ -36,5 +37,9 @@ export class ViewExpenseItemComponent {
       return 'Інше'
     }
 
+  }
+
+  deleteItem() {
+    this.expenseService.deleteExpenseItem(this.expenseItem)
   }
 }

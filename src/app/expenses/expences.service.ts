@@ -9,6 +9,8 @@ import { getCurrentUser } from '../store/selectors/user.selectors';
 import { Observable, map, take } from 'rxjs';
 import { DatePipe, formatDate } from '@angular/common';
 import * as moment from 'moment';
+import * as _ from 'lodash';
+import { UpdateUserAction } from '../store/actions/user.actions';
 
 export interface RecipyCostInfo {
   totalCost: number,
@@ -131,7 +133,7 @@ export class ExpencesService {
       const updated = {
         ...item,
         costPerHundredGrInHRN: item.costPerHundredGrInHRN * 1.2
-      }      
+      }
       return updated
     } else {
       return item
@@ -241,4 +243,16 @@ export class ExpencesService {
     ))
   }
 
+  deleteExpenseItem(item: ExpenseItem) {
+    this.store.pipe(select(getCurrentUser), take(1)).subscribe(user => {
+      if (user && user.expenses) {
+        const clonedUser = _.cloneDeep(user);
+        let updated = {
+          ...clonedUser,
+          expenses: clonedUser.expenses?.filter(expense => expense.title !== item.title && expense.productId !== item.productId && expense.purchaseDate !== item.purchaseDate && expense.purchasePlace !== item.purchasePlace)
+        }
+        this.store.dispatch(new UpdateUserAction(updated, `${item.title} deleted`))
+      }
+    })
+  }
 }

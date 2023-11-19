@@ -37,7 +37,7 @@ export class AdminTableComponent implements OnChanges {
 
   getLegendItems() {
     this.legendItems = [];
-    if (this.data[0].length) {
+    if (this.data[0]?.length) {
       for (let item of this.data[0]) {
         let legend: LegendItem = {
           name: item,
