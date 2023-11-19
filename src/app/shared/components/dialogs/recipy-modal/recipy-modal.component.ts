@@ -39,9 +39,7 @@ export class RecipyModalComponent implements OnInit {
   user$ = this.store.pipe(select(getCurrentUser));
 
   constructor(private modalCtrl: ModalController, private store: Store<IAppState>) { }
-  ngOnInit(): void {
-
-    debugger
+  ngOnInit(): void {    
   }
 
   close() {

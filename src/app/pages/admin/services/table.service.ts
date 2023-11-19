@@ -40,7 +40,7 @@ export class TableService {
       "перевірений",
       "розмір порції",
       'ціна за 100гр в грн',
-      'інфо по <80%',
+      'нема даних %',
       'інформація',
       "Перегляд",
       "Редагування",     
@@ -63,7 +63,7 @@ export class TableService {
       row.push(recipy.isCheckedAndApproved);
       row.push(recipy.portionSize);
       row.push(Math.round(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).totalCost * 100) / 100);
-      row.push(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).notReliable);
+      row.push(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).partWithNoData);
       row.push(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).warnings.reduce((a,b) => a + ' * - * ' + b));
       row.push({ action: () => this.dialog.openModal(ModalType.ViewRecipy, { recipyId: recipy.id }), title: 'view' })
       row.push({ action: () => this.dialog.openModal(ModalType.EditRecipy, { recipyId: recipy.id }), title: 'edit' })

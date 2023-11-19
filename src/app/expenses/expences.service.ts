@@ -15,7 +15,8 @@ import { UpdateUserAction } from '../store/actions/user.actions';
 export interface RecipyCostInfo {
   totalCost: number,
   warnings: string[],
-  notReliable: boolean
+  notReliable: boolean,
+  partWithNoData: number
 }
 
 @Injectable({
@@ -201,7 +202,8 @@ export class ExpencesService {
     const totalCostInfo: RecipyCostInfo = {
       totalCost: 0,
       warnings: [],
-      notReliable: false
+      notReliable: false,
+      partWithNoData: 0
     };
 
     return this.getExpenses().pipe(map(
@@ -227,8 +229,7 @@ export class ExpencesService {
                 totalCostInfo.totalCost += cost
                 totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Дані за пів року`)
               } else {
-                const averagePrice = this.getAveragePrice(ingredExpenseInfo);
-                debugger
+                const averagePrice = this.getAveragePrice(ingredExpenseInfo);                
                 const cost = averagePrice / 100 * (ingredient.amount * coef);
                 totalCostInfo.totalCost += cost;
                 if(cost === 0){
@@ -244,6 +245,7 @@ export class ExpencesService {
         if (partWithNoData >= .2) {
           totalCostInfo.notReliable = true;
         }
+        totalCostInfo.partWithNoData = partWithNoData;
         return totalCostInfo;
       }
     ))
@@ -264,7 +266,8 @@ export class ExpencesService {
     const totalCostInfo: RecipyCostInfo = {
       totalCost: 0,
       warnings: [],
-      notReliable: false
+      notReliable: false,
+      partWithNoData: 0
     };
 
     let partWithNoData = 0;
@@ -288,8 +291,7 @@ export class ExpencesService {
                 totalCostInfo.totalCost += cost
                 totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Дані за пів року`)
               } else {
-                const averagePrice = this.getAveragePrice(ingredExpenseInfo);
-                debugger
+                const averagePrice = this.getAveragePrice(ingredExpenseInfo);                
                 const cost = averagePrice / 100 * (ingredient.amount * coef);
                 totalCostInfo.totalCost += cost;
                 if(cost === 0){
@@ -305,6 +307,7 @@ export class ExpencesService {
         if (partWithNoData >= .2) {
           totalCostInfo.notReliable = true;
         }
+        totalCostInfo.partWithNoData = Math.round(partWithNoData * 100)        
         return totalCostInfo;
 
   }
