@@ -26,7 +26,7 @@ export class TableService {
     return data;
   }
 
-  buildRecipyTable(recipies: Recipy[]): any[][] {
+  buildRecipyTable(recipies: Recipy[], allExpenses: ExpenseItem[]): any[][] {
     let data = [];
     let firstRow = [
       'Назва',
@@ -39,8 +39,11 @@ export class TableService {
       "інгридієнти",
       "перевірений",
       "розмір порції",
+      'ціна за 100гр в грн',
+      'інфо по <80%',
+      'інформація',
       "Перегляд",
-      "Редагування",
+      "Редагування",     
 
     ];
     data.push(firstRow);
@@ -59,8 +62,12 @@ export class TableService {
       row.push(recipy.ingrediends.map(ingr => this.getIngredientText(ingr)));
       row.push(recipy.isCheckedAndApproved);
       row.push(recipy.portionSize);
+      row.push(Math.round(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).totalCost * 100) / 100);
+      row.push(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).notReliable);
+      row.push(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).warnings.reduce((a,b) => a + ' * - * ' + b));
       row.push({ action: () => this.dialog.openModal(ModalType.ViewRecipy, { recipyId: recipy.id }), title: 'view' })
       row.push({ action: () => this.dialog.openModal(ModalType.EditRecipy, { recipyId: recipy.id }), title: 'edit' })
+      
       data.push(row);
     }
     return data;
@@ -78,11 +85,11 @@ export class TableService {
       'grInOneItem',
       'найнижча ціна',
       'найвища ціна',
-      'середня ціна',
+      'середня ціна за 100г',
       'клк.записів',
-      'середня ціна за місяць',
+      'середня ціна за місяць за 100г',
       'клк.записів за місяць',
-      'середня ціна за рік',
+      'середня ціна за рік за 100г',
       'клк.записів за рік',
     ];
     data.push(firstRow);

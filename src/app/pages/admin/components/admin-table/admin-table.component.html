@@ -9,7 +9,7 @@
   <table>
     <tr *ngFor="let item of dataToDisplay; let rowIndex = index">
       <ng-container *ngIf="rowIndex === 0">
-        <th *ngFor="let header of item; let headerIndex = index" (click)="sort(headerIndex)">
+        <th *ngFor="let header of item; let headerIndex = index" (click)="sort(headerIndex)"  [ngClass]="{'hidden': !legendItems[headerIndex].active}">
           <div class="header-content">
             
             <div>{{header}}</div>

@@ -249,6 +249,66 @@ export class ExpencesService {
     ))
   }
 
+  getRecipyCostWithExpensesProvided(
+    ingredients: Ingredient[],
+    portionsToServe: number,
+    portionSize: number,
+    allExpenses: ExpenseItem[]
+  ){
+    const coef = this.dataMapping.getCoeficient(
+      ingredients,
+      portionsToServe,
+      portionSize
+    );
+
+    const totalCostInfo: RecipyCostInfo = {
+      totalCost: 0,
+      warnings: [],
+      notReliable: false
+    };
+
+    let partWithNoData = 0;
+        ingredients.forEach(ingredient => {
+          const ingredientName = ingredient.ingredient ? ingredient.ingredient : this.dataMapping.getProductNameById(ingredient.product)
+          const ingredExpenseInfo = this.getExpensesByProduct(allExpenses, ingredient.product)
+          if (!ingredExpenseInfo.length) {
+            totalCostInfo.warnings.push(`${ingredientName}: немає даних`)
+            const part = (ingredient.amount * coef) / (portionSize * portionsToServe);
+            partWithNoData += part;
+          } else {
+            const averagePriceLastMonth = this.getAveragePriceForLastMonth(ingredExpenseInfo);
+            if (averagePriceLastMonth) {
+              const cost = averagePriceLastMonth / 100 * (ingredient.amount * coef)
+              totalCostInfo.totalCost += cost
+              totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн`)
+            } else {
+              const averagePriceHalfYear = this.getAveragePriceForHalfYear(ingredExpenseInfo);
+              if (averagePriceHalfYear) {
+                const cost = averagePriceHalfYear / 100 * (ingredient.amount * coef);
+                totalCostInfo.totalCost += cost
+                totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Дані за пів року`)
+              } else {
+                const averagePrice = this.getAveragePrice(ingredExpenseInfo);
+                debugger
+                const cost = averagePrice / 100 * (ingredient.amount * coef);
+                totalCostInfo.totalCost += cost;
+                if(cost === 0){
+                  totalCostInfo.warnings.push(`${ingredientName}: 0 грн`)
+                } else {
+                  totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Немає даних за останні пів року`)
+                }
+                
+              }
+            }
+          }
+        })
+        if (partWithNoData >= .2) {
+          totalCostInfo.notReliable = true;
+        }
+        return totalCostInfo;
+
+  }
+
   deleteExpenseItem(item: ExpenseItem) {
     this.store.pipe(select(getCurrentUser), take(1)).subscribe(user => {
       if (user && user.expenses) {

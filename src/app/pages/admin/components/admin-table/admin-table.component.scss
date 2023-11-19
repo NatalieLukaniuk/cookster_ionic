@@ -37,3 +37,19 @@ th{
   display: flex;
   align-items: center;
 }
+
+.legend {
+  position: fixed;
+  height: 40px;
+  overflow-x: auto;
+  display: flex;
+  flex-wrap: nowrap;
+  max-width: 100vw;
+  ion-chip{
+    min-width: max-content;
+  }
+}
+
+table{
+  margin-top: 40px;
+}
