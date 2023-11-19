@@ -255,8 +255,8 @@ export class ExpencesService {
         const clonedUser = _.cloneDeep(user);
         let updated = {
           ...clonedUser,
-          expenses: clonedUser.expenses?.filter(expense => expense.title !== item.title && expense.productId !== item.productId && expense.purchaseDate !== item.purchaseDate && expense.purchasePlace !== item.purchasePlace)
-        }
+          expenses: clonedUser.expenses?.filter(expense => !(expense.title === item.title && expense.productId === item.productId && expense.purchaseDate === item.purchaseDate && expense.purchasePlace === item.purchasePlace))
+        }        
         this.store.dispatch(new UpdateUserAction(updated, `${item.title} deleted`))
       }
     })
