@@ -228,9 +228,15 @@ export class ExpencesService {
                 totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Дані за пів року`)
               } else {
                 const averagePrice = this.getAveragePrice(ingredExpenseInfo);
+                debugger
                 const cost = averagePrice / 100 * (ingredient.amount * coef);
                 totalCostInfo.totalCost += cost;
-                totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Немає даних за останні пів року`)
+                if(cost === 0){
+                  totalCostInfo.warnings.push(`${ingredientName}: 0 грн`)
+                } else {
+                  totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Немає даних за останні пів року`)
+                }
+                
               }
             }
           }

@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { ExpenseItem } from '../expenses-models';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-view-expenses-page',
@@ -13,7 +14,8 @@ import { ExpenseItem } from '../expenses-models';
 export class ViewExpensesPageComponent {
   expenses$: Observable<ExpenseItem[]> = this.store.pipe(select(getCurrentUser), map(user => {
     if (user && user.expenses?.length) {
-      return user.expenses
+      const cloned = _.cloneDeep(user.expenses)
+      return cloned.reverse()
     } else {
       return []
     }
