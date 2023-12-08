@@ -6,4 +6,5 @@ export interface Comment {
     editedOn?: Date;
     parentCommentId?: string;
     recipyId: string;
+    children?: Comment[]
 }

@@ -1,0 +1,10 @@
+<ng-container *ngIf="comment">
+    <div>
+        <p>{{comment.author}}</p>
+        <p>{{comment.text}}</p>
+    </div>
+    <div>
+        <span>{{comment.addedOn}}</span>
+        <ion-button fill="clear" size="small">Відовісти</ion-button>
+    </div>
+</ng-container>

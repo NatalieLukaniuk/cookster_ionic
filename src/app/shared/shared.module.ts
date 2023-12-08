@@ -35,6 +35,7 @@ import { AddProductFormComponent } from './components/add-product-form/add-produ
 import { InputWithAutocompleteComponent } from './components/input-with-autocomplete/input-with-autocomplete.component';
 import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recipy.component';
 import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
+import { CommentsModule } from '../comments/comments.module';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,7 @@ import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
     CostOfRecipyComponent,
     LastPreparedDatePipe
   ],
-  imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule],
+  imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule, CommentsModule],
   exports: [
     HeaderComponent,
     LoadingOverlayComponent,
@@ -94,7 +95,7 @@ import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
     AddProductFormComponent,
     InputWithAutocompleteComponent,
     CostOfRecipyComponent,
-    LastPreparedDatePipe
+    LastPreparedDatePipe,
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

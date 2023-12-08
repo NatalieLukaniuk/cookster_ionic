@@ -1,0 +1,23 @@
+.comments-block {
+    padding-inline: 10px;
+    border-block: 3px solid var(--ion-color-light);
+    p {
+        margin: 0;
+    }
+    ion-button{
+        font-size: 10px;
+    }
+}
+
+.comments-stats {
+    font-size: 10px;
+    display: flex;
+    justify-content: flex-end;    
+    border-bottom: 1px solid var(--ion-color-light);
+    padding-block: 10px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+}
