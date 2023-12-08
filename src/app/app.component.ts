@@ -27,6 +27,7 @@ import { AddReminderModalComponent } from './shared/components/dialogs/add-remin
 import { Reminder } from './models/calendar.models';
 import * as _ from 'lodash';
 import { UpdateUserAction } from './store/actions/user.actions';
+import { LoadCommentsAction } from './store/actions/comments.actions';
 
 @Component({
   selector: 'app-root',
@@ -118,6 +119,7 @@ export class AppComponent implements OnInit {
     this.store.dispatch(new UiActions.SetIsLoadingAction());
     this.store.dispatch(new RecipiesActions.GetRecipiesAction());
     this.store.dispatch(new RecipiesActions.GetProductsAction());
+    this.store.dispatch(new LoadCommentsAction())
 
     combineLatest([
       this.products$,
