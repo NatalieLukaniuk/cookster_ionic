@@ -6,6 +6,7 @@ import { IAppState } from 'src/app/store/reducers';
 import { getComments } from 'src/app/store/selectors/comments.selectors';
 import { Comment } from 'src/app/models/comments.models';
 import { CommentsService } from '../comments.service';
+import { AddCommentAction } from 'src/app/store/actions/comments.actions';
 
 @Component({
   selector: 'app-comments-block',
@@ -30,9 +31,8 @@ export class CommentsBlockComponent implements OnInit {
       this.modalId = 'comments' + '-' + this.recipyId;
       this.comments$ = this.store.pipe(select(getComments), map(comments => {
         if (comments) {
-          // const filtered = this.commentsService.getCommentsByRecipyId(this.recipyId!, comments);
-          // const tree = this.commentsService.buildCommentsTree(filtered)
-          const tree = this.commentsService.buildCommentsTree(comments)
+          const filtered = this.commentsService.getCommentsByRecipyId(this.recipyId!, comments);
+          const tree = this.commentsService.buildCommentsTree(filtered)
           return tree
         }
         else {
@@ -48,10 +48,9 @@ export class CommentsBlockComponent implements OnInit {
         author: this.currentUser?.email,
         addedOn: new Date(),
         text: this.text,
-        recipyId: this.recipyId,
-        id: crypto.randomUUID()
+        recipyId: this.recipyId
       }
-      console.log(commentToSave)
+      this.store.dispatch(new AddCommentAction(commentToSave))
     }
 
   }

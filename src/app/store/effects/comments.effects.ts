@@ -5,6 +5,7 @@ import { IAppState } from "../reducers";
 import { AddCommentAction, CommentAddedAction, CommentsActionTypes, CommentsLoadedAction, LoadCommentsAction } from "../actions/comments.actions";
 import { map, switchMap } from "rxjs";
 import { CommentsApiService } from "src/app/comments/comments-api.service";
+import { Comment } from "src/app/models/comments.models";
 
 @Injectable()
 export class CommentsEffects {
@@ -19,15 +20,18 @@ export class CommentsEffects {
     loadComments$ = createEffect(() => this.actions$.pipe(
         ofType(CommentsActionTypes.LOAD_COMMENTS),
         switchMap((action: LoadCommentsAction) => this.commentsService.getComments().pipe(
-            map(res => new CommentsLoadedAction([
-                {
-                    author: 'test@gmail.com',
-                    text: 'test comment to check how this looks',
-                    addedOn: new Date(),
-                    id: 'ff',
-                    recipyId: 'j'
-                }
-            ]))
+            map(res => {
+                let comments: Comment[] = [];
+                if (res) {
+                    Object.entries(res).forEach(([id, comment]) => {
+                        comments.push({
+                            ...comment,
+                            id
+                        })
+                    })
+                }                
+                return new CommentsLoadedAction(comments)
+            })
         ))
     ))
 }
