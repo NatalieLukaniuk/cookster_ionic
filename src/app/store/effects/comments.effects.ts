@@ -13,7 +13,7 @@ export class CommentsEffects {
     addComment$ = createEffect(() => this.actions$.pipe(
         ofType(CommentsActionTypes.ADD_COMMENT),
         switchMap((action: AddCommentAction) => this.commentsService.addComment(action.comment).pipe(
-            map(res => new CommentAddedAction(action.comment, res.id))
+            map(res => new CommentAddedAction(action.comment, res.name))
         ))
     ))
 

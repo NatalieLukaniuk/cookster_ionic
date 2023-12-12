@@ -11,8 +11,8 @@ export class CommentsApiService {
   url = `https://cookster-12ac8-default-rtdb.firebaseio.com/comments`;
   constructor(private http: HttpClient) {}
 
-  addComment(comment: Comment): Observable<{ id: string }> {
-    return this.http.post<{ id: string }>(`${this.url}.json`, comment);
+  addComment(comment: Comment): Observable<{ name: string }> {
+    return this.http.post<{ name: string }>(`${this.url}.json`, comment);
   }
 
   deleteComment(comment: Comment) {

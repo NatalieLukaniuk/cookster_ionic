@@ -1,10 +1,10 @@
-<div *ngIf="comment">
+<div *ngIf="comment" class="comment-container" [class.secondary]="isSecondaryComment">
     <div class="comment-wrapper">
         <p class="author">{{comment.author}}</p>
         <p>{{comment.text}}</p>
     </div>
     <div class="bottom-row">
         <span>{{comment.addedOn | date}}</span>
-        <ion-button fill="clear" size="small">Відповісти</ion-button>
+        <ion-button fill="clear" size="small" (click)="reply()">Відповісти</ion-button>
     </div>
 </div>

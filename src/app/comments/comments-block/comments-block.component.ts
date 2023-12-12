@@ -21,7 +21,10 @@ export class CommentsBlockComponent implements OnInit {
 
   comments$!: Observable<Comment[]>;
 
-  modalId = ''
+  modalId = '';
+
+  replyTo: string | null = null;
+  totalComments: number = 0;
 
   constructor(private store: Store<IAppState>, private commentsService: CommentsService) {
 
@@ -32,6 +35,7 @@ export class CommentsBlockComponent implements OnInit {
       this.comments$ = this.store.pipe(select(getComments), map(comments => {
         if (comments) {
           const filtered = this.commentsService.getCommentsByRecipyId(this.recipyId!, comments);
+          this.totalComments = filtered.length;
           const tree = this.commentsService.buildCommentsTree(filtered)
           return tree
         }
@@ -50,7 +54,11 @@ export class CommentsBlockComponent implements OnInit {
         text: this.text,
         recipyId: this.recipyId
       }
-      this.store.dispatch(new AddCommentAction(commentToSave))
+      if(this.replyTo){
+        commentToSave.parentCommentId = this.replyTo;
+      }
+      this.store.dispatch(new AddCommentAction(commentToSave));
+      this.replyTo = null;
     }
 
   }
@@ -58,6 +66,17 @@ export class CommentsBlockComponent implements OnInit {
   @ViewChild('textarea') textarea: any
 
   onModalPresented() {
+    this.textarea?.setFocus()
+  }
+
+
+  onReplyTo(id: string) {
+    this.replyTo = id;
+    this.textarea?.setFocus()
+  }
+
+  cancelReplyTo(){
+    this.replyTo = null;
     this.textarea?.setFocus()
   }
 }

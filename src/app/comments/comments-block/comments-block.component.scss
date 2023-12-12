@@ -30,5 +30,15 @@
 
 .existing-comments {
     flex-grow: 1;
+    max-height: 60%;
+    overflow-y: auto;
 }
 
+.save-comment-btn{
+    align-self: flex-end;
+    margin-bottom: 20px;
+}
+
+.fadeout {
+    opacity: 0.3;
+}

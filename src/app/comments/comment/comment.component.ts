@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Comment } from 'src/app/models/comments.models';
 
 @Component({
@@ -7,15 +7,16 @@ import { Comment } from 'src/app/models/comments.models';
   styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent {
-  mockComment: Comment = {
-    author: 'test@gmail.com',
-    text: 'test comment to check how this looks',
-    addedOn: new Date(),
-    id: 'ff',
-    recipyId: 'j'
+  @Output() replyToClicked = new EventEmitter<string>();
+
+  @Input() comment: Comment | undefined;
+
+
+  reply() {
+    this.replyToClicked.emit(this.comment?.id);
   }
-  
-  @Input() comment: Comment | undefined = this.mockComment;
 
-
+  get isSecondaryComment(){
+    return !!this.comment?.parentCommentId
+  }
 }

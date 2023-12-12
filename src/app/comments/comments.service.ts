@@ -13,20 +13,30 @@ export class CommentsService {
     return comments.filter(comment => comment.recipyId === recipyId)
   }
 
-  buildCommentsTree = (comments: Comment[]) => {
+  buildCommentsTree = (originalComments: Comment[]) => {
+    let comments = originalComments.map(i => i);
     const tree: Comment[] = [];
     comments.forEach(comment => {
       if (!comment.parentCommentId) {
-        tree.push(comment);
+        tree.push({ ...comment, children: [] });
       }
     })
     comments.forEach(comment => {
       if (comment.parentCommentId) {
-        const parent = tree.find(com => com.id === comment.parentCommentId);
-        if (parent && parent.children) {
-          parent.children.push(comment)
-        } else if (parent && !parent.children) {
-          parent.children = [comment]
+        let parent = tree.find(com => com.id === comment.parentCommentId);
+        const isParentExists = originalComments.find(com => com.id === comment.parentCommentId);
+
+        if (!parent && isParentExists) {
+          tree.forEach(firstLvlvElement => {
+            let tryFind = firstLvlvElement.children?.find(com => com.id === comment.parentCommentId);
+            if (tryFind) {
+              parent = firstLvlvElement;
+            }
+          })
+        }
+
+        if (parent) {
+          parent.children?.push(comment)
         } else {
           tree.push(comment)
         }
@@ -37,7 +47,7 @@ export class CommentsService {
       if (el.children && el.children.length > 1) {
         el.children.sort((a, b) => this.sortCommentsByDate(a, b))
       }
-    })
+    })    
     return tree;
   }
 
