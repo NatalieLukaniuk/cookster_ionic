@@ -21,3 +21,14 @@
     display: flex;
     justify-content: space-around;
 }
+
+.comments-modal-content-container {
+    display: flex;
+    height: 80%;
+    flex-direction: column;
+}
+
+.existing-comments {
+    flex-grow: 1;
+}
+
