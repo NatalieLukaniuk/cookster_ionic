@@ -1,6 +1,7 @@
 .comments-block {
     padding-inline: 10px;
     border-block: 3px solid var(--ion-color-light);
+    background: var(--ion-background-color);
     p {
         margin: 0;
     }
@@ -15,6 +16,11 @@
     justify-content: flex-end;    
     border-bottom: 1px solid var(--ion-color-light);
     padding-block: 10px;
+}
+
+.comments-info {
+    font-size: 10px;
+    align-self: center;
 }
 
 .buttons {
@@ -32,6 +38,8 @@
     flex-grow: 1;
     max-height: 60%;
     overflow-y: auto;
+    box-shadow: inset 0px -2px 9px 1px var(--ion-color-light);
+    padding: 20px 15px;
 }
 
 .save-comment-btn{

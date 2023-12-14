@@ -14,8 +14,9 @@ import { AddCommentAction } from 'src/app/store/actions/comments.actions';
   styleUrls: ['./comments-block.component.scss']
 })
 export class CommentsBlockComponent implements OnInit {
+  // TODO: functionality when the user is not logged in
   @Input() recipyId: string | undefined;
-  @Input() currentUser!: User | null;
+  @Input() currentUser!: User | null | undefined;
 
   text = '';
 
@@ -25,6 +26,8 @@ export class CommentsBlockComponent implements OnInit {
 
   replyTo: string | null = null;
   totalComments: number = 0;
+
+  isModalOpen = false;
 
   constructor(private store: Store<IAppState>, private commentsService: CommentsService) {
 
@@ -54,7 +57,7 @@ export class CommentsBlockComponent implements OnInit {
         text: this.text,
         recipyId: this.recipyId
       }
-      if(this.replyTo){
+      if (this.replyTo) {
         commentToSave.parentCommentId = this.replyTo;
       }
       this.store.dispatch(new AddCommentAction(commentToSave));
@@ -75,8 +78,20 @@ export class CommentsBlockComponent implements OnInit {
     this.textarea?.setFocus()
   }
 
-  cancelReplyTo(){
+  cancelReplyTo() {
     this.replyTo = null;
     this.textarea?.setFocus()
+  }
+
+  isReply(commentId: string | undefined): boolean {
+    return !!this.replyTo && !!commentId && commentId === this.replyTo
+  }
+
+  onLongPress(commentId: string | undefined) {
+    //TODO: functionality to select and delete comments on long press
+  }
+
+  click() {
+    this.isModalOpen = true;
   }
 }

@@ -14,8 +14,9 @@ import {
   RecipyForCalendar,
 } from 'src/app/models/calendar.models';
 import { IAppState } from 'src/app/store/reducers';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Recipy } from 'src/app/models/recipies.models';
+import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
   selector: 'app-calendar-meal',
@@ -30,6 +31,8 @@ export class CalendarMealComponent implements OnInit, OnChanges {
   selectedRecipyForCalendar: Recipy | null = null;
 
   _day: Day | undefined;
+
+  user$ = this.store.pipe(select(getCurrentUser));
 
   get isComments() {
     if (this._day) {

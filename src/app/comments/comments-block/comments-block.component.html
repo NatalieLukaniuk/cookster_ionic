@@ -1,38 +1,38 @@
-<div class="comments-block">
-    <div *ngIf="(comments$ | async)?.length" class="comments-stats">
+<div class="comments-block" *ngIf="(comments$ | async)">
+    <!-- <div *ngIf="(comments$ | async)?.length" class="comments-stats">
         <p>{{totalComments}} коментар</p>
-    </div>
-    <div class="buttons">
-        <ion-button fill="clear">
+    </div> -->
+    <div class="buttons" [id]="modalId" (click)="click()">
+        <p class="comments-info">{{totalComments}} коментар</p>
+        <!-- <ion-button fill="clear">
             <ion-icon name="thumbs-up-outline" slot="start"></ion-icon>
             Подобається
-        </ion-button>
-        <ion-button fill="clear" [id]="modalId">
+        </ion-button> -->
+        <ion-button fill="clear">
             <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
             Коментувати
         </ion-button>
     </div>
 </div>
 
-<ion-modal [trigger]="modalId" [initialBreakpoint]="0.8" (ionModalDidPresent)="onModalPresented()">
+<ion-modal [trigger]="modalId" [initialBreakpoint]="0.8" (ionModalDidPresent)="onModalPresented()" [isOpen]="isModalOpen" (ionModalWillDismiss)="isModalOpen = false">
     <ng-template>
 
-        <ion-content class="ion-padding">
+        <ion-content>
             <div class="comments-modal-content-container">
                 <div class="existing-comments">
                     <ng-container *ngIf="(comments$ | async)?.length; else noComments">
                         <ng-container *ngFor="let comment of (comments$ | async)">
-                            <app-comment [comment]="comment" (replyToClicked)="onReplyTo($event)" [class.fadeout]="replyTo && comment.id !== replyTo"></app-comment>
+                            <app-comment appLongPress (press)="onLongPress(comment.id)" [comment]="comment" (onButtonClicked)="isReply(comment.id)? cancelReplyTo() : onReplyTo($event)" [class.fadeout]="!!replyTo && !isReply(comment.id)" [buttonText]="isReply(comment.id) ? 'Скасувати' : 'Відповісти'"></app-comment>
                             <ng-container *ngIf="!!comment.children?.length">
                                 <ng-container *ngFor="let childComment of comment.children">
-                                    <app-comment [comment]="childComment" (replyToClicked)="onReplyTo($event)" [class.fadeout]="replyTo && childComment.id !== replyTo"></app-comment>
+                                    <app-comment [comment]="childComment" (onButtonClicked)="isReply(childComment.id)? cancelReplyTo() : onReplyTo($event)" [class.fadeout]="!!replyTo && !isReply(childComment.id)" [buttonText]="isReply(childComment.id) ? 'Скасувати' : 'Відповісти'"></app-comment>
                                 </ng-container>
                             </ng-container>
                         </ng-container>
                     </ng-container>
                 </div>
                 <ion-item class="comment-input" slot="fixed">
-                    <ion-label *ngIf="replyTo" position="stacked"><ion-button size="small" fill="clear" (click)="cancelReplyTo()">Скасувати</ion-button></ion-label>
                     <ion-textarea #textarea type="text" [placeholder]="replyTo? 'Напишіть відповідь...' : 'Напишіть коментар...'"
                         [(ngModel)]="text"></ion-textarea>
                     <ion-button size="default" fill="clear" (click)="saveComment()" [disabled]="text.length < 5" slot="end" class="save-comment-btn"><ion-icon name="send-outline" slot="icon-only"></ion-icon></ion-button>

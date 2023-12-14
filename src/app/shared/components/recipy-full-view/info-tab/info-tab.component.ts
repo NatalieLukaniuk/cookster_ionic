@@ -71,16 +71,4 @@ export class InfoTabComponent implements OnInit {
       this.store.dispatch(new UpdateRecipyAction(updatedRecipy));
     }
   }
-
-  onAddAdminComment() {
-    // this.dialogsService.openTextInputDialog('Коментар:').pipe(take(1)).subscribe(res => {
-    //   if(res && 'id' in this.recipy){
-    //     this.store.dispatch(new SetIsLoadingAction())
-    //     this.adminService.addAdminComment({recipyId: this.recipy.id, text: res}).pipe(take(1)).subscribe(res => {
-    //       this.store.dispatch(new SetIsLoadingFalseAction())
-    //     })
-    //   }
-    // })
-    console.log('not implemented'); // FIXME: implement function
-  }
 }

@@ -23,6 +23,7 @@
     <ng-container>
       <div *ngFor="let item of detailedRecipiesList">
         <app-calendar-recipy [recipy]="item" [day]="day" [mealtime]="mealtime"></app-calendar-recipy>
+        <app-comments-block [currentUser]="user$ | async" [recipyId]="item.id"></app-comments-block>
       </div>
     </ng-container>
   </ng-container>

@@ -8,6 +8,7 @@ import { Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
 import { Recipy, productPreferencesChip } from 'src/app/models/recipies.models';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import * as _ from 'lodash';
+import { User } from 'src/app/models/auth.models';
 
 @Component({
   selector: 'app-recipies',
@@ -20,12 +21,14 @@ export class RecipiesContainer implements OnDestroy {
 
   showGoTop = false;
 
-  user$ = this.store.pipe(select(getCurrentUser));
+  user$ = this.store.pipe(select(getCurrentUser), tap(user => this.currentUser = user));
   productChips: productPreferencesChip[] = [];
 
   destroy$ = new Subject<void>();
 
   numberOfRecipiesToDisplay = 10;
+
+  currentUser: User | null | undefined;
 
   constructor(
     private store: Store<IAppState>,

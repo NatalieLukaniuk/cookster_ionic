@@ -7,13 +7,15 @@ import { Comment } from 'src/app/models/comments.models';
   styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent {
-  @Output() replyToClicked = new EventEmitter<string>();
+  @Output() onButtonClicked = new EventEmitter<string>();
 
   @Input() comment: Comment | undefined;
 
+  @Input() buttonText: string = ''
 
-  reply() {
-    this.replyToClicked.emit(this.comment?.id);
+
+  buttonClicked() {
+    this.onButtonClicked.emit(this.comment?.id);
   }
 
   get isSecondaryComment(){
