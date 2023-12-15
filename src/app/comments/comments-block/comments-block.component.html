@@ -3,7 +3,7 @@
         <p>{{totalComments}} коментар</p>
     </div> -->
     <div class="buttons" [id]="modalId" (click)="click()">
-        <p class="comments-info">{{totalComments}} коментар</p>
+        <p class="comments-info">{{totalComments}} {{commentsText}}</p>
         <!-- <ion-button fill="clear">
             <ion-icon name="thumbs-up-outline" slot="start"></ion-icon>
             Подобається
@@ -43,4 +43,9 @@
     </ng-template>
 </ion-modal>
 
-<ng-template #noComments></ng-template>
+<ng-template #noComments>
+    <div class="no-comments">
+        <ion-icon size="large" name="chatbubbles-outline" color="light"></ion-icon>
+        <p>Коментарів ще немає</p>
+    </div>
+</ng-template>

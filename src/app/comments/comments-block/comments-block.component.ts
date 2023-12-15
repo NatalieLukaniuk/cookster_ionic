@@ -62,6 +62,7 @@ export class CommentsBlockComponent implements OnInit {
       }
       this.store.dispatch(new AddCommentAction(commentToSave));
       this.replyTo = null;
+      this.text = '';
     }
 
   }
@@ -93,5 +94,15 @@ export class CommentsBlockComponent implements OnInit {
 
   click() {
     this.isModalOpen = true;
+  }
+
+  get commentsText() {
+    switch (this.totalComments) {
+      case 1: return 'коментар';
+      case 2:
+      case 3:
+      case 4: return 'коментарі';
+      default: return 'коментарів';
+    }
   }
 }

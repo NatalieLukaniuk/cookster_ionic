@@ -50,3 +50,14 @@
 .fadeout {
     opacity: 0.3;
 }
+
+.no-comments {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+    p {
+        color: var(--ion-color-light);
+    }
+}
