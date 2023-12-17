@@ -2,10 +2,12 @@
     padding-inline: 10px;
     border-block: 3px solid var(--ion-color-light);
     background: var(--ion-background-color);
+
     p {
         margin: 0;
     }
-    ion-button{
+
+    ion-button {
         font-size: 10px;
     }
 }
@@ -13,7 +15,7 @@
 .comments-stats {
     font-size: 10px;
     display: flex;
-    justify-content: flex-end;    
+    justify-content: flex-end;
     border-bottom: 1px solid var(--ion-color-light);
     padding-block: 10px;
 }
@@ -40,9 +42,12 @@
     overflow-y: auto;
     box-shadow: inset 0px -2px 9px 1px var(--ion-color-light);
     padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.save-comment-btn{
+.save-comment-btn {
     align-self: flex-end;
     margin-bottom: 20px;
 }
@@ -57,7 +62,28 @@
     align-items: center;
     justify-content: center;
     gap: 2vw;
+
     p {
         color: var(--ion-color-light);
+    }
+}
+
+.comment-wrapper {
+    display: flex;
+    align-items: center;
+
+    &.selected {
+        background: var(--ion-color-tertiary);
+        padding: 5px 5px 0 0;
+    }
+
+    .actions {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    app-comment {
+        flex-grow: 1;
     }
 }

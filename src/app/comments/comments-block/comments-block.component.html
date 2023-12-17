@@ -15,7 +15,8 @@
     </div>
 </div>
 
-<ion-modal [trigger]="modalId" [initialBreakpoint]="0.8" (ionModalDidPresent)="onModalPresented()" [isOpen]="isModalOpen" (ionModalWillDismiss)="isModalOpen = false">
+<ion-modal [trigger]="modalId" [initialBreakpoint]="0.8" (ionModalDidPresent)="onModalPresented()"
+    [isOpen]="isModalOpen" (ionModalWillDismiss)="isModalOpen = false">
     <ng-template>
 
         <ion-content>
@@ -23,19 +24,53 @@
                 <div class="existing-comments">
                     <ng-container *ngIf="(comments$ | async)?.length; else noComments">
                         <ng-container *ngFor="let comment of (comments$ | async)">
-                            <app-comment appLongPress (press)="onLongPress(comment.id)" [comment]="comment" (onButtonClicked)="isReply(comment.id)? cancelReplyTo() : onReplyTo($event)" [class.fadeout]="!!replyTo && !isReply(comment.id)" [buttonText]="isReply(comment.id) ? 'Скасувати' : 'Відповісти'"></app-comment>
+                            <div class="comment-wrapper" [class.selected]="isSelected(comment.id)">
+                                <div class="actions" *ngIf="isSelected(comment.id)">
+                                    <ion-button fill="clear" (click)="deleteComment(comment.id)">
+                                        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                                    </ion-button>
+                                    <ion-button fill="clear" (click)="cancelSelection()">
+                                        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+                                    </ion-button>
+                                </div>
+                                <app-comment appLongPress (press)="onLongPress(comment.id, comment.author)"
+                                    [comment]="comment"
+                                    (onButtonClicked)="isReply(comment.id)? cancelReplyTo() : onReplyTo($event)"
+                                    [class.fadeout]="!!replyTo && !isReply(comment.id)"
+                                    [buttonText]="isReply(comment.id) ? 'Скасувати' : 'Відповісти'"></app-comment>
+
+                            </div>
                             <ng-container *ngIf="!!comment.children?.length">
                                 <ng-container *ngFor="let childComment of comment.children">
-                                    <app-comment [comment]="childComment" (onButtonClicked)="isReply(childComment.id)? cancelReplyTo() : onReplyTo($event)" [class.fadeout]="!!replyTo && !isReply(childComment.id)" [buttonText]="isReply(childComment.id) ? 'Скасувати' : 'Відповісти'"></app-comment>
+                                    <div class="comment-wrapper" [class.selected]="isSelected(childComment.id)">
+                                        <div class="actions" *ngIf="isSelected(childComment.id)">
+                                            <ion-button fill="clear" (click)="deleteComment(childComment.id)">
+                                                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                                            </ion-button>
+                                            <ion-button fill="clear" (click)="cancelSelection()">
+                                                <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+                                            </ion-button>
+                                        </div>
+                                        <app-comment [comment]="childComment" appLongPress
+                                            (press)="onLongPress(childComment.id, comment.author)"
+                                            [class.selected]="isSelected(childComment.id)"
+                                            (onButtonClicked)="isReply(childComment.id)? cancelReplyTo() : onReplyTo($event)"
+                                            [class.fadeout]="!!replyTo && !isReply(childComment.id)"
+                                            [buttonText]="isReply(childComment.id) ? 'Скасувати' : 'Відповісти'"></app-comment>
+
+                                    </div>
                                 </ng-container>
                             </ng-container>
                         </ng-container>
                     </ng-container>
                 </div>
                 <ion-item class="comment-input" slot="fixed">
-                    <ion-textarea #textarea type="text" [placeholder]="replyTo? 'Напишіть відповідь...' : 'Напишіть коментар...'"
+                    <ion-textarea #textarea type="text"
+                        [placeholder]="replyTo? 'Напишіть відповідь...' : 'Напишіть коментар...'"
                         [(ngModel)]="text"></ion-textarea>
-                    <ion-button size="default" fill="clear" (click)="saveComment()" [disabled]="text.length < 5" slot="end" class="save-comment-btn"><ion-icon name="send-outline" slot="icon-only"></ion-icon></ion-button>
+                    <ion-button size="default" fill="clear" (click)="saveComment()" [disabled]="text.length < 5"
+                        slot="end" class="save-comment-btn"><ion-icon name="send-outline"
+                            slot="icon-only"></ion-icon></ion-button>
                 </ion-item>
             </div>
 

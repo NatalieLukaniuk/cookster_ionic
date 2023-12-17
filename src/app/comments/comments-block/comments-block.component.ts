@@ -6,7 +6,8 @@ import { IAppState } from 'src/app/store/reducers';
 import { getComments } from 'src/app/store/selectors/comments.selectors';
 import { Comment } from 'src/app/models/comments.models';
 import { CommentsService } from '../comments.service';
-import { AddCommentAction } from 'src/app/store/actions/comments.actions';
+import { AddCommentAction, DeleteCommentAction } from 'src/app/store/actions/comments.actions';
+import { DialogsService } from 'src/app/services/dialogs.service';
 
 @Component({
   selector: 'app-comments-block',
@@ -25,11 +26,13 @@ export class CommentsBlockComponent implements OnInit {
   modalId = '';
 
   replyTo: string | null = null;
+  selectedComment: string | null = null;
+
   totalComments: number = 0;
 
   isModalOpen = false;
 
-  constructor(private store: Store<IAppState>, private commentsService: CommentsService) {
+  constructor(private store: Store<IAppState>, private commentsService: CommentsService, private dialog: DialogsService) {
 
   }
   ngOnInit(): void {
@@ -75,6 +78,7 @@ export class CommentsBlockComponent implements OnInit {
 
 
   onReplyTo(id: string) {
+    this.cancelSelection()
     this.replyTo = id;
     this.textarea?.setFocus()
   }
@@ -88,12 +92,40 @@ export class CommentsBlockComponent implements OnInit {
     return !!this.replyTo && !!commentId && commentId === this.replyTo
   }
 
-  onLongPress(commentId: string | undefined) {
-    //TODO: functionality to select and delete comments on long press
+  isSelected(commentId: string | undefined): boolean {
+    return !!this.selectedComment && !!commentId && commentId === this.selectedComment
+  }
+
+  onLongPress(commentId: string | undefined, author: string | undefined) {
+    if (commentId && !this.replyTo && author && author === this.currentUser?.email) {
+      this.selectedComment = commentId
+    }
+  }
+
+  cancelSelection() {
+    this.selectedComment = null;
   }
 
   click() {
     this.isModalOpen = true;
+  }
+
+  deleteComment(commentId: string | undefined) {
+    if (commentId) {
+      this.dialog
+        .openConfirmationDialog(
+          `Видалити коментар?`,
+          'Ця дія незворотня'
+        )
+        .then((res) => {
+          if (res.role === 'confirm') {
+
+            this.store.dispatch(new DeleteCommentAction(commentId));
+          } else {
+            this.selectedComment = null;
+          }
+        });
+    }
   }
 
   get commentsText() {

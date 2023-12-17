@@ -27,6 +27,13 @@ export function CommentsReducers(
         comments: action.comments
       };
     }
+
+    case CommentsActionTypes.COMMENT_DELETED: {
+      return {
+        ...state,
+        comments: deleteComment(state.comments, action.commentId)
+      }
+    }
     default:
       return state;
   }
@@ -41,4 +48,14 @@ function addComment(allComments: Comment[] | null, newComment: Comment, commentI
   }
   updatedComments.push({ ...newComment, id: commentId })
   return updatedComments;
+}
+
+function deleteComment(allComments: Comment[] | null, deletedCommentId: string) {
+  let updatedComments = allComments?.map(i => i);
+  const toReturn = updatedComments?.filter(comment => comment.id !== deletedCommentId)
+  if (toReturn) {
+    return toReturn
+  } else {
+    return []
+  }
 }

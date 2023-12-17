@@ -15,8 +15,8 @@ export class CommentsApiService {
     return this.http.post<{ name: string }>(`${this.url}.json`, comment);
   }
 
-  deleteComment(comment: Comment) {
-    return this.http.delete(`${this.url}/${comment.id}.json`);
+  deleteComment(commentId: string) {
+    return this.http.delete(`${this.url}/${commentId}.json`);
   }
 
   getComments() {

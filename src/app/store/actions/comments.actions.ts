@@ -5,7 +5,9 @@ export enum CommentsActionTypes {
   ADD_COMMENT = '[COMMENTS] Add Comment',
   COMMENT_ADDED = '[COMMENTS] Comment Added',
   LOAD_COMMENTS = '[COMMENTS] Load Comments',
-  COMMENTS_LOADED = '[COMMENTS] Comments Loaded'
+  COMMENTS_LOADED = '[COMMENTS] Comments Loaded',
+  DELETE_COMMENT = '[COMMENTS] Delete Comment',
+  COMMENT_DELETED = '[COMMENTS] Deleted Comment'
 }
 
 export class AddCommentAction implements Action {
@@ -23,6 +25,20 @@ export class CommentAddedAction implements Action {
   ) { }
 }
 
+export class DeleteCommentAction implements Action {
+  readonly type = CommentsActionTypes.DELETE_COMMENT;
+  constructor(
+    public commentId: string
+  ) { }
+}
+
+export class CommentDeletedAction implements Action {
+  readonly type = CommentsActionTypes.COMMENT_DELETED;
+  constructor(
+    public commentId: string
+  ) { }
+}
+
 export class LoadCommentsAction implements Action {
   readonly type = CommentsActionTypes.LOAD_COMMENTS;
   constructor() { }
@@ -33,4 +49,4 @@ export class CommentsLoadedAction implements Action {
   constructor(public comments: Comment[]) { }
 }
 
-export type CommentsActions = AddCommentAction | CommentAddedAction | LoadCommentsAction | CommentsLoadedAction;
+export type CommentsActions = AddCommentAction | CommentAddedAction | LoadCommentsAction | CommentsLoadedAction | DeleteCommentAction | CommentDeletedAction;
