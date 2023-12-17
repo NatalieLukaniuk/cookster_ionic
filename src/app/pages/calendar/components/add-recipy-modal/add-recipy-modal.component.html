@@ -42,7 +42,7 @@
           <ng-container *ngFor="let recipy of recipies; let index = index">
             <ion-item detail="false" button *ngIf="index < numberOfRecipiesToDisplay" (click)="onRecipyClicked(recipy)">
               <ion-label class="recipy-content">
-                <div class="recipy-text">
+                <div class="recipy-text" [class.limitedWidth]="!!recipy.photo">
                   <h2 class="ion-text-wrap">{{ recipy.name }}</h2>
                   <div class="recipy-details">
                     <div>
@@ -62,7 +62,8 @@
 
                     <span *ngIf="recipy.calorificValue">{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span>
                     <div *ngIf="recipy.portionSize">Рекомендований розмір порції: {{recipy.portionSize}}гр.</div>
-                    <div *ngIf="recipy.lastPrepared">Востаннє приготовано: {{recipy.lastPrepared | lastPreparedDate }}</div>
+                    <div *ngIf="recipy.lastPrepared">Востаннє приготовано: {{recipy.lastPrepared | lastPreparedDate }}
+                    </div>
                     <div class="collection-tags">
                       <span>Теги: </span>
                       <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
@@ -79,7 +80,8 @@
                         </ng-container>
                       </ng-container>
                     </div>
-                    <app-cost-of-recipy [ingredients]="recipy.ingrediends" [isFullscreenModal]="true"></app-cost-of-recipy>
+                    <app-cost-of-recipy [ingredients]="recipy.ingrediends"
+                      [isFullscreenModal]="true"></app-cost-of-recipy>
                   </div>
                 </div>
                 <div class="recipy-photo" *ngIf="recipy.photo">

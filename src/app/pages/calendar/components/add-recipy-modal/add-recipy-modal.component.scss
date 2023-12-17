@@ -9,6 +9,7 @@
 .collection-name {
   display: flex;
   align-items: center;
+
   span {
     margin-left: 30px;
   }
@@ -23,7 +24,13 @@
 
 .recipy-content {
   display: flex;
+
   .recipy-text {
     flex-grow: 1;
+    white-space: normal;
+
+    &.limitedWidth {
+      max-width: 60%;
+    }
   }
 }
