@@ -10,4 +10,14 @@ ion-item {
 .info-line {
     display: flex;
     align-items: center;
+
+    p {
+        font-size: inherit;
+        margin: 0;
+        line-height: inherit;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        white-space: nowrap;
+    }
 }

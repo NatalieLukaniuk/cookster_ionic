@@ -1,6 +1,6 @@
 <div *ngIf="recipyCostInfo$ | async">
     <div *ngIf="recipyInfo" class="info-line">
-        Вартість: {{Math.round(recipyInfo.totalCost * 100) / 100}} грн <span *ngIf="isPerHundredGrams">/100гр</span>
+        <p><ion-icon name="wallet-outline" size="small" color="primary"></ion-icon> {{Math.round(recipyInfo.totalCost * 100) / 100}} грн <span *ngIf="isPerHundredGrams">/100гр</span></p>
         <ng-container *ngIf="recipyInfo.warnings.length">
             <ion-button fill="clear" size="small" slot="icon-only" [id]="'warnings-details'+id">
                 <ion-icon name="alert-circle-outline"
