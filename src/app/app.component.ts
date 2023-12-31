@@ -100,13 +100,13 @@ export class AppComponent implements OnInit {
         this.store.dispatch(new UiActions.SetCurrentRouteAction(event.url));
 
         let root = document.documentElement;
-        if (this.deviceInformationService.isDesktop()) {
-          if (event.url.includes('admin')) {
-            root.style.setProperty('--app-width', 100 + "vw");
-          } else {
-            root.style.setProperty('--app-width', 900 + "px");
-          }
-        }
+        // if (this.deviceInformationService.isDesktop()) {
+        //   if (event.url.includes('admin')) {
+        //     root.style.setProperty('--app-width', 100 + "vw");
+        //   } else {
+        //     root.style.setProperty('--app-width', 900 + "px");
+        //   }
+        // }
 
       }
     })
