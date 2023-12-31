@@ -3,6 +3,7 @@
   --tabs-height: 50px;
   --segment-height: 32px;
   --safety-height: 20px;
+  --comments-height: 44px;
 }
 
 .preparations-steps {
@@ -19,7 +20,27 @@
 .scrollable {
   max-height: calc(
     100vh - var(--header-height) - var(--app-header) - var(--tabs-height) -
-      var(--segment-height) - var(--safety-height)
+      var(--segment-height) - var(--safety-height) - var(--comments-height)
   );
   overflow-y: auto;
+
+  @media (min-width: '700px') {
+    max-height: calc(
+    100vh - var(--header-height) - var(--app-header) - var(--tabs-height) -
+      var(--segment-height) - var(--safety-height) - var(--comments-height) - 40px
+  );
+  }
+}
+
+.wide-screen-view {
+  display: flex;
+  gap: 15px;
+  // flex: 1 1 1;
+  &-products, &-steps {
+    flex-basis: 40%;
+  }
+
+  &-info {
+    flex-shrink: 9;
+  }
 }

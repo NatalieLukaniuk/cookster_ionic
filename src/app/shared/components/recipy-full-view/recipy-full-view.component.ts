@@ -32,6 +32,8 @@ export class RecipyFullViewComponent implements OnChanges {
 
   ingredStartOptions: ItemOption[] = [];
 
+  isWideScreen = window.innerWidth > window.innerHeight;
+
   @ViewChild('header') header: ElementRef | undefined;
 
   tabs = [
@@ -44,7 +46,11 @@ export class RecipyFullViewComponent implements OnChanges {
 
   selectedStepId = 0;
 
-  constructor() { }
+  constructor() { 
+    window.addEventListener("orientationchange", () => {
+      this.isWideScreen = screen.orientation.type === 'landscape-primary'
+  });
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (this.header) {
       let root = document.documentElement;
