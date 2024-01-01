@@ -11,6 +11,7 @@ import {
 import { User } from 'src/app/models/auth.models';
 import { Recipy } from 'src/app/models/recipies.models';
 import { ItemOption } from '../ingredient/ingredient.component';
+import { LayoutService } from 'src/app/services/layout.service';
 @Component({
   selector: 'app-recipy-full-view',
   templateUrl: './recipy-full-view.component.html',
@@ -32,7 +33,7 @@ export class RecipyFullViewComponent implements OnChanges {
 
   ingredStartOptions: ItemOption[] = [];
 
-  isWideScreen = window.innerWidth > window.innerHeight;
+  isLandscape$ = this.layoutService.getIsLandscape();
 
   @ViewChild('header') header: ElementRef | undefined;
 
@@ -46,10 +47,7 @@ export class RecipyFullViewComponent implements OnChanges {
 
   selectedStepId = 0;
 
-  constructor() { 
-    window.addEventListener("orientationchange", () => {
-      this.isWideScreen = screen.orientation.type === 'landscape-primary'
-  });
+  constructor(private layoutService: LayoutService) {     
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (this.header) {

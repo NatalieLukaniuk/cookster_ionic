@@ -28,6 +28,7 @@ import { Reminder } from './models/calendar.models';
 import * as _ from 'lodash';
 import { UpdateUserAction } from './store/actions/user.actions';
 import { LoadCommentsAction } from './store/actions/comments.actions';
+import { LayoutService } from './services/layout.service';
 
 @Component({
   selector: 'app-root',
@@ -72,7 +73,8 @@ export class AppComponent implements OnInit {
     private dialog: DialogsService,
     private router: Router,
     private deviceInformationService: AngularDeviceInformationService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private layoutService: LayoutService
   ) { }
   ngOnInit(): void {
     this.loadData();
@@ -98,21 +100,10 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.store.dispatch(new UiActions.SetCurrentRouteAction(event.url));
-
-        let root = document.documentElement;
-        // if (this.deviceInformationService.isDesktop()) {
-        //   if (event.url.includes('admin')) {
-        //     root.style.setProperty('--app-width', 100 + "vw");
-        //   } else {
-        //     root.style.setProperty('--app-width', 900 + "px");
-        //   }
-        // }
-
       }
     })
 
-
-
+    this.layoutService.trackOrientationChange();
   }
 
   loadData() {
@@ -151,7 +142,7 @@ export class AppComponent implements OnInit {
     this.authService.logoutUser();
   }
 
-  async onAddReminder(){
+  async onAddReminder() {
     const modal = await this.modalCtrl.create({
       component: AddReminderModalComponent,
       breakpoints: [0.5, 0.75],
@@ -169,11 +160,11 @@ export class AppComponent implements OnInit {
         fullDate: data.fullDate,
         done: false
       }
-      
+
       this.user$.pipe(take(1)).subscribe(user => {
-        if(user){
+        if (user) {
           const updatedUser = _.cloneDeep(user);
-          if(updatedUser.savedPreps){
+          if (updatedUser.savedPreps) {
             updatedUser.savedPreps.push(reminder)
           } else {
             updatedUser.savedPreps = [reminder];

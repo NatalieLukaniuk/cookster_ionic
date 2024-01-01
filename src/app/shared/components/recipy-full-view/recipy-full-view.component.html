@@ -1,12 +1,12 @@
 <ng-container *ngIf="recipy; else noRecipy">
-  <ion-segment *ngIf="!isWideScreen" [value]="currentTab" (ionChange)="onTabChange($event)">
+  <ion-segment *ngIf="!(isLandscape$ | async)" [value]="currentTab" (ionChange)="onTabChange($event)">
     <ion-segment-button *ngFor="let tab of tabs" [value]="tab.value">
       <ion-label>{{ tab.name }}</ion-label>
     </ion-segment-button>
   </ion-segment>
 
   <div class="scrollable">
-    <ng-container *ngIf="!isWideScreen">
+    <ng-container *ngIf="!(isLandscape$ | async)">
       <ng-container *ngIf="currentTab === tabs[0].value">
         <app-ingredients-tab [recipy]="recipy" [portions]="portions" [amountPerPortion]="amountPerPortion"
           [ingredStartOptions]="ingredStartOptions" [day]="day"
@@ -26,7 +26,7 @@
         <app-info-tab [currentUser]="currentUser" [recipy]="recipy"></app-info-tab>
       </ng-container>
     </ng-container>
-    <div *ngIf="isWideScreen" class="wide-screen-view">
+    <div *ngIf="(isLandscape$ | async)" class="wide-screen-view">
       <div class="scrollable wide-screen-view-products">
         <app-ingredients-tab [recipy]="recipy" [portions]="portions" [amountPerPortion]="amountPerPortion"
           [ingredStartOptions]="ingredStartOptions" [day]="day"
