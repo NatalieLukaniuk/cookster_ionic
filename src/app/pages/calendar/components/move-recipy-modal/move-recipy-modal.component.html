@@ -18,7 +18,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <app-recipy-short-view *ngIf="recipy" [currentUser]="user$ | async" [recipy]="recipy" [isBigScreen]="isBigScreen"></app-recipy-short-view>
+      <app-recipy-short-view *ngIf="recipy" [currentUser]="user$ | async" [recipy]="recipy" [isBigScreen]="isBigScreen" [isShowActionButtons]="false"></app-recipy-short-view>
 
       <h5>Нова дата:</h5>
       <ion-datetime presentation="date" (ionChange)="dateSelected($event)"></ion-datetime>

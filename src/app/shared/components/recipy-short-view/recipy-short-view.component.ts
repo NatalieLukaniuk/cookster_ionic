@@ -26,6 +26,7 @@ export class RecipyShortViewComponent implements OnInit {
   currentUser!: User | null;
   @Input() productPreferencesChips: productPreferencesChip[] | null = [];
   @Input() isBigScreen = false;
+  @Input() isShowActionButtons = true;
 
   isNeedsAdvancePreparation: boolean = false;
 

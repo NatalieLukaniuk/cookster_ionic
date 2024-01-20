@@ -1,5 +1,5 @@
 <ion-card (click)="onRecipyClicked()" *ngIf="!isBigScreen">
-  <ng-container *ngTemplateOutlet="genericInfo"></ng-container>  
+  <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
 
   <ion-card-content>
     <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
@@ -24,7 +24,6 @@
         Перейти до рецепту
       </ion-button>
       <ion-button *ngIf="currentUser" (click)="showCollections()">
-
         Колекції
       </ion-button>
     </div>
@@ -45,17 +44,37 @@
     <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
   </div>
   <div class="big-screen-card-content">
-    <ng-container *ngTemplateOutlet="genericInfo"></ng-container>  
+    <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
     <ion-card-content>
       <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
-    <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
+      <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
+      <div class="big-screen-card-action-buttons" *ngIf="isShowActionButtons">
+        <ion-button color="light" *ngIf="currentUser" (click)="showCollections()">
+          Колекції
+        </ion-button>
+        <ion-button color="light" (click)="goFullRecipy()">
+          Перейти до рецепту
+        </ion-button>
+        <div class="overlay collections" [class.visible]="isShowCollections">
+          <ion-button fill="clear" class="close-btn" (click)="isShowCollections = false">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+          </ion-button>
+          <ion-list>
+            <ion-item color="tertiary" *ngFor="let collection of recipyCollections"
+              (click)="onCollectionSelected(collection)">
+              <ion-label>{{ getIsInCollection(collection) ? "✓" : "" }}
+                {{ collection }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+
     </ion-card-content>
-    
   </div>
 </ion-card>
 
 <ng-template #genericInfo>
-  <ion-card-header>    
+  <ion-card-header>
     <ion-card-title>{{ recipy.name }}</ion-card-title>
     <ion-card-subtitle>
       <div class="flex-container">
