@@ -24,7 +24,8 @@ export class RecipyShortViewComponent implements OnInit {
   recipy!: Recipy;
   @Input()
   currentUser!: User | null;
-  @Input() productPreferencesChips: productPreferencesChip[] | null = []
+  @Input() productPreferencesChips: productPreferencesChip[] | null = [];
+  @Input() isBigScreen = false;
 
   isNeedsAdvancePreparation: boolean = false;
 
@@ -95,6 +96,7 @@ export class RecipyShortViewComponent implements OnInit {
     this.isNeedsAdvancePreparation = this.recipy.type?.includes(
       DishType['потребує попередньої підготовки']
     );
+    console.log(this.isBigScreen)
   }
 
   onRecipyClicked() {

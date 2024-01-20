@@ -22,4 +22,16 @@ export class LayoutService {
   getIsLandscape() {
     return this.isLandscape$.asObservable()
   }
+
+  getIsBigScreen(){
+    return this.getIsWideScreen() && this.getIsHighScreen()
+  }
+
+  getIsWideScreen(){
+    return window.innerWidth > 600
+  }
+
+  getIsHighScreen(){
+    return window.innerHeight > 600
+  }
 }

@@ -9,6 +9,7 @@ import { Recipy, productPreferencesChip } from 'src/app/models/recipies.models';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import * as _ from 'lodash';
 import { User } from 'src/app/models/auth.models';
+import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'app-recipies',
@@ -30,9 +31,12 @@ export class RecipiesContainer implements OnDestroy {
 
   currentUser: User | null | undefined;
 
+  isBigScreen = this.layoutService.getIsBigScreen();
+
   constructor(
     private store: Store<IAppState>,
-    private filtersService: FiltersService
+    private filtersService: FiltersService,
+    private layoutService: LayoutService
   ) {
     this.subscribeForProductChips();
     this.subscribeForRecipies()

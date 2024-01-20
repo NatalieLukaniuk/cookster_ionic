@@ -1,3 +1,4 @@
+import { LayoutService } from 'src/app/services/layout.service';
 import { IonModal } from '@ionic/angular';
 import { MealTime } from 'src/app/models/calendar.models';
 import {
@@ -37,6 +38,8 @@ export class SelectOptionDialogComponent implements OnInit, OnDestroy, OnChanges
 
   presentingElement: Element | undefined | null;
 
+  isBigScreen = this.layoutService.getIsBigScreen();
+
   @Output() resultReceived = new EventEmitter<{
     portions: number;
     amountPerPortion: number;
@@ -68,7 +71,7 @@ export class SelectOptionDialogComponent implements OnInit, OnDestroy, OnChanges
 
   @ViewChild('selectOption') modal: IonModal | undefined;
 
-  constructor(private store: Store<IAppState>) { }
+  constructor(private store: Store<IAppState>, private layoutService: LayoutService) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipy']) {
       this.recipyChanged$.next(changes['recipy'].currentValue)
