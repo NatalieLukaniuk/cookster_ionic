@@ -8,6 +8,7 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -19,13 +20,14 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { FiltersService } from 'src/app/filters/services/filters.service';
 import * as _ from 'lodash';
 import { CalendarService } from 'src/app/services/calendar.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-add-recipy-modal',
   templateUrl: './add-recipy-modal.component.html',
   styleUrls: ['./add-recipy-modal.component.scss'],
 })
-export class AddRecipyModalComponent implements OnDestroy {
+export class AddRecipyModalComponent implements OnDestroy, OnInit {
   @Input() meatime!: MealTime;
   @Input() date!: string;
   @Output() recipyToAdd = new EventEmitter<Recipy>();
@@ -92,6 +94,9 @@ export class AddRecipyModalComponent implements OnDestroy {
     private calendarService: CalendarService
   ) {
     this.subscribeForProductChips()
+  }
+  ngOnInit(): void {
+    debugger
   }
 
   ngOnDestroy(): void {
@@ -200,5 +205,9 @@ export class AddRecipyModalComponent implements OnDestroy {
 
   goTop() {
     this.scrollingContainer.scrollToTop()
+  }
+
+  getDateText(){
+    return moment(this.date, 'DD-MM-YYYY').format('dddd, MMM D')
   }
 }

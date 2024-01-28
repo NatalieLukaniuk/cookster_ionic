@@ -13,7 +13,7 @@
         <ion-title [class.padding-block]="(collectionSelected$ | async)">
           <app-search-recipies-filter *ngIf="(collectionSelected$ | async)"></app-search-recipies-filter>
           <div class="selection-info">
-            <h6>{{date.toString() | date : "EE, MMM d"}}, {{mealtimeText.toLowerCase()}}</h6>
+            <h6>{{getDateText()}}, {{mealtimeText.toLowerCase()}}</h6>
             <h6 *ngIf="(collectionSelected$ | async)">
               Колекція {{ (collectionSelected$ | async)!.name }}
             </h6>
