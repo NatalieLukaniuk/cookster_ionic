@@ -9,7 +9,14 @@
 
 .selection-info {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  h6 {
+    margin-block: 5px;
+  }
+  @media (min-width: 590px){
+    gap: 20px;
+    flex-direction: row;
+  }
 }
 
 .recipy-photo {
