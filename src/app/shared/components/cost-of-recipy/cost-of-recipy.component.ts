@@ -14,6 +14,7 @@ export class CostOfRecipyComponent implements OnInit {
   @Input() portions: number = 1;
   @Input() amountPerPortion: number = 100;
   @Input() isFullscreenModal = false;
+  @Input() isCostDetails = true;
 
   isPerHundredGrams = false;
 
