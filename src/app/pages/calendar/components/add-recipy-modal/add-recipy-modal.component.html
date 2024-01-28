@@ -5,9 +5,21 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="cancel()">Cancel</ion-button>
+          <ion-button *ngIf="!(collectionSelected$ | async)" (click)="cancel()">Cancel</ion-button>
+          <ion-button *ngIf="(collectionSelected$ | async)" (click)="collectionSelected$.next(null)">
+            <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+          </ion-button>
         </ion-buttons>
-        <ion-title>Виберіть рецепт</ion-title>
+        <ion-title [class.padding-block]="(collectionSelected$ | async)">
+          <app-search-recipies-filter *ngIf="(collectionSelected$ | async)"></app-search-recipies-filter>
+          <div class="selection-info">
+            <h6>{{date.toString() | date : "EE, MMM d"}}, {{mealtimeText.toLowerCase()}}</h6>
+            <h6 *ngIf="(collectionSelected$ | async)">
+              Колекція {{ (collectionSelected$ | async)!.name }}
+            </h6>
+          </div>
+
+        </ion-title>
         <ion-buttons slot="end" *ngIf="(collectionSelected$ | async)">
           <app-filters [pageId]="'add-recipy-to-cal'"></app-filters>
         </ion-buttons>
@@ -15,8 +27,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding" #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
-      <app-search-recipies-filter *ngIf="(collectionSelected$ | async)"></app-search-recipies-filter>
-      <h6>{{date.toString() | date : "EE, MMM d"}}, {{mealtimeText.toLowerCase()}}</h6>
+
 
       <ng-container *ngIf="!(collectionSelected$ | async)">
         <ion-list>
@@ -32,12 +43,7 @@
 
       <!-- page with recipies by collection -->
       <ng-container *ngIf="collectionSelected$ | async">
-        <h3 class="collection-name">
-          <ion-button size="small" (click)="collectionSelected$.next(null)">
-            <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
-          </ion-button>
-          <span>Колекція {{ (collectionSelected$ | async)!.name }}</span>
-        </h3>
+
         <ion-list *ngIf="recipies$ | async">
           <ng-container *ngFor="let recipy of recipies; let index = index">
             <ion-item detail="false" button *ngIf="index < numberOfRecipiesToDisplay" (click)="onRecipyClicked(recipy)">
@@ -61,8 +67,10 @@
                     </span>
 
                     <span *ngIf="recipy.calorificValue">{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span>
-                    <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon> {{recipy.portionSize}}гр./порцію</div>
-                    <div *ngIf="recipy.lastPrepared"><ion-icon name="today-outline"></ion-icon> {{recipy.lastPrepared | lastPreparedDate }}
+                    <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon>
+                      {{recipy.portionSize}}гр./порцію</div>
+                    <div *ngIf="recipy.lastPrepared"><ion-icon name="today-outline"></ion-icon> {{recipy.lastPrepared |
+                      lastPreparedDate }}
                     </div>
                     <div class="collection-tags">
                       <span><ion-icon name="pricetags-outline"></ion-icon> </span>

@@ -7,13 +7,9 @@
   gap: 4px;
 }
 
-.collection-name {
+.selection-info {
   display: flex;
-  align-items: center;
-
-  span {
-    margin-left: 30px;
-  }
+  gap: 20px;
 }
 
 .recipy-photo {
@@ -33,5 +29,11 @@
     &.limitedWidth {
       max-width: 60%;
     }
+  }
+}
+
+ion-title {
+  &.padding-block {
+    padding-block: 15px 0;
   }
 }
