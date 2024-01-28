@@ -8,7 +8,6 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -27,7 +26,7 @@ import * as moment from 'moment';
   templateUrl: './add-recipy-modal.component.html',
   styleUrls: ['./add-recipy-modal.component.scss'],
 })
-export class AddRecipyModalComponent implements OnDestroy, OnInit {
+export class AddRecipyModalComponent implements OnDestroy {
   @Input() meatime!: MealTime;
   @Input() date!: string;
   @Output() recipyToAdd = new EventEmitter<Recipy>();
@@ -95,9 +94,6 @@ export class AddRecipyModalComponent implements OnDestroy, OnInit {
   ) {
     this.subscribeForProductChips()
   }
-  ngOnInit(): void {
-    debugger
-  }
 
   ngOnDestroy(): void {
     this.destroy$.next()
@@ -107,6 +103,10 @@ export class AddRecipyModalComponent implements OnDestroy, OnInit {
 
   cancel() {
     this.modal?.dismiss(null, 'cancel');
+  }
+
+  open(){
+    this.modal?.present()
   }
 
   onRecipyClicked(recipy: Recipy) {

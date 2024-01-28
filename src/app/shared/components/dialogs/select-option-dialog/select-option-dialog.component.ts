@@ -18,6 +18,7 @@ import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { BehaviorSubject, Subject, combineLatest, map, pipe, takeUntil } from 'rxjs';
+import * as moment from 'moment';
 
 export interface DialogData {
   title: string;
@@ -113,5 +114,9 @@ export class SelectOptionDialogComponent implements OnInit, OnDestroy, OnChanges
       case MealTime.Dinner:
         return 'Вечеря';
     }
+  }
+
+  getDateText(){
+    return moment(this.date, 'DD-MM-YYYY').format('dddd, MMM D')
   }
 }

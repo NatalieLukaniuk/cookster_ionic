@@ -37,7 +37,7 @@
   </ng-container>
 
   <div class="action-buttons">
-    <app-add-recipy-modal *ngIf="addRecipies" [meatime]="mealtime" [date]="day.details.day"
+    <app-add-recipy-modal #addRecipyModal *ngIf="addRecipies" [meatime]="mealtime" [date]="day.details.day"
       (recipyToAdd)="onRecipySelected($event)"></app-add-recipy-modal>
     <app-add-comment-modal #addCommentModal *ngIf="addRecipies" [meatime]="mealtime" [date]="day.details.day"
       (commentToAdd)="onAddComment($event)">
