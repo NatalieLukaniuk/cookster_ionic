@@ -1,10 +1,19 @@
 <app-header>
     <p title>Історія покупок</p>
 </app-header>
-<ion-content>
-    <div>
-        <ng-container *ngFor="let item of expenses$ | async">
-            <app-view-expense-item [expenseItem]="item"></app-view-expense-item>
+<ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
+    <div *ngIf="(expenses$ | async) as expenses">
+        <ng-container *ngFor="let item of expenses; let index = index">
+            <app-view-expense-item *ngIf="index < numberOfItemsToDisplay" [expenseItem]="item"></app-view-expense-item>
         </ng-container>
+        <ion-infinite-scroll *ngIf="numberOfItemsToDisplay <= expenses.length" (ionInfinite)="onIonInfinite($event)">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+          </ion-infinite-scroll>
     </div>
+
+    <ion-fab *ngIf="showGoTop" (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button>
+          <ion-icon name="chevron-up-circle"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
 </ion-content>

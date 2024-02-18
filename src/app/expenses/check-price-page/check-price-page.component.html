@@ -3,7 +3,7 @@
         (ionInput)="onSearch($event)" (ionClear)="clear()"></ion-searchbar>
     <app-filters right-button [isExpensePage]="true" [pageId]="'check-price'"></app-filters>
 </app-header>
-<ion-content>
+<ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
     <app-active-filters-expenses-widget></app-active-filters-expenses-widget>
     <div class="average-price">
         <ion-item class="average-price-display" lines="none" color="tertiary">
@@ -33,8 +33,17 @@
 
 <!-- цей список треба замінити на чарт -->
     <div class="expense-items-list" *ngIf="(expenseItemsToDisplay$ | async) as allItems">
-        <ng-container *ngFor="let item of allItems">
-            <app-view-expense-item [expenseItem]="item" [color]="getColor(item)"></app-view-expense-item>
+        <ng-container *ngFor="let item of allItems; let index = index">
+            <app-view-expense-item *ngIf="index < numberOfItemsToDisplay" [expenseItem]="item" [color]="getColor(item)"></app-view-expense-item>
         </ng-container>
+        <ion-infinite-scroll *ngIf="numberOfItemsToDisplay <= allItems.length" (ionInfinite)="onIonInfinite($event)">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+          </ion-infinite-scroll>
     </div>
+
+    <ion-fab *ngIf="showGoTop" (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button>
+          <ion-icon name="chevron-up-circle"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
 </ion-content>

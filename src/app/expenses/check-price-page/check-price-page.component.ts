@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, combineLatest, map, tap } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
@@ -11,6 +11,7 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
 import { Filters } from 'src/app/models/filters.models';
 import { ExpencesService } from '../expences.service';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-check-price-page',
@@ -102,6 +103,25 @@ export class CheckPricePageComponent {
 
   clear() {
     this.searchWord$.next('');
+  }
+
+  numberOfItemsToDisplay = 10;
+
+  onIonInfinite(event: any){
+    this.numberOfItemsToDisplay += 10;
+    (event as InfiniteScrollCustomEvent).target.complete();
+  }
+
+  showGoTop = false;
+
+  onscroll(event: any) {
+    this.showGoTop = event.detail.scrollTop > 500;
+  }
+
+  @ViewChild('scrollingContainer') scrollingContainer: any;
+
+  goTop() {
+    this.scrollingContainer.scrollToTop()
   }
 
 }

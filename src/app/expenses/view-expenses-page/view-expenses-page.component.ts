@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
 import { ExpenseItem } from '../expenses-models';
 import * as _ from 'lodash';
 import { getExpenses } from 'src/app/store/selectors/expenses.selectors';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-view-expenses-page',
@@ -25,4 +26,23 @@ export class ViewExpensesPageComponent {
     private store: Store<IAppState>
   ) { }
 
+  
+  numberOfItemsToDisplay = 10;
+
+  onIonInfinite(event: any){
+    this.numberOfItemsToDisplay += 10;
+    (event as InfiniteScrollCustomEvent).target.complete();
+  }
+
+  showGoTop = false;
+
+  onscroll(event: any) {
+    this.showGoTop = event.detail.scrollTop > 500;
+  }
+
+  @ViewChild('scrollingContainer') scrollingContainer: any;
+
+  goTop() {
+    this.scrollingContainer.scrollToTop()
+  }
 }
