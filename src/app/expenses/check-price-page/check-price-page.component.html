@@ -31,8 +31,9 @@
         </div>
     </div>
 
-    <div class="expense-items-list">
-        <ng-container *ngFor="let item of expenseItemsToDisplay$ | async">
+<!-- цей список треба замінити на чарт -->
+    <div class="expense-items-list" *ngIf="(expenseItemsToDisplay$ | async) as allItems">
+        <ng-container *ngFor="let item of allItems">
             <app-view-expense-item [expenseItem]="item" [color]="getColor(item)"></app-view-expense-item>
         </ng-container>
     </div>

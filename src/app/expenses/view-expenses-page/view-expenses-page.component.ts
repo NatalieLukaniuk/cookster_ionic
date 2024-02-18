@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { ExpenseItem } from '../expenses-models';
 import * as _ from 'lodash';
+import { getExpenses } from 'src/app/store/selectors/expenses.selectors';
 
 @Component({
   selector: 'app-view-expenses-page',
@@ -12,9 +12,9 @@ import * as _ from 'lodash';
   styleUrls: ['./view-expenses-page.component.scss']
 })
 export class ViewExpensesPageComponent {
-  expenses$: Observable<ExpenseItem[]> = this.store.pipe(select(getCurrentUser), map(user => {
-    if (user && user.expenses?.length) {
-      const cloned = _.cloneDeep(user.expenses)
+  expenses$: Observable<ExpenseItem[]> = this.store.pipe(select(getExpenses), map(expenses => {
+    if (expenses && expenses.length) {
+      const cloned = _.cloneDeep(expenses)
       return cloned.reverse()
     } else {
       return []

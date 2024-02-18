@@ -17,7 +17,6 @@ export interface User {
   draftRecipies?: DraftRecipy[];
   preferences?: Preferences;
   family?: FamilyMember[];
-  expenses?: ExpenseItem[];
 }
 
 export enum Role {

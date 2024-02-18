@@ -7,13 +7,11 @@ import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 import { Currency, CurrencyOptions, CurrencyText, ExpenseItem } from '../expenses-models';
 import { transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import * as _ from 'lodash';
-import { UpdateUserAction } from 'src/app/store/actions/user.actions';
 import { InputWithAutocompleteComponent } from 'src/app/shared/components/input-with-autocomplete/input-with-autocomplete.component';
 import { ProductAutocompleteComponent } from 'src/app/shared/components/product-autocomplete/product-autocomplete.component';
-import { User } from 'src/app/models/auth.models';
-import { ExpencesService } from '../expences.service';
+import { getExpenses } from 'src/app/store/selectors/expenses.selectors';
+import { AddExpenseAction } from 'src/app/store/actions/expenses.actions';
 
 @Component({
   selector: 'app-record-expenses',
@@ -42,9 +40,9 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   originalCost = '';
   discount = '';
 
-  currentUser: User | undefined;
-
   destroy$ = new Subject<void>();
+
+  expenses: ExpenseItem[] = []
 
   products: Product[] = [];
   products$: Observable<Product[]> = this.store.pipe(
@@ -62,7 +60,6 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<IAppState>,
     private datamapping: DataMappingService,
-    private expensesService: ExpencesService
   ) { }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -70,14 +67,10 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.store.pipe(select(getCurrentUser), takeUntil(this.destroy$)).subscribe(user => {
-      if (user) {
-        this.currentUser = user;        
-      }
-    })
 
-    this.expensesService.getExpenses().pipe(takeUntil(this.destroy$)).subscribe(expenses => {
-      if (expenses.length) {
+    this.store.pipe(select(getExpenses)).pipe(takeUntil(this.destroy$)).subscribe(expenses => {
+      if (expenses?.length) {
+        this.expenses = expenses
         const allBrands = expenses.filter(expense => !!expense?.brand).map(expense => expense.brand)
         this.brandAutocompleteOptions = this.getUnique(allBrands as string[]);
         this.titleAutocompleteOptions = this.getUnique(expenses.map(expense => expense?.title));
@@ -191,16 +184,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
       costPerHundredGrInHRN: costPerHundredGrInHRN
     }
 
-    if (this.currentUser) {
-      const clonedUser = _.cloneDeep(this.currentUser);
-      if (clonedUser.expenses) {
-        clonedUser.expenses = clonedUser.expenses.filter(item => !!item);
-        clonedUser.expenses.push(toAdd)
-      } else {
-        clonedUser.expenses = [toAdd]
-      }
-      this.store.dispatch(new UpdateUserAction(clonedUser, `${this.title} saved`))
-    }
+    this.store.dispatch(new AddExpenseAction(toAdd))
     this.clearForm()
   }
 
@@ -215,7 +199,7 @@ export class RecordExpensesComponent implements OnInit, OnDestroy {
 
   onExpenseNameAdded(event: string) {
     this.title = event;
-    const found = this.currentUser?.expenses?.find((expenseItem: ExpenseItem) => expenseItem.title === event);
+    const found = this.expenses.find((expenseItem: ExpenseItem) => expenseItem.title === event);
 
     if (found) {
         const productId = found.productId;

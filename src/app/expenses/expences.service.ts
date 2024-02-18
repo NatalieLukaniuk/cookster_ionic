@@ -5,12 +5,12 @@ import { ExpenseItem } from './expenses-models';
 import { Ingredient, MeasuringUnit, MeasuringUnitText } from '../models/recipies.models';
 import { DataMappingService } from '../services/data-mapping.service';
 import { transformToGr } from '../pages/recipies/utils/recipy.utils';
-import { getCurrentUser } from '../store/selectors/user.selectors';
 import { Observable, map, take } from 'rxjs';
-import { DatePipe, formatDate } from '@angular/common';
+import { formatDate } from '@angular/common';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { UpdateUserAction } from '../store/actions/user.actions';
+import { getExpenses } from '../store/selectors/expenses.selectors';
+import { DeleteExpenseAction } from '../store/actions/expenses.actions';
 
 export interface RecipyCostInfo {
   totalCost: number,
@@ -120,9 +120,9 @@ export class ExpencesService {
   }
 
   getExpenses(): Observable<ExpenseItem[]> {
-    return this.store.pipe(select(getCurrentUser), map(user => {
-      if (user && user.expenses?.length) {
-        return user.expenses.map(expense => this.addVat(expense))
+    return this.store.pipe(select(getExpenses), map(expenses => {
+      if (expenses && expenses.length) {
+        return expenses.map(expense => this.addVat(expense))
       } else {
         return []
       }
@@ -142,9 +142,9 @@ export class ExpencesService {
   }
 
   getTitleOptions() {
-    return this.store.pipe(select(getCurrentUser), map(user => {
-      if (user && user.expenses?.length) {
-        return this.getUnique(user.expenses.map(expense => expense.title))
+    return this.store.pipe(select(getExpenses), map(expenses => {
+      if (expenses && expenses.length) {
+        return this.getUnique(expenses.map(expense => expense.title))
       } else {
         return []
       }
@@ -229,15 +229,15 @@ export class ExpencesService {
                 totalCostInfo.totalCost += cost
                 totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Дані за пів року`)
               } else {
-                const averagePrice = this.getAveragePrice(ingredExpenseInfo);                
+                const averagePrice = this.getAveragePrice(ingredExpenseInfo);
                 const cost = averagePrice / 100 * (ingredient.amount * coef);
                 totalCostInfo.totalCost += cost;
-                if(cost === 0){
+                if (cost === 0) {
                   totalCostInfo.warnings.push(`${ingredientName}: 0 грн`)
                 } else {
                   totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Немає даних за останні пів року`)
                 }
-                
+
               }
             }
           }
@@ -256,7 +256,7 @@ export class ExpencesService {
     portionsToServe: number,
     portionSize: number,
     allExpenses: ExpenseItem[]
-  ){
+  ) {
     const coef = this.dataMapping.getCoeficient(
       ingredients,
       portionsToServe,
@@ -271,57 +271,50 @@ export class ExpencesService {
     };
 
     let partWithNoData = 0;
-        ingredients.forEach(ingredient => {
-          const ingredientName = ingredient.ingredient ? ingredient.ingredient : this.dataMapping.getProductNameById(ingredient.product)
-          const ingredExpenseInfo = this.getExpensesByProduct(allExpenses, ingredient.product)
-          if (!ingredExpenseInfo.length) {
-            totalCostInfo.warnings.push(`${ingredientName}: немає даних`)
-            const part = (ingredient.amount * coef) / (portionSize * portionsToServe);
-            partWithNoData += part;
+    ingredients.forEach(ingredient => {
+      const ingredientName = ingredient.ingredient ? ingredient.ingredient : this.dataMapping.getProductNameById(ingredient.product)
+      const ingredExpenseInfo = this.getExpensesByProduct(allExpenses, ingredient.product)
+      if (!ingredExpenseInfo.length) {
+        totalCostInfo.warnings.push(`${ingredientName}: немає даних`)
+        const part = (ingredient.amount * coef) / (portionSize * portionsToServe);
+        partWithNoData += part;
+      } else {
+        const averagePriceLastMonth = this.getAveragePriceForLastMonth(ingredExpenseInfo);
+        if (averagePriceLastMonth) {
+          const cost = averagePriceLastMonth / 100 * (ingredient.amount * coef)
+          totalCostInfo.totalCost += cost
+          totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн`)
+        } else {
+          const averagePriceHalfYear = this.getAveragePriceForHalfYear(ingredExpenseInfo);
+          if (averagePriceHalfYear) {
+            const cost = averagePriceHalfYear / 100 * (ingredient.amount * coef);
+            totalCostInfo.totalCost += cost
+            totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Дані за пів року`)
           } else {
-            const averagePriceLastMonth = this.getAveragePriceForLastMonth(ingredExpenseInfo);
-            if (averagePriceLastMonth) {
-              const cost = averagePriceLastMonth / 100 * (ingredient.amount * coef)
-              totalCostInfo.totalCost += cost
-              totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн`)
+            const averagePrice = this.getAveragePrice(ingredExpenseInfo);
+            const cost = averagePrice / 100 * (ingredient.amount * coef);
+            totalCostInfo.totalCost += cost;
+            if (cost === 0) {
+              totalCostInfo.warnings.push(`${ingredientName}: 0 грн`)
             } else {
-              const averagePriceHalfYear = this.getAveragePriceForHalfYear(ingredExpenseInfo);
-              if (averagePriceHalfYear) {
-                const cost = averagePriceHalfYear / 100 * (ingredient.amount * coef);
-                totalCostInfo.totalCost += cost
-                totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Дані за пів року`)
-              } else {
-                const averagePrice = this.getAveragePrice(ingredExpenseInfo);                
-                const cost = averagePrice / 100 * (ingredient.amount * coef);
-                totalCostInfo.totalCost += cost;
-                if(cost === 0){
-                  totalCostInfo.warnings.push(`${ingredientName}: 0 грн`)
-                } else {
-                  totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Немає даних за останні пів року`)
-                }
-                
-              }
+              totalCostInfo.warnings.push(`${ingredientName}: ${Math.round(cost * 100) / 100} грн. Немає даних за останні пів року`)
             }
+
           }
-        })
-        if (partWithNoData >= .2) {
-          totalCostInfo.notReliable = true;
         }
-        totalCostInfo.partWithNoData = Math.round(partWithNoData * 100)        
-        return totalCostInfo;
+      }
+    })
+    if (partWithNoData >= .2) {
+      totalCostInfo.notReliable = true;
+    }
+    totalCostInfo.partWithNoData = Math.round(partWithNoData * 100)
+    return totalCostInfo;
 
   }
 
   deleteExpenseItem(item: ExpenseItem) {
-    this.store.pipe(select(getCurrentUser), take(1)).subscribe(user => {
-      if (user && user.expenses) {
-        const clonedUser = _.cloneDeep(user);
-        let updated = {
-          ...clonedUser,
-          expenses: clonedUser.expenses?.filter(expense => !(expense.title === item.title && expense.productId === item.productId && expense.purchaseDate === item.purchaseDate && expense.purchasePlace === item.purchasePlace))
-        }        
-        this.store.dispatch(new UpdateUserAction(updated, `${item.title} deleted`))
-      }
-    })
+    this.store.dispatch(new DeleteExpenseAction(item))
   }
+
+
 }

@@ -6,6 +6,7 @@ import { InitialUiState, UiReducers, UiState } from './ui.reducer';
 import { InitialUserState, IUserState, UserReducers } from './user.reducer';
 import { InitialRecipiesState, IRecipiesState, RecipiesReducers } from './recipies.reducer';
 import { CommentsReducers, CommentsState, InitialCommentsState } from './comments.reducers';
+import { ExpensesReducers, ExpensesState, InitialExpensesState } from './expenses.reducer';
 
 export interface IAppState {
   ui: UiState,
@@ -13,7 +14,8 @@ export interface IAppState {
   planner: PlannerState,
   user: IUserState,
   recipies: IRecipiesState,
-  comments: CommentsState
+  comments: CommentsState,
+  expenses: ExpensesState
 }
 
 export const InitialAppState: IAppState = {
@@ -22,7 +24,8 @@ export const InitialAppState: IAppState = {
   planner: InitialPlannerState,
   user: InitialUserState,
   recipies: InitialRecipiesState,
-  comments: InitialCommentsState
+  comments: InitialCommentsState,
+  expenses: InitialExpensesState
 }
 
 export const reducers: ActionReducerMap<IAppState, any> = {
@@ -31,5 +34,6 @@ export const reducers: ActionReducerMap<IAppState, any> = {
   planner: PlannerReducers,
   user: UserReducers,
   recipies: RecipiesReducers,
-  comments: CommentsReducers
+  comments: CommentsReducers,
+  expenses: ExpensesReducers
 };

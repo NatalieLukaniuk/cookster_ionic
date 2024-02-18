@@ -3,7 +3,7 @@
 </app-header>
 
 <ion-content>
-    <div class="form-container">
+    <div class="form-container" *ngIf="products$ | async">
         <div *ngIf="!isModal">
             <app-input-with-autocomplete #titleAutocomplete [suggestions]="titleAutocompleteOptions"
                 [placeholder]="'Точна назва товару'"
@@ -13,7 +13,7 @@
             <p class="static-title">{{title}}</p>
         </div>
         <div>
-            <app-product-autocomplete #productAutocomplete *ngIf="products$ | async" [products]="products"
+            <app-product-autocomplete #productAutocomplete [products]="products"
                 [addNewProductAsOther]="true" (onAddProduct)="showAddProduct = true"
                 (productSelected)="onProductSelected($event)"></app-product-autocomplete>
         </div>
