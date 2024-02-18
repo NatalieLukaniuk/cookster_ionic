@@ -35,6 +35,8 @@ export class RecipyFullViewComponent implements OnChanges {
 
   isLandscape$ = this.layoutService.getIsLandscape();
 
+  isBig = this.layoutService.getIsBigScreen()
+
   @ViewChild('header') header: ElementRef | undefined;
 
   tabs = [

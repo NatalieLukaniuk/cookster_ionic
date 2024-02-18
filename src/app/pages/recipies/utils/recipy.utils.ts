@@ -53,6 +53,10 @@ export function getProductIdByName(name: string, allProducts: Product[]){
   return productId;
 }
 
+export function getProductById(id: string, allProducts: Product[]){
+  return allProducts.find(product => product.id === id)
+}
+
 export function getDefaultMeasuringUnit(
   productId: string,
   allProducts: Product[]
