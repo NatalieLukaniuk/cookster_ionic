@@ -12,6 +12,7 @@ import { transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
 import { Filters } from 'src/app/models/filters.models';
 import { ExpencesService } from '../expences.service';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
+import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'app-check-price-page',
@@ -54,6 +55,7 @@ export class CheckPricePageComponent {
       }
     }),
     map((res) => this.filtersService.applyFiltersToExpenses(res[0], res[1])),
+    map(res => res.reverse()),
     tap(res => this.filteredExpenses = res),
     tap(() => this.getAveragePrice())
   )
@@ -61,7 +63,8 @@ export class CheckPricePageComponent {
   constructor(
     private filtersService: FiltersService,
     private dataMapping: DataMappingService,
-    private expenceService: ExpencesService
+    private expenceService: ExpencesService,
+    private layoutService: LayoutService
   ) { }
 
   getAveragePrice() {
@@ -105,7 +108,7 @@ export class CheckPricePageComponent {
     this.searchWord$.next('');
   }
 
-  numberOfItemsToDisplay = 10;
+  numberOfItemsToDisplay = this.layoutService.getIsBigScreen()? 20: 10;
 
   onIonInfinite(event: any){
     this.numberOfItemsToDisplay += 10;

@@ -1,4 +1,4 @@
-<div class="form-container" *ngIf="products$ | async">
+<div class="form-container">
   <div *ngIf="!isModal">
       <app-input-with-autocomplete #titleAutocomplete [suggestions]="titleAutocompleteOptions"
           [placeholder]="'Точна назва товару'"
@@ -7,7 +7,7 @@
   <div *ngIf="isModal">
       <p class="static-title">{{title}}</p>
   </div>
-  <div  *ngIf="!presetProduct">
+  <div  *ngIf="!presetProduct && (products$ | async)">
       <app-product-autocomplete #productAutocomplete [products]="products"
           [addNewProductAsOther]="true" (onAddProduct)="showAddProduct = true"
           (productSelected)="onProductSelected($event)"></app-product-autocomplete>

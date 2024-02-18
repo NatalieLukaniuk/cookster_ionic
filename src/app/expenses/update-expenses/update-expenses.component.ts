@@ -52,7 +52,10 @@ export class UpdateExpensesComponent {
           productsNoCostForMonth.push(product.id)
         }
       })
-      return productsNoCostForMonth
+      return productsNoCostForMonth.map(productId => ({
+        id: productId,
+        name: this.getProductName(productId)
+      })).sort((a,b) => a.name.localeCompare(b.name))
     })
   )
 

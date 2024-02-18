@@ -6,6 +6,7 @@ import { ExpenseItem } from '../expenses-models';
 import * as _ from 'lodash';
 import { getExpenses } from 'src/app/store/selectors/expenses.selectors';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
+import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'app-view-expenses-page',
@@ -23,11 +24,12 @@ export class ViewExpensesPageComponent {
   }))
 
   constructor(
-    private store: Store<IAppState>
+    private store: Store<IAppState>,
+    private layoutService: LayoutService
   ) { }
 
   
-  numberOfItemsToDisplay = 10;
+  numberOfItemsToDisplay = this.layoutService.getIsBigScreen()? 20: 10;
 
   onIonInfinite(event: any){
     this.numberOfItemsToDisplay += 10;

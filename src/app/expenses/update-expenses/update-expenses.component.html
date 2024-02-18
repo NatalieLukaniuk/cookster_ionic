@@ -6,8 +6,8 @@
 </app-header>
 <ion-content>
     <div *ngIf="!selectedProduct">
-        <ion-item *ngFor="let item of (expensesToUpdate$ | async)" (click)="selectProduct(item)">
-            {{getProductName(item)}}
+        <ion-item *ngFor="let item of (expensesToUpdate$ | async)" (click)="selectProduct(item.id)">
+            {{item.name}}
         </ion-item>
     </div>
     <div *ngIf="selectedProduct">
