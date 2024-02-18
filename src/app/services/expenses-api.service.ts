@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../store/reducers';
 import { getExpenses } from '../store/selectors/expenses.selectors';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class ExpensesApiService {
     } else {
       clonedExpenses = [newItem]
     }
-    return this.http.patch<{ name: string }>(`${this.url}/${this.userCooksterId}.json`, { expenses: clonedExpenses });
+    return this.http.patch<{ name: string }>(`${this.url}/${this.userCooksterId}.json`, { expenses: clonedExpenses }).pipe(map(() => clonedExpenses));
   }
 
   filterOutItemToDelete(item: ExpenseItem, expenses: ExpenseItem[]) {
@@ -43,7 +44,7 @@ export class ExpensesApiService {
 
   removeExpense(item: ExpenseItem) {
     const updated = this.filterOutItemToDelete(item, this.userExpenses)
-    return this.http.patch<{ name: string }>(`${this.url}/${this.userCooksterId}.json`, { expenses: updated });
+    return this.http.patch<{ name: string }>(`${this.url}/${this.userCooksterId}.json`, { expenses: updated }).pipe(map(() => updated));
   }
 
 

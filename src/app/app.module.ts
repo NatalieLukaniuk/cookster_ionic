@@ -20,6 +20,7 @@ import { UserEffects } from './store/effects/user.effects';
 import { reducers } from './store/reducers';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import { CommentsEffects } from './store/effects/comments.effects';
+import { ExpensesEffects } from './store/effects/expenses.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,7 +36,8 @@ import { CommentsEffects } from './store/effects/comments.effects';
       UserEffects,
       CalendarEffects,
       PlannerEffects,
-      CommentsEffects
+      CommentsEffects,
+      ExpensesEffects
     ]),
     StoreDevtoolsModule.instrument({ 
       maxAge: 25,

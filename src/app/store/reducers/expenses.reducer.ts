@@ -20,6 +20,20 @@ export interface ExpensesState {
           expenses: action.expenses
         };
       }
+
+      case ExpensesActionTypes.EXPENSE_ADDED: {
+        return {
+          ...state,
+          expenses: action.expenses
+        };
+      }
+
+      case ExpensesActionTypes.EXPENSE_DELETED: {
+        return {
+          ...state,
+          expenses: action.expenses
+        };
+      }
   
       
       default:
