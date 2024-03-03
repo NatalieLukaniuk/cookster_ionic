@@ -20,6 +20,7 @@ import { FiltersService } from 'src/app/filters/services/filters.service';
 import * as _ from 'lodash';
 import { CalendarService } from 'src/app/services/calendar.service';
 import * as moment from 'moment';
+import { User } from 'src/app/models/auth.models';
 
 @Component({
   selector: 'app-add-recipy-modal',
@@ -30,9 +31,11 @@ export class AddRecipyModalComponent implements OnDestroy {
   @Input() meatime!: MealTime;
   @Input() date!: string;
   @Output() recipyToAdd = new EventEmitter<Recipy>();
+  currentUser: User | null = null;
 
   collections$ = this.store.pipe(
     select(getCurrentUser),
+    tap(user => this.currentUser = user),
     map((user) => user?.collections)
   );
 
@@ -52,10 +55,11 @@ export class AddRecipyModalComponent implements OnDestroy {
     this.store.pipe(select(getAllRecipies), take(1)),
     this.collectionSelected$,
     this.filters$,
-    this.store.pipe(select(getUserPlannedRecipies))
+    this.store.pipe(select(getUserPlannedRecipies)),
+    this.collections$
   ]).pipe(
-    map((res) => {
-      let [recipies, collection, filters, plannedRecipies] = res;
+    map((res) => {      
+      let [recipies, collection, filters, plannedRecipies, userCollections] = res;
       const clonedRecipies = _.cloneDeep(recipies);
       if (collection && collection.name === 'all') {
 
@@ -64,7 +68,9 @@ export class AddRecipyModalComponent implements OnDestroy {
         const sorted = this.getSortedByLastPrepared(mapped);
         return sorted
       } else if (collection && collection.name !== 'all') {
-        const recipiesInCollection = clonedRecipies.filter((rec) => collection!.recipies!.includes(rec.id));
+        const selectedCollectionName = collection.name;
+        const selectedRecipies = userCollections?.find(item => item.name === selectedCollectionName)?.recipies;
+        const recipiesInCollection = clonedRecipies.filter((rec) => selectedRecipies!.includes(rec.id));
         const filtered = this.filtersService.applyFilters(recipiesInCollection, filters);
         const mapped = filtered.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
         const sorted = this.getSortedByLastPrepared(mapped);
