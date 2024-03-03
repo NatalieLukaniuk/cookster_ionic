@@ -1,5 +1,6 @@
+import { Preferences, defaultPrefs } from './../../models/auth.models';
 import { Filters } from 'src/app/models/filters.models';
-import { BehaviorSubject, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, map, shareReplay } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Recipy } from 'src/app/models/recipies.models';
 import { Store, select } from '@ngrx/store';
@@ -8,6 +9,7 @@ import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import * as _ from 'lodash';
 import { ExpenseItem } from 'src/app/expenses/expenses-models';
+import { getUserPreferences } from 'src/app/store/selectors/user.selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,8 @@ export class FiltersService {
   filteredRecipies: number = 0;
   constructor(private store: Store<IAppState>) { }
   recipies$ = this.store.pipe(select(getAllRecipies));
+
+  noShowRecipies$ = this.store.pipe(select(getUserPreferences), map(prefs => prefs ? prefs : defaultPrefs), map((preferences: Preferences) => preferences.noShowRecipies), shareReplay())
 
   clearedFilters: Filters = {
     ingredientsToExclude: [],
@@ -31,10 +35,13 @@ export class FiltersService {
 
   getFilters = this.filters$.asObservable().pipe(shareReplay(1));
 
-  applyFilters(recipies: Recipy[], filters: Filters) {
+  applyFilters(recipies: Recipy[], filters: Filters, noShowIds?: string[]) {
     let _recipies = recipies.map((recipy) => recipy);
 
     _recipies = _recipies.filter((recipy) => !recipy.notApproved);
+    if(noShowIds){
+      _recipies = _recipies.filter((recipy) => !noShowIds.includes(recipy.id))
+    }
 
     if (!!filters.ingredientsToInclude.length) {
       _recipies = _recipies.filter((recipy) => {

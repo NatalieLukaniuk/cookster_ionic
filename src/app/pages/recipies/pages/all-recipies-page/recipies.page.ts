@@ -79,10 +79,11 @@ export class RecipiesContainer implements OnDestroy {
     combineLatest([
       this.store.pipe(select(getAllRecipies)),
       this.filters$,
+      this.filtersService.noShowRecipies$
     ]).pipe(
       takeUntil(this.destroy$),
       map(res => _.cloneDeep(res)),
-      map((res) => this.filtersService.applyFilters(res[0], res[1])),
+      map((res) => this.filtersService.applyFilters(res[0], res[1], res[2])),      
       tap(recipies => this.recipies = recipies)
     ).subscribe()
   }

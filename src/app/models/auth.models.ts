@@ -29,6 +29,15 @@ export interface Preferences {
   defaultPortionSize: number;
   isUsePersonalizedPortionSize: boolean;
   noShowProducts: string[];
+  noShowRecipies: string[];
+}
+
+export const defaultPrefs: Preferences = {
+  isUsePersonalizedPortionSize: false,
+  isUseRecommendedPortionSize: false,
+  defaultPortionSize: 250,
+  noShowProducts: [],
+  noShowRecipies: []
 }
 
 export interface FamilyMember {

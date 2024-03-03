@@ -24,6 +24,8 @@
         Перейти до рецепту
       </ion-button>
       <app-collections-action-sheet *ngIf="currentUser" [currentUser]="currentUser" [recipy]="recipy"></app-collections-action-sheet>
+      <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser" [buttonColor]="'light'"></app-add-recipy-to-no-show>
+
     </div>
   </div>
 </ion-card>
@@ -38,6 +40,7 @@
       <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
       <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
       <div class="big-screen-card-action-buttons" *ngIf="isShowActionButtons">
+        <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser" [buttonColor]="'light'"></app-add-recipy-to-no-show>
         <app-collections-action-sheet [buttonColor]="'light'" *ngIf="currentUser" [currentUser]="currentUser" [recipy]="recipy"></app-collections-action-sheet>
 
         <ion-button color="light" (click)="goFullRecipy()">

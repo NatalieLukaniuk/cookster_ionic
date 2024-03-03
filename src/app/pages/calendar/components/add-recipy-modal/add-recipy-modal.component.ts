@@ -56,14 +56,15 @@ export class AddRecipyModalComponent implements OnDestroy {
     this.collectionSelected$,
     this.filters$,
     this.store.pipe(select(getUserPlannedRecipies)),
-    this.collections$
+    this.collections$,
+    this.filtersService.noShowRecipies$
   ]).pipe(
     map((res) => {      
-      let [recipies, collection, filters, plannedRecipies, userCollections] = res;
+      let [recipies, collection, filters, plannedRecipies, userCollections, noShowIds] = res;
       const clonedRecipies = _.cloneDeep(recipies);
       if (collection && collection.name === 'all') {
 
-        const filtered = this.filtersService.applyFilters(clonedRecipies, filters);
+        const filtered = this.filtersService.applyFilters(clonedRecipies, filters, noShowIds);
         const mapped = filtered.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
         const sorted = this.getSortedByLastPrepared(mapped);
         return sorted
@@ -71,7 +72,7 @@ export class AddRecipyModalComponent implements OnDestroy {
         const selectedCollectionName = collection.name;
         const selectedRecipies = userCollections?.find(item => item.name === selectedCollectionName)?.recipies;
         const recipiesInCollection = clonedRecipies.filter((rec) => selectedRecipies!.includes(rec.id));
-        const filtered = this.filtersService.applyFilters(recipiesInCollection, filters);
+        const filtered = this.filtersService.applyFilters(recipiesInCollection, filters, noShowIds);
         const mapped = filtered.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
         const sorted = this.getSortedByLastPrepared(mapped);
         return sorted

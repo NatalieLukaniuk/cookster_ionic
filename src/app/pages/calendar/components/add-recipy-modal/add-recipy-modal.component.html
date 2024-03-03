@@ -100,9 +100,16 @@
                 </ion-label>
               </ion-item>
               <ion-item-options>
-                <ion-item-option *ngIf="currentUser && selectedCollection.name !== 'all'">
+                <div class="vertical-flex">
+                  <ion-item-option *ngIf="currentUser">
+                    <app-add-recipy-to-no-show [recipy]="recipy" [currentUser]="currentUser"></app-add-recipy-to-no-show>
+                </ion-item-option>
+                  <ion-item-option *ngIf="currentUser && selectedCollection.name !== 'all'">
                     <app-collections-action-sheet [recipy]="recipy" [currentUser]="currentUser"></app-collections-action-sheet>
                 </ion-item-option>
+                
+                </div>
+                
               </ion-item-options>
             </ion-item-sliding>
 

@@ -36,6 +36,7 @@ import { InputWithAutocompleteComponent } from './components/input-with-autocomp
 import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recipy.component';
 import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
 import { CollectionsActionSheetComponent } from './components/collections-action-sheet/collections-action-sheet.component';
+import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/add-recipy-to-no-show.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { CollectionsActionSheetComponent } from './components/collections-action
     InputWithAutocompleteComponent,
     CostOfRecipyComponent,
     LastPreparedDatePipe,
-    CollectionsActionSheetComponent
+    CollectionsActionSheetComponent,
+    AddRecipyToNoShowComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule],
   exports: [
@@ -97,7 +99,8 @@ import { CollectionsActionSheetComponent } from './components/collections-action
     InputWithAutocompleteComponent,
     CostOfRecipyComponent,
     LastPreparedDatePipe,
-    CollectionsActionSheetComponent
+    CollectionsActionSheetComponent,
+    AddRecipyToNoShowComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

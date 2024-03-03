@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
 import { Observable, Subject, debounceTime, map, takeUntil, tap } from 'rxjs';
-import { FamilyMember, Preferences } from 'src/app/models/auth.models';
+import { FamilyMember, Preferences, defaultPrefs } from 'src/app/models/auth.models';
 import { INPUT_DEBOUNCE_TIME } from 'src/app/shared/constants';
 import { UpdatePreferencesAction } from 'src/app/store/actions/user.actions';
 import { IAppState } from 'src/app/store/reducers';
@@ -15,12 +15,6 @@ import { getFamilyMembers, getUserPreferences } from 'src/app/store/selectors/us
 })
 export class GenericSettingsComponent implements OnDestroy {
 
-  defaultPrefs: Preferences = {
-    isUsePersonalizedPortionSize: false,
-    isUseRecommendedPortionSize: false,
-    defaultPortionSize: 250,
-    noShowProducts: []
-  }
 
   preferences!: Preferences;
 
@@ -44,7 +38,7 @@ export class GenericSettingsComponent implements OnDestroy {
       this.defaultPortionSize = prefs.defaultPortionSize.toString();
     }
 
-    return prefs ? prefs : this.defaultPrefs
+    return prefs ? prefs : defaultPrefs
   }))
 
   isEditDefaultPortionEnabled$: Observable<boolean> = this.store.pipe(
