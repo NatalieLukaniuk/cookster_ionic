@@ -23,19 +23,8 @@
 
         Перейти до рецепту
       </ion-button>
-      <ion-button *ngIf="currentUser" (click)="showCollections()">
-        Колекції
-      </ion-button>
+      <app-collections-action-sheet *ngIf="currentUser" [currentUser]="currentUser" [recipy]="recipy"></app-collections-action-sheet>
     </div>
-  </div>
-  <div class="overlay collections" [class.visible]="isShowCollections">
-    <ion-list>
-      <ion-item color="tertiary" *ngFor="let collection of recipyCollections"
-        (click)="onCollectionSelected(collection)">
-        <ion-label>{{ getIsInCollection(collection) ? "✓" : "" }}
-          {{ collection }}</ion-label>
-      </ion-item>
-    </ion-list>
   </div>
 </ion-card>
 
@@ -49,24 +38,11 @@
       <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
       <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
       <div class="big-screen-card-action-buttons" *ngIf="isShowActionButtons">
-        <ion-button color="light" *ngIf="currentUser" (click)="showCollections()">
-          Колекції
-        </ion-button>
+        <app-collections-action-sheet [buttonColor]="'light'" *ngIf="currentUser" [currentUser]="currentUser" [recipy]="recipy"></app-collections-action-sheet>
+
         <ion-button color="light" (click)="goFullRecipy()">
           Перейти до рецепту
-        </ion-button>
-        <div class="overlay collections" [class.visible]="isShowCollections">
-          <ion-button fill="clear" class="close-btn" (click)="isShowCollections = false">
-            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-          </ion-button>
-          <ion-list>
-            <ion-item color="tertiary" *ngFor="let collection of recipyCollections"
-              (click)="onCollectionSelected(collection)">
-              <ion-label>{{ getIsInCollection(collection) ? "✓" : "" }}
-                {{ collection }}</ion-label>
-            </ion-item>
-          </ion-list>
-        </div>
+        </ion-button>        
       </div>
 
     </ion-card-content>

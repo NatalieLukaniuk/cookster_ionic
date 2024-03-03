@@ -111,42 +111,6 @@ export class RecipyShortViewComponent implements OnInit {
     }
   }
 
-  showCollections() {
-    this.isShowCollections = true;
-  }
-
-  onCollectionSelected(collection: string) {
-    if (this.currentUser) {
-      let updated = _.cloneDeep(this.currentUser);
-      updated.collections = updated.collections!.map((coll) => {
-        if (coll.name === collection) {
-          if (coll.recipies && coll.recipies.includes(this.recipy.id)) {
-            coll.recipies = coll.recipies.filter((id) => id !== this.recipy.id);
-          } else if (coll.recipies && !coll.recipies.includes(this.recipy.id)) {
-            coll.recipies.push(this.recipy.id);
-          } else {
-            coll.recipies = [this.recipy.id];
-          }
-          return coll;
-        } else return coll;
-      });
-      this.store.dispatch(
-        new UpdateUserAction(
-          updated,
-          `${this.recipy.id} додано до колекції ${collection}`
-        )
-      );
-    }
-  }
-
-  getIsInCollection(collection: string) {
-    if (this.currentUser?.collections) {
-      return this.currentUser.collections
-        .find((coll) => coll.name == collection)
-        ?.recipies?.find((recipy) => recipy == this.recipy.id);
-    } else return false;
-  }
-
   goFullRecipy() {
     this.router.navigate(['recipy/', this.recipy.id], {
       relativeTo: this.route,

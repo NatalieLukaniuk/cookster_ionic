@@ -163,6 +163,7 @@ ion-card-content {
   &-action-buttons {
     position: absolute;
     bottom: 0;
+    display: flex;
 
     .collections.visible {
       height: 550px;
