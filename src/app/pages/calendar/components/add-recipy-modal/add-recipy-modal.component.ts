@@ -61,21 +61,43 @@ export class AddRecipyModalComponent implements OnDestroy {
 
         const filtered = this.filtersService.applyFilters(clonedRecipies, filters);
         const mapped = filtered.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
-        return mapped
+        const sorted = this.getSortedByLastPrepared(mapped);
+        return sorted
       } else if (collection && collection.name !== 'all') {
         const recipiesInCollection = clonedRecipies.filter((rec) => collection!.recipies!.includes(rec.id));
         const filtered = this.filtersService.applyFilters(recipiesInCollection, filters);
         const mapped = filtered.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
-        return mapped
+        const sorted = this.getSortedByLastPrepared(mapped);
+        return sorted
       } else return [];
     }),
     tap(recipies => this.recipies = recipies)
   );
 
+  getSortedByLastPrepared(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    cloned.sort((a, b) => this.sortByLastPrepared(a, b));
+    return cloned
+  }
+
+  sortByLastPrepared(a: Recipy, b: Recipy) {
+    if (!a.lastPrepared) {
+      return -1
+    }
+    if (!b.lastPrepared) {
+      return 1
+    }
+    if (moment(a.lastPrepared, 'DDMMYYYY').clone().isAfter(moment(b.lastPrepared, 'DDMMYYYY').clone())) {
+      return 1
+    } else {
+      return -1
+    }
+  }
+
   addLastPrepared(recipy: Recipy, allPlannedRecipies: IDayDetails[] | undefined) {
     let updated = {
       ...recipy,
-      lastPrepared: allPlannedRecipies? this.calendarService.getLastPreparedDate(recipy.id, allPlannedRecipies) : 'N/A'
+      lastPrepared: allPlannedRecipies ? this.calendarService.getLastPreparedDate(recipy.id, allPlannedRecipies) : 'N/A'
     }
     return updated
   }
@@ -105,7 +127,7 @@ export class AddRecipyModalComponent implements OnDestroy {
     this.modal?.dismiss(null, 'cancel');
   }
 
-  open(){
+  open() {
     this.modal?.present()
   }
 
@@ -207,7 +229,7 @@ export class AddRecipyModalComponent implements OnDestroy {
     this.scrollingContainer.scrollToTop()
   }
 
-  getDateText(){
+  getDateText() {
     return moment(this.date, 'DD-MM-YYYY').format('dddd, MMM D')
   }
 }
