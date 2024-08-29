@@ -1,3 +1,4 @@
+import { ExpenseItem } from '../expenses/expenses-models';
 import { DayDetails, Reminder } from './calendar.models';
 import { PlannerByDate, ShoppingList, ShoppingListItem } from './planner.models';
 import { DraftRecipy, RecipyCollection } from './recipies.models';
@@ -15,7 +16,7 @@ export interface User {
   collections?: RecipyCollection[];
   draftRecipies?: DraftRecipy[];
   preferences?: Preferences;
-  family?: FamilyMember[]
+  family?: FamilyMember[];
 }
 
 export enum Role {
@@ -28,6 +29,15 @@ export interface Preferences {
   defaultPortionSize: number;
   isUsePersonalizedPortionSize: boolean;
   noShowProducts: string[];
+  noShowRecipies: string[];
+}
+
+export const defaultPrefs: Preferences = {
+  isUsePersonalizedPortionSize: false,
+  isUseRecommendedPortionSize: false,
+  defaultPortionSize: 250,
+  noShowProducts: [],
+  noShowRecipies: []
 }
 
 export interface FamilyMember {

@@ -1,0 +1,12 @@
+.price-info {
+    padding: 5px;
+    width: 70%;
+    p {
+        margin-block: 0;
+        font-size: 8px;
+        max-width: 70%;
+        &:not(:last-child){
+            margin-bottom: 3px;
+        }
+    }
+}

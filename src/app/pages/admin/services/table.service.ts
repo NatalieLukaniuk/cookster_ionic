@@ -5,12 +5,15 @@ import * as moment from 'moment';
 import { Router } from '@angular/router';
 import { DialogsService, ModalType } from 'src/app/services/dialogs.service';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
+import { ExpencesService } from 'src/app/expenses/expences.service';
+import { ExpenseItem } from 'src/app/expenses/expenses-models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TableService {
-  constructor(private dialog: DialogsService, private datamapping: DataMappingService) {}
+  constructor(private dialog: DialogsService, private datamapping: DataMappingService,
+    private expencesService: ExpencesService) { }
 
   buildTable(object: Object[]): string[][] {
     let data = [];
@@ -23,7 +26,7 @@ export class TableService {
     return data;
   }
 
-  buildRecipyTable(recipies: Recipy[]): any[][] {
+  buildRecipyTable(recipies: Recipy[], allExpenses: ExpenseItem[]): any[][] {
     let data = [];
     let firstRow = [
       'Назва',
@@ -36,8 +39,11 @@ export class TableService {
       "інгридієнти",
       "перевірений",
       "розмір порції",
+      'ціна за 100гр в грн',
+      'нема даних %',
+      'інформація',
       "Перегляд",
-      "Редагування",
+      "Редагування",     
 
     ];
     data.push(firstRow);
@@ -56,14 +62,18 @@ export class TableService {
       row.push(recipy.ingrediends.map(ingr => this.getIngredientText(ingr)));
       row.push(recipy.isCheckedAndApproved);
       row.push(recipy.portionSize);
-      row.push({action: () => this.dialog.openModal(ModalType.ViewRecipy, {recipyId: recipy.id}), title: 'view'})
-      row.push({action: () => this.dialog.openModal(ModalType.EditRecipy, {recipyId: recipy.id}), title: 'edit'})
+      row.push(Math.round(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).totalCost * 100) / 100);
+      row.push(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).partWithNoData);
+      row.push(this.expencesService.getRecipyCostWithExpensesProvided(recipy.ingrediends, 1, 100, allExpenses).warnings.reduce((a,b) => a + ' * - * ' + b));
+      row.push({ action: () => this.dialog.openModal(ModalType.ViewRecipy, { recipyId: recipy.id }), title: 'view' })
+      row.push({ action: () => this.dialog.openModal(ModalType.EditRecipy, { recipyId: recipy.id }), title: 'edit' })
+      
       data.push(row);
     }
     return data;
   }
 
-  buildProductsTable(products: Product[]): any[][] {
+  buildProductsTable(products: Product[], allExpenses: ExpenseItem[]): any[][] {
     let data = [];
     let firstRow = [
       'Назва',
@@ -73,6 +83,14 @@ export class TableService {
       'unit',
       'type',
       'grInOneItem',
+      'найнижча ціна',
+      'найвища ціна',
+      'середня ціна за 100г',
+      'клк.записів',
+      'середня ціна за місяць за 100г',
+      'клк.записів за місяць',
+      'середня ціна за рік за 100г',
+      'клк.записів за рік',
     ];
     data.push(firstRow);
     for (let product of products) {
@@ -84,9 +102,64 @@ export class TableService {
       row.push(product.defaultUnit);
       row.push(product.type);
       row.push(product.grInOneItem);
+      row.push(this.getLowestPrice(allExpenses, product.id));
+      row.push(this.getHighestPrice(allExpenses, product.id));
+      row.push(this.getAveragePrice(allExpenses, product.id));
+      row.push(this.getNumberOfRecords(allExpenses, product.id));
+      row.push(this.getAveragePriceForLastMonth(allExpenses, product.id));
+      row.push(this.getNumberOfRecordsLastMonth(allExpenses, product.id));
+      row.push(this.getAveragePriceForHalfYear(allExpenses, product.id));
+      row.push(this.getNumberOfRecordsHalfYear(allExpenses, product.id));
       data.push(row);
     }
     return data;
+  }
+
+  getLowestPrice(allExpenses: ExpenseItem[], productId: string): string {
+    const filtered = this.expencesService.getExpensesByProduct(allExpenses, productId);
+    return this.expencesService.getLowestPriceWithDetails(filtered)
+  }
+
+  getHighestPrice(allExpenses: ExpenseItem[], productId: string): string {
+    const filtered = this.expencesService.getExpensesByProduct(allExpenses, productId);
+    return this.expencesService.getHighestPriceWithDetails(filtered)
+  }
+
+  getAveragePrice(allExpenses: ExpenseItem[], productId: string): number {
+    const filtered = this.expencesService.getExpensesByProduct(allExpenses, productId);
+    return this.expencesService.getAveragePrice(filtered)
+  }
+
+  getAveragePriceForHalfYear(allExpenses: ExpenseItem[], productId: string): number {
+    const filtered = this.expencesService.getExpensesByProduct(allExpenses, productId);
+    return this.expencesService.getAveragePriceForHalfYear(filtered)
+  }
+
+  getAveragePriceForLastMonth(allExpenses: ExpenseItem[], productId: string): number {
+    const filtered = this.expencesService.getExpensesByProduct(allExpenses, productId);
+    return this.expencesService.getAveragePriceForLastMonth(filtered)
+  }
+
+  getNumberOfRecords(allExpenses: ExpenseItem[], productId: string): number{
+    const filtered = this.expencesService.getExpensesByProduct(allExpenses, productId);
+    return filtered.length
+  }
+
+  getNumberOfRecordsLastMonth(allExpenses: ExpenseItem[], productId: string): number{
+    const filtered = this.expencesService.getExpensesByProduct(allExpenses, productId);
+    const today = new Date();
+    const startOfMonth = moment(today).clone().subtract(1, 'month')
+    const filtered2 = filtered.filter(expense => moment(expense.purchaseDate).isSameOrAfter(startOfMonth));
+    return filtered2.length
+  }
+
+  getNumberOfRecordsHalfYear(allExpenses: ExpenseItem[], productId: string): number{
+    
+    const filtered = this.expencesService.getExpensesByProduct(allExpenses, productId);
+    const today = new Date();
+    const halfYearAgo = moment(today).clone().subtract(6, 'month')
+    const filtered2 = filtered.filter(expense => moment(expense.purchaseDate).isSameOrAfter(halfYearAgo));
+    return filtered2.length
   }
 
   getIngredientText(ingredient: Ingredient): string {

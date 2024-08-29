@@ -3,6 +3,7 @@ import { IonModal } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import { MealTime, transformDate } from 'src/app/models/calendar.models';
 import { Recipy } from 'src/app/models/recipies.models';
+import { LayoutService } from 'src/app/services/layout.service';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
@@ -24,9 +25,11 @@ export class MoveRecipyModalComponent implements OnInit {
 
   mealTimeOptions: MealTime[] = [];
 
+  isBigScreen = this.layoutService.getIsBigScreen();
+
   @ViewChild('moveRecipy') modal: IonModal | undefined;
 
-  constructor(private store: Store<IAppState>) { }
+  constructor(private store: Store<IAppState>, private layoutService: LayoutService) { }
 
   ngOnInit(): void {
     this.presentingElement = document.querySelector('.ion-page');

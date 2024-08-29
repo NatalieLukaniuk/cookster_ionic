@@ -7,15 +7,28 @@
 
   </div>
   <table>
-    <tr *ngFor="let item of data">
-      <ng-container *ngFor="let property of item; let index = index">
-        <td *ngIf="!isActionItem(property)" [ngClass]="{'hidden': !legendItems[index].active}">{{ property }}
-        </td>
-        <td *ngIf="property && isActionItem(property)">
-          <ion-button (click)="property.action()">{{property.title}}</ion-button>
-        </td>
+    <tr *ngFor="let item of dataToDisplay; let rowIndex = index">
+      <ng-container *ngIf="rowIndex === 0">
+        <th *ngFor="let header of item; let headerIndex = index" (click)="sort(headerIndex)"  [ngClass]="{'hidden': !legendItems[headerIndex].active}">
+          <div class="header-content">
+            
+            <div>{{header}}</div>
+            <ng-container *ngIf="sorting.sortByIndex === headerIndex">
+              <ion-icon size="small" *ngIf="sorting.direction === sortDirection.Down" name="arrow-up-outline"></ion-icon>
+              <ion-icon size="small" *ngIf="sorting.direction === sortDirection.Up" name="arrow-down-outline"></ion-icon>
+            </ng-container>
+          </div>
+        </th>
       </ng-container>
-
+      <ng-container *ngIf="rowIndex !== 0">
+        <ng-container *ngFor="let property of item; let index = index">
+          <td *ngIf="!isActionItem(property)" [ngClass]="{'hidden': !legendItems[index].active}">{{ property }}
+          </td>
+          <td *ngIf="property && isActionItem(property)">
+            <ion-button (click)="property.action()">{{property.title}}</ion-button>
+          </td>
+        </ng-container>
+      </ng-container>
     </tr>
   </table>
 </div>

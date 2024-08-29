@@ -16,6 +16,8 @@ import { Router } from '@angular/router';
 import { DialogsService } from 'src/app/services/dialogs.service';
 import { ControllerInputDialogComponent } from 'src/app/shared/components/dialogs/controller-input-dialog/controller-input-dialog.component';
 import { ControllerListSelectDialogComponent } from 'src/app/shared/components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
+import { RecordExpensesComponent } from 'src/app/expenses/record-expenses-page/record-expenses.component';
+import { ExpencesService } from 'src/app/expenses/expences.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -43,12 +45,15 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   ];
   currentTab = this.tabs[0].name;
 
+  isRecordExpenseOnBought = false;
+
   constructor(
     private store: Store<IAppState>,
     private shoppingListService: ShoppingListService,
     private modalCtrl: ModalController,
     private router: Router,
-    private dialog: DialogsService
+    private dialog: DialogsService,
+    private expensesService: ExpencesService
   ) { }
 
   ngOnInit() { }
@@ -83,6 +88,9 @@ export class ShoppingListPage implements OnInit, OnDestroy {
       return ls;
     });
     this.shoppingListService.updateShoppingList(updatedList);
+    if (this.isRecordExpenseOnBought && !item.completed) {
+      this.recordPrice(item)
+    }
   }
 
   async addCustomItem() {
@@ -153,6 +161,20 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     }
   }
 
+  @ViewChild(RecordExpensesComponent) expensesModal: RecordExpensesComponent | undefined;
+
+  async recordPrice(item: ShoppingListItem) {
+    const modal = await this.modalCtrl.create({
+      component: RecordExpensesComponent,
+      componentProps: {
+        title: item.title,
+        isModal: true
+      },
+      initialBreakpoint: 0.75
+    });
+    modal.present();
+  }
+
   async onChangeList(item: ShoppingListItem, previousListName: string) {
     let cloned = _.cloneDeep(this.activeList);
     const listNames = cloned?.map(list => list.name);
@@ -162,7 +184,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
         list: listNames,
         selected: previousListName
       },
-      initialBreakpoint: 0.75
+      initialBreakpoint: 0.75,
     });
     modal.present();
 
@@ -177,21 +199,21 @@ export class ShoppingListPage implements OnInit, OnDestroy {
           }
           return updated;
         } else if (listItem.name === newListName && !!listItem.items?.length) {
-         const updated = {
-           ...listItem,
-           items: listItem.items.concat(item)
-         }
-         return updated;
-       } else if(listItem.name === newListName && !listItem.items?.length){
-        const updated = {
-          ...listItem,
-          items: [item]
+          const updated = {
+            ...listItem,
+            items: listItem.items.concat(item)
+          }
+          return updated;
+        } else if (listItem.name === newListName && !listItem.items?.length) {
+          const updated = {
+            ...listItem,
+            items: [item]
+          }
+          return updated;
+        } else {
+          return listItem;
         }
-        return updated;
-       } else {
-         return listItem;
-       }
-     })
+      })
 
       if (updatedList) {
         this.shoppingListService.updateShoppingList(updatedList)
@@ -247,5 +269,13 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   closeSlidingItem() {
     document.querySelectorAll('.slidingContainer').forEach((item: any) => item.close())
+  }
+
+  getHighestPrice(title: string) {
+    return this.expensesService.getHighestPriceInfo(title)
+  }
+
+  getLowestPrice(title: string) {
+    return this.expensesService.getLowestPriceInfo(title);
   }
 }

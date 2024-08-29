@@ -1,0 +1,9 @@
+<ion-button [id]="'collections_' + recipy.id" [color]="buttonColor">
+    <span *ngIf="isIconPresentation">
+        <ion-icon slot="icon-only" name="bookmarks-outline"></ion-icon>
+    </span>
+    <span *ngIf="!isIconPresentation">{{buttonTitle}}</span>
+</ion-button>
+<ion-action-sheet [trigger]="'collections_' + recipy.id" [header]="recipy.name " (didDismiss)="onDismissed($event)"
+    (willPresent)="updateItems()" [buttons]="actionSheetItems">
+</ion-action-sheet>

@@ -1,0 +1,49 @@
+<app-header>
+    <ion-searchbar title class="searchbar" placeholder="Пошук за назвою" show-clear-button="always" [debounce]="500"
+        (ionInput)="onSearch($event)" (ionClear)="clear()"></ion-searchbar>
+    <app-filters right-button [isExpensePage]="true" [pageId]="'check-price'"></app-filters>
+</app-header>
+<ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
+    <app-active-filters-expenses-widget></app-active-filters-expenses-widget>
+    <div class="average-price">
+        <ion-item class="average-price-display" lines="none" color="tertiary">
+            <p>Середня ціна {{selectedQuantity}} {{getMeasuringUnitText(selectedMeasuringUnit)}}: <span
+                    *ngIf="averagePrice">{{averagePrice}}грн</span><span *ngIf="!averagePrice">Немає даних</span></p>
+            <ion-button [color]="isEditAverage? 'primary' : 'secondary'" slot="end" size="small"
+                (click)="isEditAverage = !isEditAverage"><ion-icon slot="icon-only"
+                    name="create-outline"></ion-icon></ion-button>
+        </ion-item>
+        <div *ngIf="isEditAverage" class="average-price-edit">
+            <ion-item class="quantity-input-item">
+                <ion-label>Кількість:</ion-label>
+                <ion-input type="tel" [(ngModel)]="selectedQuantity" (ngModelChange)="getAveragePrice()"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Одиниця виміру: {{ getMeasuringUnitText(selectedMeasuringUnit)}}</ion-label>
+            </ion-item>
+            <div class="chip-selection-list">
+                <ion-chip *ngFor="let unitTag of measuringUnitsOptions"
+                    (click)="selectedMeasuringUnit = unitTag; getAveragePrice()"
+                    [color]="selectedMeasuringUnit === unitTag? 'primary' : 'secondary'">
+                    <span>{{ getMeasuringUnitText(unitTag)}}</span>
+                </ion-chip>
+            </div>
+        </div>
+    </div>
+
+<!-- цей список треба замінити на чарт -->
+    <div class="expense-items-list" *ngIf="(expenseItemsToDisplay$ | async) as allItems">
+        <ng-container *ngFor="let item of allItems; let index = index">
+            <app-view-expense-item *ngIf="index < numberOfItemsToDisplay" [expenseItem]="item" [color]="getColor(item)"></app-view-expense-item>
+        </ng-container>
+        <ion-infinite-scroll *ngIf="numberOfItemsToDisplay <= allItems.length" (ionInfinite)="onIonInfinite($event)">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+    </div>
+
+    <ion-fab *ngIf="showGoTop" (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button>
+          <ion-icon name="chevron-up-circle"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+</ion-content>

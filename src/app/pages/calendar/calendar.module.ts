@@ -19,6 +19,7 @@ import { ProductsPerDayComponent } from './components/products-per-day/products-
 import { AddCommentModalComponent } from './components/add-comment-modal/add-comment-modal.component';
 import { MoveRecipyModalComponent } from './components/move-recipy-modal/move-recipy-modal.component';
 import { FiltersModule } from 'src/app/filters/filters.module';
+import { CommentsModule } from 'src/app/comments/comments.module';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { FiltersModule } from 'src/app/filters/filters.module';
     IonicModule,
     CalendarPageRoutingModule,
     SharedModule,
-    FiltersModule
+    FiltersModule,
+    CommentsModule
   ],
   declarations: [
     CalendarPage,

@@ -1,8 +1,8 @@
 import { RecipyCollection, productPreferencesChip } from './../../../../models/recipies.models';
-import { getCurrentUser, getFamilyMembers } from 'src/app/store/selectors/user.selectors';
+import { getCurrentUser, getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 import { DishType, Recipy } from 'src/app/models/recipies.models';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { MealTime } from 'src/app/models/calendar.models';
+import { IDayDetails, MealTime } from 'src/app/models/calendar.models';
 import {
   Component,
   EventEmitter,
@@ -18,6 +18,9 @@ import { take, map, combineLatest, BehaviorSubject, takeUntil, Subject, tap } fr
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { FiltersService } from 'src/app/filters/services/filters.service';
 import * as _ from 'lodash';
+import { CalendarService } from 'src/app/services/calendar.service';
+import * as moment from 'moment';
+import { User } from 'src/app/models/auth.models';
 
 @Component({
   selector: 'app-add-recipy-modal',
@@ -28,9 +31,11 @@ export class AddRecipyModalComponent implements OnDestroy {
   @Input() meatime!: MealTime;
   @Input() date!: string;
   @Output() recipyToAdd = new EventEmitter<Recipy>();
+  currentUser: User | null = null;
 
   collections$ = this.store.pipe(
     select(getCurrentUser),
+    tap(user => this.currentUser = user),
     map((user) => user?.collections)
   );
 
@@ -49,20 +54,60 @@ export class AddRecipyModalComponent implements OnDestroy {
   recipies$ = combineLatest([
     this.store.pipe(select(getAllRecipies), take(1)),
     this.collectionSelected$,
-    this.filters$
+    this.filters$,
+    this.store.pipe(select(getUserPlannedRecipies)),
+    this.collections$,
+    this.filtersService.noShowRecipies$
   ]).pipe(
-    map((res) => {
-      let [recipies, collection, filters] = res;
+    map((res) => {      
+      let [recipies, collection, filters, plannedRecipies, userCollections, noShowIds] = res;
       const clonedRecipies = _.cloneDeep(recipies);
       if (collection && collection.name === 'all') {
-        return this.filtersService.applyFilters(clonedRecipies, filters);
+
+        const filtered = this.filtersService.applyFilters(clonedRecipies, filters, noShowIds);
+        const mapped = filtered.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
+        const sorted = this.getSortedByLastPrepared(mapped);
+        return sorted
       } else if (collection && collection.name !== 'all') {
-        const recipiesInCollection = clonedRecipies.filter((rec) => collection!.recipies!.includes(rec.id));
-        return this.filtersService.applyFilters(recipiesInCollection, filters)
+        const selectedCollectionName = collection.name;
+        const selectedRecipies = userCollections?.find(item => item.name === selectedCollectionName)?.recipies;
+        const recipiesInCollection = clonedRecipies.filter((rec) => selectedRecipies!.includes(rec.id));
+        const filtered = this.filtersService.applyFilters(recipiesInCollection, filters, noShowIds);
+        const mapped = filtered.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
+        const sorted = this.getSortedByLastPrepared(mapped);
+        return sorted
       } else return [];
     }),
     tap(recipies => this.recipies = recipies)
   );
+
+  getSortedByLastPrepared(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    cloned.sort((a, b) => this.sortByLastPrepared(a, b));
+    return cloned
+  }
+
+  sortByLastPrepared(a: Recipy, b: Recipy) {
+    if (!a.lastPrepared) {
+      return -1
+    }
+    if (!b.lastPrepared) {
+      return 1
+    }
+    if (moment(a.lastPrepared, 'DDMMYYYY').clone().isAfter(moment(b.lastPrepared, 'DDMMYYYY').clone())) {
+      return 1
+    } else {
+      return -1
+    }
+  }
+
+  addLastPrepared(recipy: Recipy, allPlannedRecipies: IDayDetails[] | undefined) {
+    let updated = {
+      ...recipy,
+      lastPrepared: allPlannedRecipies ? this.calendarService.getLastPreparedDate(recipy.id, allPlannedRecipies) : 'N/A'
+    }
+    return updated
+  }
 
   Math = Math;
   DishType = DishType;
@@ -71,10 +116,11 @@ export class AddRecipyModalComponent implements OnDestroy {
 
   productChips: productPreferencesChip[] = [];
   constructor(
-    private store: Store<IAppState>, 
+    private store: Store<IAppState>,
     private datamapping: DataMappingService,
-    private filtersService: FiltersService
-    ) {
+    private filtersService: FiltersService,
+    private calendarService: CalendarService
+  ) {
     this.subscribeForProductChips()
   }
 
@@ -86,6 +132,10 @@ export class AddRecipyModalComponent implements OnDestroy {
 
   cancel() {
     this.modal?.dismiss(null, 'cancel');
+  }
+
+  open() {
+    this.modal?.present()
   }
 
   onRecipyClicked(recipy: Recipy) {
@@ -171,7 +221,7 @@ export class AddRecipyModalComponent implements OnDestroy {
     return this.datamapping.getProductNameById(id)
   }
 
-  onIonInfinite(event: any){
+  onIonInfinite(event: any) {
     this.numberOfRecipiesToDisplay += 10;
     (event as InfiniteScrollCustomEvent).target.complete();
   }
@@ -184,5 +234,9 @@ export class AddRecipyModalComponent implements OnDestroy {
 
   goTop() {
     this.scrollingContainer.scrollToTop()
+  }
+
+  getDateText() {
+    return moment(this.date, 'DD-MM-YYYY').format('dddd, MMM D')
   }
 }

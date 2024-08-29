@@ -16,6 +16,7 @@
     [day]="getDay()"
     (portionsChanged)="onPortionsChanged($event)"
   ></app-recipy-full-view>
+  <app-comments-block [currentUser]="user$ | async" [recipyId]="(recipy$ | async)?.id"></app-comments-block>
 </ion-content>
 
 <ng-template #loading>

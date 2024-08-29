@@ -5,6 +5,8 @@ import {
   getCalorificValue,
   getDefaultMeasuringUnit,
   getIngredientText,
+  getProductById,
+  getProductIdByName,
   getProductText,
   isIngrIncludedInAmountCalculation,
   transformToGr,
@@ -24,6 +26,14 @@ export class DataMappingService {
 
   getProductNameById(id: string): string {
     return getProductText(id, this.products$.value);
+  }
+
+  getProductIdByName(name: string){
+    return getProductIdByName(name, this.products$.value);
+  }
+
+  getProductById(id: string){
+    return getProductById(id, this.products$.value)
   }
 
   getDefaultMU(id: string): MeasuringUnit {

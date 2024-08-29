@@ -15,4 +15,5 @@
     [recipy]="recipy$ | async"
     [currentUser]="user$ | async"
   ></app-recipy-full-view>
+  <app-comments-block *ngIf="recipyId" [currentUser]="user$ | async" [recipyId]="recipyId"></app-comments-block>
 </ion-content>

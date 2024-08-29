@@ -1,9 +1,10 @@
 <app-header>
   <span title class="header-title">Інгридієнти на {{getDatesForHeader()}}</span>
   <ion-back-button left-button defaultHref="tabs/shopping-list"></ion-back-button>
+  <ion-button *ngIf="!resetScrollPoint" right-button (click)="setScroll()">scroll</ion-button>
 </app-header>
 
-<ion-content>
+<ion-content #scrollingContainer (ionScroll)="recordScroll($event)" [scrollEvents]="true">
   <ion-list>
     <ion-item-sliding *ngFor="let ingred of itemsTree">
       <ion-item [color]="!!getHasBeenAddedToList(ingred) ? 'tertiary' : ''" (click)="

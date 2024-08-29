@@ -12,6 +12,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { GenericSettingsComponent } from './components/generic-settings/generic-settings.component';
 import { EditFamilyComponent } from './components/edit-family/edit-family.component';
 import { ManageCollectionsComponent } from './components/manage-collections/manage-collections.component';
+import { ExpensesPageComponent } from './components/expenses-page/expenses-page.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import { ManageCollectionsComponent } from './components/manage-collections/mana
     UserPageRoutingModule,
     SharedModule
   ],
-  declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent, EditFamilyComponent, ManageCollectionsComponent]
+  declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent, EditFamilyComponent, ManageCollectionsComponent, ExpensesPageComponent]
 })
-export class UserPageModule {}
+export class UserPageModule { }

@@ -1,0 +1,38 @@
+<ion-item-sliding>
+    <ion-item [color]="color">
+        <div class="item-wrapper">
+            <p class="text-second-level">{{productText()}}</p>
+            <div class="flex">
+                <p>
+                    {{expenseItem.title}}, {{expenseItem.brand}}
+                </p>
+                <p class="text-second-level">
+                    {{expenseItem.amount}} {{getUnitText(expenseItem.unit)}} - {{roundToTwoPlaces(expenseItem.cost)}}
+                    грн
+                </p>
+            </div>
+            <div class="flex">
+                <p class="text-second-level">
+                    {{expenseItem.purchasePlace}}, {{expenseItem.purchaseDate | date}}
+                </p>
+                <p class="text-second-level" *ngIf="isValidProduct(expenseItem.productId)">
+                    {{roundToTwoPlaces(expenseItem.costPerHundredGrInHRN)}} грн / 100гр
+                </p>
+                <p class="text-second-level" *ngIf="!isValidProduct(expenseItem.productId)">
+                    <ng-container *ngIf="expenseItem.unit !== MeasuringUnit.item">
+                        {{roundToTwoPlaces(expenseItem.costPerHundredGrInHRN * 100)}} грн /
+                        100{{getUnitText(expenseItem.unit)}}
+                    </ng-container>
+                    <ng-container *ngIf="expenseItem.unit === MeasuringUnit.item">
+                        {{roundToTwoPlaces(expenseItem.costPerHundredGrInHRN)}} грн / 1{{getUnitText(expenseItem.unit)}}
+                    </ng-container>
+                </p>
+            </div>
+        </div>
+    </ion-item>
+    <ion-item-options>
+        <ion-item-option color="danger" (click)="deleteItem()">
+            <ion-icon name="trash-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+</ion-item-sliding>

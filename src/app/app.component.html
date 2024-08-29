@@ -1,5 +1,5 @@
 <ion-app class="app-container">
-  <ion-split-pane contentId="main-content">
+  <ion-split-pane contentId="main-content" when="false">
 
     <ion-menu contentId="main-content">
       <ion-content>
@@ -31,7 +31,14 @@
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
-
+          <ion-menu-toggle autoHide="false">
+            <ion-item routerLink="/tabs/expenses/check-price" routerLinkActive="active" routerDirection="root" detail="false">
+              <ion-icon slot="start" name="search-outline"></ion-icon>
+              <ion-label>
+                Перевірити ціну
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
           <ion-menu-toggle autoHide="false">
             <ion-item button (click)="logout()" detail="false">
               <ion-icon slot="start" name="log-out"></ion-icon>

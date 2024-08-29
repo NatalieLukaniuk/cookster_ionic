@@ -24,7 +24,9 @@ export class RecipyShortViewComponent implements OnInit {
   recipy!: Recipy;
   @Input()
   currentUser!: User | null;
-  @Input() productPreferencesChips: productPreferencesChip[] | null = []
+  @Input() productPreferencesChips: productPreferencesChip[] | null = [];
+  @Input() isBigScreen = false;
+  @Input() isShowActionButtons = true;
 
   isNeedsAdvancePreparation: boolean = false;
 
@@ -95,6 +97,7 @@ export class RecipyShortViewComponent implements OnInit {
     this.isNeedsAdvancePreparation = this.recipy.type?.includes(
       DishType['потребує попередньої підготовки']
     );
+    console.log(this.isBigScreen)
   }
 
   onRecipyClicked() {
@@ -106,42 +109,6 @@ export class RecipyShortViewComponent implements OnInit {
     } else {
       this.isRecipyClicked = !this.isRecipyClicked;
     }
-  }
-
-  showCollections() {
-    this.isShowCollections = true;
-  }
-
-  onCollectionSelected(collection: string) {
-    if (this.currentUser) {
-      let updated = _.cloneDeep(this.currentUser);
-      updated.collections = updated.collections!.map((coll) => {
-        if (coll.name === collection) {
-          if (coll.recipies && coll.recipies.includes(this.recipy.id)) {
-            coll.recipies = coll.recipies.filter((id) => id !== this.recipy.id);
-          } else if (coll.recipies && !coll.recipies.includes(this.recipy.id)) {
-            coll.recipies.push(this.recipy.id);
-          } else {
-            coll.recipies = [this.recipy.id];
-          }
-          return coll;
-        } else return coll;
-      });
-      this.store.dispatch(
-        new UpdateUserAction(
-          updated,
-          `${this.recipy.id} додано до колекції ${collection}`
-        )
-      );
-    }
-  }
-
-  getIsInCollection(collection: string) {
-    if (this.currentUser?.collections) {
-      return this.currentUser.collections
-        .find((coll) => coll.name == collection)
-        ?.recipies?.find((recipy) => recipy == this.recipy.id);
-    } else return false;
   }
 
   goFullRecipy() {

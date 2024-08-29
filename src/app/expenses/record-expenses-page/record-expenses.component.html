@@ -1,0 +1,8 @@
+<app-header *ngIf="!isModal">
+    <p title>Додати покупку</p>
+</app-header>
+
+<ion-content>
+    <app-record-expense-form [isModal]="isModal"></app-record-expense-form>
+
+</ion-content>

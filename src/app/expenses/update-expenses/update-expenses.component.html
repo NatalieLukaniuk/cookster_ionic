@@ -1,0 +1,16 @@
+<app-header>
+    <p title>Оновити дані</p>
+    <ion-button *ngIf="!selectedProduct" right-button (click)="toggleDisplayMode()">{{(displayMode$ | async) === DisplayMode.HalfYear ?
+    'За півроку' : 'За місяць'}}</ion-button>
+    <ion-button right-button *ngIf="selectedProduct" (click)="this.selectedProduct = null">Скасувати</ion-button>
+</app-header>
+<ion-content>
+    <div *ngIf="!selectedProduct">
+        <ion-item *ngFor="let item of (expensesToUpdate$ | async)" (click)="selectProduct(item.id)">
+            {{item.name}}
+        </ion-item>
+    </div>
+    <div *ngIf="selectedProduct">
+        <app-record-expense-form [isModal]="false" [presetProduct]="selectedProduct" (recordAdded)="this.selectedProduct = null"></app-record-expense-form>
+    </div>
+</ion-content>

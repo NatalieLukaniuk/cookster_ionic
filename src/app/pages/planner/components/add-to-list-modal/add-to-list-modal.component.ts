@@ -1,6 +1,6 @@
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { ShoppingList } from './../../../../models/planner.models';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { SLItem } from 'src/app/models/planner.models';
 import { Recipy } from 'src/app/models/recipies.models';
@@ -12,17 +12,21 @@ import {
 } from 'src/app/pages/recipies/utils/recipy.utils';
 import * as moment from 'moment';
 import { DialogsService } from 'src/app/services/dialogs.service';
+import { ExpencesService } from 'src/app/expenses/expences.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-add-to-list-modal',
   templateUrl: './add-to-list-modal.component.html',
   styleUrls: ['./add-to-list-modal.component.scss'],
 })
-export class AddToListModalComponent implements OnInit {
+export class AddToListModalComponent implements OnInit, OnDestroy {
   ingredient!: SLItem;
   lists!: ShoppingList[];
   allRecipies!: Recipy[];
   isPlannedIngredient!: boolean;
+
+  titleAutocompleteOptions: string[] = [];
 
   selectedList = '';
 
@@ -35,6 +39,8 @@ export class AddToListModalComponent implements OnInit {
   newList = '';
 
   newItemName = '';
+
+  destroy$ = new Subject<void>();
 
   ngOnInit() {
     if (this.isPlannedIngredient) {
@@ -49,14 +55,22 @@ export class AddToListModalComponent implements OnInit {
         this.ingredient.unit
       );
       this.amountToAdd = normalized + ' ' + getUnitText(this.ingredient.unit);
+    } else {
+      this.expensesService.getTitleOptions().pipe(takeUntil(this.destroy$)).subscribe(res => {
+        this.titleAutocompleteOptions = res
+      });
     }
   }
 
   constructor(
     private modalCtrl: ModalController,
     private datamapping: DataMappingService,
-    private dialog: DialogsService
-  ) {}
+    private dialog: DialogsService,
+    private expensesService: ExpencesService
+  ) { }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+  }
 
   cancel() {
     return this.modalCtrl.dismiss(null, 'cancel');
@@ -66,7 +80,7 @@ export class AddToListModalComponent implements OnInit {
     if (this.isPlannedIngredient) {
       this.lists.forEach((list) => {
         if (list.name === this.selectedList) {
-          if(!list.items){
+          if (!list.items) {
             list.items = []
           }
           list.items.push({
@@ -80,7 +94,7 @@ export class AddToListModalComponent implements OnInit {
     } else {
       this.lists.forEach((list) => {
         if (list.name === this.selectedList) {
-          if(!list.items){
+          if (!list.items) {
             list.items = []
           }
           list.items.push({
@@ -135,12 +149,12 @@ export class AddToListModalComponent implements OnInit {
   }
 
   addList() {
-    if(this.lists){
+    if (this.lists) {
       this.lists.push({
-      name: this.newList,
-      isExpanded: false,
-      items: [],
-    });
+        name: this.newList,
+        isExpanded: false,
+        items: [],
+      });
     } else {
       this.lists = [{
         name: this.newList,
@@ -148,7 +162,7 @@ export class AddToListModalComponent implements OnInit {
         items: [],
       }]
     }
-    
+
     this.isAddNewList = false;
   }
 
@@ -163,5 +177,17 @@ export class AddToListModalComponent implements OnInit {
           this.lists = this.lists.filter((item) => item.name !== list.name);
         }
       });
+  }
+
+  onItemSelected(event: string) {
+    this.newItemName = event
+  }
+
+  getHighestPrice(title: string) {
+    return this.expensesService.getHighestPriceInfo(title)
+  }
+
+  getLowestPrice(title: string) {
+    return this.expensesService.getLowestPriceInfo(title);
   }
 }

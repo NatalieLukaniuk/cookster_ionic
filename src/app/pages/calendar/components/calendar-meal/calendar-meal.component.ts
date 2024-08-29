@@ -14,8 +14,10 @@ import {
   RecipyForCalendar,
 } from 'src/app/models/calendar.models';
 import { IAppState } from 'src/app/store/reducers';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Recipy } from 'src/app/models/recipies.models';
+import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { AddRecipyModalComponent } from '../add-recipy-modal/add-recipy-modal.component';
 
 @Component({
   selector: 'app-calendar-meal',
@@ -30,6 +32,8 @@ export class CalendarMealComponent implements OnInit, OnChanges {
   selectedRecipyForCalendar: Recipy | null = null;
 
   _day: Day | undefined;
+
+  user$ = this.store.pipe(select(getCurrentUser));
 
   get isComments() {
     if (this._day) {
@@ -187,13 +191,14 @@ export class CalendarMealComponent implements OnInit, OnChanges {
   }
 
   @ViewChild('selectOption') modal: any;
+  @ViewChild('addRecipyModal') addRecipyModal: AddRecipyModalComponent | undefined;
   onRecipySelected(recipy: Recipy) {
     this.selectedRecipyForCalendar = recipy;
-    setTimeout(() => {      
+    setTimeout(() => {
       this.modal.modal.present();
     }, 200);
 
-    this.modal.modal.onDidDismiss().then((res: any) => {
+    this.modal.modal.onDidDismiss().then((res: any) => {      
       if (res.role === 'confirm') {
         this.store.dispatch(
           new AddRecipyToCalendarAction(
@@ -205,6 +210,10 @@ export class CalendarMealComponent implements OnInit, OnChanges {
             0
           )
         );
+      }
+
+      if (res.role === 'return') {
+        this.addRecipyModal?.open()
       }
       this.selectedRecipyForCalendar = null;
     });
@@ -223,7 +232,7 @@ export class CalendarMealComponent implements OnInit, OnChanges {
     this.addCommentModal.comment = '';
   }
 
-  onDeleteComment(comment: any){
+  onDeleteComment(comment: any) {
     this.store.dispatch(
       new RemoveCommentFromCalendarAction(
         comment.comment,

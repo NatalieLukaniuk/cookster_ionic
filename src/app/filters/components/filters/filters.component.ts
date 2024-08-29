@@ -1,7 +1,7 @@
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { DishType, Product } from 'src/app/models/recipies.models';
 import { FiltersService } from './../../services/filters.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { select, Store } from '@ngrx/store';
 import { map, Observable, tap } from 'rxjs';
@@ -14,6 +14,9 @@ import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
   styleUrls: ['./filters.component.scss'],
 })
 export class FiltersComponent implements OnInit {
+  @Input() isExpensePage = false;
+  @Input() pageId: string = '';
+
   products: Product[] = [];
   products$: Observable<Product[]> = this.store.pipe(
     select(getAllProducts),
@@ -48,10 +51,12 @@ export class FiltersComponent implements OnInit {
     public filtersService: FiltersService,
     private store: Store<IAppState>,
     private datamapping: DataMappingService
-  ) {}
+  ) { }
 
   ngOnInit() {
-    this.tags = this.gettags();
+    if(!this.isExpensePage){
+      this.tags = this.gettags();
+    }    
   }
 
   @ViewChild(IonModal) modal: IonModal | undefined;

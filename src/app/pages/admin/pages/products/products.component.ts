@@ -1,12 +1,13 @@
 import { Product } from 'src/app/models/recipies.models';
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { take, tap } from 'rxjs';
+import { combineLatest, take, tap } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 import { TableService } from '../../services/table.service';
 import { UpdateProductAction } from 'src/app/store/actions/recipies.actions';
 import * as _ from 'lodash';
+import { ExpencesService } from 'src/app/expenses/expences.service';
 
 @Component({
   selector: 'app-products',
@@ -15,34 +16,42 @@ import * as _ from 'lodash';
 })
 export class ProductsComponent implements OnInit {
   productsTableData: string[][] = [];
-  products$ = this.store.pipe(
-    select(getAllProducts),
-    tap((res) => {
-      if (res.length) {
-        this.productsTableData = this.tableService.buildProductsTable(res);
+
+  products$ = combineLatest([
+    this.store.pipe(select(getAllProducts)),
+    this.expencesService.getExpenses()
+  ]).pipe(
+    tap(
+      (res) => {
+        if (res[0].length && res[1].length) {
+          this.productsTableData = this.tableService.buildProductsTable(res[0], res[1]);
+        }
       }
-    })
-  );
+    )
+  )
+
   constructor(
     private store: Store<IAppState>,
-    private tableService: TableService
-  ) {}
+    private tableService: TableService,
+    private expencesService: ExpencesService
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   runUpdate() {
     this.products$.pipe(take(1)).subscribe((res) => {
-      this.recursiveUpdate(0, res);
+      this.recursiveUpdate(0, res[0]);
     });
   }
 
   recursiveUpdate(i: number, products: Product[]) {
     if (i < products.length) {
       setTimeout(() => {
-        if(!products[i].sizeChangeCoef){
+        if (!products[i].sizeChangeCoef) {
           let update = this.updateScript(products[i]);
-        console.log(update);
-        this.store.dispatch(new UpdateProductAction(update));        }
+          console.log(update);
+          this.store.dispatch(new UpdateProductAction(update));
+        }
         console.log(i + ' of ' + products.length)
         i++;
         this.recursiveUpdate(i, products);

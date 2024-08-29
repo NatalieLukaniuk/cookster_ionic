@@ -124,3 +124,10 @@ ion-item-sliding ion-item-option div {
 .timed-out{
   color: var(--ion-color-warning);
 }
+
+.vertical-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}

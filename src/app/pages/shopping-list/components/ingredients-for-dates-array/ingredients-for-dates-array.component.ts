@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IonContent, ModalController } from '@ionic/angular';
 import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { Observable, Subject, combineLatest, map, takeUntil } from 'rxjs';
+import { Observable, Subject, Subscription, combineLatest, filter, map, take, takeUntil, tap } from 'rxjs';
 import { Day, DayDetails, RecipyForCalendar } from 'src/app/models/calendar.models';
 import { SLItem, ShoppingList, ShoppingListItem } from 'src/app/models/planner.models';
 import { Ingredient, Recipy } from 'src/app/models/recipies.models';
@@ -40,8 +40,9 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
   ]).pipe(
     map((combinedResult: [DayDetails[] | undefined, Recipy[]]) => {
       if (combinedResult[0] && combinedResult[1]) {
-        return this.calendarService.buildCalendarForDates(this.datesArray, combinedResult[0], combinedResult[1])
-      } else return []
+        this.calendarService.buildCalendarForDates(this.datesArray, combinedResult[0], combinedResult[1]);
+        this.canedarSub?.unsubscribe()
+      }
     }
     )
   )
@@ -56,6 +57,14 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
 
   getUnitText = getUnitText;
 
+  scrollPoint = 0;
+
+  resetScrollPoint = true;
+
+  canedarSub: Subscription | undefined;
+
+  @ViewChild(IonContent) content: IonContent | undefined;
+
   constructor(
     private dataMapping: DataMappingService,
     private store: Store<IAppState>,
@@ -68,15 +77,7 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
     const datesString = path[path.length - 1];
     this.datesArray = datesString.split('&');
 
-    this.canedar$.subscribe();
-
-    this.fullIngredsList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
-      if (res) {
-        this.itemsTree = [];
-        this.buildTree(res);
-        console.log(this.itemsTree);
-      }
-    });
+    this.canedarSub = this.canedar$.subscribe();
 
     this.store
       .pipe(select(getAllRecipies), takeUntil(this.destroyed$))
@@ -86,9 +87,27 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
         }
       });
   }
+
+  setScroll() {
+    if (this.content) {
+      this.content.scrollToPoint(null, this.scrollPoint, 0);
+      this.resetScrollPoint = true;
+    }
+
+  }
+
   ngOnInit(): void {
+    this.fullIngredsList$.pipe(takeUntil(this.destroyed$)).subscribe((res) => {
+      if (res) {
+        this.itemsTree = [];
+        this.buildTree(res);
+        console.log(this.itemsTree);
+      }
+    });
+
     combineLatest([this.calendar$, this.shoppingList$]).pipe(
       takeUntil(this.destroyed$),
+      filter(res => res[0] !== null),
       map(res => ({ calendar: res[0], shoppingList: res[1] }))).subscribe(res => {
         if (res.calendar) {
           const dayItemsToAdd = res.calendar.filter(
@@ -124,7 +143,6 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
             } else return list;
           });
         }
-
       })
   }
 
@@ -225,6 +243,7 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
       )
       .then((res) => {
         if (res.role === 'confirm') {
+          this.resetScrollPoint = false;
           this.myLists = this.myLists.map((list) => {
             if (list.name === listName) {
               list.items = list.items.filter(
@@ -247,7 +266,16 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
     } else return undefined;
   }
 
+  recordScroll(event: any) {
+    if (this.resetScrollPoint) {
+      this.scrollPoint = event.detail.scrollTop
+    }
+  }
+
+
+
   async addToList(ingred: SLItem) {
+    this.resetScrollPoint = false;
     const modal = await this.modalCtrl.create({
       component: AddToListModalComponent,
       componentProps: {

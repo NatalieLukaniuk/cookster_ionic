@@ -1,0 +1,26 @@
+.author {
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    align-items: center;
+}
+
+.comment-wrapper {
+    padding: 2px 10px 5px;
+    background: var(--ion-color-light);
+    border-radius: 2px;  
+}
+
+.secondary {
+    margin-left: 40px;
+}
+
+p {
+    margin: 0;
+}

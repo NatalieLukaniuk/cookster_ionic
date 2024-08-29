@@ -8,7 +8,7 @@ import {
 import { TableService } from './../../services/table.service';
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { take, tap } from 'rxjs';
+import { combineLatest, take, tap } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
 import {
   getAllRecipies,
@@ -19,6 +19,7 @@ import {
   getDensity,
 } from 'src/app/pages/recipies/utils/recipy.utils';
 import * as _ from 'lodash';
+import { ExpencesService } from 'src/app/expenses/expences.service';
 
 @Component({
   selector: 'app-recipies',
@@ -28,26 +29,30 @@ import * as _ from 'lodash';
 export class RecipiesComponent implements OnInit {
   Object = Object;
   recipiesTableData: string[][] = [];
-  recipies$ = this.store.pipe(
-    select(getAllRecipies),
-    tap((res) => {
-      if (res.length) {
-        this.recipiesTableData = this.tableService.buildRecipyTable(res);
+  recipies$ = combineLatest([
+    this.store.pipe(select(getAllRecipies)),
+    this.expencesService.getExpenses()
+  ]).pipe(
+    tap(res => {
+      if (res[0].length && res[1].length){
+        this.recipiesTableData = this.tableService.buildRecipyTable(res[0], res[1]);
       }
     })
-  );
+  )
+
   products$ = this.store.pipe(select(getAllProducts));
   constructor(
     private store: Store<IAppState>,
     private tableService: TableService,
-    private dataMapping: DataMappingService
+    private dataMapping: DataMappingService,
+    private expencesService: ExpencesService
   ) {}
 
   ngOnInit() {}
 
   runUpdate() {
     this.recipies$.pipe(take(1)).subscribe((res) => {
-      this.recursiveUpdate(0, res);
+      this.recursiveUpdate(0, res[0]);
     });
   }
 

@@ -5,49 +5,38 @@
     </ion-buttons>
     <ion-title>{{
       isPlannedIngredient ? ingredient.name : newItemName
-    }}</ion-title>
+      }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
   <ng-container *ngIf="!isPlannedIngredient">
-    <ion-item class="add-new-list" button detail="false">
-      <ion-label position="floating">Введіть назву:</ion-label>
-      <ion-input [(ngModel)]="newItemName"></ion-input>
-    </ion-item>
+    <div>
+      <app-input-with-autocomplete #titleAutocomplete [suggestions]="titleAutocompleteOptions"
+        [placeholder]="'Введіть назву:'" (itemSelected)="onItemSelected($event)"></app-input-with-autocomplete>
+    </div>
   </ng-container>
+  <div *ngIf="isPlannedIngredient ? ingredient.name : newItemName" class="price-info">
+    <p><ion-icon color="success" name="arrow-down-outline"></ion-icon> {{getLowestPrice(isPlannedIngredient ? ingredient.name :
+      newItemName) | async}}</p>
+    <p><ion-icon color="danger" name="arrow-up-outline"></ion-icon> {{getHighestPrice(isPlannedIngredient ? ingredient.name :
+      newItemName) | async}}</p>
+  </div>
   <h3>Виберіть список:</h3>
   <ion-list class="lists-container">
-    <ion-radio-group
-      *ngIf="lists?.length"
-      [value]="selectedList"
-      (ionChange)="listChange($event)"
-    >
-      <ion-item
-        swipeLeftNoConfirmation
-        *ngFor="let list of lists"
-        (itemSwiped)="onDeleteList(list)"
-      >
+    <ion-radio-group *ngIf="lists?.length" [value]="selectedList" (ionChange)="listChange($event)">
+      <ion-item swipeLeftNoConfirmation *ngFor="let list of lists" (itemSwiped)="onDeleteList(list)">
         <ion-label>{{ list.name }}</ion-label>
         <ion-radio slot="end" [value]="list.name"></ion-radio>
       </ion-item>
     </ion-radio-group>
-    <ion-item
-      *ngIf="!isAddNewList"
-      button
-      detail="false"
-      (click)="isAddNewList = true"
-    >
+    <ion-item *ngIf="!isAddNewList" button detail="false" (click)="isAddNewList = true">
       <ion-label>Додати список</ion-label>
       <ion-icon slot="start" name="add-outline"></ion-icon>
     </ion-item>
     <ion-item class="add-new-list" *ngIf="isAddNewList" button detail="false">
       <ion-label position="floating">Введіть назву:</ion-label>
       <ion-input [(ngModel)]="newList"></ion-input>
-      <ion-button
-        slot="end"
-        (click)="addList()"
-        [disabled]="newList.length < 3"
-      >
+      <ion-button slot="end" (click)="addList()" [disabled]="newList.length < 3">
         <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
       </ion-button>
     </ion-item>
@@ -70,15 +59,15 @@
                     | convertToSelectedUnit
                       : childItem.product
                       : ingredient.unit
-                    | normalizeDisplayedAmount : ingredient.unit">                
-              </span>              
+                    | normalizeDisplayedAmount : ingredient.unit">
+              </span>
               <span *ngIf="ingredient.unit !== 13 && +childItem.amount"> {{ getUnitText(ingredient.unit) }}</span>
             </h4>
             <p>
               {{
-                moment(childItem.day[0].day, "DDMMYYYY")
-                  .clone()
-                  .format("ddd, DD MMMM")
+              moment(childItem.day[0].day, "DDMMYYYY")
+              .clone()
+              .format("ddd, DD MMMM")
               }}
             </p>
           </ion-label>
@@ -87,13 +76,7 @@
     </ion-list>
   </ng-container>
 
-  <ion-button
-    class="add-btn"
-    expand="full"
-    [disabled]="!isValid"
-    (click)="confirm()"
-    >{{ confirmButton }}</ion-button
-  >
+  <ion-button class="add-btn" expand="full" [disabled]="!isValid" (click)="confirm()">{{ confirmButton }}</ion-button>
 </ion-content>
 
 <ng-template #noUnit>

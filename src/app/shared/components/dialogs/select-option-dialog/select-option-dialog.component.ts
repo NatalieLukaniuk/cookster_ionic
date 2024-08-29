@@ -1,3 +1,4 @@
+import { LayoutService } from 'src/app/services/layout.service';
 import { IonModal } from '@ionic/angular';
 import { MealTime } from 'src/app/models/calendar.models';
 import {
@@ -17,6 +18,7 @@ import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { BehaviorSubject, Subject, combineLatest, map, pipe, takeUntil } from 'rxjs';
+import * as moment from 'moment';
 
 export interface DialogData {
   title: string;
@@ -36,6 +38,8 @@ export class SelectOptionDialogComponent implements OnInit, OnDestroy, OnChanges
   amountPerPortion: number = AVERAGE_PORTION;
 
   presentingElement: Element | undefined | null;
+
+  isBigScreen = this.layoutService.getIsBigScreen();
 
   @Output() resultReceived = new EventEmitter<{
     portions: number;
@@ -68,7 +72,7 @@ export class SelectOptionDialogComponent implements OnInit, OnDestroy, OnChanges
 
   @ViewChild('selectOption') modal: IonModal | undefined;
 
-  constructor(private store: Store<IAppState>) { }
+  constructor(private store: Store<IAppState>, private layoutService: LayoutService) { }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipy']) {
       this.recipyChanged$.next(changes['recipy'].currentValue)
@@ -110,5 +114,9 @@ export class SelectOptionDialogComponent implements OnInit, OnDestroy, OnChanges
       case MealTime.Dinner:
         return 'Вечеря';
     }
+  }
+
+  getDateText(){
+    return moment(this.date, 'DD-MM-YYYY').format('dddd, MMM D')
   }
 }

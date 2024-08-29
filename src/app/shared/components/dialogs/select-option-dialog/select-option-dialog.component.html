@@ -3,9 +3,11 @@
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title>{{date.toString() | date : "EE, MMM d"}}, {{mealtimeText.toLowerCase()}}</ion-title>
+        <ion-title>{{getDateText()}}, {{mealtimeText.toLowerCase()}}</ion-title>
         <ion-buttons slot="start">
-          <ion-button (click)="selectOption.dismiss({}, 'cancel')">Скасувати</ion-button>
+          <ion-button (click)="selectOption.dismiss({}, 'return')">
+            <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+          </ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
           <ion-button (click)="
@@ -18,7 +20,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <app-recipy-short-view *ngIf="recipy" [currentUser]="user$ | async" [recipy]="recipy"></app-recipy-short-view>
+      <app-recipy-short-view *ngIf="recipy" [currentUser]="user$ | async" [recipy]="recipy" [isBigScreen]="isBigScreen" [isShowActionButtons]="false"></app-recipy-short-view>
 
       <h5>{{(isUseDefaultPortionSettings$| async) ? 'Вкажіть' : 'Змінити'}} кількість порцій:</h5>
       <div class="amount-wrapper">

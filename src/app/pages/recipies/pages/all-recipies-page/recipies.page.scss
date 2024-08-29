@@ -1,3 +1,12 @@
 .recipies-background {
     background: var(--ion-color-light);
 }
+
+@media (min-width: 1600px) {
+    .recipies-background {
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 15px;
+    }
+}

@@ -1,0 +1,11 @@
+<app-header>
+    <ion-back-button left-button defaultHref="tabs/profile"></ion-back-button>
+    <p title>Витрати</p>
+</app-header>
+
+<ion-content>
+    <ion-item detail="true" (click)="goRecordExpenses()">Record expenses</ion-item>
+    <ion-item detail="true" (click)="goReviewExpenses()">Expenses Overview</ion-item>
+    <ion-item detail="true" (click)="goCheckPrice()">Перевірити ціну</ion-item>
+    <ion-item detail="true" (click)="goUpdateExpenses()">Оновити дані</ion-item>
+</ion-content>

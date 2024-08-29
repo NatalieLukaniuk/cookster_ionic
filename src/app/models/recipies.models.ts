@@ -38,6 +38,7 @@ export interface Recipy extends NewRecipy {
   calorificValue?: number;
   source?: string;
   portionSize?: number;
+  lastPrepared?: string
 }
 
 export interface DraftRecipy {

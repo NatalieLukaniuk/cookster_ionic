@@ -8,6 +8,8 @@ import { Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
 import { Recipy, productPreferencesChip } from 'src/app/models/recipies.models';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import * as _ from 'lodash';
+import { User } from 'src/app/models/auth.models';
+import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'app-recipies',
@@ -20,16 +22,21 @@ export class RecipiesContainer implements OnDestroy {
 
   showGoTop = false;
 
-  user$ = this.store.pipe(select(getCurrentUser));
+  user$ = this.store.pipe(select(getCurrentUser), tap(user => this.currentUser = user));
   productChips: productPreferencesChip[] = [];
 
   destroy$ = new Subject<void>();
 
   numberOfRecipiesToDisplay = 10;
 
+  currentUser: User | null | undefined;
+
+  isBigScreen = this.layoutService.getIsBigScreen();
+
   constructor(
     private store: Store<IAppState>,
-    private filtersService: FiltersService
+    private filtersService: FiltersService,
+    private layoutService: LayoutService
   ) {
     this.subscribeForProductChips();
     this.subscribeForRecipies()
@@ -72,10 +79,11 @@ export class RecipiesContainer implements OnDestroy {
     combineLatest([
       this.store.pipe(select(getAllRecipies)),
       this.filters$,
+      this.filtersService.noShowRecipies$
     ]).pipe(
       takeUntil(this.destroy$),
       map(res => _.cloneDeep(res)),
-      map((res) => this.filtersService.applyFilters(res[0], res[1])),
+      map((res) => this.filtersService.applyFilters(res[0], res[1], res[2])),      
       tap(recipies => this.recipies = recipies)
     ).subscribe()
   }

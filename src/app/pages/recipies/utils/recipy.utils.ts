@@ -43,6 +43,20 @@ export function getProductText(productId: string, allProducts: Product[]) {
   return productName;
 }
 
+export function getProductIdByName(name: string, allProducts: Product[]){
+  let productId = '';
+  for (let product of allProducts) {
+    if (product.name.toLowerCase() === name.toLowerCase()) {
+      productId = product.id;
+    }
+  }
+  return productId;
+}
+
+export function getProductById(id: string, allProducts: Product[]){
+  return allProducts.find(product => product.id === id)
+}
+
 export function getDefaultMeasuringUnit(
   productId: string,
   allProducts: Product[]

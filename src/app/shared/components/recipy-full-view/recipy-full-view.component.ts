@@ -11,6 +11,7 @@ import {
 import { User } from 'src/app/models/auth.models';
 import { Recipy } from 'src/app/models/recipies.models';
 import { ItemOption } from '../ingredient/ingredient.component';
+import { LayoutService } from 'src/app/services/layout.service';
 @Component({
   selector: 'app-recipy-full-view',
   templateUrl: './recipy-full-view.component.html',
@@ -32,6 +33,10 @@ export class RecipyFullViewComponent implements OnChanges {
 
   ingredStartOptions: ItemOption[] = [];
 
+  isLandscape$ = this.layoutService.getIsLandscape();
+
+  isBig = this.layoutService.getIsBigScreen()
+
   @ViewChild('header') header: ElementRef | undefined;
 
   tabs = [
@@ -44,7 +49,8 @@ export class RecipyFullViewComponent implements OnChanges {
 
   selectedStepId = 0;
 
-  constructor() { }
+  constructor(private layoutService: LayoutService) {     
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (this.header) {
       let root = document.documentElement;

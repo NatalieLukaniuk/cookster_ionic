@@ -32,6 +32,11 @@ import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-
 import { AddReminderModalComponent } from './components/dialogs/add-reminder-modal/add-reminder-modal.component';
 import { ControllerListSelectDialogComponent } from './components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { AddProductFormComponent } from './components/add-product-form/add-product-form.component';
+import { InputWithAutocompleteComponent } from './components/input-with-autocomplete/input-with-autocomplete.component';
+import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recipy.component';
+import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
+import { CollectionsActionSheetComponent } from './components/collections-action-sheet/collections-action-sheet.component';
+import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/add-recipy-to-no-show.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +67,12 @@ import { AddProductFormComponent } from './components/add-product-form/add-produ
     RecipyShortViewComponent,
     AddReminderModalComponent,
     ControllerListSelectDialogComponent,
-    AddProductFormComponent
+    AddProductFormComponent,
+    InputWithAutocompleteComponent,
+    CostOfRecipyComponent,
+    LastPreparedDatePipe,
+    CollectionsActionSheetComponent,
+    AddRecipyToNoShowComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule],
   exports: [
@@ -85,7 +95,12 @@ import { AddProductFormComponent } from './components/add-product-form/add-produ
     LongPressDirective,
     IngredientComponent,
     RecipyShortViewComponent,
-    AddProductFormComponent
+    AddProductFormComponent,
+    InputWithAutocompleteComponent,
+    CostOfRecipyComponent,
+    LastPreparedDatePipe,
+    CollectionsActionSheetComponent,
+    AddRecipyToNoShowComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
