@@ -97,7 +97,6 @@ export class RecipyShortViewComponent implements OnInit {
     this.isNeedsAdvancePreparation = this.recipy.type?.includes(
       DishType['потребує попередньої підготовки']
     );
-    console.log(this.isBigScreen)
   }
 
   onRecipyClicked() {
