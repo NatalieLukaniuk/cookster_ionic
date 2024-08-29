@@ -1,5 +1,5 @@
 import { FiltersService } from './../../../../filters/services/filters.service';
-import { getCurrentUser, getFamilyMembers } from 'src/app/store/selectors/user.selectors';
+import { getCurrentUser, getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
@@ -10,6 +10,8 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import * as _ from 'lodash';
 import { User } from 'src/app/models/auth.models';
 import { LayoutService } from 'src/app/services/layout.service';
+import { IDayDetails } from 'src/app/models/calendar.models';
+import { CalendarService } from 'src/app/services/calendar.service';
 
 @Component({
   selector: 'app-recipies',
@@ -36,7 +38,8 @@ export class RecipiesContainer implements OnDestroy {
   constructor(
     private store: Store<IAppState>,
     private filtersService: FiltersService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private calendarService: CalendarService
   ) {
     this.subscribeForProductChips();
     this.subscribeForRecipies()
@@ -79,13 +82,28 @@ export class RecipiesContainer implements OnDestroy {
     combineLatest([
       this.store.pipe(select(getAllRecipies)),
       this.filters$,
-      this.filtersService.noShowRecipies$
+      this.filtersService.noShowRecipies$,
+      this.store.pipe(select(getUserPlannedRecipies)),
     ]).pipe(
       takeUntil(this.destroy$),
       map(res => _.cloneDeep(res)),
-      map((res) => this.filtersService.applyFilters(res[0], res[1], res[2])),      
+      map(res => {
+        if(res[3]){
+          res[0] = res[0].map(recipy => this.addLastPrepared(recipy, res[3]))          
+        }
+        return res
+      }), 
+      map((res) => this.filtersService.applyFilters(res[0], res[1], res[2])),           
       tap(recipies => this.recipies = recipies)
     ).subscribe()
+  }
+
+  addLastPrepared(recipy: Recipy, allPlannedRecipies: IDayDetails[] | undefined): Recipy {
+    let updated = {
+      ...recipy,
+      lastPrepared: allPlannedRecipies ? this.calendarService.getLastPreparedDate(recipy.id, allPlannedRecipies) : 'N/A'
+    }
+    return updated
   }
 
   onscroll(event: any) {

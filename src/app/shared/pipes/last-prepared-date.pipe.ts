@@ -20,7 +20,7 @@ export class LastPreparedDatePipe implements PipeTransform {
         toReturn = `заплановано через ${futureDays} дні${futureDays >= 5 ? 'в' : ''}`
       } 
     } else if (days === 0) {
-      const isSame = today.isSame(momentDate);
+      const isSame = today.format('DDMMYYYY') === momentDate.format('DDMMYYYY')
       toReturn = isSame ? 'заплановано на сьогодні' : 'заплановано на завтра'
 
     } else if (days <= 1) {

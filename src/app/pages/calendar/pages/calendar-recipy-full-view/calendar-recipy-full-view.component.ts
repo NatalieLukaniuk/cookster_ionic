@@ -6,7 +6,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
-import { tap, map, take } from 'rxjs';
+import { tap, map, take, combineLatest, filter } from 'rxjs';
 import {
   SetIsLoadingAction,
   SetIsLoadingFalseAction,
@@ -39,6 +39,11 @@ export class CalendarRecipyFullViewComponent {
   );
 
   user$ = this.store.pipe(select(getCurrentUser));
+
+  isOwnRecipy$ = combineLatest([this.user$, this.recipy$]).pipe(
+    filter((res) => !!res[0] && !!res[1]),
+    map((res) => res[0]?.email === res[1]?.author)
+  );
 
   portions$ = this.route.queryParams.pipe(
     tap((res) => {
@@ -95,5 +100,9 @@ export class CalendarRecipyFullViewComponent {
     } else {
       return new Date()
     }
-  }  
+  }
+
+  goEditRecipy() {
+    this.router.navigate(['tabs', 'recipies', 'edit-recipy', this.recipyId]);
+  }
 }

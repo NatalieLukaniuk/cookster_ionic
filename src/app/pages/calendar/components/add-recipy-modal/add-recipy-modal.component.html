@@ -70,9 +70,9 @@
                       <span *ngIf="recipy.calorificValue">{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span>
                       <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon>
                         {{recipy.portionSize}}гр./порцію</div>
-                      <div *ngIf="recipy.lastPrepared"><ion-icon name="today-outline"></ion-icon> {{recipy.lastPrepared
-                        |
-                        lastPreparedDate }}
+                      <div><ion-icon name="today-outline"></ion-icon>
+                        <span *ngIf="recipy.lastPrepared">{{recipy.lastPrepared | lastPreparedDate }}</span>
+                        <span class="color-warning" *ngIf="!recipy.lastPrepared">не готувався</span>
                       </div>
                       <div class="collection-tags">
                         <span><ion-icon name="pricetags-outline"></ion-icon> </span>
@@ -102,14 +102,16 @@
               <ion-item-options>
                 <div class="vertical-flex">
                   <ion-item-option *ngIf="currentUser">
-                    <app-add-recipy-to-no-show [recipy]="recipy" [currentUser]="currentUser"></app-add-recipy-to-no-show>
-                </ion-item-option>
+                    <app-add-recipy-to-no-show [recipy]="recipy"
+                      [currentUser]="currentUser"></app-add-recipy-to-no-show>
+                  </ion-item-option>
                   <ion-item-option *ngIf="currentUser && selectedCollection.name !== 'all'">
-                    <app-collections-action-sheet [recipy]="recipy" [currentUser]="currentUser"></app-collections-action-sheet>
-                </ion-item-option>
-                
+                    <app-collections-action-sheet [recipy]="recipy"
+                      [currentUser]="currentUser"></app-collections-action-sheet>
+                  </ion-item-option>
+
                 </div>
-                
+
               </ion-item-options>
             </ion-item-sliding>
 
