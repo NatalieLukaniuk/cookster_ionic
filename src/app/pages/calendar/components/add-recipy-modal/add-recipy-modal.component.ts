@@ -59,7 +59,7 @@ export class AddRecipyModalComponent implements OnDestroy {
     this.collections$,
     this.filtersService.noShowRecipies$
   ]).pipe(
-    map((res) => {      
+    map((res) => {
       let [recipies, collection, filters, plannedRecipies, userCollections, noShowIds] = res;
       const clonedRecipies = _.cloneDeep(recipies);
       if (collection && collection.name === 'all') {
@@ -88,6 +88,9 @@ export class AddRecipyModalComponent implements OnDestroy {
   }
 
   sortByLastPrepared(a: Recipy, b: Recipy) {
+    if (!a.lastPrepared && !b.lastPrepared) {
+      return 0
+    }
     if (!a.lastPrepared) {
       return -1
     }
