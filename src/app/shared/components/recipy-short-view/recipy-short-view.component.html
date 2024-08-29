@@ -130,5 +130,9 @@
         </ng-container>
       </ng-container>
     </div>
+    <div class="overlay-row"><ion-icon name="today-outline"></ion-icon> 
+      <span *ngIf="recipy.lastPrepared">{{recipy.lastPrepared | lastPreparedDate }}</span>
+      <span class="color-warning" *ngIf="!recipy.lastPrepared">не готувався</span>
+      </div>
   </div>
 </ng-template>
