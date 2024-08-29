@@ -121,16 +121,14 @@
         DishType[tag]
         }}</ion-chip>
     </div>
-    <div class="chip-selection-list">
-      <ng-container *ngIf="productPreferencesChips?.length">
+    <div class="chip-selection-list" *ngIf="!!productPreferencesChips?.length">
         <ng-container *ngFor="let item of productPreferencesChips">
           <ion-chip *ngIf="getIsInRecipy(item.productId)" class="collection-chip" [color]="item.color">
             {{item.name}}: {{getProductText(item.productId)}}
           </ion-chip>
         </ng-container>
-      </ng-container>
     </div>
-    <div class="overlay-row"><ion-icon name="today-outline"></ion-icon> 
+    <div class="overlay-row" *ngIf="!!currentUser"><ion-icon name="today-outline"></ion-icon> 
       <span *ngIf="recipy.lastPrepared">{{recipy.lastPrepared | lastPreparedDate }}</span>
       <span class="color-warning" *ngIf="!recipy.lastPrepared">не готувався</span>
       </div>
