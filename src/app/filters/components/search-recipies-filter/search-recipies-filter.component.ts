@@ -9,6 +9,8 @@ import { FiltersService } from '../../services/filters.service';
 export class SearchRecipiesFilterComponent implements OnInit, OnDestroy {
   @Input() isClearOnDestroy = true;
 
+  value = ''
+
   constructor(private filtersService: FiltersService) { }
   ngOnDestroy(): void {
     if (this.isClearOnDestroy) {
@@ -16,7 +18,10 @@ export class SearchRecipiesFilterComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.value = this.filtersService.currentFilters.search;
+  }
+
   onSearch(event: any) {
     this.filtersService.toggleSearch(event.detail.value);
   }
