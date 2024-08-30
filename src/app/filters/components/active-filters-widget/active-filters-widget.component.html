@@ -1,43 +1,32 @@
 <div *ngIf="!!currentFilters" class="wrapper">
-  <div
-    class="title"
-    *ngIf="
+  <div class="title" *ngIf="
       currentFilters.ingredientsToInclude.length ||
       currentFilters.ingredientsToExclude.length ||
-      currentFilters.tags.length ||
+      currentFilters.tagsToShow.length ||
+      currentFilters.tagsToExclude.length ||
       !!currentFilters.maxPrepTime
-    "
-  >
-    <div
-      class="ingreds-to-include"
-      *ngIf="currentFilters.ingredientsToInclude.length"
-    >
-      <ion-chip
-        *ngFor="let tag of currentFilters.ingredientsToInclude"
-        (click)="removeIngrToInclude(tag)"
-      >
+    ">
+    <div class="ingreds-to-include" *ngIf="currentFilters.ingredientsToInclude.length">
+      <ion-chip *ngFor="let tag of currentFilters.ingredientsToInclude" (click)="removeIngrToInclude(tag)">
         <ion-label>{{ getIngredientText(tag) }}</ion-label>
         <ion-icon name="close"></ion-icon>
       </ion-chip>
     </div>
 
-    <div
-      class="ingreds-to-exclude"
-      *ngIf="currentFilters.ingredientsToExclude.length"
-    >
-      <ion-chip
-        *ngFor="let tag of currentFilters.ingredientsToExclude"
-        (click)="removeIngrToExclude(tag)"
-      >
+    <div class="ingreds-to-exclude" *ngIf="currentFilters.ingredientsToExclude.length">
+      <ion-chip *ngFor="let tag of currentFilters.ingredientsToExclude" (click)="removeIngrToExclude(tag)">
         <ion-label>{{ getIngredientText(tag) }}</ion-label>
         <ion-icon name="close"></ion-icon>
       </ion-chip>
     </div>
-    <div class="tags" *ngIf="currentFilters.tags.length">
-      <ion-chip
-        *ngFor="let tag of currentFilters.tags"
-        (click)="removeTag(tag)"
-      >
+    <div class="tags-to-show" *ngIf="currentFilters.tagsToShow.length">
+      <ion-chip *ngFor="let tag of currentFilters.tagsToShow" (click)="removeTagToShow(tag)">
+        <ion-label>{{ getTagsText(tag) }}</ion-label>
+        <ion-icon name="close"></ion-icon>
+      </ion-chip>
+    </div>
+    <div class="tags-to-hide" *ngIf="currentFilters.tagsToExclude.length">
+      <ion-chip *ngFor="let tag of currentFilters.tagsToExclude" (click)="removeTagToExclude(tag)">
         <ion-label>{{ getTagsText(tag) }}</ion-label>
         <ion-icon name="close"></ion-icon>
       </ion-chip>

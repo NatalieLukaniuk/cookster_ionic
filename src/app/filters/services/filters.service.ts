@@ -25,7 +25,8 @@ export class FiltersService {
     ingredientsToExclude: [],
     ingredientsToInclude: [],
     maxPrepTime: 0,
-    tags: [],
+    tagsToShow: [],
+    tagsToExclude: [],
     search: '',
   };
 
@@ -63,9 +64,14 @@ export class FiltersService {
         );
       });
     }
-    if (!!filters.tags.length) {
+    if (!!filters.tagsToShow.length) {
       _recipies = _recipies.filter((recipy) => {
-        return filters.tags.every((tag) => recipy.type.includes(tag));
+        return filters.tagsToShow.some((tag) => recipy.type.includes(tag));
+      });
+    }
+    if (!!filters.tagsToExclude.length) {
+      _recipies = _recipies.filter((recipy) => {
+        return !filters.tagsToExclude.some((tag) => recipy.type.includes(tag));
       });
     }
     if (!!filters.maxPrepTime) {
@@ -114,9 +120,18 @@ export class FiltersService {
     );
     this.onFiltersChange();
   }
-  toggleTag(tag: number) {
-    this.currentFilters.tags = this.processToggleTag(
-      this.currentFilters.tags,
+
+  toggleTagToShow(tag: number) {
+    this.currentFilters.tagsToShow = this.processToggleTag(
+      this.currentFilters.tagsToShow,
+      tag
+    );
+    this.onFiltersChange();
+  }
+
+  toggleTagToExclude(tag: number) {
+    this.currentFilters.tagsToExclude = this.processToggleTag(
+      this.currentFilters.tagsToExclude,
       tag
     );
     this.onFiltersChange();

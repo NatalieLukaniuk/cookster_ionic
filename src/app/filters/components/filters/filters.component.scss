@@ -5,3 +5,15 @@
 .accordion-content{
   min-height: 330px;
 }
+
+.filter-item {
+  display: flex;
+    flex-direction: column;
+    margin-block: 20px;
+}
+
+.found-recipies-count {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-block: 5px;
+}

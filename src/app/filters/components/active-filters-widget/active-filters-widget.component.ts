@@ -44,8 +44,12 @@ export class ActiveFiltersWidgetComponent implements OnDestroy {
     return DishType[tag];
   }
 
-  removeTag(tag: DishType) {
-    this.filtersService.toggleTag(tag);
+  removeTagToShow(tag: DishType) {
+    this.filtersService.toggleTagToShow(tag);
+  }
+
+  removeTagToExclude(tag: DishType) {
+    this.filtersService.toggleTagToExclude(tag);
   }
 
   removeIngrToInclude(tag: string) {
