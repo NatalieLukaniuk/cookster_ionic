@@ -19,6 +19,11 @@
       <app-active-filters-widget></app-active-filters-widget>
       <h5 class="found-recipies-count">Знайдено {{ filtersService.filteredRecipies }} рецептів</h5>
       <div class="filter-item">
+        <span class="filter-item-title">Пошук за назвою:</span>
+        <app-search-recipies-filter [isClearOnDestroy]="false"></app-search-recipies-filter>
+      </div>
+      
+      <div class="filter-item">
         <span class="filter-item-title">Показати типи страв:</span>
         <app-dish-type-selector></app-dish-type-selector>
       </div>

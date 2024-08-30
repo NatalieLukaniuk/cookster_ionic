@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { SIDEBAR_EXPANDED_WIDTH } from '../../constants';
 
 @Component({
@@ -7,6 +7,7 @@ import { SIDEBAR_EXPANDED_WIDTH } from '../../constants';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  @Input() isShowDoubleToolbar = true;
 
   isDesktop = window.innerWidth >= SIDEBAR_EXPANDED_WIDTH;
   
