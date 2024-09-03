@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FiltersService } from '../../services/filters.service';
 
 @Component({
@@ -7,13 +7,21 @@ import { FiltersService } from '../../services/filters.service';
   styleUrls: ['./search-recipies-filter.component.scss'],
 })
 export class SearchRecipiesFilterComponent implements OnInit, OnDestroy {
+  @Input() isClearOnDestroy = true;
+
+  value = ''
 
   constructor(private filtersService: FiltersService) { }
   ngOnDestroy(): void {
-    this.clear()
+    if (this.isClearOnDestroy) {
+      this.clear()
+    }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.value = this.filtersService.currentFilters.search;
+  }
+
   onSearch(event: any) {
     this.filtersService.toggleSearch(event.detail.value);
   }

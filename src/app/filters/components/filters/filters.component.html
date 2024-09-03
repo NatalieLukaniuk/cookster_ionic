@@ -2,7 +2,7 @@
   <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
 </ion-button>
 
-<ion-modal [trigger]="'filters-modal' + pageId">
+<ion-modal [trigger]="'filters-modal' + pageId" [initialBreakpoint]="0.75" [breakpoints]="[0.25, 0.5, 0.75]">
   <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -17,7 +17,20 @@
     </ion-header>
     <ion-content class="ion-padding" *ngIf="!isExpensePage; else ExpensesTemplate">
       <app-active-filters-widget></app-active-filters-widget>
-      <h3>Знайдено {{ filtersService.filteredRecipies }} рецептів</h3>
+      <h5 class="found-recipies-count">Знайдено {{ filtersService.filteredRecipies }} рецептів</h5>
+      <div class="filter-item">
+        <span class="filter-item-title">Пошук за назвою:</span>
+        <app-search-recipies-filter [isClearOnDestroy]="false"></app-search-recipies-filter>
+      </div>
+      
+      <div class="filter-item">
+        <span class="filter-item-title">Показати типи страв:</span>
+        <app-dish-type-selector></app-dish-type-selector>
+      </div>
+      <div class="filter-item">
+        <span class="filter-item-title">Приховати типи страв:</span>
+        <app-dish-type-selector [isTagsToShow]="false"></app-dish-type-selector>
+      </div>
       <ion-accordion-group>
         <ion-accordion value="first">
           <ion-item slot="header" color="light">
@@ -35,19 +48,6 @@
           <div class="ion-padding accordion-content" slot="content">
             <app-product-autocomplete #withoutAutocomplete *ngIf="products$ | async" [products]="products"
               (productSelected)="addToDisplayWithout($event)"></app-product-autocomplete>
-          </div>
-        </ion-accordion>
-        <ion-accordion value="third">
-          <ion-item slot="header" color="light">
-            <ion-label>Пошук за типом страв</ion-label>
-          </ion-item>
-          <div class="ion-padding" slot="content">
-            <div class="chip-selection-list" slot="content" *ngIf="checkedTags$ | async">
-              <ion-chip *ngFor="let tag of tags" (click)="onTagCheck(tag)"
-                [color]="checkedTags.includes(tag)? 'primary' : 'secondary'">
-                <span>{{ getTagsText(tag) }}</span>
-              </ion-chip>
-            </div>
           </div>
         </ion-accordion>
       </ion-accordion-group>

@@ -1,0 +1,17 @@
+.chip-selector-list {
+    display: flex;
+    gap: 0;
+    flex-wrap: nowrap;
+    padding: 10px 5px;
+    width: max-content;
+
+    ::ng-deep ion-chip {
+        padding: 1px 5px;
+        border-radius: 1px;
+        margin: 0;
+    }
+}
+
+.dish-selector-wrapper {
+    overflow-x: auto;
+}

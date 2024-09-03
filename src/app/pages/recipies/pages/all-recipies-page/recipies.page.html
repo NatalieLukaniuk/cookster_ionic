@@ -1,15 +1,16 @@
-<app-header>
-  <span left-button><app-search-recipies-filter></app-search-recipies-filter></span>
-  <app-filters right-button [pageId]="'all-recipies'"></app-filters>
+<app-header [isShowDoubleToolbar]="false">
+  <app-filters top-header-right-button [pageId]="'all-recipies'"></app-filters>
 </app-header>
 
 <ion-content #scrollingContainer [fullscreen]="true" (ionScroll)="onscroll($event)" [scrollEvents]="true">
   <span id="top-anchor"></span>
-  <div class="recipies-background">    
+  
+  <div class="recipies-background">
     <div *ngFor="let recipy of recipies; let index = index">
       <app-recipy-short-view *ngIf="index < numberOfRecipiesToDisplay" [currentUser]="user$ | async" [recipy]="recipy"
         [productPreferencesChips]="productChips" [isBigScreen]="isBigScreen"></app-recipy-short-view>
-        <app-comments-block *ngIf="index < numberOfRecipiesToDisplay" [currentUser]="currentUser" [recipyId]="recipy.id"></app-comments-block>
+      <app-comments-block *ngIf="index < numberOfRecipiesToDisplay" [currentUser]="currentUser"
+        [recipyId]="recipy.id"></app-comments-block>
     </div>
     <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= recipies.length" (ionInfinite)="onIonInfinite($event)">
       <ion-infinite-scroll-content></ion-infinite-scroll-content>

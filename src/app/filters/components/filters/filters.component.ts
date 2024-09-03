@@ -30,22 +30,6 @@ export class FiltersComponent implements OnInit {
     })
   );
 
-  checkedTags: number[] = [];
-
-  tags: number[] = [];
-
-  gettags() {
-    let tags: number[] = [];
-    tags = Object.values(DishType).filter(
-      (value) => typeof value === 'number'
-    ) as number[];
-    return tags;
-  }
-
-  checkedTags$ = this.filtersService.getFilters.pipe(
-    map((res) => res.tags),
-    tap((res) => (this.checkedTags = res))
-  );
 
   constructor(
     public filtersService: FiltersService,
@@ -54,9 +38,6 @@ export class FiltersComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(!this.isExpensePage){
-      this.tags = this.gettags();
-    }    
   }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
@@ -87,11 +68,4 @@ export class FiltersComponent implements OnInit {
     this.withoutAutocomplete.clearSearch();
   }
 
-  getTagsText(tag: DishType) {
-    return DishType[tag];
-  }
-
-  onTagCheck(tag: DishType) {
-    this.filtersService.toggleTag(tag);
-  }
 }

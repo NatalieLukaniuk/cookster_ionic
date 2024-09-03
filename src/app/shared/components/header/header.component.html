@@ -13,10 +13,11 @@
       </div>
     </ion-title>
     <ion-buttons slot="end">
+      <ng-content select="[top-header-right-button]"></ng-content>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar>
+  <ion-toolbar *ngIf="isShowDoubleToolbar">
     <ion-buttons slot="start">
       <ng-content select="[left-button]"></ng-content>
     </ion-buttons>
