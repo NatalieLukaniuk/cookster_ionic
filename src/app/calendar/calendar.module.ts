@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarComponent } from './calendar-smart-wrapper/calendar.component';
 
 
 

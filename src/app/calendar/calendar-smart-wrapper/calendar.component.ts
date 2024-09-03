@@ -8,7 +8,7 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 
 @Component({
-  selector: 'app-calendar-reworked',
+  selector: 'app-calendar-wrapper',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
