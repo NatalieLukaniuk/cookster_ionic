@@ -9,17 +9,41 @@ export interface CalendarRecipyInDatabase_Reworked {
   
   export const mockPlannedRecipies: CalendarRecipyInDatabase_Reworked[] = [
     {
-      recipyId: '-O5gg2YNlRduAeRaPg0w',
+      recipyId: '-NmQ6PGasvqnMJZbz-mz',
       portions: 2,
       amountPerPortion: 350,
-      endTime: new Date('2024-09-03T21:24:00')
+      endTime: new Date('2024-09-03T19:20:00')
     },
     {
       recipyId: '-O57rNh1mVadL70jMZ1Z',
       portions: 2,
       amountPerPortion: 350,
-      endTime: new Date('2024-09-03T12:24:00')
+      endTime: new Date('2024-09-03T12:00:00')
     },
+    {
+        recipyId: '-NmQ6PGasvqnMJZbz-mz',
+        portions: 2,
+        amountPerPortion: 350,
+        endTime: new Date('2024-09-03T19:00:00')
+      },
+      {
+        recipyId: '-O57rNh1mVadL70jMZ1Z',
+        portions: 2,
+        amountPerPortion: 350,
+        endTime: new Date('2024-09-03T12:00:00')
+      },
+      {
+        recipyId: '-NmQ6PGasvqnMJZbz-mz',
+        portions: 2,
+        amountPerPortion: 350,
+        endTime: new Date('2024-09-03T21:24:00')
+      },
+      {
+        recipyId: '-O57rNh1mVadL70jMZ1Z',
+        portions: 2,
+        amountPerPortion: 350,
+        endTime: new Date('2024-09-03T12:24:00')
+      },
     {
         recipyId: '-O57rNh1mVadL70jMZ1Z',
         portions: 2,

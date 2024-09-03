@@ -1,0 +1,24 @@
+<div class="timeline-container" [style]="'height: ' + PIXELS_IN_DAY + 'px'">
+  <div class="timeline-scale">
+    <ng-container *ngIf="timelineScaleItems">
+      <div *ngFor="let scale of timelineScaleItems" class="scale-item">
+        {{scale}}:00 - {{scale + 1}}:00
+      </div>
+    </ng-container>
+
+  </div>
+  <div class="timeline-body">
+    <ng-container *ngIf="timelineScaleItems">
+      <div class="background-grid">
+        <div *ngFor="let scale of timelineScaleItems" class="scale-item"> </div>
+      </div>
+
+      <div class="recipies-container">
+        <div class="timeline-recipy" *ngFor="let recipy of recipies"
+          [style]="'height: ' + getRecipyHeight(recipy) + 'px; margin-top: ' + getRecipyTopMargin(recipy) + 'px'">
+          {{recipy.name}}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
