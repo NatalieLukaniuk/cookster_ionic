@@ -1,6 +1,7 @@
 import { FamilyMember, Preferences, User } from 'src/app/models/auth.models';
 import { UserActions, UserActionTypes } from '../actions/user.actions';
 import * as _ from 'lodash';
+import { mockPlannedRecipies } from 'src/app/calendar/calendar.models';
 
 export interface IUserState {
   currentUser: User | null;
@@ -32,7 +33,7 @@ export function UserReducers(
     case UserActionTypes.USER_LOADED: {
       return {
         ...state,
-        currentUser: action.user,
+        currentUser: {...action.user, plannedRecipies: mockPlannedRecipies},
       };
     }
 
