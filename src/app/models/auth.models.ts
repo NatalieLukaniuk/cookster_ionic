@@ -1,3 +1,4 @@
+import { CalendarRecipyInDatabase_Reworked } from '../calendar/calendar.models';
 import { ExpenseItem } from '../expenses/expenses-models';
 import { DayDetails, Reminder } from './calendar.models';
 import { PlannerByDate, ShoppingList, ShoppingListItem } from './planner.models';
@@ -17,6 +18,7 @@ export interface User {
   draftRecipies?: DraftRecipy[];
   preferences?: Preferences;
   family?: FamilyMember[];
+  plannedRecipies?: CalendarRecipyInDatabase_Reworked[]
 }
 
 export enum Role {

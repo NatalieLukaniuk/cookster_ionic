@@ -20,6 +20,7 @@ import { AddCommentModalComponent } from './components/add-comment-modal/add-com
 import { MoveRecipyModalComponent } from './components/move-recipy-modal/move-recipy-modal.component';
 import { FiltersModule } from 'src/app/filters/filters.module';
 import { CommentsModule } from 'src/app/comments/comments.module';
+import { CalendarModule } from 'src/app/calendar/calendar.module';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { CommentsModule } from 'src/app/comments/comments.module';
     CalendarPageRoutingModule,
     SharedModule,
     FiltersModule,
-    CommentsModule
+    CommentsModule,
+    CalendarModule
   ],
   declarations: [
     CalendarPage,
