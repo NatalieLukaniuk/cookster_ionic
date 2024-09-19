@@ -14,10 +14,21 @@
       </div>
 
       <div class="recipies-container">
-        <div class="timeline-recipy" *ngFor="let recipy of recipies"
-          [style]="'height: ' + getRecipyHeight(recipy) + 'px; margin-top: ' + getRecipyTopMargin(recipy) + 'px'">
-          {{recipy.name}}
-        </div>
+        <ng-container *ngFor="let recipy of recipies">
+          <div class="timeline-recipy"
+            [style]="'height: ' + getRecipyHeight(recipy) + 'px; margin-top: ' + getRecipyTopMargin(recipy) + 'px'"
+            [id]="recipy.id + '_' + recipy.endTime">
+            {{recipy.name}}
+
+          </div>
+          <ion-popover [trigger]="recipy.id + '_' + recipy.endTime" triggerAction="click">
+            <ng-template>
+              <ion-content class="ion-padding">{{recipy.name}}</ion-content>
+              <!-- TODO: Here goes component with recipy short preview, rework based on app-calendar-recipy -->
+            </ng-template>
+          </ion-popover>
+        </ng-container>
+
       </div>
     </ng-container>
   </div>
