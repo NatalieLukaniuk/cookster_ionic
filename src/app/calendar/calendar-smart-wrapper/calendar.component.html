@@ -1,1 +1,13 @@
-<app-calendar-timeline-day [recipies]="currentDateDetails$ | async"></app-calendar-timeline-day>
+<div class="current-day-selector">
+  <ion-button size="small" (click)="goPreviousDay()">
+    <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+  </ion-button>
+  <span>{{
+    (currentDay$ | async)?.toString() | date : "EEEE, d MMMM"
+    }}</span>
+  <ion-button size="small" (click)="goNextDay()">
+    <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+  </ion-button>
+</div>
+
+<app-calendar-timeline-day class="day-details" [recipies]="currentDateDetails$ | async"></app-calendar-timeline-day>
