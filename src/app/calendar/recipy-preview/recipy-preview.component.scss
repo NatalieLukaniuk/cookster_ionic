@@ -1,34 +1,64 @@
 .additional-info {
-    display: flex;
-    color: var(--ion-color-medium);
-    font-size: 12px;
-    flex-direction: column;
-    gap: 3px;
-    margin-top: 10px;
-    & > span {
-      margin-right: 10px;
-    }
-    .icons {
-      color: var(--ion-color-primary);
-    }
+  display: flex;
+  color: var(--ion-color-medium);
+  font-size: 12px;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 10px;
+
+  &>span {
+    margin-right: 10px;
   }
-  
-  h2 {
-    white-space: normal;
-    font-size: 16px;
-    font-weight: 600;
+
+  .icons {
+    color: var(--ion-color-primary);
   }
-  
-  .recipy-content {
-    display: flex;
-    .recipy-text {
-      flex-grow: 1;
-    }
+}
+
+h2 {
+  white-space: normal;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.recipy-content {
+  display: flex;
+  padding-left: 15px;
+
+  .recipy-text {
+    flex-grow: 1;
   }
-  
-  .recipy-photo {
+}
+
+.recipy-photo {
+  height: auto;
+  width: 140px;
+  min-width: 140px;
+  margin-left: 10px;
+}
+
+.recipy-actions {
+  display: flex;
+
+  &>ion-button {
     height: auto;
-    width: 140px;
-    min-width: 140px;
-    margin-left: 10px;
+    flex-grow: 1;
+
+    div {
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      ion-icon {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 8px;
+      }
+
+    }
   }
+}

@@ -25,16 +25,18 @@
         }}
         ккал/порцію
       </span>
-      
-      
-      <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon> {{recipy.portionSize}}гр./порцію</div>
+
+
+      <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon> {{recipy.portionSize}}гр./порцію
+      </div>
       <div class="collection-tags">
         <span><ion-icon name="pricetags-outline"></ion-icon> </span>
         <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
           DishType[tag]
           }}</ion-chip>
       </div>
-      <app-cost-of-recipy [amountPerPortion]="recipy.amountPerPortion" [ingredients]="recipy.ingrediends" [portions]="recipy.portions"></app-cost-of-recipy>
+      <app-cost-of-recipy [amountPerPortion]="recipy.amountPerPortion" [ingredients]="recipy.ingrediends"
+        [portions]="recipy.portions"></app-cost-of-recipy>
     </div>
   </div>
   <div class="recipy-photo" *ngIf="recipy.photo">
@@ -42,8 +44,24 @@
   </div>
 </div>
 <div class="recipy-actions">
-  <!-- TODO: add real actions -->
-  <ion-icon name="beer-outline"></ion-icon>
-  <ion-icon name="beer-outline"></ion-icon>
-  <ion-icon name="beer-outline"></ion-icon>
+  <ion-button (click)="viewRecipy()">
+    <div>
+      <ion-icon name="search-outline"></ion-icon>
+      <p>Переглянути</p>
+    </div>
+  </ion-button>
+
+  <ion-button (click)="onChangeRecipyDate()">
+    <div>
+      <ion-icon name="move-outline"></ion-icon>
+      <p>Змінити дату</p>
+    </div>
+  </ion-button>
+  
+  <ion-button (click)="onDelete()" color="danger">
+    <div>
+      <ion-icon name="trash-outline"></ion-icon>
+      <p>Видалити</p>
+    </div>
+  </ion-button>
 </div>
