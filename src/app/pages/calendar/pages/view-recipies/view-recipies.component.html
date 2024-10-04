@@ -2,7 +2,7 @@
   <ion-back-button left-button defaultHref="tabs/calendar"></ion-back-button>
   <ion-segment [value]="displayRecipyIndex" title [scrollable]="true" (ionChange)="onSelectedRecipyChanged($event)">
     <ng-container *ngFor="let recipy of (openedRecipies$ | async); index as i">
-      <ion-segment-button [value]="i"  class="recipy-selector-btn">
+      <ion-segment-button [value]="i"  class="recipy-selector-btn" (click)="onSegmentBtnClicked(i)">
         <ion-label class="recipy-selector-btn-label">{{recipy.name}}</ion-label>
       </ion-segment-button>
     </ng-container>

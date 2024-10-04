@@ -23,4 +23,10 @@ export class CalendarService {
     this.openedRecipies$.next(updated);
 
   }
+
+  closeRecipy(index: number){
+    const current = this.openedRecipies$.getValue();
+    const updated = current.filter((openedRecipy, openedIndex) => openedIndex !== index);
+    this.openedRecipies$.next(updated);
+  }
 }

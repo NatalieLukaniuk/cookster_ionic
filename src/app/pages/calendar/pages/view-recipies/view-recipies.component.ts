@@ -5,6 +5,7 @@ import { RecipyForCalendar_Reworked } from 'src/app/calendar/calendar.models';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { DialogsService } from 'src/app/services/dialogs.service';
 
 @Component({
   selector: 'app-view-recipies',
@@ -18,7 +19,7 @@ export class ViewRecipiesComponent implements OnInit {
 
   user$ = this.store.pipe(select(getCurrentUser));
 
-  constructor(private calendarService: CalendarService, private store: Store<IAppState>) { }
+  constructor(private calendarService: CalendarService, private store: Store<IAppState>, private dialog: DialogsService,) { }
 
   ngOnInit() {
 
@@ -29,7 +30,25 @@ export class ViewRecipiesComponent implements OnInit {
   }
 
   onSelectedRecipyChanged(event: any) {
-    this.displayRecipyIndex = +event.detail.value
+    this.displayRecipyIndex = +event.detail.value;
+  }
+
+  onSegmentBtnClicked(i: number) {
+    if (i === this.displayRecipyIndex) {
+      this.dialog
+        .openConfirmationDialog(
+          `Закрити вкладку?`,
+          ''
+        )
+        .then((res) => {
+          if (res.role === 'confirm') {
+            this.calendarService.closeRecipy(i);
+            if (this.displayRecipyIndex !== 0) {
+              this.displayRecipyIndex -= this.displayRecipyIndex;
+            }
+          }
+        });
+    }
   }
 
 }
