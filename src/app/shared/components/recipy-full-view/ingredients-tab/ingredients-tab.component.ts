@@ -57,13 +57,6 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.portions) {
-      this.portionsToServe = this.portions;
-    }
-
-    if (this.amountPerPortion) {
-      this.portionSize = this.amountPerPortion;
-    }
 
     if (!this.portions && !this.amountPerPortion) {
       this.store.pipe(select(getUserPreferences), takeUntil(this.destroy$)).subscribe(preferences => {
@@ -82,16 +75,25 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
         }
       })
     }
-
-
-    this.getCoeficient();
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if(changes['portions'] && changes['portions'].currentValue !== changes['portions'].previousValue){
+      this.portionsToServe = changes['portions'].currentValue;
+    }
+
+    if(changes['amountPerPortion'] && changes['amountPerPortion'].currentValue !== changes['amountPerPortion'].previousValue){
+      this.portionSize = changes['amountPerPortion'].currentValue;
+    }
+
+    this.getCoeficient();
+
     if (this.recipy.isSplitIntoGroups) {
       this.isSplitToGroups = true;
       this.getIngredientsByGroup();
     }
+
   }
 
   getIngredientsByGroup() {

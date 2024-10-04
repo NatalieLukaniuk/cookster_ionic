@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, map, tap } from 'rxjs';
 import { User } from 'src/app/models/auth.models';
@@ -14,7 +14,7 @@ import { DialogsService } from 'src/app/services/dialogs.service';
   templateUrl: './comments-block.component.html',
   styleUrls: ['./comments-block.component.scss']
 })
-export class CommentsBlockComponent implements OnInit {
+export class CommentsBlockComponent implements OnChanges {
   // TODO: functionality when the user is not logged in
   @Input() recipyId: string | undefined;
   @Input() currentUser!: User | null | undefined;
@@ -35,8 +35,8 @@ export class CommentsBlockComponent implements OnInit {
   constructor(private store: Store<IAppState>, private commentsService: CommentsService, private dialog: DialogsService) {
 
   }
-  ngOnInit(): void {
-    if (!!this.recipyId) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['recipyId'] && !!this.recipyId) {
       this.modalId = 'comments' + '-' + this.recipyId;
       this.comments$ = this.store.pipe(select(getComments), map(comments => {
         if (comments) {

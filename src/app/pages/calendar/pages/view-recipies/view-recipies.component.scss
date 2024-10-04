@@ -1,5 +1,8 @@
 .recipy-selector-btn {
-    white-space: normal;
-    font-size: 9px;
-    line-height: 1.2;
+
+    &-label {
+        white-space: normal;
+        font-size: 9px;
+        line-height: 1.2;
+    }
 }
