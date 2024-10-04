@@ -1,0 +1,49 @@
+<div class="recipy-content">
+  <div class="recipy-text">
+    <h2>{{ recipy.name }}<span class="icons">
+        <ion-icon name="alarm" *ngIf="showNeedsAdvancePreparation"></ion-icon>
+        <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
+      </span></h2>
+    <div class="additional-info">
+      <div>
+        <span>
+          <ion-icon name="american-football-outline"></ion-icon>
+          {{ activePreparationTime() | normalizeTime }}
+        </span>
+        <span>
+          <ion-icon name="beer-outline"></ion-icon>
+          {{ passivePreparationTime() | normalizeTime }}
+        </span>
+      </div>
+      <span>{{ recipy.portions }} порцій</span>
+      <span><ion-icon name="calendar-outline"></ion-icon>{{ recipy.amountPerPortion }} гр/порцію</span>
+      <span *ngIf="recipy.calorificValue">
+        {{
+        Math.round(
+        (recipy.calorificValue * recipy.amountPerPortion) / 100
+        )
+        }}
+        ккал/порцію
+      </span>
+      
+      
+      <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon> {{recipy.portionSize}}гр./порцію</div>
+      <div class="collection-tags">
+        <span><ion-icon name="pricetags-outline"></ion-icon> </span>
+        <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+          DishType[tag]
+          }}</ion-chip>
+      </div>
+      <app-cost-of-recipy [amountPerPortion]="recipy.amountPerPortion" [ingredients]="recipy.ingrediends" [portions]="recipy.portions"></app-cost-of-recipy>
+    </div>
+  </div>
+  <div class="recipy-photo" *ngIf="recipy.photo">
+    <app-image [imagePath]="recipy.photo"></app-image>
+  </div>
+</div>
+<div class="recipy-actions">
+  <!-- TODO: add real actions -->
+  <ion-icon name="beer-outline"></ion-icon>
+  <ion-icon name="beer-outline"></ion-icon>
+  <ion-icon name="beer-outline"></ion-icon>
+</div>

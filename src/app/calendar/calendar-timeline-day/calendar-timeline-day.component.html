@@ -21,10 +21,10 @@
             {{recipy.name}}
 
           </div>
-          <ion-popover [trigger]="recipy.id + '_' + recipy.endTime" triggerAction="click">
+          <ion-popover class="recipy-preview" [trigger]="recipy.id + '_' + recipy.endTime" triggerAction="click">
             <ng-template>
-              <ion-content class="ion-padding">{{recipy.name}}</ion-content>
-              <!-- TODO: Here goes component with recipy short preview, rework based on app-calendar-recipy -->
+              <ion-content class="ion-padding">
+                <app-recipy-preview [recipy]="recipy"></app-recipy-preview></ion-content>
             </ng-template>
           </ion-popover>
         </ng-container>
