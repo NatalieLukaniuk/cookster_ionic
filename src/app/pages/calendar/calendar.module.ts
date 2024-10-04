@@ -21,6 +21,7 @@ import { MoveRecipyModalComponent } from './components/move-recipy-modal/move-re
 import { FiltersModule } from 'src/app/filters/filters.module';
 import { CommentsModule } from 'src/app/comments/comments.module';
 import { CalendarModule } from 'src/app/calendar/calendar.module';
+import { ViewRecipiesComponent } from './pages/view-recipies/view-recipies.component';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { CalendarModule } from 'src/app/calendar/calendar.module';
     AdvancePreparationComponent,
     ProductsPerDayComponent,
     AddCommentModalComponent,
-    MoveRecipyModalComponent
+    MoveRecipyModalComponent,
+    ViewRecipiesComponent
   ],
   exports: [CalendarCoreComponent]
 })
