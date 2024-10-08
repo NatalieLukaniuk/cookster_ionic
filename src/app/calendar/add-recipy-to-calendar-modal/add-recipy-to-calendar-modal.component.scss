@@ -1,0 +1,11 @@
+.recipy-selection-result {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 14px;
+    padding: 10px 0;
+
+    .recipy-selection-section {
+        padding: 10px 0;
+    }
+}
