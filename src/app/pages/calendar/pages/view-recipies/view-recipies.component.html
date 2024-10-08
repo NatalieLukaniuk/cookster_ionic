@@ -14,7 +14,7 @@
     <ng-container *ngIf="openedRecipies[displayRecipyIndex] as openedRecipy">
       <app-recipy-full-view [recipy]="openedRecipy" [currentUser]="user$ | async"
         [amountPerPortion]="openedRecipy.amountPerPortion" [portions]="openedRecipy.portions"
-        [day]="openedRecipy.endTime" (portionsChanged)="onPortionsChanged($event)"></app-recipy-full-view>
+        [day]="openedRecipy.endTime" (portionsChanged)="onPortionsChanged($event, openedRecipy)"></app-recipy-full-view>
       <app-comments-block [currentUser]="user$ | async" [recipyId]="openedRecipy.id"></app-comments-block>
     </ng-container>
 

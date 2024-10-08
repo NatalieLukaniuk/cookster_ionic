@@ -125,8 +125,8 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
 
   onPortionsChanged() {
     this.portionsChanged.emit({
-      portions: this.portionsToServe,
-      amountPerPortion: this.portionSize,
+      portions: +this.portionsToServe,
+      amountPerPortion: +this.portionSize,
     });
 
     this.isEditPortions = false;

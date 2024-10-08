@@ -25,7 +25,8 @@ export class ViewRecipiesComponent implements OnInit {
 
   }
 
-  onPortionsChanged(event: any) {
+  onPortionsChanged(event: {portions: number, amountPerPortion: number}, changedRecipy: RecipyForCalendar_Reworked) {
+
     //TODO save new portions and amount values
   }
 
