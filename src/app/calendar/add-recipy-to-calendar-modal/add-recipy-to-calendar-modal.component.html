@@ -58,7 +58,9 @@
         <app-recipy-in-calendar-select-date [initialValue]="selectedTime?.toISOString()" (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
       </ng-container>
 
-      <ng-container *ngIf="currentView === AddRecipyToCalView.SetAmount"></ng-container>
+      <ng-container *ngIf="currentView === AddRecipyToCalView.SetAmount">
+        <app-recipy-in-calendar-select-portions-and-amount (amountValueChanged)="onAmountSelected($event)" (portionsValueChanged)="onPortionsSelected($event)"></app-recipy-in-calendar-select-portions-and-amount>
+      </ng-container>
     </ion-content>
   </ng-template>
 </ion-modal>

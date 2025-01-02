@@ -137,4 +137,12 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     this.selectedTime = new Date(newDate);
   }
 
+  onAmountSelected(event: number) {
+    this.portionSize = event;
+  }
+
+  onPortionsSelected(event: number){
+    this.portions = event;
+  }
+
 }
