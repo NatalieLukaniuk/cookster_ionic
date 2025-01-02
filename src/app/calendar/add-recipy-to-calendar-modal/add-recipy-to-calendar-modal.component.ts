@@ -145,4 +145,8 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     this.portions = event;
   }
 
+  get isAddDisabled(){
+    return !(!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime)
+  }
+
 }

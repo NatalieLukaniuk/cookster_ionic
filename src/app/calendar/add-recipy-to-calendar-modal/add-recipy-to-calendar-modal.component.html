@@ -17,7 +17,7 @@
             </div>
             <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectDate)">
               <span>Час приготування:</span>
-              <span>{{(selectedTime | date) || '-'}}</span>
+              <span>{{(selectedTime | date: 'dd MMM yyyy, hh:mm a') || '-'}}</span>
             </div>
             <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SetAmount)">
               <span>Порцій:</span>
@@ -25,6 +25,7 @@
               <span>Розмір порції:</span>
               <span>{{portionSize || '-'}}</span>
             </div>
+
           </div>
         </ion-title>
         <ng-container *ngIf="currentView === AddRecipyToCalView.SelectRecipy">
@@ -33,6 +34,7 @@
           </ion-buttons>
         </ng-container>
       </ion-toolbar>
+
     </ion-header>
 
     <ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
@@ -55,12 +57,20 @@
       </ng-container>
 
       <ng-container *ngIf="currentView === AddRecipyToCalView.SelectDate">
-        <app-recipy-in-calendar-select-date [initialValue]="selectedTime?.toISOString()" (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
+        <app-recipy-in-calendar-select-date [initialValue]="selectedTime?.toISOString()"
+          (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
       </ng-container>
 
       <ng-container *ngIf="currentView === AddRecipyToCalView.SetAmount">
-        <app-recipy-in-calendar-select-portions-and-amount (amountValueChanged)="onAmountSelected($event)" (portionsValueChanged)="onPortionsSelected($event)"></app-recipy-in-calendar-select-portions-and-amount>
+        <app-recipy-in-calendar-select-portions-and-amount (amountValueChanged)="onAmountSelected($event)"
+          (portionsValueChanged)="onPortionsSelected($event)"></app-recipy-in-calendar-select-portions-and-amount>
       </ng-container>
+
     </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-button expand="full" [disabled]="isAddDisabled">Додати</ion-button>
+      </ion-toolbar>
+    </ion-footer>
   </ng-template>
 </ion-modal>
