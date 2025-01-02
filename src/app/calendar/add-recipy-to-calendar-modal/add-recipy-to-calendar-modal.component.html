@@ -54,7 +54,9 @@
         </ion-fab>
       </ng-container>
 
-      <ng-container *ngIf="currentView === AddRecipyToCalView.SelectDate"></ng-container>
+      <ng-container *ngIf="currentView === AddRecipyToCalView.SelectDate">
+        <app-recipy-in-calendar-select-date [initialValue]="selectedTime?.toISOString()" (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
+      </ng-container>
 
       <ng-container *ngIf="currentView === AddRecipyToCalView.SetAmount"></ng-container>
     </ion-content>

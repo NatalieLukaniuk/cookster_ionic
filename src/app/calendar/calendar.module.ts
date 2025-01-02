@@ -8,11 +8,12 @@ import { SharedModule } from '../shared/shared.module';
 import { AddRecipyToCalendarModalComponent } from './add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { FiltersModule } from '../filters/filters.module';
 import { RecipyInCalendarShortViewComponent } from './add-recipy-to-calendar-modal/recipy-in-calendar-short-view/recipy-in-calendar-short-view.component';
+import { RecipyInCalendarSelectDateComponent } from './add-recipy-to-calendar-modal/recipy-in-calendar-select-date/recipy-in-calendar-select-date.component';
 
 
 
 @NgModule({
-  declarations: [CalendarComponent, CalendarTimelineDayComponent, RecipyPreviewComponent, AddRecipyToCalendarModalComponent, RecipyInCalendarShortViewComponent],
+  declarations: [CalendarComponent, CalendarTimelineDayComponent, RecipyPreviewComponent, AddRecipyToCalendarModalComponent, RecipyInCalendarShortViewComponent, RecipyInCalendarSelectDateComponent],
   imports: [
     CommonModule,
     IonicModule,

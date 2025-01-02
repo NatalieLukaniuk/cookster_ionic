@@ -133,4 +133,8 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     this.selectedRecipy = recipy;
   }
 
+  onDateChanged(newDate: string) {
+    this.selectedTime = new Date(newDate);
+  }
+
 }
