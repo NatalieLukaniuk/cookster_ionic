@@ -24,6 +24,7 @@ export enum CalendarActionTypes {
   REMOVE_COMMENT_FROM_CALENDAR = '[CLANEDAR] Remove Comment From Calendar',
   ADD_RECIPY_TO_CALENDAR_NEW = '[CALENDAR] Add Recipy To Calendar',
   UPDATE_RECIPY_IN_CALENDAR_NEW = '[CALENDAR] Update Recipy In Calendar',
+  REMOVE_RECIPY_FROM_CALENDAR_NEW = '[CALENDAR] Remove Recipy From Calendar',
 }
 
 export class RemoveCommentFromCalendarAction implements Action {
@@ -50,6 +51,13 @@ export class UpdateRecipyInCalendarActionNew implements Action {
   constructor(
     public previousEntry: RecipyForCalendar_Reworked,
     public newEntry: RecipyForCalendar_Reworked    
+  ) {}
+}
+
+export class RemoveRecipyFromCalendarActionNew implements Action {
+  readonly type = CalendarActionTypes.REMOVE_RECIPY_FROM_CALENDAR_NEW;
+  constructor(
+    public recipyEntry: RecipyForCalendar_Reworked
   ) {}
 }
 
@@ -163,4 +171,4 @@ export type CalendarActions =
   | MoveRecipyInCalendarAction
   | UpdateRecipyInCalendarAction | AddCommentToCalendarAction | RemoveCommentFromCalendarAction
   | AddRecipyToCalendarActionNew
-  | UpdateRecipyInCalendarActionNew;
+  | UpdateRecipyInCalendarActionNew | RemoveRecipyFromCalendarActionNew;

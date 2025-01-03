@@ -1,4 +1,4 @@
-import { UpdateRecipyInCalendarAction, AddCommentToCalendarAction, RemoveCommentFromCalendarAction, AddRecipyToCalendarActionNew, UpdateRecipyInCalendarActionNew } from './../actions/calendar.actions';
+import { UpdateRecipyInCalendarAction, AddCommentToCalendarAction, RemoveCommentFromCalendarAction, AddRecipyToCalendarActionNew, UpdateRecipyInCalendarActionNew, RemoveRecipyFromCalendarActionNew } from './../actions/calendar.actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -395,6 +395,35 @@ export class CalendarEffects {
       )
     )
   );
+
+  removeRecipyFromCalendar_Reworked$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CalendarActionTypes.REMOVE_RECIPY_FROM_CALENDAR_NEW),
+      switchMap((action: RemoveRecipyFromCalendarActionNew) =>
+        this.store.pipe(
+          select(getCurrentUser),
+          take(1),
+          map((user: User | null) => {
+            if (user) {
+              let updatedUser = _.cloneDeep(user);
+              updatedUser.plannedRecipies = updatedUser.plannedRecipies!.filter(recipy => {
+                return !(
+                  recipy.recipyId === action.recipyEntry.id &&
+                  recipy.portions === action.recipyEntry.portions &&
+                  recipy.amountPerPortion === action.recipyEntry.amountPerPortion &&
+                  action.recipyEntry.endTime === recipy.endTime) 
+            })
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipyEntry.name} видалено`
+              );
+            } else return new ErrorAction('no user');
+          })
+        )
+      )
+    )
+  );
+
 
   constructor(private actions$: Actions, private store: Store<IAppState>) { }
 }
