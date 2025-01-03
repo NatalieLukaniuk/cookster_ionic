@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { RecipyForCalendar_Reworked } from 'src/app/calendar/calendar.models';
 import {
   CalendarRecipyInDatabase,
   Day,
@@ -21,6 +22,9 @@ export enum CalendarActionTypes {
   UPDATE_RECIPY_IN_CALENDAR = '[CLANEDAR] Update Recipy In Calendar',
   ADD_COMMENT_TO_CALENDAR = '[CALENDAR] Add Comment To Calendar',
   REMOVE_COMMENT_FROM_CALENDAR = '[CLANEDAR] Remove Comment From Calendar',
+  ADD_RECIPY_TO_CALENDAR_NEW = '[CALENDAR] Add Recipy To Calendar',
+  MOVE_RECIPY_IN_CALENDAR_NEW = '[CALENDAR] Move Recipy In Calendar',
+  UPDATE_RECIPY_IN_CALENDAR_NEW = '[CALENDAR] Update Recipy In Calendar',
 }
 
 export class RemoveCommentFromCalendarAction implements Action {
@@ -39,6 +43,28 @@ export class AddCommentToCalendarAction implements Action {
     public day: string,
     public mealtime: MealTime,
     public order: number
+  ) {}
+}
+
+export class MoveRecipyInCalendarActionNew implements Action {
+  readonly type = CalendarActionTypes.MOVE_RECIPY_IN_CALENDAR_NEW;
+  constructor(    
+    public previousEntry: RecipyForCalendar_Reworked,
+    public newEntry: RecipyForCalendar_Reworked
+  ) {}
+}
+
+export class UpdateRecipyInCalendarActionNew implements Action {
+  readonly type = CalendarActionTypes.UPDATE_RECIPY_IN_CALENDAR_NEW;
+  constructor(
+    public recipyEntry: RecipyForCalendar_Reworked    
+  ) {}
+}
+
+export class AddRecipyToCalendarActionNew implements Action {
+  readonly type = CalendarActionTypes.ADD_RECIPY_TO_CALENDAR_NEW;
+  constructor(
+    public recipyEntry: RecipyForCalendar_Reworked
   ) {}
 }
 
@@ -143,4 +169,7 @@ export type CalendarActions =
   | RemoveRecipyFromCalendarAction
   | AddRecipyToCalendarAction
   | MoveRecipyInCalendarAction
-  | UpdateRecipyInCalendarAction | AddCommentToCalendarAction | RemoveCommentFromCalendarAction;
+  | UpdateRecipyInCalendarAction | AddCommentToCalendarAction | RemoveCommentFromCalendarAction
+  | AddRecipyToCalendarActionNew
+  | MoveRecipyInCalendarActionNew
+  | UpdateRecipyInCalendarActionNew;

@@ -1,4 +1,4 @@
-import { UpdateRecipyInCalendarAction, AddCommentToCalendarAction, RemoveCommentFromCalendarAction } from './../actions/calendar.actions';
+import { UpdateRecipyInCalendarAction, AddCommentToCalendarAction, RemoveCommentFromCalendarAction, AddRecipyToCalendarActionNew } from './../actions/calendar.actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -22,6 +22,7 @@ import { UpdateUserAction } from '../actions/user.actions';
 import { IAppState } from '../reducers';
 import { getCurrentUser } from '../selectors/user.selectors';
 import { User } from 'src/app/models/auth.models';
+import { CalendarRecipyInDatabase_Reworked } from 'src/app/calendar/calendar.models';
 
 @Injectable()
 export class CalendarEffects {
@@ -324,6 +325,38 @@ export class CalendarEffects {
     }
     return calWithAdded;
   }
+
+  addRecipyToCal_Rework$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CalendarActionTypes.ADD_RECIPY_TO_CALENDAR_NEW),
+      switchMap((action: AddRecipyToCalendarActionNew) =>
+        this.store.pipe(
+          select(getCurrentUser),
+          take(1),
+          map((user) => {
+            if (user && user.details) {
+              let updatedUser = _.cloneDeep(user);
+              if(!updatedUser.plannedRecipies){
+                updatedUser.plannedRecipies = [];
+              }
+              let recipyToSave: CalendarRecipyInDatabase_Reworked = {
+                recipyId: action.recipyEntry.id,
+                portions: action.recipyEntry.portions,
+                amountPerPortion: action.recipyEntry.amountPerPortion,
+                endTime: action.recipyEntry.endTime
+              }
+              updatedUser.plannedRecipies?.push(recipyToSave)
+
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.recipyEntry.name} додано`
+              );
+            } else return new ErrorAction('no user');
+          })
+        )
+      )
+    )
+  );
 
   constructor(private actions$: Actions, private store: Store<IAppState>) { }
 }

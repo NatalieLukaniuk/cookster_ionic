@@ -12,6 +12,8 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
+import { RecipyForCalendar_Reworked } from '../calendar.models';
+import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 
 enum AddRecipyToCalView {
   SelectRecipy = 'select-recipy',
@@ -141,12 +143,25 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     this.portionSize = event;
   }
 
-  onPortionsSelected(event: number){
+  onPortionsSelected(event: number) {
     this.portions = event;
   }
 
-  get isAddDisabled(){
+  get isAddDisabled() {
     return !(!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime)
+  }
+
+  addRecipyToCalendar() {
+    if (!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime) {
+      let recipyToAdd: RecipyForCalendar_Reworked = {
+        ...this.selectedRecipy,
+        portions: this.portions,
+        amountPerPortion: this.portionSize,
+        endTime: this.selectedTime
+      }
+      this.store.dispatch(new AddRecipyToCalendarActionNew(recipyToAdd))
+    }
+
   }
 
 }

@@ -41,7 +41,8 @@ export class CalendarComponent implements OnInit {
         const mappedOld = this.mapOldPlannedRecipies(oldPlannedRecipies, currentDay, allRecipies);
         recipiesoDisplay = recipiesoDisplay.concat(mappedOld);
       }
-      const currentDayRecipies = plannedRecipies.filter(recipy => recipy.endTime.toDateString() === selectedDate);
+      
+      const currentDayRecipies = plannedRecipies.filter(recipy =>  new Date(recipy.endTime).toDateString() === selectedDate);
       const currentDayRecipiesFullData: RecipyForCalendar_Reworked[] = currentDayRecipies.map(recipy => {
         const found = allRecipies.find(item => item.id === recipy.recipyId);
         if (found) {

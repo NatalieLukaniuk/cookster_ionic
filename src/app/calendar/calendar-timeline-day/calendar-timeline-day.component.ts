@@ -21,8 +21,8 @@ export class CalendarTimelineDayComponent implements OnInit {
 
   ngOnInit() { }
 
-  getRecipyTopMargin(recipy: RecipyForCalendar_Reworked) {
-    const minutesTillEndTime = (recipy.endTime.getHours() * 60) + recipy.endTime.getMinutes();
+  getRecipyTopMargin(recipy: RecipyForCalendar_Reworked) {    
+    const minutesTillEndTime = (new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
     const startTime = minutesTillEndTime - this.getRecipyHeight(recipy);
     if (startTime > 0) {
       return startTime / MINUTES_IN_PIXEL

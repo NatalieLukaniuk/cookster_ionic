@@ -33,7 +33,7 @@ export function UserReducers(
     case UserActionTypes.USER_LOADED: {
       return {
         ...state,
-        currentUser: {...action.user, plannedRecipies: mockPlannedRecipies},
+        currentUser: {...action.user},
       };
     }
 
