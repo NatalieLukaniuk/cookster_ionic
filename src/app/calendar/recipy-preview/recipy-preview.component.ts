@@ -1,8 +1,12 @@
+import { RemoveRecipyFromCalendarActionNew } from './../../store/actions/calendar.actions';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RecipyForCalendar_Reworked } from '../calendar.models';
 import { DishType } from 'src/app/models/recipies.models';
 import { CalendarService } from 'src/app/pages/calendar/calendar.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { IAppState } from 'src/app/store/reducers';
+import { Store } from '@ngrx/store';
+import { RemoveRecipyFromCalendarAction } from 'src/app/store/actions/calendar.actions';
 
 @Component({
   selector: 'app-recipy-preview',
@@ -20,6 +24,7 @@ export class RecipyPreviewComponent implements OnInit {
     private calendarService: CalendarService,
     private router: Router,
     private route: ActivatedRoute,
+    private store: Store<IAppState>,
   ) { }
 
   ngOnInit() {
@@ -54,6 +59,8 @@ export class RecipyPreviewComponent implements OnInit {
 
   onChangeRecipyDate() { }
 
-  onDelete() { }
+  onDelete() {
+    this.store.dispatch(new RemoveRecipyFromCalendarActionNew(this.recipy))
+   }
 
 }
