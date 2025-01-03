@@ -1,4 +1,4 @@
-import { UpdateRecipyInCalendarAction, AddCommentToCalendarAction, RemoveCommentFromCalendarAction, AddRecipyToCalendarActionNew } from './../actions/calendar.actions';
+import { UpdateRecipyInCalendarAction, AddCommentToCalendarAction, RemoveCommentFromCalendarAction, AddRecipyToCalendarActionNew, UpdateRecipyInCalendarActionNew } from './../actions/calendar.actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -334,9 +334,9 @@ export class CalendarEffects {
           select(getCurrentUser),
           take(1),
           map((user) => {
-            if (user && user.details) {
+            if (user) {
               let updatedUser = _.cloneDeep(user);
-              if(!updatedUser.plannedRecipies){
+              if (!updatedUser.plannedRecipies) {
                 updatedUser.plannedRecipies = [];
               }
               let recipyToSave: CalendarRecipyInDatabase_Reworked = {
@@ -350,6 +350,44 @@ export class CalendarEffects {
               return new UpdateUserAction(
                 updatedUser,
                 `${action.recipyEntry.name} додано`
+              );
+            } else return new ErrorAction('no user');
+          })
+        )
+      )
+    )
+  );
+
+  updateRecipyInCalendar_Reworked$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CalendarActionTypes.UPDATE_RECIPY_IN_CALENDAR_NEW),
+      switchMap((action: UpdateRecipyInCalendarActionNew) =>
+        this.store.pipe(
+          select(getCurrentUser),
+          take(1),
+          map((user: User | null) => {
+            if (user) {
+              let updatedUser = _.cloneDeep(user);
+              updatedUser.plannedRecipies = updatedUser.plannedRecipies!.map(recipy => {
+                if (
+                  recipy.recipyId === action.previousEntry.id &&
+                  recipy.portions === action.previousEntry.portions &&
+                  recipy.amountPerPortion === action.previousEntry.amountPerPortion &&
+                  action.previousEntry.endTime === recipy.endTime) {
+                  let recipyToSave: CalendarRecipyInDatabase_Reworked = {
+                    recipyId: action.newEntry.id,
+                    portions: action.newEntry.portions,
+                    amountPerPortion: action.newEntry.amountPerPortion,
+                    endTime: action.newEntry.endTime
+                  }
+                  return recipyToSave
+                } else {
+                  return recipy
+                }
+              })
+              return new UpdateUserAction(
+                updatedUser,
+                `${action.newEntry.name} оновлено`
               );
             } else return new ErrorAction('no user');
           })
