@@ -16,6 +16,7 @@ import { RemoveRecipyFromCalendarAction } from 'src/app/store/actions/calendar.a
 export class RecipyPreviewComponent implements OnInit {
   @Input() recipy!: RecipyForCalendar_Reworked;
   @Output() closePopover = new EventEmitter<void>();
+  @Output() editClicked = new EventEmitter<RecipyForCalendar_Reworked>()
 
   Math = Math;
   DishType = DishType;
@@ -57,7 +58,10 @@ export class RecipyPreviewComponent implements OnInit {
     this.closePopover.emit()
   }
 
-  onChangeRecipyDate() { }
+  onEditRecipy() {
+    this.closePopover.emit();
+    this.editClicked.emit(this.recipy);
+   }
 
   onDelete() {
     this.store.dispatch(new RemoveRecipyFromCalendarActionNew(this.recipy))

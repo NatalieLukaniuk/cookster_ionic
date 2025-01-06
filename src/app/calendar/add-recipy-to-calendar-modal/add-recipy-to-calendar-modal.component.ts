@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { InfiniteScrollCustomEvent, IonModal } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, IonModal, ModalController } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -37,11 +37,14 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   AddRecipyToCalView = AddRecipyToCalView;
 
+  isEditMode = false;
+
   constructor(
     private store: Store<IAppState>,
     private datamapping: DataMappingService,
     private filtersService: FiltersService,
-    private calendarService: CalendarService
+    private calendarService: CalendarService,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit() { }
@@ -49,7 +52,12 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   @ViewChild(IonModal) modal: IonModal | undefined;
 
   cancel() {
-    this.modal?.dismiss(null, 'cancel');
+    if(!this.isEditMode){
+      this.modal?.dismiss(null, 'cancel');
+    } else {
+      this.modalCtrl.dismiss(null, 'cancel')
+    }
+    
   }
 
   get isValid() {
@@ -159,8 +167,25 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
         amountPerPortion: this.portionSize,
         endTime: this.selectedTime
       }
-      this.store.dispatch(new AddRecipyToCalendarActionNew(recipyToAdd))
+      this.store.dispatch(new AddRecipyToCalendarActionNew(recipyToAdd));
+      this.modal?.dismiss()
     }
+
+  }
+
+  saveUpdatedRecipyToCalendar() {
+    if (!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime) {
+      let updatedRecipy: RecipyForCalendar_Reworked = {
+        ...this.selectedRecipy,
+        portions: this.portions,
+        amountPerPortion: this.portionSize,
+        endTime: this.selectedTime
+      }
+      return this.modalCtrl.dismiss(updatedRecipy, 'confirm');
+    } else {
+      return null;
+    }
+
 
   }
 

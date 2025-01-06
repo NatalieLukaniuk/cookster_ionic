@@ -24,7 +24,7 @@
           <ion-popover #popover class="recipy-preview" [trigger]="recipy.id + '_' + recipy.endTime" triggerAction="click">
             <ng-template>
               <ion-content>
-                <app-recipy-preview [recipy]="recipy" (closePopover)="popover.dismiss()"></app-recipy-preview></ion-content>
+                <app-recipy-preview [recipy]="recipy" (closePopover)="popover.dismiss()" (editClicked)="onEditRecipy($event)"></app-recipy-preview></ion-content>
             </ng-template>
           </ion-popover>
         </ng-container>
