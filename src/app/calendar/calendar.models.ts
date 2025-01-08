@@ -4,7 +4,9 @@ export interface CalendarRecipyInDatabase_Reworked {
     recipyId: string;
     portions: number;
     amountPerPortion: number;
-    endTime: Date
+    endTime: Date;
+    overflowStart?: Date
+
   }
   
   export const mockPlannedRecipies: CalendarRecipyInDatabase_Reworked[] = [
@@ -62,5 +64,6 @@ export interface CalendarRecipyInDatabase_Reworked {
   export interface RecipyForCalendar_Reworked extends Recipy {
     portions: number;
     amountPerPortion: number;
-    endTime: Date
+    endTime: Date;
+    overflowStart?: Date
   }
