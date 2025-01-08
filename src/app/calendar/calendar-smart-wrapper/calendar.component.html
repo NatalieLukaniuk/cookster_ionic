@@ -10,4 +10,4 @@
   </ion-button>
 </div>
 
-<app-calendar-timeline-day class="day-details" [recipies]="currentDateDetails$ | async"></app-calendar-timeline-day>
+<app-calendar-timeline-day class="day-details" [selectedDay]="(currentDay$ | async)?.toString()" [recipies]="currentDateDetails$ | async"></app-calendar-timeline-day>

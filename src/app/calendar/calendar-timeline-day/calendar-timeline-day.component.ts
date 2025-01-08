@@ -1,10 +1,11 @@
 import { ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarModalComponent } from '../add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { RecipyForCalendar_Reworked } from './../calendar.models';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
+import { iSameDay, MINUTES_IN_DAY } from '../calendar.utils';
 
 const MINUTES_IN_PIXEL = 1;
 
@@ -15,10 +16,11 @@ const HOURS_IN_DAY = 24;
   templateUrl: './calendar-timeline-day.component.html',
   styleUrls: ['./calendar-timeline-day.component.scss'],
 })
-export class CalendarTimelineDayComponent implements OnInit {
+export class CalendarTimelineDayComponent {
   PIXELS_IN_DAY = (HOURS_IN_DAY * 60) / MINUTES_IN_PIXEL;
 
-  @Input() recipies: RecipyForCalendar_Reworked[] | null = []
+  @Input() recipies: RecipyForCalendar_Reworked[] | null = [];
+  @Input() selectedDay: string | undefined;
 
   timelineScaleItems = Array.from({ length: HOURS_IN_DAY }, (v, i) => i)
 
@@ -27,24 +29,42 @@ export class CalendarTimelineDayComponent implements OnInit {
     private store: Store<IAppState>,
   ) { }
 
-  ngOnInit() { }
-
   getRecipyTopMargin(recipy: RecipyForCalendar_Reworked) {
-    const minutesTillEndTime = (new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
-    const startTime = minutesTillEndTime - this.getRecipyHeight(recipy);
-    if (startTime > 0) {
-      return startTime / MINUTES_IN_PIXEL
+    if ('overflowStart' in recipy && recipy.overflowStart && this.selectedDay && iSameDay(recipy.overflowStart, new Date(this.selectedDay))) {
+
+      const minutesInToday = MINUTES_IN_DAY - (new Date(recipy.overflowStart).getHours() * 60) + new Date(recipy.overflowStart).getMinutes();
+
+      return minutesInToday / MINUTES_IN_PIXEL
     } else {
-      return 0
+      const minutesTillEndTime = (new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
+      const startTime = minutesTillEndTime - this.getRecipyHeight(recipy);
+      if (startTime > 0) {
+        return startTime / MINUTES_IN_PIXEL
+      } else {
+        return 0
+      }
     }
+
   }
 
   getRecipyHeight(recipy: RecipyForCalendar_Reworked): number {
-    let time = 0;
-    for (let step of recipy.steps) {
-      time = time + +step.timeActive + +step.timePassive;
+    if ('overflowStart' in recipy) {
+      return MINUTES_IN_DAY / MINUTES_IN_PIXEL
+
+    } else {
+      let time = 0;
+      for (let step of recipy.steps) {
+        time = time + +step.timeActive + +step.timePassive;
+      }
+      if (time <= MINUTES_IN_DAY) {
+        return time / MINUTES_IN_PIXEL;
+      } else {
+        const minutesTillEndTime = (new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
+        return minutesTillEndTime / MINUTES_IN_PIXEL;
+      }
+
     }
-    return time / MINUTES_IN_PIXEL;
+
   }
 
   async onEditRecipy(event: RecipyForCalendar_Reworked) {
