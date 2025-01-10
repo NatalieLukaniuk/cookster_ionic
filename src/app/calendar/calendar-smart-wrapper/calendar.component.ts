@@ -10,6 +10,7 @@ import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { DayDetails } from 'src/app/models/calendar.models';
 import { Recipy } from 'src/app/models/recipies.models';
 import { getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, MS_IN_MINUTE } from '../calendar.utils';
+import { CalendarReworkedService } from '../calendar-reworked.service';
 
 @Component({
   selector: 'app-calendar-wrapper',
@@ -18,7 +19,8 @@ import { getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, MS_I
 })
 export class CalendarComponent implements OnInit {
 
-  currentDay$: BehaviorSubject<moment.Moment> = new BehaviorSubject(moment().clone());
+  constructor(private store: Store<IAppState>, private calendarService: CalendarReworkedService) { }
+  currentDay$ = this.calendarService.getCurrentDay();
 
   plannedRecipies$: Observable<CalendarRecipyInDatabase_Reworked[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedRecipies || []));
 
@@ -144,21 +146,10 @@ export class CalendarComponent implements OnInit {
       })
     }
     return mapped;
-  }
-
-  constructor(private store: Store<IAppState>,) { }
+  }  
 
   ngOnInit() { }
 
-  goPreviousDay() {
-    const current = this.currentDay$.getValue();
-    const updated = current.subtract(1, 'day');
-    this.currentDay$.next(updated);
-  }
-  goNextDay() {
-    const current = this.currentDay$.getValue();
-    const updated = current.add(1, 'day');
-    this.currentDay$.next(updated);
-  }
+  
 
 }

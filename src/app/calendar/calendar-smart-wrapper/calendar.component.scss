@@ -5,13 +5,3 @@
     height: 100%;
     position: relative;
 }
-
-.current-day-selector {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    position: sticky;
-    top: 0;
-    background: var(--ion-color-tertiary);
-    z-index: 100;
-}

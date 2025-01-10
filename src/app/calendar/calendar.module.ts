@@ -11,6 +11,7 @@ import { RecipyInCalendarShortViewComponent } from './add-recipy-to-calendar-mod
 import { RecipyInCalendarSelectDateComponent } from './add-recipy-to-calendar-modal/recipy-in-calendar-select-date/recipy-in-calendar-select-date.component';
 import { RecipyInCalendarSelectPortionsAndAmountComponent } from './add-recipy-to-calendar-modal/recipy-in-calendar-select-portions-and-amount/recipy-in-calendar-select-portions-and-amount.component';
 import { FormsModule } from '@angular/forms';
+import { CalendarDaySelectorComponent } from './calendar-day-selector/calendar-day-selector.component';
 
 
 
@@ -18,7 +19,8 @@ import { FormsModule } from '@angular/forms';
   declarations: [CalendarComponent,
     CalendarTimelineDayComponent,
     RecipyPreviewComponent, AddRecipyToCalendarModalComponent, RecipyInCalendarShortViewComponent, RecipyInCalendarSelectDateComponent,
-    RecipyInCalendarSelectPortionsAndAmountComponent
+    RecipyInCalendarSelectPortionsAndAmountComponent,
+    CalendarDaySelectorComponent
   ],
   imports: [
     CommonModule,
@@ -27,6 +29,6 @@ import { FormsModule } from '@angular/forms';
     FiltersModule,
     FormsModule
   ],
-  exports: [CalendarComponent, AddRecipyToCalendarModalComponent]
+  exports: [CalendarComponent, AddRecipyToCalendarModalComponent, CalendarDaySelectorComponent]
 })
 export class CalendarModule { }
