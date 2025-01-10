@@ -32,8 +32,7 @@ export class CalendarTimelineDayComponent {
   getRecipyTopMargin(recipy: RecipyForCalendar_Reworked) {
     if ('overflowStart' in recipy && recipy.overflowStart && this.selectedDay && iSameDay(recipy.overflowStart, new Date(this.selectedDay))) {
 
-      const minutesInToday = MINUTES_IN_DAY - (new Date(recipy.overflowStart).getHours() * 60) + new Date(recipy.overflowStart).getMinutes();
-
+      const minutesInToday = (new Date(recipy.overflowStart).getHours() * 60) + new Date(recipy.overflowStart).getMinutes();
       return minutesInToday / MINUTES_IN_PIXEL
     } else {
       const minutesTillEndTime = (new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
@@ -49,7 +48,15 @@ export class CalendarTimelineDayComponent {
 
   getRecipyHeight(recipy: RecipyForCalendar_Reworked): number {
     if ('overflowStart' in recipy) {
-      return MINUTES_IN_DAY / MINUTES_IN_PIXEL
+      if(recipy.overflowStart && this.selectedDay && !iSameDay(recipy.overflowStart, new Date(this.selectedDay))){
+        return MINUTES_IN_DAY / MINUTES_IN_PIXEL
+      } else if (recipy.overflowStart && this.selectedDay){
+        const minutesTillEndTime = MINUTES_IN_DAY - ((new Date(recipy.overflowStart).getHours() * 60) + new Date(recipy.overflowStart).getMinutes());
+        return minutesTillEndTime / MINUTES_IN_PIXEL;
+      } else {
+        return 0
+      }
+      
 
     } else {
       let time = 0;
@@ -59,7 +66,7 @@ export class CalendarTimelineDayComponent {
       if (time <= MINUTES_IN_DAY) {
         return time / MINUTES_IN_PIXEL;
       } else {
-        const minutesTillEndTime = (new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
+        const minutesTillEndTime =(new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
         return minutesTillEndTime / MINUTES_IN_PIXEL;
       }
 
