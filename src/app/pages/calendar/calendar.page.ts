@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
+import { AddRecipyToCalendarModalComponent } from 'src/app/calendar/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
+import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
+import { IAppState } from 'src/app/store/reducers';
 
 
 @Component({
@@ -7,10 +12,71 @@ import { Component } from '@angular/core';
   styleUrls: ['./calendar.page.scss'],
 })
 export class CalendarPage {
-  currentTab = 'menu'
-  isPlannerMode = false;
+  
+  constructor(private modalCtrl: ModalController, private store: Store<IAppState>,){}
 
-  togglePlannerMode() {
-    this.isPlannerMode = !this.isPlannerMode;
+  public actionSheetButtons = [
+    {
+      text: 'Рецепт',
+      data: {
+        action: 'recipy',
+      },
+    },
+    {
+      text: 'Коментар',
+      data: {
+        action: 'comment',
+      },
+    },
+    {
+      text: 'Нагадування',
+      data: {
+        action: 'reminder',
+      },
+    },
+    {
+      text: 'Cancel',
+      role: 'cancel',
+      data: {
+        action: 'cancel',
+      },
+    },
+  ];
+
+  onActionSelected(event: any){
+    switch(event.detail.data.action){
+      case "recipy": this.addRecipy();
+      break;
+      case 'comment': this.addComment();
+      break;
+      case 'reminder': this.addReminder();
+      break;
+      default: null
+    }
+
+  }
+
+  addReminder(){
+
+  }
+
+  addComment(){
+
+  }
+
+  async addRecipy() {
+    const modal = await this.modalCtrl.create({
+      component: AddRecipyToCalendarModalComponent,
+      componentProps: {
+        isEditMode: true
+      }
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      this.store.dispatch(new AddRecipyToCalendarActionNew(data));
+    }
   }
 }

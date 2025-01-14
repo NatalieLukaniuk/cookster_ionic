@@ -3,7 +3,9 @@
     <app-calendar-day-selector></app-calendar-day-selector>
   </div>
   <div right-button>
-    <app-add-recipy-to-calendar-modal></app-add-recipy-to-calendar-modal>
+    <ion-button id="open-action-sheet"><ion-icon name="add-circle-outline"></ion-icon></ion-button>
+    <ion-action-sheet trigger="open-action-sheet" header="Виберіть що потрібно додати:" [buttons]="actionSheetButtons"
+      (didDismiss)="onActionSelected($event)"></ion-action-sheet>
   </div>
 </app-header>
 
