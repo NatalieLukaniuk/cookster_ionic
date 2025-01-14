@@ -19,7 +19,7 @@ export interface User {
   preferences?: Preferences;
   family?: FamilyMember[];
   plannedRecipies?: CalendarRecipyInDatabase_Reworked[],
-  plannedComments?: {comment: string, date: Date}[]
+  plannedComments?: {comment: string, date: Date, isReminder: boolean}[]
 }
 
 export enum Role {

@@ -12,6 +12,8 @@ export class AddCommentToCalendarModalComponent {
 
   comment = '';
 
+  title = 'Коментар'
+
   constructor(private modalCtrl: ModalController){
 
   }

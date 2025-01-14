@@ -40,7 +40,8 @@ export class AddCommentToCalendarAction implements Action {
   readonly type = CalendarActionTypes.ADD_COMMENT_TO_CALENDAR;
   constructor(
     public comment: string,
-    public selectedDate: Date
+    public selectedDate: Date,
+    public isReminder: boolean
   ) {}
 }
 

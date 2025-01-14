@@ -122,7 +122,7 @@ export class CalendarEffects {
         if (user && user.details) {
           let updatedUser = _.cloneDeep(user);
           let commentToAdd = {
-            comment: action.comment, date: action.selectedDate
+            comment: action.comment, date: action.selectedDate, isReminder: action.isReminder
           }
           if (updatedUser.plannedComments) {
             updatedUser.plannedComments.push(commentToAdd)

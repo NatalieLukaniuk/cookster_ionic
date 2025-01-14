@@ -57,8 +57,26 @@ export class CalendarPage {
 
   }
 
-  addReminder(){
+  async addReminder(){
+    const modal = await this.modalCtrl.create({
+      component: AddCommentToCalendarModalComponent,
+      componentProps: {
+        title: 'Нагадування'
+      }
+    });
+    modal.present();
 
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      this.store.dispatch(
+        new AddCommentToCalendarAction(
+          data.comment,
+          data.selectedDate,
+          true
+        )
+      );
+    }
   }
 
   async addComment(){
@@ -73,7 +91,8 @@ export class CalendarPage {
       this.store.dispatch(
         new AddCommentToCalendarAction(
           data.comment,
-          data.selectedDate
+          data.selectedDate,
+          false
         )
       );
     }
