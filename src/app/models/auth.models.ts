@@ -18,7 +18,8 @@ export interface User {
   draftRecipies?: DraftRecipy[];
   preferences?: Preferences;
   family?: FamilyMember[];
-  plannedRecipies?: CalendarRecipyInDatabase_Reworked[]
+  plannedRecipies?: CalendarRecipyInDatabase_Reworked[],
+  plannedComments?: {comment: string, date: Date}[]
 }
 
 export enum Role {

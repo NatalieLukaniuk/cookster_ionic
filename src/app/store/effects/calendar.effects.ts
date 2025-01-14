@@ -121,16 +121,13 @@ export class CalendarEffects {
       map((user: User | null) => {
         if (user && user.details) {
           let updatedUser = _.cloneDeep(user);
-          const foundDay = updatedUser.details?.find((day) => day.day == action.day)
-          if (foundDay) {
-            if (!foundDay.comments) {
-              foundDay.comments = []
-            }
-            foundDay.comments.push({ comment: action.comment, mealTime: action.mealtime })
+          let commentToAdd = {
+            comment: action.comment, date: action.selectedDate
+          }
+          if (updatedUser.plannedComments) {
+            updatedUser.plannedComments.push(commentToAdd)
           } else {
-            let newDay = new DayDetails(action.day, []);
-            newDay.comments.push({ comment: action.comment, mealTime: action.mealtime });
-            updatedUser.details?.push(newDay);
+            updatedUser.plannedComments = [commentToAdd]
           }
           return new UpdateUserAction(
             updatedUser,
@@ -411,8 +408,8 @@ export class CalendarEffects {
                   recipy.recipyId === action.recipyEntry.id &&
                   recipy.portions === action.recipyEntry.portions &&
                   recipy.amountPerPortion === action.recipyEntry.amountPerPortion &&
-                  action.recipyEntry.endTime === recipy.endTime) 
-            })
+                  action.recipyEntry.endTime === recipy.endTime)
+              })
               return new UpdateUserAction(
                 updatedUser,
                 `${action.recipyEntry.name} видалено`

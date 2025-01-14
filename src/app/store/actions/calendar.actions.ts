@@ -40,9 +40,7 @@ export class AddCommentToCalendarAction implements Action {
   readonly type = CalendarActionTypes.ADD_COMMENT_TO_CALENDAR;
   constructor(
     public comment: string,
-    public day: string,
-    public mealtime: MealTime,
-    public order: number
+    public selectedDate: Date
   ) {}
 }
 

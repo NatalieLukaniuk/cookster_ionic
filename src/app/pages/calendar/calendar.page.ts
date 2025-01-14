@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
+import { AddCommentToCalendarModalComponent } from 'src/app/calendar/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
 import { AddRecipyToCalendarModalComponent } from 'src/app/calendar/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
-import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
+import { AddCommentToCalendarAction, AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';
 
 
@@ -60,9 +61,24 @@ export class CalendarPage {
 
   }
 
-  addComment(){
+  async addComment(){
+    const modal = await this.modalCtrl.create({
+      component: AddCommentToCalendarModalComponent,
+    });
+    modal.present();
 
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      this.store.dispatch(
+        new AddCommentToCalendarAction(
+          data.comment,
+          data.selectedDate
+        )
+      );
+    }
   }
+  
 
   async addRecipy() {
     const modal = await this.modalCtrl.create({
