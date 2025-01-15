@@ -29,7 +29,6 @@
 .timeline-body {
     flex-grow: 1;
     position: relative;
-    overflow-x: auto;
 
     .scale-item {
         border-color: var(--ion-color-light-tint);
@@ -48,8 +47,14 @@
 
 .recipies-container {
     position: absolute;
+    overflow: auto;
+    box-shadow: inset -4px 6px 7px 0px rgb(0 0 0 / 11%)
+}
+
+.recipies-container-scrolling {
     display: flex;
     gap: 5px;
+    width: max-content;
 }
 
 .timeline-recipy,
