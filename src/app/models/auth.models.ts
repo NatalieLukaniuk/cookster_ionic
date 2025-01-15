@@ -1,4 +1,4 @@
-import { CalendarRecipyInDatabase_Reworked } from '../calendar/calendar.models';
+import { CalendarComment, CalendarRecipyInDatabase_Reworked } from '../calendar/calendar.models';
 import { ExpenseItem } from '../expenses/expenses-models';
 import { DayDetails, Reminder } from './calendar.models';
 import { PlannerByDate, ShoppingList, ShoppingListItem } from './planner.models';
@@ -19,7 +19,7 @@ export interface User {
   preferences?: Preferences;
   family?: FamilyMember[];
   plannedRecipies?: CalendarRecipyInDatabase_Reworked[],
-  plannedComments?: {comment: string, date: Date, isReminder: boolean}[]
+  plannedComments?: CalendarComment[]
 }
 
 export enum Role {

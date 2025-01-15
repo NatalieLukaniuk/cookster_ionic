@@ -8,6 +8,10 @@ export interface CalendarRecipyInDatabase_Reworked {
     overflowStart?: Date
 
   }
+
+  export interface CalendarComment {
+    comment: string, date: Date, isReminder: boolean
+  }
   
   export const mockPlannedRecipies: CalendarRecipyInDatabase_Reworked[] = [
     {

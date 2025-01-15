@@ -1,6 +1,6 @@
 import { Observable, combineLatest, map } from 'rxjs';
 import { Component } from '@angular/core';
-import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../calendar.models';
+import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../calendar.models';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
@@ -21,7 +21,22 @@ export class CalendarComponent {
 
   plannedRecipies$: Observable<CalendarRecipyInDatabase_Reworked[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedRecipies || []));
 
+  plannedComments$: Observable<CalendarComment[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedComments || []));
+
   allRecipies$ = this.store.pipe(select(getAllRecipies))
+
+  currentDayComments$ = combineLatest([
+    this.currentDay$,
+    this.plannedComments$
+  ]).pipe(
+    map(res => {
+      const [currentDay, plannedComments] = res;
+
+      const selectedDate = currentDay.toDate().toDateString();
+      let commentsToDisplay: CalendarComment[] = plannedComments.filter(entry => iSameDay(new Date(entry.date), new Date(selectedDate)) );
+      return commentsToDisplay
+    })
+  )
 
   currentDateDetails$: Observable<RecipyForCalendar_Reworked[]> = combineLatest([
     this.currentDay$,

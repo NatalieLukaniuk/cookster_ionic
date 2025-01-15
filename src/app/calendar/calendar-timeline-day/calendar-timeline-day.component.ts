@@ -1,6 +1,6 @@
 import { ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarModalComponent } from '../add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
-import { RecipyForCalendar_Reworked } from './../calendar.models';
+import { CalendarComment, RecipyForCalendar_Reworked } from './../calendar.models';
 import { Component, Input } from '@angular/core';
 import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';
@@ -16,10 +16,11 @@ const HOURS_IN_DAY = 24;
   templateUrl: './calendar-timeline-day.component.html',
   styleUrls: ['./calendar-timeline-day.component.scss'],
 })
-export class CalendarTimelineDayComponent {
+export class CalendarTimelineDayComponent{
   PIXELS_IN_DAY = (HOURS_IN_DAY * 60) / MINUTES_IN_PIXEL;
 
   @Input() recipies: RecipyForCalendar_Reworked[] | null = [];
+  @Input() comments: CalendarComment[] | null = [];
   @Input() selectedDay: string | undefined;
 
   timelineScaleItems = Array.from({ length: HOURS_IN_DAY }, (v, i) => i)
@@ -44,6 +45,15 @@ export class CalendarTimelineDayComponent {
       }
     }
 
+  }
+  
+  getCommentTopMargin(comment: CalendarComment){
+    const minutesTillTime = (new Date(comment.date).getHours() * 60) + new Date(comment.date).getMinutes();
+    return minutesTillTime / MINUTES_IN_PIXEL
+  }
+
+  getCommentBackground(comment: CalendarComment){
+    return comment.isReminder? '#FCD786' : 'var(--ion-color-light)'
   }
 
   getRecipyHeight(recipy: RecipyForCalendar_Reworked): number {
