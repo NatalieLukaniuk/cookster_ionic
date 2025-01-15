@@ -36,7 +36,7 @@ export class UserService {
           this.getCurrentUserData(found.cooksterId);
           this.expApi.userCooksterId = found.cooksterId;
           this.expApi.getExpenses().pipe(take(1)).subscribe(res => {
-            this.store.dispatch(new ExpensesLoadedAction(res.expenses))
+            this.store.dispatch(new ExpensesLoadedAction(res?.expenses || []))
           })
         } else {
           this.store.dispatch(new UIActions.ErrorAction('no such user found'));

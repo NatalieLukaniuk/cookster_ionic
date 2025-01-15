@@ -1,13 +1,10 @@
-import { CalendarRecipyInDatabase } from './../../models/calendar.models';
-import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Observable, combineLatest, map } from 'rxjs';
+import { Component } from '@angular/core';
 import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../calendar.models';
-import * as moment from 'moment';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { DayDetails } from 'src/app/models/calendar.models';
 import { Recipy } from 'src/app/models/recipies.models';
 import { getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, MS_IN_MINUTE } from '../calendar.utils';
 import { CalendarReworkedService } from '../calendar-reworked.service';
@@ -17,33 +14,26 @@ import { CalendarReworkedService } from '../calendar-reworked.service';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent {
 
   constructor(private store: Store<IAppState>, private calendarService: CalendarReworkedService) { }
   currentDay$ = this.calendarService.getCurrentDay();
 
   plannedRecipies$: Observable<CalendarRecipyInDatabase_Reworked[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedRecipies || []));
 
-  old_plannedRecipies$ = this.store.pipe(select(getCurrentUser), map(user => user?.details || []))
-
   allRecipies$ = this.store.pipe(select(getAllRecipies))
 
   currentDateDetails$: Observable<RecipyForCalendar_Reworked[]> = combineLatest([
     this.currentDay$,
     this.plannedRecipies$,
-    this.allRecipies$,
-    this.old_plannedRecipies$
+    this.allRecipies$
   ]).pipe(
     map(res => {
 
-      const [currentDay, plannedRecipies, allRecipies, oldPlannedRecipies] = res;
+      const [currentDay, plannedRecipies, allRecipies] = res;
 
       const selectedDate = currentDay.toDate().toDateString();
       let recipiesoDisplay: RecipyForCalendar_Reworked[] = [];
-      if (oldPlannedRecipies.length && allRecipies.length && selectedDate) {
-        const mappedOld = this.mapOldPlannedRecipies(oldPlannedRecipies, currentDay, allRecipies);
-        recipiesoDisplay = recipiesoDisplay.concat(mappedOld);
-      }
 
       const currentDayRecipies: RecipyForCalendar_Reworked[] = this.getCurrentDayRecipies(plannedRecipies, selectedDate, allRecipies);
       recipiesoDisplay = recipiesoDisplay.concat(currentDayRecipies);
@@ -78,8 +68,8 @@ export class CalendarComponent implements OnInit {
         }
         return recipy
       }).filter(recipy => {
-        return iSameDay(new Date(selectedDate), new Date(recipy.overflowStart!)) ||
-          (isDateAfter(new Date(selectedDate), new Date(recipy.overflowStart!)) && isDateBefore(new Date(selectedDate), new Date(recipy.endTime)))
+        return !iSameDay(new Date(recipy.endTime), new Date(recipy.overflowStart!)) && (iSameDay(new Date(selectedDate), new Date(recipy.overflowStart!)) ||
+          (isDateAfter(new Date(selectedDate), new Date(recipy.overflowStart!)) && isDateBefore(new Date(selectedDate), new Date(recipy.endTime))))
       })
       return overflowing
     }
@@ -103,53 +93,5 @@ export class CalendarComponent implements OnInit {
     })
     return currentDayRecipiesFullData
   }
-
-  mapOldPlannedRecipies(oldPlannedRecipies: DayDetails[], selectedDate: moment.Moment, allRecipies: Recipy[]): RecipyForCalendar_Reworked[] {
-    const selectedDayToMatch = selectedDate.clone().format('DDMMYYYY');
-    const plannedForSelectedDate = oldPlannedRecipies.filter(recipy => recipy.day === selectedDayToMatch)
-    let mapped: RecipyForCalendar_Reworked[] = [];
-    if (plannedForSelectedDate.length) {
-      plannedForSelectedDate.forEach((dayDetails: DayDetails) => {
-        if (dayDetails.breakfast) {
-          dayDetails.breakfast.forEach((recipy: CalendarRecipyInDatabase) => {
-            const found = allRecipies.find(item => item.id === recipy.recipyId);
-            if (found) {
-              const dateTime = selectedDate.clone().toDate();
-              dateTime.setHours(9, 0, 0, 0);
-              const updated = { ...found, ...recipy, endTime: dateTime }
-              mapped.push(updated)
-            }
-          })
-        }
-        if (dayDetails.lunch) {
-          dayDetails.lunch.forEach((recipy: CalendarRecipyInDatabase) => {
-            const found = allRecipies.find(item => item.id === recipy.recipyId);
-            if (found) {
-              const dateTime = selectedDate.clone().toDate();
-              dateTime.setHours(14, 0, 0, 0);
-              const updated = { ...found, ...recipy, endTime: dateTime }
-              mapped.push(updated)
-            }
-          })
-        }
-        if (dayDetails.dinner) {
-          dayDetails.dinner.forEach((recipy: CalendarRecipyInDatabase) => {
-            const found = allRecipies.find(item => item.id === recipy.recipyId);
-            if (found) {
-              const dateTime = selectedDate.clone().toDate();
-              dateTime.setHours(19, 0, 0, 0);
-              const updated = { ...found, ...recipy, endTime: dateTime }
-              mapped.push(updated)
-            }
-          })
-        }
-      })
-    }
-    return mapped;
-  }  
-
-  ngOnInit() { }
-
-  
 
 }
