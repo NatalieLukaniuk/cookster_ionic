@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { AddCommentToCalendarModalComponent } from 'src/app/calendar/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
 import { AddRecipyToCalendarModalComponent } from 'src/app/calendar/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
+import { CalendarReworkedService } from 'src/app/calendar/calendar-reworked.service';
 import { AddCommentToCalendarAction, AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';
 
@@ -14,7 +15,7 @@ import { IAppState } from 'src/app/store/reducers';
 })
 export class CalendarPage {
   
-  constructor(private modalCtrl: ModalController, private store: Store<IAppState>,){}
+  constructor(private modalCtrl: ModalController, private store: Store<IAppState>, private calendarService: CalendarReworkedService){}
 
   public actionSheetButtons = [
     {
@@ -58,10 +59,12 @@ export class CalendarPage {
   }
 
   async addReminder(){
+    const currentDay = this.calendarService.getCurrentDayValue()
     const modal = await this.modalCtrl.create({
       component: AddCommentToCalendarModalComponent,
       componentProps: {
-        title: 'Нагадування'
+        title: 'Нагадування',
+        selectedTime:  currentDay
       }
     });
     modal.present();
@@ -80,8 +83,12 @@ export class CalendarPage {
   }
 
   async addComment(){
+    const currentDay = this.calendarService.getCurrentDayValue()
     const modal = await this.modalCtrl.create({
       component: AddCommentToCalendarModalComponent,
+      componentProps: {
+        selectedTime:  currentDay
+      }
     });
     modal.present();
 
@@ -100,10 +107,12 @@ export class CalendarPage {
   
 
   async addRecipy() {
+    const currentDay = this.calendarService.getCurrentDayValue()
     const modal = await this.modalCtrl.create({
       component: AddRecipyToCalendarModalComponent,
       componentProps: {
-        isEditMode: true
+        isEditMode: true,
+        selectedTime: currentDay
       }
     });
     modal.present();

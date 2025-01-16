@@ -11,7 +11,7 @@ import { CalendarService } from 'src/app/services/calendar.service';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
+import { getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 import { RecipyForCalendar_Reworked } from '../calendar.models';
 import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 
@@ -47,17 +47,26 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     private modalCtrl: ModalController
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    const sub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
+      if (res) {
+        this.portions = res.length;
+      } else { this.portions = 4; }
+      sub.unsubscribe()
+    });
+
+    
+  }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
 
   cancel() {
-    if(!this.isEditMode){
+    if (!this.isEditMode) {
       this.modal?.dismiss(null, 'cancel');
     } else {
       this.modalCtrl.dismiss(null, 'cancel')
     }
-    
+
   }
 
   get isValid() {
@@ -141,6 +150,7 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   onRecipyClicked(recipy: Recipy) {
     this.selectedRecipy = recipy;
+    this.portionSize = recipy.portionSize || 300;
   }
 
   onDateChanged(newDate: string) {
