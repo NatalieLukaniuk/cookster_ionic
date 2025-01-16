@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import { Day, RecipyForCalendar } from 'src/app/models/calendar.models';
 import { Ingredient } from 'src/app/models/recipies.models';
-import { AddToListModalComponent } from 'src/app/pages/planner/components/add-to-list-modal/add-to-list-modal.component';
+import { AddToListModalComponent } from 'src/app/pages/shopping-list/components/add-to-list-modal/add-to-list-modal.component';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { IAppState } from 'src/app/store/reducers';
 import { Subject, take, takeUntil } from 'rxjs';

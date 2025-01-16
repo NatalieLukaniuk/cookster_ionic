@@ -1,10 +1,34 @@
 import { Recipy } from "../models/recipies.models";
+import * as moment from 'moment';
 
 const MS_IN_HOUR = 3600000;
 const MS_IN_DAY = 86400000;
 export const MS_IN_MINUTE = 60000;
 
 export const MINUTES_IN_DAY = 1440;
+
+export function getFormattedName(name: string): string {
+  // format is 'DDMMYYYY'
+  return moment(name, 'DDMMYYYY').toString();
+}
+
+export function transformDate(date: Date): string {
+  return (
+    getTwoDigitValue(date.getDate().toString()) +
+    getTwoDigitValue((date.getMonth() + 1).toString()) +
+    date.getFullYear().toString()
+  );
+}
+
+export function transfromMomentToDate(date: string){
+  return moment(date, 'DDMMYYYY').format('YYYY-MM-DD')
+}
+
+export function getTwoDigitValue(value: string): string {
+  if (value.length < 2) {
+    return '0' + value;
+  } else return value;
+}
 
 export const convertMsToHours = (amountInMs: number) => amountInMs / MS_IN_HOUR;
 

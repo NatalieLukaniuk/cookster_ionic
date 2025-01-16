@@ -1,5 +1,5 @@
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { ShoppingList } from './../../../../models/planner.models';
+import { ShoppingList } from '../../../../models/planner.models';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { SLItem } from 'src/app/models/planner.models';

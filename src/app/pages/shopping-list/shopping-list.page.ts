@@ -9,7 +9,6 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import * as _ from 'lodash';
 import { IonModal, ModalController } from '@ionic/angular';
-import { AddToListModalComponent } from '../planner/components/add-to-list-modal/add-to-list-modal.component';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { Router } from '@angular/router';
@@ -18,6 +17,7 @@ import { ControllerInputDialogComponent } from 'src/app/shared/components/dialog
 import { ControllerListSelectDialogComponent } from 'src/app/shared/components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { RecordExpensesComponent } from 'src/app/expenses/record-expenses-page/record-expenses.component';
 import { ExpencesService } from 'src/app/expenses/expences.service';
+import { AddToListModalComponent } from './components/add-to-list-modal/add-to-list-modal.component';
 
 @Component({
   selector: 'app-shopping-list',

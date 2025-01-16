@@ -14,7 +14,7 @@ import {
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { transfromMomentToDate } from 'src/app/pages/planner/planner.utils';
+import { transfromMomentToDate } from 'src/app/calendar/calendar.utils';
 
 @Component({
   selector: 'app-calendar-recipy-full-view',

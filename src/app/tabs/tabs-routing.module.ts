@@ -37,10 +37,6 @@ const routes: Routes = [
         loadChildren: () => import('../pages/user/user.module').then(m => m.UserPageModule)
       },
       {
-        path: 'planner',
-        loadChildren: () => import('../pages/planner/planner.module').then(m => m.PlannerPageModule)
-      },
-      {
         path: 'draft-recipies',
         loadChildren: () => import('../pages/draft-recipies/draft-recipies.module').then( m => m.DraftRecipiesPageModule)
       },

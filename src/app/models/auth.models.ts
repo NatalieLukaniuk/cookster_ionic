@@ -13,7 +13,6 @@ export interface User {
   savedPreps?: Reminder[];
   img?: string;
   role: Role;
-  planner?: PlannerByDate[];
   collections?: RecipyCollection[];
   draftRecipies?: DraftRecipy[];
   preferences?: Preferences;

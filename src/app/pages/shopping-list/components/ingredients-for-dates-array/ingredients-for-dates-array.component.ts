@@ -7,7 +7,6 @@ import { Observable, Subject, Subscription, combineLatest, filter, map, take, ta
 import { Day, DayDetails, RecipyForCalendar } from 'src/app/models/calendar.models';
 import { SLItem, ShoppingList, ShoppingListItem } from 'src/app/models/planner.models';
 import { Ingredient, Recipy } from 'src/app/models/recipies.models';
-import { AddToListModalComponent } from 'src/app/pages/planner/components/add-to-list-modal/add-to-list-modal.component';
 import { NormalizeDisplayedAmountGetNumber, convertAmountToSelectedUnit, getRecipyNameById, getUnitText, transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
@@ -17,6 +16,7 @@ import { IAppState } from 'src/app/store/reducers';
 import { getCalendar } from 'src/app/store/selectors/calendar.selectors';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getUserPlannedRecipies, getUserShoppingList } from 'src/app/store/selectors/user.selectors';
+import { AddToListModalComponent } from '../add-to-list-modal/add-to-list-modal.component';
 
 @Component({
   selector: 'app-ingredients-for-dates-array',
