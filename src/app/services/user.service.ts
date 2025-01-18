@@ -50,8 +50,8 @@ export class UserService {
       if (user.id) {
         this.currentUserId = user.id;
       }
-      if (!('details' in this.currentUser!)) {
-        this.currentUser!.details = [];
+      if (!('plannedRecipies' in this.currentUser!)) {
+        this.currentUser!.plannedRecipies = [];
       }
       this.store.dispatch(new UserActions.UserLoadedAction(user));
     })

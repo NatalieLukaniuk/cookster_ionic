@@ -30,7 +30,7 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
   @Input() portions?: number;
   @Input() amountPerPortion?: number;
   @Input() ingredStartOptions: ItemOption[] = [];
-  @Input() day: Date = new Date();
+
 
   @Output() portionsChanged = new EventEmitter<{
     portions: number;

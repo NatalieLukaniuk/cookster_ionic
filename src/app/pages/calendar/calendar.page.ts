@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
-import { AddCommentToCalendarModalComponent } from 'src/app/calendar/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
-import { AddRecipyToCalendarModalComponent } from 'src/app/calendar/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
-import { CalendarReworkedService } from 'src/app/calendar/calendar-reworked.service';
+import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
+import { CalendarReworkedService } from 'src/app/pages/calendar/calendar-reworked.service';
 import { AddCommentToCalendarAction, AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';
+import { AddCommentToCalendarModalComponent } from './components/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
 
 
 @Component({

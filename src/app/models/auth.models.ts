@@ -1,4 +1,4 @@
-import { CalendarComment, CalendarRecipyInDatabase_Reworked } from '../calendar/calendar.models';
+import { CalendarComment, CalendarRecipyInDatabase_Reworked } from '../pages/calendar/calendar.models';
 import { ExpenseItem } from '../expenses/expenses-models';
 import { DayDetails, Reminder } from './calendar.models';
 import { PlannerByDate, ShoppingList, ShoppingListItem } from './planner.models';
@@ -7,7 +7,6 @@ import { DraftRecipy, RecipyCollection } from './recipies.models';
 export interface User {
   email: string;
   uid: string;
-  details?: DayDetails[];
   id?: string;
   shoppingLists?: ShoppingList[];
   savedPreps?: Reminder[];

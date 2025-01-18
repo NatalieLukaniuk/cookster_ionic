@@ -24,8 +24,6 @@ export class RecipyFullViewComponent implements OnChanges {
   @Input() portions?: number;
   @Input() amountPerPortion?: number;
 
-  @Input() day: Date = new Date();
-
   @Output() portionsChanged = new EventEmitter<{
     portions: number;
     amountPerPortion: number;

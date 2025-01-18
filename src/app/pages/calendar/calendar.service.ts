@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { RecipyForCalendar_Reworked } from 'src/app/calendar/calendar.models';
+import { RecipyForCalendar_Reworked } from 'src/app/pages/calendar/calendar.models';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class CalendarService {
 
   openRecipy(recipy: RecipyForCalendar_Reworked) {
     const current = this.openedRecipies$.getValue();
-    if (!!current.find(openedRecipy => openedRecipy.endTime.getDate() === recipy.endTime.getDate() && openedRecipy.id === recipy.id)) {
+    if (!!current.find(openedRecipy => new Date(openedRecipy.endTime).getDate() === new Date(recipy.endTime).getDate() && openedRecipy.id === recipy.id)) {
       return
     }
 

@@ -10,8 +10,8 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import * as _ from 'lodash';
 import { User } from 'src/app/models/auth.models';
 import { LayoutService } from 'src/app/services/layout.service';
-import { IDayDetails } from 'src/app/models/calendar.models';
-import { CalendarService } from 'src/app/services/calendar.service';
+import { CalendarRecipyInDatabase_Reworked } from 'src/app/pages/calendar/calendar.models';
+import { getLastPreparedDate } from 'src/app/pages/calendar/calendar.utils';
 
 @Component({
   selector: 'app-recipies',
@@ -39,7 +39,6 @@ export class RecipiesContainer implements OnDestroy {
     private store: Store<IAppState>,
     private filtersService: FiltersService,
     private layoutService: LayoutService,
-    private calendarService: CalendarService
   ) {
     this.subscribeForProductChips();
     this.subscribeForRecipies()
@@ -98,10 +97,10 @@ export class RecipiesContainer implements OnDestroy {
     ).subscribe()
   }
 
-  addLastPrepared(recipy: Recipy, allPlannedRecipies: IDayDetails[] | undefined): Recipy {
+  addLastPrepared(recipy: Recipy, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[] | undefined): Recipy {
     let updated = {
       ...recipy,
-      lastPrepared: allPlannedRecipies ? this.calendarService.getLastPreparedDate(recipy.id, allPlannedRecipies) : 'N/A'
+      lastPrepared: allPlannedRecipies ? getLastPreparedDate(recipy.id, allPlannedRecipies) : null
     }
     return updated
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import * as moment from 'moment';
 import { take } from 'rxjs';
+import { isDateBefore } from 'src/app/pages/calendar/calendar.utils';
 import { UpdateUserAction } from 'src/app/store/actions/user.actions';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
@@ -14,14 +15,14 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 export class ClearOldDataComponent implements OnInit {
 
   isOlDataAvailable = false;
-  numberOfMonthsToStore = 3;
+  oldDate = new Date('1/17/2024');
 
   constructor(private store: Store<IAppState>,) {
 
   }
   ngOnInit(): void {
     this.store.pipe(select(getCurrentUser)).subscribe(user => {
-      this.isOlDataAvailable = !!user?.details?.find(day => this.getIsOlderThan(day.day, 3));
+      this.isOlDataAvailable = !!user?.plannedRecipies?.find(recipy => isDateBefore(new Date(recipy.endTime), this.oldDate));
     })
   }
 
@@ -34,7 +35,7 @@ export class ClearOldDataComponent implements OnInit {
     this.store.pipe(select(getCurrentUser), take(1)).subscribe(user => {
       const updatedUser = {
         ...user,
-        details: user!.details!.filter(day => !this.getIsOlderThan(day.day, this.numberOfMonthsToStore))
+        details: user!.plannedRecipies!.filter(recipy => !isDateBefore(new Date(recipy.endTime), this.oldDate))
       }
       this.store.dispatch(new UpdateUserAction(updatedUser, 'Old data deleted'))
     })

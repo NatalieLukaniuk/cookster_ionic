@@ -9,7 +9,7 @@
     <ng-container *ngIf="!isBig">
       <ng-container *ngIf="currentTab === tabs[0].value">
         <app-ingredients-tab [recipy]="recipy" [portions]="portions" [amountPerPortion]="amountPerPortion"
-          [ingredStartOptions]="ingredStartOptions" [day]="day"
+          [ingredStartOptions]="ingredStartOptions"
           (portionsChanged)="onPortionsChanged($event)"></app-ingredients-tab>
       </ng-container>
 
@@ -29,7 +29,7 @@
     <div *ngIf="isBig" class="wide-screen-view">
       <div class="scrollable wide-screen-view-products">
         <app-ingredients-tab [recipy]="recipy" [portions]="portions" [amountPerPortion]="amountPerPortion"
-          [ingredStartOptions]="ingredStartOptions" [day]="day"
+          [ingredStartOptions]="ingredStartOptions"
           (portionsChanged)="onPortionsChanged($event)"></app-ingredients-tab>
       </div>
       <div class="scrollable wide-screen-view-steps">

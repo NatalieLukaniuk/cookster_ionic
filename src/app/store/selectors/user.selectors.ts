@@ -10,7 +10,7 @@ export const getCurrentUser = createSelector(
 );
 export const getUserPlannedRecipies = createSelector(
   getUserState,
-  (state) => state.currentUser?.details
+  (state) => state.currentUser?.plannedRecipies
 );
 
 export const getUserShoppingList = createSelector(

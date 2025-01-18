@@ -1,0 +1,30 @@
+<app-header>
+  <ion-back-button left-button defaultHref="tabs/calendar"></ion-back-button>
+  <p title>{{ (recipy$ | async)!.name }}</p>
+  <ion-button
+    *ngIf="isOwnRecipy$ | async"
+    right-button
+    size="small"
+    (click)="goEditRecipy()"
+    ><ion-icon name="construct-outline" slot="icon-only"></ion-icon
+  ></ion-button>
+</app-header>
+
+<ion-content>
+  <app-recipy-full-view
+    *ngIf="
+      (recipy$ | async) && (amountPerPortion$ | async) && (portions$ | async);
+      else loading
+    "
+    [recipy]="recipy$ | async"
+    [currentUser]="user$ | async"
+    [amountPerPortion]="amountPerPortion$ | async"
+    [portions]="portions$ | async"
+    (portionsChanged)="onPortionsChanged($event)"
+  ></app-recipy-full-view>
+  <app-comments-block [currentUser]="user$ | async" [recipyId]="(recipy$ | async)?.id"></app-comments-block>
+</ion-content>
+
+<ng-template #loading>
+  <app-loading-overlay></app-loading-overlay>
+</ng-template>

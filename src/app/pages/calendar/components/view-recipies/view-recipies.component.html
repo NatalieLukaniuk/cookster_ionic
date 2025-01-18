@@ -1,0 +1,23 @@
+<app-header>
+  <ion-back-button left-button defaultHref="tabs/calendar"></ion-back-button>
+  <ion-segment [value]="displayRecipyIndex" title [scrollable]="true" (ionChange)="onSelectedRecipyChanged($event)">
+    <ng-container *ngFor="let recipy of (openedRecipies$ | async); index as i">
+      <ion-segment-button [value]="i"  class="recipy-selector-btn" (click)="onSegmentBtnClicked(i)">
+        <ion-label class="recipy-selector-btn-label">{{recipy.name}}</ion-label>
+      </ion-segment-button>
+    </ng-container>
+  </ion-segment>
+</app-header>
+
+<ion-content>
+  <ng-container *ngIf="(openedRecipies$ | async) as openedRecipies">
+    <ng-container *ngIf="openedRecipies[displayRecipyIndex] as openedRecipy">
+      <app-recipy-full-view [recipy]="openedRecipy" [currentUser]="user$ | async"
+        [amountPerPortion]="openedRecipy.amountPerPortion" [portions]="openedRecipy.portions"
+         (portionsChanged)="onPortionsChanged($event, openedRecipy)"></app-recipy-full-view>
+      <app-comments-block [currentUser]="user$ | async" [recipyId]="openedRecipy.id"></app-comments-block>
+    </ng-container>
+
+  </ng-container>
+
+</ion-content>
