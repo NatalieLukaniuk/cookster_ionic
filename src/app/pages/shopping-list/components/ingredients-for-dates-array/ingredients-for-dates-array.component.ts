@@ -17,7 +17,7 @@ import { AddToListModalComponent } from '../add-to-list-modal/add-to-list-modal.
 import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { iSameDay } from 'src/app/pages/calendar/calendar.utils';
 import { ShoppingListItem, SLItem, ShoppingList } from 'src/app/models/shopping-list.models';
-// TODO: NEEDS REVISION
+
 @Component({
   selector: 'app-ingredients-for-dates-array',
   templateUrl: './ingredients-for-dates-array.component.html',
@@ -96,7 +96,7 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
         if (res.plannedRecipies) {
           const dayItemsToAdd = res.plannedRecipies.filter(
             (detail: CalendarRecipyInDatabase_Reworked) =>
-              !!this.datesArray.find(date => iSameDay(detail.endTime, new Date(date)))
+              !!this.datesArray.find(date => iSameDay(new Date(detail.endTime), new Date(date)))
           );
           let list: any[] = [];
           dayItemsToAdd.forEach((plannedRecipy: CalendarRecipyInDatabase_Reworked) => {
