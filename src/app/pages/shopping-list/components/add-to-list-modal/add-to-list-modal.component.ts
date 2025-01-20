@@ -1,8 +1,6 @@
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { ShoppingList } from '../../../../models/planner.models';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { SLItem } from 'src/app/models/planner.models';
 import { Recipy } from 'src/app/models/recipies.models';
 import {
   convertAmountToSelectedUnit,
@@ -14,6 +12,7 @@ import * as moment from 'moment';
 import { DialogsService } from 'src/app/services/dialogs.service';
 import { ExpencesService } from 'src/app/expenses/expences.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ShoppingList, SLItem } from 'src/app/models/shopping-list.models';
 
 @Component({
   selector: 'app-add-to-list-modal',

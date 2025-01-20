@@ -6,12 +6,11 @@ import { AddToListModalComponent } from 'src/app/pages/shopping-list/components/
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { IAppState } from 'src/app/store/reducers';
 import { Subject, takeUntil } from 'rxjs';
-import { PlannerByDate, ShoppingList } from 'src/app/models/planner.models';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { SLItem } from 'src/app/models/planner.models';
 import * as _ from 'lodash';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { RecipyForCalendar_Reworked } from '../../calendar.models';
+import { ShoppingList, SLItem } from 'src/app/models/shopping-list.models';
 
 @Component({
   selector: 'app-products-per-day',
@@ -23,8 +22,6 @@ export class ProductsPerDayComponent implements OnChanges, OnDestroy {
   // @Input() day!: Day;
 
   products: Ingredient[] = [];
-
-  plannerWithActiveList: PlannerByDate | undefined;
 
   activeList: ShoppingList[] | undefined;
 

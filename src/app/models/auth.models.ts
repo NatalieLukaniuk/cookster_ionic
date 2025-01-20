@@ -1,14 +1,12 @@
 import { CalendarComment, CalendarRecipyInDatabase_Reworked } from '../pages/calendar/calendar.models';
-import { Reminder } from './calendar.models';
-import { ShoppingList } from './planner.models';
 import { DraftRecipy, RecipyCollection } from './recipies.models';
+import { ShoppingList } from './shopping-list.models';
 
 export interface User {
   email: string;
   uid: string;
   id?: string;
   shoppingLists?: ShoppingList[];
-  savedPreps?: Reminder[];
   img?: string;
   role: Role;
   collections?: RecipyCollection[];

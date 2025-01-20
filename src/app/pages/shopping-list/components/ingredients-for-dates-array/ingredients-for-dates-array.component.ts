@@ -4,7 +4,6 @@ import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Subject, Subscription, combineLatest, filter, map, take, takeUntil, tap } from 'rxjs';
-import { SLItem, ShoppingList, ShoppingListItem } from 'src/app/models/planner.models';
 import { Ingredient, Recipy } from 'src/app/models/recipies.models';
 import { NormalizeDisplayedAmountGetNumber, convertAmountToSelectedUnit, getRecipyNameById, getUnitText, transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
 
@@ -17,6 +16,7 @@ import { getUserPlannedRecipies, getUserShoppingList } from 'src/app/store/selec
 import { AddToListModalComponent } from '../add-to-list-modal/add-to-list-modal.component';
 import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/pages/calendar/calendar.models';
 import { iSameDay } from 'src/app/pages/calendar/calendar.utils';
+import { ShoppingListItem, SLItem, ShoppingList } from 'src/app/models/shopping-list.models';
 // TODO: NEEDS REVISION
 @Component({
   selector: 'app-ingredients-for-dates-array',

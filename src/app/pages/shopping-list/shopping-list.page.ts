@@ -1,7 +1,3 @@
-import {
-  ShoppingList,
-  ShoppingListItem,
-} from './../../models/planner.models';
 import { map, Subject, takeUntil } from 'rxjs';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
@@ -18,6 +14,7 @@ import { ControllerListSelectDialogComponent } from 'src/app/shared/components/d
 import { RecordExpensesComponent } from 'src/app/expenses/record-expenses-page/record-expenses.component';
 import { ExpencesService } from 'src/app/expenses/expences.service';
 import { AddToListModalComponent } from './components/add-to-list-modal/add-to-list-modal.component';
+import { ShoppingList, ShoppingListItem } from 'src/app/models/shopping-list.models';
 
 @Component({
   selector: 'app-shopping-list',

@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { take } from 'rxjs';
 import { UpdateUserAction } from '../store/actions/user.actions';
 import { getCurrentUser } from '../store/selectors/user.selectors';
-import { ShoppingList } from '../models/planner.models';
+import { ShoppingList } from '../models/shopping-list.models';
 
 @Injectable({
   providedIn: 'root'

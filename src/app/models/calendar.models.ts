@@ -1,14 +1,4 @@
-export interface IReminderList {
-  day: Date;
-  reminders: Reminder[];
-}
 
-export interface Reminder {
-  description: string;
-  calendarDay: string;
-  fullDate: Date;
-  done?: boolean;
-}
 
 export function transformDate(date: Date): string {
   return (
