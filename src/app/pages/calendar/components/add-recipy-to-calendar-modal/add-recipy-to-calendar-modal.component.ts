@@ -10,7 +10,7 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
-import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../calendar.models';
+import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { getLastPreparedDate } from '../../calendar.utils';
 

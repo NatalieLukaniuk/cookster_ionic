@@ -14,7 +14,7 @@ import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getUserPlannedRecipies, getUserShoppingList } from 'src/app/store/selectors/user.selectors';
 import { AddToListModalComponent } from '../add-to-list-modal/add-to-list-modal.component';
-import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/pages/calendar/calendar.models';
+import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { iSameDay } from 'src/app/pages/calendar/calendar.utils';
 import { ShoppingListItem, SLItem, ShoppingList } from 'src/app/models/shopping-list.models';
 // TODO: NEEDS REVISION

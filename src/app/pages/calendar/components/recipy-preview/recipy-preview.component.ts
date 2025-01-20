@@ -1,6 +1,6 @@
 import { RemoveRecipyFromCalendarActionNew } from '../../../../store/actions/calendar.actions';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { RecipyForCalendar_Reworked } from '../../calendar.models';
+import { RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { DishType } from 'src/app/models/recipies.models';
 import { CalendarService } from 'src/app/pages/calendar/calendar.service';
 import { Router, ActivatedRoute } from '@angular/router';

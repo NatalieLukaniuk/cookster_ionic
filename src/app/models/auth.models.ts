@@ -1,4 +1,4 @@
-import { CalendarComment, CalendarRecipyInDatabase_Reworked } from '../pages/calendar/calendar.models';
+import { CalendarComment, CalendarRecipyInDatabase_Reworked } from './calendar.models';
 import { DraftRecipy, RecipyCollection } from './recipies.models';
 import { ShoppingList } from './shopping-list.models';
 

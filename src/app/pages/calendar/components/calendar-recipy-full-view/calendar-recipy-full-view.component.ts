@@ -12,7 +12,7 @@ import {
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentUser, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
-import { RecipyForCalendar_Reworked } from 'src/app/pages/calendar/calendar.models';
+import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 
 @Component({
   selector: 'app-calendar-recipy-full-view',

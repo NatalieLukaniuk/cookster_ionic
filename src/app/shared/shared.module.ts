@@ -28,7 +28,6 @@ import { PrepsComponent } from './components/recipy-constructor/preps/preps.comp
 import { ControllerInputDialogComponent } from './components/dialogs/controller-input-dialog/controller-input-dialog.component';
 import { RecipyModalComponent } from './components/dialogs/recipy-modal/recipy-modal.component';
 import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-short-view.component';
-import { AddReminderModalComponent } from './components/dialogs/add-reminder-modal/add-reminder-modal.component';
 import { ControllerListSelectDialogComponent } from './components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { AddProductFormComponent } from './components/add-product-form/add-product-form.component';
 import { InputWithAutocompleteComponent } from './components/input-with-autocomplete/input-with-autocomplete.component';
@@ -63,7 +62,6 @@ import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/a
     ControllerInputDialogComponent,
     RecipyModalComponent,
     RecipyShortViewComponent,
-    AddReminderModalComponent,
     ControllerListSelectDialogComponent,
     AddProductFormComponent,
     InputWithAutocompleteComponent,

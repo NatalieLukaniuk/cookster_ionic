@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { RecipyForCalendar_Reworked } from 'src/app/pages/calendar/calendar.models';
+import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 
 @Injectable({
   providedIn: 'root'

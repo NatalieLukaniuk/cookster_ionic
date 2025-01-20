@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarService } from '../../calendar.service';
 import { Observable } from 'rxjs';
-import { RecipyForCalendar_Reworked } from 'src/app/pages/calendar/calendar.models';
+import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';

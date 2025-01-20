@@ -1,6 +1,6 @@
 import { ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarModalComponent } from '../add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
-import { CalendarComment, RecipyForCalendar_Reworked } from '../../calendar.models';
+import { CalendarComment, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { Component, Input } from '@angular/core';
 import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';

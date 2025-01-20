@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { RecipyForCalendar_Reworked } from 'src/app/pages/calendar/calendar.models';
+import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { Recipy } from 'src/app/models/recipies.models';
 
 export enum CalendarActionTypes {

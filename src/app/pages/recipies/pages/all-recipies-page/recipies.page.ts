@@ -10,7 +10,7 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import * as _ from 'lodash';
 import { User } from 'src/app/models/auth.models';
 import { LayoutService } from 'src/app/services/layout.service';
-import { CalendarRecipyInDatabase_Reworked } from 'src/app/pages/calendar/calendar.models';
+import { CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
 import { getLastPreparedDate } from 'src/app/pages/calendar/calendar.utils';
 
 @Component({

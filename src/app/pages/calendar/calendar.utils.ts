@@ -1,6 +1,6 @@
 import { Recipy } from "../../models/recipies.models";
 import * as moment from 'moment';
-import { CalendarRecipyInDatabase_Reworked } from "./calendar.models";
+import { CalendarRecipyInDatabase_Reworked } from "../../models/calendar.models";
 
 const MS_IN_HOUR = 3600000;
 const MS_IN_DAY = 86400000;

@@ -12,7 +12,7 @@ import { UpdateUserAction } from '../actions/user.actions';
 import { IAppState } from '../reducers';
 import { getCurrentUser } from '../selectors/user.selectors';
 import { User } from 'src/app/models/auth.models';
-import { CalendarRecipyInDatabase_Reworked } from 'src/app/pages/calendar/calendar.models';
+import { CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
 
 @Injectable()
 export class CalendarEffects {

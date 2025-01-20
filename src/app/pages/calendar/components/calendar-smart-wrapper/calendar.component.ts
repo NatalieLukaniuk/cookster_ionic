@@ -1,6 +1,6 @@
 import { Observable, combineLatest, map } from 'rxjs';
 import { Component } from '@angular/core';
-import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../calendar.models';
+import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';

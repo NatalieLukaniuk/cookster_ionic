@@ -9,7 +9,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import * as _ from 'lodash';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
-import { RecipyForCalendar_Reworked } from '../../calendar.models';
+import { RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { ShoppingList, SLItem } from 'src/app/models/shopping-list.models';
 
 @Component({
