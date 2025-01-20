@@ -4,7 +4,6 @@ import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Subject, Subscription, combineLatest, filter, map, take, takeUntil, tap } from 'rxjs';
-import { RecipyForCalendar } from 'src/app/models/calendar.models';
 import { SLItem, ShoppingList, ShoppingListItem } from 'src/app/models/planner.models';
 import { Ingredient, Recipy } from 'src/app/models/recipies.models';
 import { NormalizeDisplayedAmountGetNumber, convertAmountToSelectedUnit, getRecipyNameById, getUnitText, transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
@@ -16,9 +15,9 @@ import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getUserPlannedRecipies, getUserShoppingList } from 'src/app/store/selectors/user.selectors';
 import { AddToListModalComponent } from '../add-to-list-modal/add-to-list-modal.component';
-import { CalendarRecipyInDatabase_Reworked } from 'src/app/pages/calendar/calendar.models';
+import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/pages/calendar/calendar.models';
 import { iSameDay } from 'src/app/pages/calendar/calendar.utils';
-
+// TODO: NEEDS REVISION
 @Component({
   selector: 'app-ingredients-for-dates-array',
   templateUrl: './ingredients-for-dates-array.component.html',
@@ -34,19 +33,6 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
     .pipe(select(getAllRecipies))
 
   fullIngredsList$ = new Subject<ShoppingListItem[]>();
-  // calendar$: Observable<Day[] | null> = this.store.pipe(select(getCalendar));
-  // canedar$ = combineLatest([
-  //   this.store.pipe(select(getUserPlannedRecipies)),
-  //   this.allRecipies$
-  // ]).pipe(
-  //   map((combinedResult: [DayDetails[] | undefined, Recipy[]]) => {
-  //     if (combinedResult[0] && combinedResult[1]) {
-  //       this.calendarService.buildCalendarForDates(this.datesArray, combinedResult[0], combinedResult[1]);
-  //       this.canedarSub?.unsubscribe()
-  //     }
-  //   }
-  //   )
-  // )
 
   plannedRecipies$ = this.store.pipe(select(getUserPlannedRecipies))
 
@@ -64,8 +50,6 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
 
   resetScrollPoint = true;
 
-  canedarSub: Subscription | undefined;
-
   @ViewChild(IonContent) content: IonContent | undefined;
 
   constructor(
@@ -78,8 +62,6 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
     const path = window.location.pathname.split('/');
     const datesString = path[path.length - 1];
     this.datesArray = datesString.split('&');
-
-    // this.canedarSub = this.canedar$.subscribe();
 
     this.store
       .pipe(select(getAllRecipies), takeUntil(this.destroyed$))
@@ -155,7 +137,7 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
       })
   }
 
-  getCoef(recipy: RecipyForCalendar): number {
+  getCoef(recipy: RecipyForCalendar_Reworked): number {
     let totalAmount = 0;
     recipy.ingrediends.forEach((ingr) => {
       if (this.dataMapping.getIsIngredientIncludedInAmountCalculation(ingr)) {

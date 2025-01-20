@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { IonModal, ModalController } from '@ionic/angular';
-import { MealTime } from 'src/app/models/calendar.models';
+import { Component } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-add-comment-to-calendar-modal',

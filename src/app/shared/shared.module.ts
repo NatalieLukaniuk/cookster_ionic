@@ -4,7 +4,6 @@ import { AddGroupModalComponent } from './components/recipy-constructor/add-grou
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { SwipeLeftNoConfirmationDirective } from './directives/swipe-left-no-confirmation.directive';
 import { InputDialogComponent } from './components/dialogs/input-dialog/input-dialog.component';
-import { SelectOptionDialogComponent } from './components/dialogs/select-option-dialog/select-option-dialog.component';
 
 import { InfoTabComponent } from './components/recipy-full-view/info-tab/info-tab.component';
 import { ImageComponent } from './components/image/image.component';
@@ -50,7 +49,6 @@ import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/a
     IngredientComponent,
     NormalizeDisplayedAmountPipe,
     ConvertToSelectedUnitPipe,
-    SelectOptionDialogComponent,
     InputDialogComponent,
     SwipeLeftDirective,
     SwipeLeftNoConfirmationDirective,
@@ -81,7 +79,6 @@ import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/a
     ImageComponent,
     NormalizeTimePipe,
     RecipyFullViewComponent,
-    SelectOptionDialogComponent,
     InputDialogComponent,
     SwipeLeftDirective,
     NormalizeDisplayedAmountPipe,

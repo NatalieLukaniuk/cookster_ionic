@@ -21,6 +21,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./add-to-list-modal.component.scss'],
 })
 export class AddToListModalComponent implements OnInit, OnDestroy {
+  // TODO needs review
   ingredient!: SLItem;
   lists!: ShoppingList[];
   allRecipies!: Recipy[];

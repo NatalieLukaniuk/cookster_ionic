@@ -1,7 +1,6 @@
 import { CalendarComment, CalendarRecipyInDatabase_Reworked } from '../pages/calendar/calendar.models';
-import { ExpenseItem } from '../expenses/expenses-models';
-import { DayDetails, Reminder } from './calendar.models';
-import { PlannerByDate, ShoppingList, ShoppingListItem } from './planner.models';
+import { Reminder } from './calendar.models';
+import { ShoppingList } from './planner.models';
 import { DraftRecipy, RecipyCollection } from './recipies.models';
 
 export interface User {
