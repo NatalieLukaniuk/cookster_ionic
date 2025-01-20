@@ -14,8 +14,8 @@ import { AddCommentToCalendarModalComponent } from './components/add-comment-to-
   styleUrls: ['./calendar.page.scss'],
 })
 export class CalendarPage {
-  
-  constructor(private modalCtrl: ModalController, private store: Store<IAppState>, private calendarService: CalendarReworkedService){}
+
+  constructor(private modalCtrl: ModalController, private store: Store<IAppState>, private calendarService: CalendarReworkedService) { }
 
   public actionSheetButtons = [
     {
@@ -45,26 +45,29 @@ export class CalendarPage {
     },
   ];
 
-  onActionSelected(event: any){
-    switch(event.detail.data.action){
-      case "recipy": this.addRecipy();
-      break;
-      case 'comment': this.addComment();
-      break;
-      case 'reminder': this.addReminder();
-      break;
-      default: null
+  onActionSelected(event: any) {
+    if (event) {
+      switch (event.detail.data.action) {
+        case "recipy": this.addRecipy();
+          break;
+        case 'comment': this.addComment();
+          break;
+        case 'reminder': this.addReminder();
+          break;
+        default: null
+      }
     }
+
 
   }
 
-  async addReminder(){
+  async addReminder() {
     const currentDay = this.calendarService.getCurrentDayValue()
     const modal = await this.modalCtrl.create({
       component: AddCommentToCalendarModalComponent,
       componentProps: {
         title: 'Нагадування',
-        selectedTime:  currentDay
+        selectedTime: currentDay
       }
     });
     modal.present();
@@ -82,12 +85,12 @@ export class CalendarPage {
     }
   }
 
-  async addComment(){
+  async addComment() {
     const currentDay = this.calendarService.getCurrentDayValue()
     const modal = await this.modalCtrl.create({
       component: AddCommentToCalendarModalComponent,
       componentProps: {
-        selectedTime:  currentDay
+        selectedTime: currentDay
       }
     });
     modal.present();
@@ -104,7 +107,7 @@ export class CalendarPage {
       );
     }
   }
-  
+
 
   async addRecipy() {
     const currentDay = this.calendarService.getCurrentDayValue()
