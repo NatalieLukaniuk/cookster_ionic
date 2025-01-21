@@ -2,7 +2,7 @@
   <ion-button size="small" (click)="goPreviousDay()" color="tertiary">
     <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
   </ion-button>
-  <span>{{
+  <span class="date-title">{{
     (currentDay$ | async)?.toString() | date : "EEEE, d MMMM"
     }}</span>
   <ion-button size="small" (click)="goNextDay()" color="tertiary">

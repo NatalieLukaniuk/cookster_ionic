@@ -53,6 +53,8 @@ export class CalendarComponent {
       const currentDayRecipies: RecipyForCalendar_Reworked[] = this.getCurrentDayRecipies(plannedRecipies, selectedDate, allRecipies);
       recipiesoDisplay = recipiesoDisplay.concat(currentDayRecipies);
 
+      this.calendarService.setCurrentDayRecipies(recipiesoDisplay)
+
       const overflowingRecipies: CalendarRecipyInDatabase_Reworked[] = this.getOverflowingRecipies(plannedRecipies, selectedDate, allRecipies);
       if (overflowingRecipies.length) {
         const mapped: RecipyForCalendar_Reworked[] = overflowingRecipies.map(recipy => {
