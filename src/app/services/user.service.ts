@@ -47,6 +47,10 @@ export class UserService {
   getCurrentUserData(cooksterId: string) {
     this.authApiService.getUser(cooksterId).pipe(take(1)).subscribe(user => {
       this.currentUser = user;
+      if(!this.currentUser.id){
+        this.currentUser.id = cooksterId;
+        this.currentUserId = cooksterId;
+      }
       if (user.id) {
         this.currentUserId = user.id;
       }
