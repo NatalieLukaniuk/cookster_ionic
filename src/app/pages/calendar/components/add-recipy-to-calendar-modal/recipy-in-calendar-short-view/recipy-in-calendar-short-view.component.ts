@@ -15,6 +15,14 @@ export class RecipyInCalendarShortViewComponent implements OnInit {
 
   ngOnInit() { }
 
+  get recipyIngredients(){
+    return this.recipy.ingrediends.map(ingred => ingred.ingredient)
+  }
+
+  get recipyPrep(){
+    return this.recipy.steps.map(step => step.description)
+  }
+
   onRecipyClicked() {
     this.recipyClicked.emit(this.recipy)
   }

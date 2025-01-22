@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, Subject, map, takeUntil, tap } from 'rxjs';
 import { User } from 'src/app/models/auth.models';
 import { IAppState } from 'src/app/store/reducers';
 import { getComments } from 'src/app/store/selectors/comments.selectors';
@@ -8,16 +8,17 @@ import { Comment } from 'src/app/models/comments.models';
 import { CommentsService } from '../comments.service';
 import { AddCommentAction, DeleteCommentAction } from 'src/app/store/actions/comments.actions';
 import { DialogsService } from 'src/app/services/dialogs.service';
+import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
   selector: 'app-comments-block',
   templateUrl: './comments-block.component.html',
   styleUrls: ['./comments-block.component.scss']
 })
-export class CommentsBlockComponent implements OnChanges {
+export class CommentsBlockComponent implements OnChanges, OnDestroy {
   // TODO: functionality when the user is not logged in
   @Input() recipyId: string | undefined;
-  @Input() currentUser!: User | null | undefined;
+  currentUser: User | null | undefined = null;
 
   text = '';
 
@@ -31,9 +32,17 @@ export class CommentsBlockComponent implements OnChanges {
   totalComments: number = 0;
 
   isModalOpen = false;
+  destroyed$ = new Subject<void>()
+
+  currentUser$ = this.store.pipe(select(getCurrentUser), takeUntil(this.destroyed$))
 
   constructor(private store: Store<IAppState>, private commentsService: CommentsService, private dialog: DialogsService) {
-
+    this.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    })
+  }
+  ngOnDestroy(): void {
+    this.destroyed$.next();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipyId'] && !!this.recipyId) {

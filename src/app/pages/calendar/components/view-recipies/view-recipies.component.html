@@ -15,7 +15,7 @@
       <app-recipy-full-view [recipy]="openedRecipy" [currentUser]="user$ | async"
         [amountPerPortion]="openedRecipy.amountPerPortion" [portions]="openedRecipy.portions"
          (portionsChanged)="onPortionsChanged($event, openedRecipy)"></app-recipy-full-view>
-      <app-comments-block [currentUser]="user$ | async" [recipyId]="openedRecipy.id"></app-comments-block>
+      <app-comments-block [recipyId]="openedRecipy.id"></app-comments-block>
     </ng-container>
 
   </ng-container>
