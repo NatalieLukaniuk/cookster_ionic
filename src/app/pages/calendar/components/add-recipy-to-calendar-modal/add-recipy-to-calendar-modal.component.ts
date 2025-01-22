@@ -168,6 +168,14 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     return !(!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime)
   }
 
+  get saveButtonText(){
+    return !this.selectedRecipy ? 'Виберіть рецепт' : 
+    !this.selectedTime ? 'Вкажіть час' : 
+    !this.portions ? 'Вкажіть кількість порцій' :
+    !this.portionSize? 'Вкажіть розмір порції' : 
+    this.isEditMode ? 'Зберегти' : 'Додати'
+  }
+
   addRecipyToCalendar() {
     if (!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime) {
       let recipyToAdd: RecipyForCalendar_Reworked = {

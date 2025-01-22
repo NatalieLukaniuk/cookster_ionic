@@ -82,9 +82,9 @@
   <ion-footer>
     <ion-toolbar>
       <ion-button *ngIf="!isEditMode" expand="full" [disabled]="isAddDisabled"
-        (click)="addRecipyToCalendar()">Додати</ion-button>
+        (click)="addRecipyToCalendar()">{{saveButtonText}}</ion-button>
       <ion-button *ngIf="isEditMode" expand="full" [disabled]="isAddDisabled"
-        (click)="saveUpdatedRecipyToCalendar()">Зберегти</ion-button>
+        (click)="saveUpdatedRecipyToCalendar()">{{saveButtonText}}</ion-button>
 
     </ion-toolbar>
   </ion-footer>
