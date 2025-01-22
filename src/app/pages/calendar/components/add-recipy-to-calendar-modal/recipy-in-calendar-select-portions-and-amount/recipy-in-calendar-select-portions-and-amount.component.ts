@@ -6,8 +6,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./recipy-in-calendar-select-portions-and-amount.component.scss'],
 })
 export class RecipyInCalendarSelectPortionsAndAmountComponent implements OnInit {
-  @Input() initialPortionsValue: number | undefined;
-  @Input() initialAmountValue: number | undefined;
+  @Input() initialPortionsValue: number | null = null;
+  @Input() initialAmountValue: number | null = null;
 
   @Output() portionsValueChanged = new EventEmitter<number>();
   @Output() amountValueChanged = new EventEmitter<number>();
