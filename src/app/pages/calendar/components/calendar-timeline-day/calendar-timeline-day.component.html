@@ -10,7 +10,7 @@
   <div class="timeline-body" #recipiesContainer>
     <ng-container *ngIf="timelineScaleItems">
       <div class="background-grid">
-        <div *ngFor="let scale of timelineScaleItems; let i=index;" class="scale-item" [class.night]="i < dayStartIndex || i >= dayEndIndex"> </div>
+        <div *ngFor="let scale of timelineScaleItems; let i=index;" class="scale-item" [class.night]="i < dayStartIndex || i >= dayEndIndex"  [id]="'scale-grid-item-' + i"> </div>
       </div>
 
       <div class="recipies-container" [style]="'width:' + recipiesContainer.offsetWidth + 'px'">

@@ -17,7 +17,7 @@ const HOURS_IN_DAY = 24;
   templateUrl: './calendar-timeline-day.component.html',
   styleUrls: ['./calendar-timeline-day.component.scss'],
 })
-export class CalendarTimelineDayComponent implements OnChanges {
+export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
   PIXELS_IN_DAY = (HOURS_IN_DAY * 60) / MINUTES_IN_PIXEL;
   dayStartIndex = 6;
   dayEndIndex = 21;
@@ -33,19 +33,52 @@ export class CalendarTimelineDayComponent implements OnChanges {
     private store: Store<IAppState>,
   ) { }
 
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.processSelectedDayVisuals();
+
+    }, 200)
+
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedDay']) {
-      if (this.selectedDay && !iSameDay(new Date(), new Date(this.selectedDay))) {
-        setTimeout(() => {
-          this.scrollToDay()
-        }, 200)
-      } else {
-        setTimeout(() => {
-          this.scrollToNow()
-        }, 200)
-      }
+      this.processSelectedDayVisuals()
     }
 
+  }
+
+  processSelectedDayVisuals() {
+    if (this.selectedDay && !iSameDay(new Date(), new Date(this.selectedDay))) {
+      this.scrollToDay()
+    } else {
+      this.scrollToNow()
+    }
+    this.removeNowLine()
+    if (this.selectedDay && iSameDay(new Date(), new Date(this.selectedDay))) {
+      this.drawNowLine()
+    } else {
+      
+    }
+  }
+
+  drawNowLine() {
+    const now = new Date();
+    const index = now.getHours();
+    const id = 'scale-grid-item-' + index;
+    
+    const pointNow = document.getElementById(id);
+    pointNow?.classList.add('point-now');
+  }
+
+  removeNowLine(){
+    const toRemove = document.getElementsByClassName('point-now');
+
+    if (toRemove.length) {
+      for (let i = 0; i <= toRemove.length; i++) {
+        toRemove.item(i)?.classList.remove('point-now')
+      }
+    }
   }
 
   scrollToDay() {
