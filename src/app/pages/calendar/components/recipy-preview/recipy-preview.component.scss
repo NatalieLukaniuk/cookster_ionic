@@ -23,7 +23,7 @@ h2 {
 
 .recipy-content {
   display: flex;
-  padding-left: 15px;
+  padding-left: 5px;
 
   .recipy-text {
     flex-grow: 1;
@@ -61,4 +61,22 @@ h2 {
 
     }
   }
+}
+
+.ingrediends-block-wrapper, .steps-block-wrapper{
+  display: flex;
+  flex-direction: column;  
+  font-size: 10px;
+  .title {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+}
+
+.ingrediends-block-wrapper{
+  padding: 10px 15px 10px 0;
+}
+
+.steps-block-wrapper{
+  padding: 10px 10px 10px 15px;
 }

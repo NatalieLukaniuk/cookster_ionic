@@ -1,8 +1,8 @@
 <div class="timeline-container" [style]="'height: ' + PIXELS_IN_DAY + 'px'">
   <div class="timeline-scale">
     <ng-container *ngIf="timelineScaleItems">
-      <div *ngFor="let scale of timelineScaleItems" class="scale-item">
-        {{scale}}:00 - {{scale + 1}}:00
+      <div *ngFor="let scale of timelineScaleItems; let i=index;" class="scale-item" [class.night]="i < dayStartIndex || i >= dayEndIndex" [id]="'scale-item-' + i">
+        <span class="time-label" [class.transparent]="i===0">{{scale}}:00</span>
       </div>
     </ng-container>
 
@@ -10,7 +10,7 @@
   <div class="timeline-body" #recipiesContainer>
     <ng-container *ngIf="timelineScaleItems">
       <div class="background-grid">
-        <div *ngFor="let scale of timelineScaleItems" class="scale-item"> </div>
+        <div *ngFor="let scale of timelineScaleItems; let i=index;" class="scale-item" [class.night]="i < dayStartIndex || i >= dayEndIndex"> </div>
       </div>
 
       <div class="recipies-container" [style]="'width:' + recipiesContainer.offsetWidth + 'px'">

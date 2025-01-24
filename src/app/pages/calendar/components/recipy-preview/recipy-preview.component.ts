@@ -33,6 +33,14 @@ export class RecipyPreviewComponent implements OnInit {
     );
   }
 
+  get recipyIngredients(){
+    return this.recipy.ingrediends.map(ingred => ingred.ingredient)
+  }
+
+  get recipyPrep(){
+    return this.recipy.steps.map(step => step.description)
+  }
+
   activePreparationTime() {
     let time = 0;
     for (let step of this.recipy.steps) {

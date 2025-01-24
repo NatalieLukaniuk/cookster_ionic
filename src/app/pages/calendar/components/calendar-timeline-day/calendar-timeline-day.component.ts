@@ -1,13 +1,14 @@
 import { ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarModalComponent } from '../add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { CalendarComment, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
 import { iSameDay, MINUTES_IN_DAY } from '../../calendar.utils';
+import { start } from 'repl';
 
-const MINUTES_IN_PIXEL = 1;
+const MINUTES_IN_PIXEL = 2;
 
 const HOURS_IN_DAY = 24;
 
@@ -16,8 +17,10 @@ const HOURS_IN_DAY = 24;
   templateUrl: './calendar-timeline-day.component.html',
   styleUrls: ['./calendar-timeline-day.component.scss'],
 })
-export class CalendarTimelineDayComponent{
+export class CalendarTimelineDayComponent implements OnChanges {
   PIXELS_IN_DAY = (HOURS_IN_DAY * 60) / MINUTES_IN_PIXEL;
+  dayStartIndex = 6;
+  dayEndIndex = 21;
 
   @Input() recipies: RecipyForCalendar_Reworked[] | null = [];
   @Input() comments: CalendarComment[] | null = [];
@@ -29,6 +32,35 @@ export class CalendarTimelineDayComponent{
     private modalCtrl: ModalController,
     private store: Store<IAppState>,
   ) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedDay']) {
+      if (this.selectedDay && !iSameDay(new Date(), new Date(this.selectedDay))) {
+        setTimeout(() => {
+          this.scrollToDay()
+        }, 200)
+      } else {
+        setTimeout(() => {
+          this.scrollToNow()
+        }, 200)
+      }
+    }
+
+  }
+
+  scrollToDay() {
+    const id = 'scale-item-' + this.dayStartIndex
+    const dayStart = document.getElementById(id);
+    dayStart?.scrollIntoView({ block: "start", inline: "nearest" });
+  }
+
+  scrollToNow() {
+    const now = new Date();
+    const index = now.getHours();
+    const id = 'scale-item-' + index
+    const pointNow = document.getElementById(id);
+    pointNow?.scrollIntoView({ block: "start", inline: "nearest" });
+  }
 
   getRecipyTopMargin(recipy: RecipyForCalendar_Reworked) {
     if ('overflowStart' in recipy && recipy.overflowStart && this.selectedDay && iSameDay(recipy.overflowStart, new Date(this.selectedDay))) {
@@ -46,27 +78,27 @@ export class CalendarTimelineDayComponent{
     }
 
   }
-  
-  getCommentTopMargin(comment: CalendarComment){
+
+  getCommentTopMargin(comment: CalendarComment) {
     const minutesTillTime = (new Date(comment.date).getHours() * 60) + new Date(comment.date).getMinutes();
     return minutesTillTime / MINUTES_IN_PIXEL
   }
 
-  getCommentBackground(comment: CalendarComment){
-    return comment.isReminder? '#FCD786' : 'var(--ion-color-light)'
+  getCommentBackground(comment: CalendarComment) {
+    return comment.isReminder ? '#FCD786' : 'var(--ion-color-light)'
   }
 
   getRecipyHeight(recipy: RecipyForCalendar_Reworked): number {
     if ('overflowStart' in recipy) {
-      if(recipy.overflowStart && this.selectedDay && !iSameDay(recipy.overflowStart, new Date(this.selectedDay))){
+      if (recipy.overflowStart && this.selectedDay && !iSameDay(recipy.overflowStart, new Date(this.selectedDay))) {
         return MINUTES_IN_DAY / MINUTES_IN_PIXEL
-      } else if (recipy.overflowStart && this.selectedDay){
+      } else if (recipy.overflowStart && this.selectedDay) {
         const minutesTillEndTime = MINUTES_IN_DAY - ((new Date(recipy.overflowStart).getHours() * 60) + new Date(recipy.overflowStart).getMinutes());
         return minutesTillEndTime / MINUTES_IN_PIXEL;
       } else {
         return 0
       }
-      
+
 
     } else {
       let time = 0;
@@ -76,7 +108,7 @@ export class CalendarTimelineDayComponent{
       if (time <= MINUTES_IN_DAY) {
         return time / MINUTES_IN_PIXEL;
       } else {
-        const minutesTillEndTime =(new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
+        const minutesTillEndTime = (new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
         return minutesTillEndTime / MINUTES_IN_PIXEL;
       }
 

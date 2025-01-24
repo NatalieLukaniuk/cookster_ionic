@@ -40,8 +40,12 @@
 .scale-item {
     border-bottom: 1px solid var(--ion-color-medium);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+
+    &.night {
+        background-color: var(--ion-color-light);
+    }
 
 }
 
@@ -85,4 +89,15 @@
 
 .recipy-preview {
     --width: 95vw;
+}
+
+.time-label {
+    transform: translateY(-50%);
+    display: block;
+    background-color: var(--ion-color-secondary);
+    padding: 0 10px;
+    border-radius: 10px;
+    &.transparent{
+        color: transparent;
+    }
 }
