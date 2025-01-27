@@ -1,11 +1,13 @@
 <ion-item-sliding>
-  <ion-item class="recipy-content">
+  <ion-item class="recipy-content">    
     <div class="recipy-text">
       <h2>{{ recipy.name }}<span class="icons">
+        <!-- <span>{{recipy.endTime | date: 'hh:mm a'}}</span> -->
           <ion-icon name="alarm" *ngIf="showNeedsAdvancePreparation"></ion-icon>
           <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
         </span></h2>
       <div class="additional-info">
+        <!-- <span>кінець приготування: {{recipy.endTime | date: 'EEE, dd MMM yyyy, hh:mm a'}}</span> -->
         <div>
           <span>
             <ion-icon name="american-football-outline"></ion-icon>

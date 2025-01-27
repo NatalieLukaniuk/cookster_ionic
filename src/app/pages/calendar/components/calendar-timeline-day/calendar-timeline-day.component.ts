@@ -6,7 +6,7 @@ import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.
 import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
 import { iSameDay, MINUTES_IN_DAY } from '../../calendar.utils';
-import { start } from 'repl';
+
 
 const MINUTES_IN_PIXEL = 2;
 
@@ -102,7 +102,7 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
       return minutesInToday / MINUTES_IN_PIXEL
     } else {
       const minutesTillEndTime = (new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
-      const startTime = minutesTillEndTime - this.getRecipyHeight(recipy);
+      const startTime = minutesTillEndTime - (this.getRecipyHeight(recipy) * MINUTES_IN_PIXEL);
       if (startTime > 0) {
         return startTime / MINUTES_IN_PIXEL
       } else {
