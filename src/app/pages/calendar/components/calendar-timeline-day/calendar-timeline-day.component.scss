@@ -72,14 +72,19 @@
     background: var(--ion-color-tertiary);
     display: flex;
     align-items: center;
-    justify-content: center;
+    
     text-align: center;
     font-size: 0.8em;
     flex-direction: column;
 }
 
+.timeline-recipy {
+    justify-content: flex-end;
+}
+
 .timeline-comment {
     border-radius: 3px;
+    justify-content: center;
 }
 
 .background-grid {
