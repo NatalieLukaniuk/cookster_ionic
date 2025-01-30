@@ -30,7 +30,7 @@
           </div>
           <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectDate)">
             <span>Час:</span>
-            <span>{{(selectedTime | date: 'EEE, dd MMM yyyy, hh:mm a') || '-'}}</span>
+            <span>{{(selectedTime | date: 'EEE, dd MMM yyyy, HH:mm') || '-'}}</span>
           </div>
           <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SetAmount)">
             <span>Порцій:</span>

@@ -1,50 +1,62 @@
 <ion-item-sliding>
-  <ion-item class="recipy-content">    
-    <div class="recipy-text">
-      <h2>{{ recipy.name }}<span class="icons">
-        <!-- <span>{{recipy.endTime | date: 'hh:mm a'}}</span> -->
+  <ion-item>
+    <div class="recipy-wrapper">
+      <div class="recipy-header">
+        <span class="recipy-title">{{ recipy.name }}</span>
+        <span class="icons">
+          <span class="prep-boundaries" [class.overflowing]="getIsOverflowing()">{{recipy.prepStart | date:
+            getFormatting()}} - {{recipy.endTime | date: getFormatting()}}</span>
           <ion-icon name="alarm" *ngIf="showNeedsAdvancePreparation"></ion-icon>
           <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
-        </span></h2>
-      <div class="additional-info">
-        <!-- <span>кінець приготування: {{recipy.endTime | date: 'EEE, dd MMM yyyy, hh:mm a'}}</span> -->
-        <div>
-          <span>
-            <ion-icon name="american-football-outline"></ion-icon>
-            {{ activePreparationTime() | normalizeTime }}
-          </span>
-          <span>
-            <ion-icon name="beer-outline"></ion-icon>
-            {{ passivePreparationTime() | normalizeTime }}
-          </span>
-        </div>
-        <span>{{ recipy.portions }} порцій</span>
-        <span><ion-icon name="calendar-outline"></ion-icon>{{ recipy.amountPerPortion }} гр/порцію</span>
-        <span *ngIf="recipy.calorificValue">
-          {{
-          Math.round(
-          (recipy.calorificValue * recipy.amountPerPortion) / 100
-          )
-          }}
-          ккал/порцію
         </span>
+      </div>
+      <div class="recipy-content">
+        <div class="recipy-text">
+
+          <div class="additional-info">
+            <!-- <span>кінець приготування: {{recipy.endTime | date: 'EEE, dd MMM yyyy, HH:mm'}}</span> -->
+            <div>
+              <span>
+                <ion-icon name="american-football-outline"></ion-icon>
+                {{ activePreparationTime() | normalizeTime }}
+              </span>
+              <span>
+                <ion-icon name="beer-outline"></ion-icon>
+                {{ passivePreparationTime() | normalizeTime }}
+              </span>
+            </div>
+            <span>{{ recipy.portions }} порцій</span>
+            <span><ion-icon name="calendar-outline"></ion-icon>{{ recipy.amountPerPortion }} гр/порцію</span>
+            <span *ngIf="recipy.calorificValue">
+              {{
+              Math.round(
+              (recipy.calorificValue * recipy.amountPerPortion) / 100
+              )
+              }}
+              ккал/порцію
+            </span>
 
 
-        <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon> {{recipy.portionSize}}гр./порцію
+            <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon>
+              {{recipy.portionSize}}гр./порцію
+            </div>
+            <div class="collection-tags">
+              <span><ion-icon name="pricetags-outline"></ion-icon> </span>
+              <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+                DishType[tag]
+                }}</ion-chip>
+            </div>
+            <app-cost-of-recipy [amountPerPortion]="recipy.amountPerPortion" [ingredients]="recipy.ingrediends"
+              [portions]="recipy.portions"></app-cost-of-recipy>
+          </div>
         </div>
-        <div class="collection-tags">
-          <span><ion-icon name="pricetags-outline"></ion-icon> </span>
-          <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
-            DishType[tag]
-            }}</ion-chip>
+        <div class="recipy-photo" *ngIf="recipy.photo">
+          <app-image [imagePath]="recipy.photo"></app-image>
         </div>
-        <app-cost-of-recipy [amountPerPortion]="recipy.amountPerPortion" [ingredients]="recipy.ingrediends"
-          [portions]="recipy.portions"></app-cost-of-recipy>
       </div>
     </div>
-    <div class="recipy-photo" *ngIf="recipy.photo">
-      <app-image [imagePath]="recipy.photo"></app-image>
-    </div>
+
+
 
   </ion-item>
   <ion-item-options side="start">

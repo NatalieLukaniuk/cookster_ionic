@@ -6,6 +6,7 @@ import { CalendarService } from 'src/app/pages/calendar/calendar.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
+import { iSameDay } from '../../calendar.utils';
 
 @Component({
   selector: 'app-recipy-preview',
@@ -20,24 +21,26 @@ export class RecipyPreviewComponent implements OnInit {
   Math = Math;
   DishType = DishType;
   showNeedsAdvancePreparation: boolean = false;
+
   constructor(
     private calendarService: CalendarService,
     private router: Router,
     private route: ActivatedRoute,
-    private store: Store<IAppState>,
+    private store: Store<IAppState>
   ) { }
 
   ngOnInit() {
     this.showNeedsAdvancePreparation = this.recipy.type.includes(
       DishType['потребує попередньої підготовки']
     );
+
   }
 
-  get recipyIngredients(){
+  get recipyIngredients() {
     return this.recipy.ingrediends.map(ingred => ingred.ingredient)
   }
 
-  get recipyPrep(){
+  get recipyPrep() {
     return this.recipy.steps.map(step => step.description)
   }
 
@@ -68,10 +71,18 @@ export class RecipyPreviewComponent implements OnInit {
   onEditRecipy() {
     this.closePopover.emit();
     this.editClicked.emit(this.recipy);
-   }
+  }
 
   onDelete() {
     this.store.dispatch(new RemoveRecipyFromCalendarActionNew(this.recipy))
-   }
+  }
+
+  getIsOverflowing(): boolean{
+    return !this.recipy.prepStart ? false : !iSameDay(new Date(this.recipy.prepStart), new Date(this.recipy.endTime))
+  }
+
+  getFormatting() {
+    return this.getIsOverflowing() ? 'EEE, dd.MM, HH:mm' : 'HH:mm'
+  }
 
 }

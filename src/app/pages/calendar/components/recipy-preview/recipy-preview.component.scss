@@ -15,7 +15,7 @@
   }
 }
 
-h2 {
+.recipy-title {
   white-space: normal;
   font-size: 16px;
   font-weight: 600;
@@ -79,4 +79,23 @@ h2 {
 
 .steps-block-wrapper{
   padding: 10px 10px 10px 15px;
+}
+
+.recipy-wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+.prep-boundaries{
+  font-size: 12px;
+  &:not(.overflowing){
+    white-space: nowrap;
+  }
+  
+}
+
+.recipy-header {
+  padding-block: 10px 5px;
+    display: flex;
+    justify-content: space-between;
 }
