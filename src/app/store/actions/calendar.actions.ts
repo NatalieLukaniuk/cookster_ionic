@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
+import { CalendarComment, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { Recipy } from 'src/app/models/recipies.models';
 
 export enum CalendarActionTypes {
@@ -10,6 +10,8 @@ export enum CalendarActionTypes {
   PREVIEW_RECIPY = '[CLANEDAR] Preview Recipy',
   RESET_PREVIEW_RECIPY = '[CLANEDAR] Reset Preview Recipy',
   ADD_COMMENT_TO_CALENDAR = '[CALENDAR] Add Comment To Calendar',
+  UPDATE_COMMENT_IN_CALENDAR_NEW = '[CALENDAR] Update Comment In Calendar',
+  REMOVE_COMMENT_FROM_CALENDAR_NEW = '[CALENDAR] Remove Comment From Calendar',
   ADD_RECIPY_TO_CALENDAR_NEW = '[CALENDAR] Add Recipy To Calendar',
   UPDATE_RECIPY_IN_CALENDAR_NEW = '[CALENDAR] Update Recipy In Calendar',
   REMOVE_RECIPY_FROM_CALENDAR_NEW = '[CALENDAR] Remove Recipy From Calendar',
@@ -21,6 +23,21 @@ export class AddCommentToCalendarAction implements Action {
     public comment: string,
     public selectedDate: Date,
     public isReminder: boolean
+  ) {}
+}
+
+export class UpdateCommentInCalendarActionNew implements Action {
+  readonly type = CalendarActionTypes.UPDATE_COMMENT_IN_CALENDAR_NEW;
+  constructor(
+    public previousEntry: CalendarComment,
+    public newEntry: CalendarComment    
+  ) {}
+}
+
+export class RemoveCommentFromCalendarActionNew implements Action {
+  readonly type = CalendarActionTypes.REMOVE_COMMENT_FROM_CALENDAR_NEW;
+  constructor(
+    public comment: CalendarComment
   ) {}
 }
 
@@ -89,4 +106,6 @@ export type CalendarActions =
   | ResetPreviewRecipyAction
   | AddCommentToCalendarAction 
   | AddRecipyToCalendarActionNew
-  | UpdateRecipyInCalendarActionNew | RemoveRecipyFromCalendarActionNew;
+  | UpdateCommentInCalendarActionNew
+  | RemoveCommentFromCalendarActionNew
+  | UpdateRecipyInCalendarActionNew | RemoveRecipyFromCalendarActionNew ;

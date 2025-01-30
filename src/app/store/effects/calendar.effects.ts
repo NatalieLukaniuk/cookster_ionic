@@ -1,4 +1,4 @@
-import { AddRecipyToCalendarActionNew, UpdateRecipyInCalendarActionNew, RemoveRecipyFromCalendarActionNew, AddCommentToCalendarAction } from './../actions/calendar.actions';
+import { AddRecipyToCalendarActionNew, UpdateRecipyInCalendarActionNew, RemoveRecipyFromCalendarActionNew, AddCommentToCalendarAction, UpdateCommentInCalendarActionNew, RemoveCommentFromCalendarActionNew } from './../actions/calendar.actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -73,6 +73,48 @@ export class CalendarEffects {
       } else return new ErrorAction('no user');
     })))
   ))
+
+  updateCommentInCalendar$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(CalendarActionTypes.UPDATE_COMMENT_IN_CALENDAR_NEW),
+      switchMap((action: UpdateCommentInCalendarActionNew) => 
+      this.store.pipe(select(getCurrentUser), take(1), map((user: User | null) => {
+        if (user) {
+          let updatedUser = _.cloneDeep(user);         
+          
+          updatedUser.plannedComments = updatedUser.plannedComments?.map(commentEntry => {
+            if(commentEntry.comment === action.previousEntry.comment &&
+              commentEntry.date === action.previousEntry.date
+            ){
+              return action.newEntry
+            } else return commentEntry
+          })
+          return new UpdateUserAction(
+            updatedUser,
+            `${action.previousEntry.isReminder? 'Нагадування' : 'Коментар'} оновлено`
+          );
+        } else return new ErrorAction('no user');
+      })))
+    ))
+
+    removeCommentFromCalendar$ = createEffect(() => 
+      this.actions$.pipe(
+        ofType(CalendarActionTypes.REMOVE_COMMENT_FROM_CALENDAR_NEW),
+        switchMap((action: RemoveCommentFromCalendarActionNew) => 
+        this.store.pipe(select(getCurrentUser), take(1), map((user: User | null) => {
+          if (user) {
+            let updatedUser = _.cloneDeep(user);         
+            
+            updatedUser.plannedComments = updatedUser.plannedComments?.filter(commentEntry => commentEntry.comment !== action.comment.comment && 
+              commentEntry.date !== action.comment.date
+            )
+            return new UpdateUserAction(
+              updatedUser,
+              `${action.comment.isReminder? 'Нагадування' : 'Коментар'} видалено`
+            );
+          } else return new ErrorAction('no user');
+        })))
+      ))
 
   updateRecipyInCalendar_Reworked$ = createEffect(() =>
     this.actions$.pipe(
