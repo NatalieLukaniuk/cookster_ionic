@@ -4,5 +4,6 @@ export interface Filters {
     maxPrepTime: number,
     tagsToShow: number[],
     tagsToExclude: number[],
+    collectionsToInclude: string[],
     search: string
 }

@@ -1,21 +1,23 @@
 import { Preferences, defaultPrefs } from './../../models/auth.models';
 import { Filters } from 'src/app/models/filters.models';
-import { BehaviorSubject, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, map, shareReplay, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Recipy } from 'src/app/models/recipies.models';
+import { Recipy, RecipyCollection } from 'src/app/models/recipies.models';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import * as _ from 'lodash';
 import { ExpenseItem } from 'src/app/expenses/expenses-models';
-import { getUserPreferences } from 'src/app/store/selectors/user.selectors';
+import { getUserCollections, getUserPreferences } from 'src/app/store/selectors/user.selectors';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FiltersService {
   filteredRecipies: number = 0;
+
+  userCollections: RecipyCollection[] = []
   constructor(private store: Store<IAppState>) { }
   recipies$ = this.store.pipe(select(getAllRecipies));
 
@@ -27,6 +29,7 @@ export class FiltersService {
     maxPrepTime: 0,
     tagsToShow: [],
     tagsToExclude: [],
+    collectionsToInclude: [],
     search: '',
   };
 
@@ -34,14 +37,31 @@ export class FiltersService {
 
   filters$: BehaviorSubject<Filters> = new BehaviorSubject(this.clearedFilters);
 
+  userCollections$ = this.store.pipe(select(getUserCollections), tap(collections => {
+    if (collections) {
+      this.userCollections = collections
+    }
+  }))
+
   getFilters = this.filters$.asObservable().pipe(shareReplay(1));
 
   applyFilters(recipies: Recipy[], filters: Filters, noShowIds?: string[]) {
     let _recipies = recipies.map((recipy) => recipy);
 
     _recipies = _recipies.filter((recipy) => !recipy.notApproved);
-    if(noShowIds){
+    if (noShowIds) {
       _recipies = _recipies.filter((recipy) => !noShowIds.includes(recipy.id))
+    }
+
+    if (filters.collectionsToInclude.length && this.userCollections.length) {
+      let recipiesIdsToShow: string[] = [];
+      filters.collectionsToInclude.forEach(collection => {
+        const add = this.userCollections.find(item => item.name === collection)?.recipies;
+        if (add?.length) {
+          recipiesIdsToShow = recipiesIdsToShow.concat(add)
+        }
+      })
+      _recipies = recipies.filter(recipy => recipiesIdsToShow.includes(recipy.id))
     }
 
     if (!!filters.ingredientsToInclude.length) {
@@ -137,6 +157,14 @@ export class FiltersService {
     this.onFiltersChange();
   }
 
+  toggleCollectionToShow(collectionName: string) {
+    this.currentFilters.collectionsToInclude = this.processToggleCollection(
+      this.currentFilters.collectionsToInclude,
+      collectionName
+    );
+    this.onFiltersChange()
+  }
+
   processToggleIngredient(
     ingredientsArray: string[],
     ingredientId: string
@@ -156,6 +184,16 @@ export class FiltersService {
       _array = _array.filter((tag) => tag !== tagId);
     } else {
       _array.push(tagId);
+    }
+    return _array;
+  }
+
+  processToggleCollection(collectionsArray: string[], collectionName: string): string[] {
+    let _array = collectionsArray.map((collection) => collection);
+    if (_array.includes(collectionName)) {
+      _array = _array.filter((collection) => collection !== collectionName);
+    } else {
+      _array.push(collectionName);
     }
     return _array;
   }

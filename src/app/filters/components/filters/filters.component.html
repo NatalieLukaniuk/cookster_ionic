@@ -22,7 +22,10 @@
         <span class="filter-item-title">Пошук за назвою:</span>
         <app-search-recipies-filter [isClearOnDestroy]="false"></app-search-recipies-filter>
       </div>
-      
+      <div class="filter-item" *ngIf="(userCollections$ | async)?.length">
+        <span class="filter-item-title">Показати страви з колекцій:</span>
+        <app-collection-selector [userCollections]="userCollections$ | async"></app-collection-selector>
+      </div>
       <div class="filter-item">
         <span class="filter-item-title">Показати типи страв:</span>
         <app-dish-type-selector></app-dish-type-selector>
