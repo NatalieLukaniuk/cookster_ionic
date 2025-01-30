@@ -67,12 +67,10 @@
 
 .timeline-recipy,
 .timeline-comment {
-    width: 120px;
-    padding: 5px;
-    background: var(--ion-color-tertiary);
-    display: flex;
-    align-items: center;
+    width: 140px;    
     
+    display: flex;
+    align-items: center;    
     text-align: center;
     font-size: 0.8em;
     flex-direction: column;
@@ -80,11 +78,13 @@
 
 .timeline-recipy {
     justify-content: flex-end;
+    
 }
 
 .timeline-comment {
     border-radius: 3px;
     justify-content: center;
+    padding: 5px;
 }
 
 .background-grid {

@@ -19,6 +19,7 @@ import { CommentsModule } from '../../comments/comments.module';
 import { ProductsPerDayComponent } from './components/products-per-day/products-per-day.component';
 import { AddCommentToCalendarModalComponent } from './components/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
 import { CalendarPageRoutingModule } from './calendar-routing.module';
+import { CalendarTimelineRecipyComponent } from './components/calendar-timeline-recipy/calendar-timeline-recipy.component';
 
 
 
@@ -32,7 +33,8 @@ import { CalendarPageRoutingModule } from './calendar-routing.module';
     ViewRecipiesComponent,
     CalendarRecipyFullViewComponent,
     CalendarPage,
-    ProductsPerDayComponent
+    ProductsPerDayComponent,
+    CalendarTimelineRecipyComponent
   ],
   imports: [
     CommonModule,

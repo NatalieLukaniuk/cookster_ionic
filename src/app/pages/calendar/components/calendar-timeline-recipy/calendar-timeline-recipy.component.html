@@ -1,0 +1,9 @@
+<ng-container *ngIf="recipy">
+  <div class="recipy-wrapper">
+    <div class="timeline-indicator"></div>
+    <div class="recipy-details">
+      <span *ngIf="recipy.photo"><app-image [imagePath]="recipy.photo"></app-image></span>
+      <span class="recipy-name">{{recipy.name}}</span>
+    </div>
+  </div>
+</ng-container>

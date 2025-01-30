@@ -19,7 +19,7 @@
             <div class="timeline-recipy"
               [style]="'height: ' + getRecipyHeight(recipy) + 'px; margin-top: ' + getRecipyTopMargin(recipy) + 'px'"
               [id]="recipy.id + '_' + recipy.endTime">
-              {{recipy.name}}
+              <app-calendar-timeline-recipy [recipy]="recipy"></app-calendar-timeline-recipy>
 
             </div>
             <ion-popover #popover class="recipy-preview" [trigger]="recipy.id + '_' + recipy.endTime"
