@@ -80,13 +80,13 @@ export class CalendarComponent {
         if (found) {
           return {
             ...recipy,
-            overflowStart: this.getRecipyPrepStart(found, recipy.endTime)
+            prepStart: this.getRecipyPrepStart(found, recipy.endTime)
           }
         }
         return recipy
       }).filter(recipy => {
-        return !iSameDay(new Date(recipy.endTime), new Date(recipy.overflowStart!)) && (iSameDay(new Date(selectedDate), new Date(recipy.overflowStart!)) ||
-          (isDateAfter(new Date(selectedDate), new Date(recipy.overflowStart!)) && isDateBefore(new Date(selectedDate), new Date(recipy.endTime))))
+        return !iSameDay(new Date(recipy.endTime), new Date(recipy.prepStart!)) && (iSameDay(new Date(selectedDate), new Date(recipy.prepStart!)) ||
+          (isDateAfter(new Date(selectedDate), new Date(recipy.prepStart!)) && isDateBefore(new Date(selectedDate), new Date(recipy.endTime))))
       })
       return overflowing
     }
@@ -105,7 +105,7 @@ export class CalendarComponent {
     const currentDayRecipiesFullData: RecipyForCalendar_Reworked[] = currentDayRecipies.map(recipy => {
       const found = allRecipies.find(item => item.id === recipy.recipyId);
       if (found) {
-        return { ...found, ...recipy }
+        return { ...found, ...recipy, prepStart: this.getRecipyPrepStart(found, recipy.endTime)}
       } else return { ...allRecipies[0], ...recipy }
     })
     return currentDayRecipiesFullData

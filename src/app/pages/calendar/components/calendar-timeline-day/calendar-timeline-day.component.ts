@@ -58,7 +58,7 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
     if (this.selectedDay && iSameDay(new Date(), new Date(this.selectedDay))) {
       this.drawNowLine()
     } else {
-      
+
     }
   }
 
@@ -66,12 +66,12 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
     const now = new Date();
     const index = now.getHours();
     const id = 'scale-grid-item-' + index;
-    
+
     const pointNow = document.getElementById(id);
     pointNow?.classList.add('point-now');
   }
 
-  removeNowLine(){
+  removeNowLine() {
     const toRemove = document.getElementsByClassName('point-now');
 
     if (toRemove.length) {
@@ -96,9 +96,9 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
   }
 
   getRecipyTopMargin(recipy: RecipyForCalendar_Reworked) {
-    if ('overflowStart' in recipy && recipy.overflowStart && this.selectedDay && iSameDay(recipy.overflowStart, new Date(this.selectedDay))) {
+    if ('prepStart' in recipy && recipy.prepStart && this.selectedDay && iSameDay(recipy.prepStart, new Date(this.selectedDay)) && !iSameDay(recipy.prepStart, new Date(recipy.endTime))) {
 
-      const minutesInToday = (new Date(recipy.overflowStart).getHours() * 60) + new Date(recipy.overflowStart).getMinutes();
+      const minutesInToday = (new Date(recipy.prepStart).getHours() * 60) + new Date(recipy.prepStart).getMinutes();
       return minutesInToday / MINUTES_IN_PIXEL
     } else {
       const minutesTillEndTime = (new Date(recipy.endTime).getHours() * 60) + new Date(recipy.endTime).getMinutes();
@@ -122,11 +122,12 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
   }
 
   getRecipyHeight(recipy: RecipyForCalendar_Reworked): number {
-    if ('overflowStart' in recipy) {
-      if (recipy.overflowStart && this.selectedDay && !iSameDay(recipy.overflowStart, new Date(this.selectedDay))) {
+
+    if (recipy.prepStart && this.selectedDay && !iSameDay(recipy.prepStart, new Date(recipy.endTime)) && !iSameDay(new Date(recipy.endTime), new Date(this.selectedDay))) {
+      if (recipy.prepStart && this.selectedDay && !iSameDay(recipy.prepStart, new Date(this.selectedDay))) {
         return MINUTES_IN_DAY / MINUTES_IN_PIXEL
-      } else if (recipy.overflowStart && this.selectedDay) {
-        const minutesTillEndTime = MINUTES_IN_DAY - ((new Date(recipy.overflowStart).getHours() * 60) + new Date(recipy.overflowStart).getMinutes());
+      } else if (recipy.prepStart && this.selectedDay) {
+        const minutesTillEndTime = MINUTES_IN_DAY - ((new Date(recipy.prepStart).getHours() * 60) + new Date(recipy.prepStart).getMinutes());
         return minutesTillEndTime / MINUTES_IN_PIXEL;
       } else {
         return 0

@@ -6,7 +6,7 @@ export interface CalendarRecipyInDatabase_Reworked {
     amountPerPortion: number;
     endTime: Date;
     entryId: string;
-    overflowStart?: Date
+    prepStart?: Date
 
   }
 
@@ -19,5 +19,5 @@ export interface CalendarRecipyInDatabase_Reworked {
     amountPerPortion: number;
     endTime: Date;
     entryId: string;
-    overflowStart?: Date
+    prepStart?: Date
   }
