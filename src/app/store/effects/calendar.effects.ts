@@ -1,4 +1,4 @@
-import { AddRecipyToCalendarActionNew, UpdateRecipyInCalendarActionNew, RemoveRecipyFromCalendarActionNew } from './../actions/calendar.actions';
+import { AddRecipyToCalendarActionNew, UpdateRecipyInCalendarActionNew, RemoveRecipyFromCalendarActionNew, AddCommentToCalendarAction } from './../actions/calendar.actions';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -12,7 +12,7 @@ import { UpdateUserAction } from '../actions/user.actions';
 import { IAppState } from '../reducers';
 import { getCurrentUser } from '../selectors/user.selectors';
 import { User } from 'src/app/models/auth.models';
-import { CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
+import { CalendarComment, CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
 
 @Injectable()
 export class CalendarEffects {
@@ -49,6 +49,30 @@ export class CalendarEffects {
       )
     )
   );
+
+  addCommentToCalendar$ = createEffect(() => 
+  this.actions$.pipe(
+    ofType(CalendarActionTypes.ADD_COMMENT_TO_CALENDAR),
+    switchMap((action: AddCommentToCalendarAction) => 
+    this.store.pipe(select(getCurrentUser), take(1), map((user: User | null) => {
+      if (user) {
+        let updatedUser = _.cloneDeep(user);
+        if(!updatedUser.plannedComments){
+          updatedUser.plannedComments = []
+        }
+        let comment: CalendarComment = {
+          comment: action.comment,
+          date: action.selectedDate,
+          isReminder: action.isReminder
+        }
+        updatedUser.plannedComments?.push(comment)
+        return new UpdateUserAction(
+          updatedUser,
+          `${action.isReminder? 'Нагадування' : 'Коментар'} додано`
+        );
+      } else return new ErrorAction('no user');
+    })))
+  ))
 
   updateRecipyInCalendar_Reworked$ = createEffect(() =>
     this.actions$.pipe(
