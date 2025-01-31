@@ -23,9 +23,13 @@
 
         Перейти до рецепту
       </ion-button>
+      <ion-button (click)="onAddRecipyToCalendar()">
+
+        <ion-icon name="calendar-outline"></ion-icon>
+      </ion-button>
       <app-collections-action-sheet *ngIf="currentUser" [currentUser]="currentUser" [recipy]="recipy"></app-collections-action-sheet>
       <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser" [buttonColor]="'light'"></app-add-recipy-to-no-show>
-
+      
     </div>
   </div>
 </ion-card>
