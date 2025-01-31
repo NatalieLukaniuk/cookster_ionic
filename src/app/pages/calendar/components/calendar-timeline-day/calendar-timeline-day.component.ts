@@ -1,11 +1,12 @@
-import { ModalController } from '@ionic/angular';
+import { ActionSheetController, ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarModalComponent } from '../add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { CalendarComment, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
+import { RemoveCommentFromCalendarActionNew, UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
 import { iSameDay, MINUTES_IN_DAY } from '../../calendar.utils';
+import { DialogsService } from 'src/app/services/dialogs.service';
 
 
 const MINUTES_IN_PIXEL = 2;
@@ -31,6 +32,8 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
   constructor(
     private modalCtrl: ModalController,
     private store: Store<IAppState>,
+    private actionSheetCtrl: ActionSheetController,
+    private dialog: DialogsService
   ) { }
 
   ngAfterViewInit(): void {
@@ -168,6 +171,59 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
     if (role === 'confirm') {
       this.store.dispatch(new UpdateRecipyInCalendarActionNew(event, data))
     }
+  }
+
+  async onCommentClicked(comment: CalendarComment) {
+    const actionSheet = await this.actionSheetCtrl.create({
+      buttons: [
+        // {
+        //   text: 'Редагувати',
+        //   data: {
+        //     action: 'edit',
+        //   },
+        // },
+        {
+          text: 'Видалити',
+          role: 'destructive',
+          data: {
+            action: 'delete',
+          },
+        },
+
+        {
+          text: 'Відміна',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ],
+    });
+
+    await actionSheet.present();
+
+    const { data, role } = await actionSheet.onWillDismiss();
+
+    switch (data.action) {
+      case 'edit': this.onEditComment(comment);
+        break;
+      case 'delete': this.onDeleteComment(comment);
+        break;
+      case 'cancel': null;
+        break;
+      default: null
+    }
+
+  }
+
+  onEditComment(comment: CalendarComment) {
+// todo
+  }
+
+  onDeleteComment(comment: CalendarComment) {
+    this.dialog.openConfirmationDialog('Видалити коментар?', 'ця дія незворотна').then(res => {
+      this.store.dispatch(new RemoveCommentFromCalendarActionNew(comment))
+    })
   }
 
 }

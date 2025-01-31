@@ -33,7 +33,7 @@
           </ng-container>
           <ng-container *ngFor="let comment of comments">
             <div class="timeline-comment"
-              [style]="'height: 40px; margin-top: ' + getCommentTopMargin(comment) + 'px; background-color: ' + getCommentBackground(comment)">
+              [style]="'height: 40px; margin-top: ' + getCommentTopMargin(comment) + 'px; background-color: ' + getCommentBackground(comment)" (click)="onCommentClicked(comment)">
               {{comment.comment}}
 
             </div>
