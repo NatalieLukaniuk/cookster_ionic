@@ -1,4 +1,3 @@
-import { CalendarRecipyFullViewComponent } from './components/calendar-recipy-full-view/calendar-recipy-full-view.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -14,11 +13,6 @@ const routes: Routes = [
     path: 'view-recipies',
     component: ViewRecipiesComponent
   },
-  {
-    path: 'recipy/:entryId',
-    component: CalendarRecipyFullViewComponent,
-    pathMatch: 'full',
-  }
 ];
 
 @NgModule({

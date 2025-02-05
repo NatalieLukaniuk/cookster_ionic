@@ -13,7 +13,6 @@ import { RecipyInCalendarSelectPortionsAndAmountComponent } from './components/a
 import { FormsModule } from '@angular/forms';
 import { CalendarDaySelectorComponent } from './components/calendar-day-selector/calendar-day-selector.component';
 import { ViewRecipiesComponent } from './components/view-recipies/view-recipies.component';
-import { CalendarRecipyFullViewComponent } from './components/calendar-recipy-full-view/calendar-recipy-full-view.component';
 import { CalendarPage } from './calendar.page';
 import { CommentsModule } from '../../comments/comments.module';
 import { ProductsPerDayComponent } from './components/products-per-day/products-per-day.component';
@@ -31,7 +30,6 @@ import { CalendarTimelineRecipyComponent } from './components/calendar-timeline-
     CalendarDaySelectorComponent,
     AddCommentToCalendarModalComponent,
     ViewRecipiesComponent,
-    CalendarRecipyFullViewComponent,
     CalendarPage,
     ProductsPerDayComponent,
     CalendarTimelineRecipyComponent
