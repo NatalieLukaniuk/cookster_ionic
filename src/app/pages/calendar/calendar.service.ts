@@ -24,9 +24,24 @@ export class CalendarService {
 
   }
 
-  closeRecipy(index: number){
+  closeRecipy(index: number) {
     const current = this.openedRecipies$.getValue();
     const updated = current.filter((openedRecipy, openedIndex) => openedIndex !== index);
     this.openedRecipies$.next(updated);
+  }
+
+  updateOpenedRecipies(changedRecipy: RecipyForCalendar_Reworked, updatedRecipy: RecipyForCalendar_Reworked) {
+    const current = this.openedRecipies$.getValue();
+    if (current.find(openedRecipy => new Date(openedRecipy.endTime).getDate() === new Date(changedRecipy.endTime).getDate() && openedRecipy.id === changedRecipy.id)) {
+      const updated = current.map(openedRecipy => {
+        if (new Date(openedRecipy.endTime).getDate() === new Date(changedRecipy.endTime).getDate() && openedRecipy.id === changedRecipy.id) {
+          return updatedRecipy
+        } else {
+          return openedRecipy
+        }
+      })
+      this.openedRecipies$.next(updated);
+    }
+
   }
 }

@@ -6,6 +6,7 @@ import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { DialogsService } from 'src/app/services/dialogs.service';
+import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 
 @Component({
   selector: 'app-view-recipies',
@@ -26,8 +27,7 @@ export class ViewRecipiesComponent implements OnInit {
   }
 
   onPortionsChanged(event: {portions: number, amountPerPortion: number}, changedRecipy: RecipyForCalendar_Reworked) {
-
-    //TODO save new portions and amount values
+    this.store.dispatch(new UpdateRecipyInCalendarActionNew(changedRecipy, {...changedRecipy, ...event}))
   }
 
   onSelectedRecipyChanged(event: any) {

@@ -13,6 +13,7 @@ import { IAppState } from '../reducers';
 import { getCurrentUser } from '../selectors/user.selectors';
 import { User } from 'src/app/models/auth.models';
 import { CalendarComment, CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
+import { CalendarService } from 'src/app/pages/calendar/calendar.service';
 
 @Injectable()
 export class CalendarEffects {
@@ -144,6 +145,7 @@ export class CalendarEffects {
                   return recipy
                 }
               })
+              this.calendarService.updateOpenedRecipies(action.previousEntry, action.newEntry)
               return new UpdateUserAction(
                 updatedUser,
                 `${action.newEntry.name} оновлено`
@@ -184,5 +186,5 @@ export class CalendarEffects {
   );
 
 
-  constructor(private actions$: Actions, private store: Store<IAppState>) { }
+  constructor(private actions$: Actions, private store: Store<IAppState>, private calendarService: CalendarService) { }
 }

@@ -47,14 +47,18 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const sub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
-      if (res) {
-        this.portions = res.length;
-      } else { this.portions = 4; }
-      sub.unsubscribe()
-    });
 
-    
+    if (!this.isEditMode) {
+      const sub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
+        if (res) {
+          this.portions = res.length;
+        } else { this.portions = 4; }
+        sub.unsubscribe()
+      });
+    }
+
+
+
   }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
@@ -168,12 +172,12 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     return !(!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime)
   }
 
-  get saveButtonText(){
-    return !this.selectedRecipy ? 'Виберіть рецепт' : 
-    !this.selectedTime ? 'Вкажіть час' : 
-    !this.portions ? 'Вкажіть кількість порцій' :
-    !this.portionSize? 'Вкажіть розмір порції' : 
-    this.isEditMode ? 'Зберегти' : 'Додати'
+  get saveButtonText() {
+    return !this.selectedRecipy ? 'Виберіть рецепт' :
+      !this.selectedTime ? 'Вкажіть час' :
+        !this.portions ? 'Вкажіть кількість порцій' :
+          !this.portionSize ? 'Вкажіть розмір порції' :
+            this.isEditMode ? 'Зберегти' : 'Додати'
   }
 
   addRecipyToCalendar() {
