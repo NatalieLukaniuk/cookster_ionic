@@ -75,23 +75,25 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
         }
       })
     }
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['portions'] && changes['portions'].currentValue !== changes['portions'].previousValue){
+
+    if (changes['portions'] && changes['portions'].currentValue !== changes['portions'].previousValue) {
       this.portionsToServe = changes['portions'].currentValue;
     }
 
-    if(changes['amountPerPortion'] && changes['amountPerPortion'].currentValue !== changes['amountPerPortion'].previousValue){
+    if (changes['amountPerPortion'] && changes['amountPerPortion'].currentValue !== changes['amountPerPortion'].previousValue) {
       this.portionSize = changes['amountPerPortion'].currentValue;
     }
 
     this.getCoeficient();
-
+    this.isSplitToGroups = this.recipy.isSplitIntoGroups;
     if (this.recipy.isSplitIntoGroups) {
-      this.isSplitToGroups = true;
       this.getIngredientsByGroup();
+    } else {
+      this.groups = []
     }
 
   }

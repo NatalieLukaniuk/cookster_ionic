@@ -24,7 +24,7 @@
     </app-ingredient>
   </ion-list>
 </ng-container>
-<ng-container>
+<ng-container *ngIf="isSplitToGroups">
   <ion-item-group *ngFor="let group of groups">
     <ion-item-divider sticky="true" color="primary">
       <ion-label>{{ group }}</ion-label>
