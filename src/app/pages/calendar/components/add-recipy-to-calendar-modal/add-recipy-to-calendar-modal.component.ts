@@ -64,7 +64,7 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   ngOnInit() {
 
-    if (!this.isEditMode) {
+    if (!this.isEditMode || !this.portions) {
       const sub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
         if (res) {
           this.portions = res.length;
