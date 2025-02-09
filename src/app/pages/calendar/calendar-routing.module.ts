@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { CalendarPage } from './calendar.page';
 import { ViewRecipiesComponent } from './components/view-recipies/view-recipies.component';
+import { OpenedRecipiesGuardService } from './calendar.service';
 
 const routes: Routes = [
   {
@@ -11,7 +12,8 @@ const routes: Routes = [
   },
   {
     path: 'view-recipies',
-    component: ViewRecipiesComponent
+    component: ViewRecipiesComponent,
+    canActivate: [OpenedRecipiesGuardService]
   },
 ];
 

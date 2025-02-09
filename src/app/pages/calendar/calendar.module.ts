@@ -19,6 +19,7 @@ import { ProductsPerDayComponent } from './components/products-per-day/products-
 import { AddCommentToCalendarModalComponent } from './components/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
 import { CalendarPageRoutingModule } from './calendar-routing.module';
 import { CalendarTimelineRecipyComponent } from './components/calendar-timeline-recipy/calendar-timeline-recipy.component';
+import { OpenedRecipiesGuardService } from './calendar.service';
 
 
 
@@ -43,6 +44,7 @@ import { CalendarTimelineRecipyComponent } from './components/calendar-timeline-
     FormsModule,
     CommentsModule
   ],
+  providers: [OpenedRecipiesGuardService],
   exports: [CalendarComponent, AddRecipyToCalendarModalComponent, CalendarDaySelectorComponent, CalendarPage]
 })
 export class CalendarModule { }
