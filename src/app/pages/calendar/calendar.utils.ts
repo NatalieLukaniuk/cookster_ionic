@@ -1,6 +1,6 @@
 import { Recipy } from "../../models/recipies.models";
 import * as moment from 'moment';
-import { CalendarRecipyInDatabase_Reworked } from "../../models/calendar.models";
+import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from "../../models/calendar.models";
 
 const MS_IN_HOUR = 3600000;
 const MS_IN_DAY = 86400000;
@@ -68,9 +68,24 @@ export const iSameDay = (dayToCheck: Date, dayToCheckAgainst: Date) =>
       return lastDate
     }
   
-    export const getIsNewer = (date1: string, date2: string) => {
-      const transf1 = moment(date1, 'DDMMYYYY');
-      const transf3 = moment(date2, 'DDMMYYYY')
-      const isNewer = transf1.isSameOrBefore(transf3)
-      return isNewer
+    export const getIsNewer = (dateToCheck: Date, dateToCheckAgainst: Date) => {
+      return dateToCheck.valueOf() > dateToCheckAgainst.valueOf()
     }
+
+    export const sortRecipiesByDate = (a: RecipyForCalendar_Reworked, b: RecipyForCalendar_Reworked) => {
+      if (getIsNewer(new Date(a.endTime), new Date(b.endTime))) {
+        return 1
+      } else {
+        return -1
+      }
+    }
+
+    export const sortCommentsByDate = (a: CalendarComment, b: CalendarComment) => {
+      if (getIsNewer(new Date(a.date), new Date(b.date))) {
+        return 1
+      } else {
+        return -1
+      }
+    }
+
+

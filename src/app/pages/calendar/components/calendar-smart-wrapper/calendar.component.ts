@@ -6,7 +6,7 @@ import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { Recipy } from 'src/app/models/recipies.models';
-import { getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, MS_IN_MINUTE } from '../../calendar.utils';
+import { getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, MS_IN_MINUTE, sortCommentsByDate, sortRecipiesByDate } from '../../calendar.utils';
 import { CalendarReworkedService } from '../../calendar-reworked.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class CalendarComponent {
 
       const selectedDate = currentDay.toDate().toDateString();
       let commentsToDisplay: CalendarComment[] = plannedComments.filter(entry => iSameDay(new Date(entry.date), new Date(selectedDate)) );
-      return commentsToDisplay
+      return commentsToDisplay.sort((a,b) => sortCommentsByDate(a,b))
     })
   )
 
@@ -68,7 +68,7 @@ export class CalendarComponent {
         });
         recipiesoDisplay = recipiesoDisplay.concat(mapped)
       }
-      return recipiesoDisplay
+      return recipiesoDisplay.sort((a,b) => sortRecipiesByDate(a,b))
     })
   )
 
