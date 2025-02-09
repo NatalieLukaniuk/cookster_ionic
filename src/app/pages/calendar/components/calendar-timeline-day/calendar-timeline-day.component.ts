@@ -23,6 +23,8 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
   dayStartIndex = 6;
   dayEndIndex = 21;
 
+  commentHeight = 40;
+
   @Input() recipies: RecipyForCalendar_Reworked[] | null = [];
   @Input() comments: CalendarComment[] | null = [];
   @Input() selectedDay: string | undefined;
@@ -117,7 +119,7 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
 
   getCommentTopMargin(comment: CalendarComment) {
     const minutesTillTime = (new Date(comment.date).getHours() * 60) + new Date(comment.date).getMinutes();
-    return minutesTillTime / MINUTES_IN_PIXEL
+    return comment.isReminder? minutesTillTime / MINUTES_IN_PIXEL : minutesTillTime / MINUTES_IN_PIXEL - this.commentHeight
   }
 
   getCommentBackground(comment: CalendarComment) {
