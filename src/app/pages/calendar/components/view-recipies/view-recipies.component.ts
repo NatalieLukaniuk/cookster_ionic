@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarService } from '../../calendar.service';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
@@ -14,7 +14,9 @@ import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.
   styleUrls: ['./view-recipies.component.scss'],
 })
 export class ViewRecipiesComponent implements OnInit {
-  openedRecipies$: Observable<RecipyForCalendar_Reworked[]> = this.calendarService.getOpenedRecipies();
+  openedRecipies$: Observable<RecipyForCalendar_Reworked[]> = this.calendarService.getOpenedRecipies().pipe(tap(openedRecipies => {
+    this.displayRecipyIndex = openedRecipies.length - 1
+  }));
 
   displayRecipyIndex = 0;
 
