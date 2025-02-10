@@ -52,7 +52,7 @@
 
   <ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
     <ng-container *ngIf="currentView === AddRecipyToCalView.SelectRecipy">
-      <ion-list *ngIf="(recipies$ | async) as allRecipies">
+      <ion-list *ngIf="(recipies$ | async) as allRecipies" lines="none">
         <ng-container *ngFor="let recipy of allRecipies; let index = index">
           <app-recipy-in-calendar-short-view *ngIf="index < numberOfRecipiesToDisplay" [recipy]="recipy"
             (recipyClicked)="onRecipyClicked(recipy)"></app-recipy-in-calendar-short-view>

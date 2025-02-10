@@ -25,6 +25,7 @@
     .recipy-text {
       flex-grow: 1;
       white-space: normal;
+      padding-bottom: 10px;
   
       &.limitedWidth {
         max-width: 60%;
@@ -41,6 +42,7 @@
 
   .ion-item-wrapper {
     width: 100%;
+    padding-top: 10px;
   }
 
   .ingrediends-block-wrapper, .steps-block-wrapper{
