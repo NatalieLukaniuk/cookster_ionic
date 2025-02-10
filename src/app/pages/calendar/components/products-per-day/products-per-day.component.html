@@ -1,6 +1,6 @@
 <ion-button id="open-modal" [disabled]="!(recipies$ | async)?.length"><ion-icon name="restaurant-outline"></ion-icon></ion-button>
 
-<ion-modal trigger="open-modal" [initialBreakpoint]="0.75" [breakpoints]="[0.25, 0.5, 0.75]">
+<ion-modal trigger="open-modal" [initialBreakpoint]="0.75" [breakpoints]="[0.25, 0.5, 0.75, 1]">
   <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -11,11 +11,11 @@
 
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
+    <ion-content>
       <ion-list>
         <app-ingredient *ngFor="let product of products" [ingredient]="product" [coefficient]="1">
-          <ion-button class="add-to-shopping-list" action-buttons size="small" (click)="addToList(product)"><ion-icon
-              name="add" slot="icon-only"></ion-icon></ion-button>
+          <ion-button class="add-to-shopping-list" action-buttons size="small" (click)="addToList(product)" fill="clear"><ion-icon
+              name="add" slot="icon-only" ></ion-icon></ion-button>
         </app-ingredient>
       </ion-list>
     </ion-content>
