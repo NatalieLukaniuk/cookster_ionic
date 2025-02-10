@@ -18,7 +18,11 @@
 <ion-modal [trigger]="modalId" [initialBreakpoint]="0.8" (ionModalDidPresent)="onModalPresented()"
     [isOpen]="isModalOpen" (ionModalWillDismiss)="isModalOpen = false">
     <ng-template>
-
+        <ion-header *ngIf="recipyName">
+            <ion-toolbar class="comments-modal-header">
+              <div class="title"><span>{{recipyName}}</span></div>
+            </ion-toolbar>
+          </ion-header>
         <ion-content>
             <div class="comments-modal-content-container">
                 <div class="existing-comments">

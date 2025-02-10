@@ -18,6 +18,7 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 export class CommentsBlockComponent implements OnChanges, OnDestroy {
   // TODO: functionality when the user is not logged in
   @Input() recipyId: string | undefined;
+  @Input() recipyName: string = '';
   currentUser: User | null | undefined = null;
 
   text = '';
