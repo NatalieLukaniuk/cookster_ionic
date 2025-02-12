@@ -9,8 +9,8 @@ export class SaveAsPdfService {
 
   constructor() { }
 
-  public captureScreen() {
-    var data = document.getElementById('contentToConvert');  //Id of the table
+  public captureScreen(contentId: string) {
+    var data = document.getElementById(contentId);  //Id of the table
     if (data) {
       html2canvas(data).then(canvas => {
         // Few necessary setting options  
