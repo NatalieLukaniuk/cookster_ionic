@@ -4,8 +4,8 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import * as _ from 'lodash';
-import { IonModal, ModalController } from '@ionic/angular';
-import { OverlayEventDetail } from '@ionic/core/components';
+import { ModalController } from '@ionic/angular';
+
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { Router } from '@angular/router';
 import { DialogsService } from 'src/app/services/dialogs.service';
@@ -136,27 +136,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     this.router.navigate(['tabs', 'shopping-list', 'dates', datesToString]);
   }
 
-  @ViewChild(IonModal) modal: IonModal | undefined;
 
-  selectedDates: [] = [];
-  selectedDateChanged(event: any) {
-    this.selectedDates = event.detail.value;
-  }
-
-  cancel() {
-    this.modal?.dismiss(null, 'cancel');
-  }
-
-  confirm() {
-    this.modal?.dismiss(this.selectedDates, 'confirm');
-  }
-
-  onWillDismiss(event: Event) {
-    const ev = event as CustomEvent<OverlayEventDetail<string[]>>;
-    if (ev.detail.role === 'confirm' && ev.detail.data) {
-      this.addFromCalendar(ev.detail.data)
-    }
-  }
 
   @ViewChild(RecordExpensesComponent) expensesModal: RecordExpensesComponent | undefined;
 

@@ -35,6 +35,7 @@ import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recip
 import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
 import { CollectionsActionSheetComponent } from './components/collections-action-sheet/collections-action-sheet.component';
 import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/add-recipy-to-no-show.component';
+import { MultipleDatesPickerModalComponent } from './components/multiple-dates-picker-modal/multiple-dates-picker-modal.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/a
     CostOfRecipyComponent,
     LastPreparedDatePipe,
     CollectionsActionSheetComponent,
-    AddRecipyToNoShowComponent
+    AddRecipyToNoShowComponent,
+    MultipleDatesPickerModalComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule],
   exports: [
@@ -95,7 +97,8 @@ import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/a
     CostOfRecipyComponent,
     LastPreparedDatePipe,
     CollectionsActionSheetComponent,
-    AddRecipyToNoShowComponent
+    AddRecipyToNoShowComponent,
+    MultipleDatesPickerModalComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })
