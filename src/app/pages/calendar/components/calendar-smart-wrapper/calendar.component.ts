@@ -6,7 +6,7 @@ import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { Recipy } from 'src/app/models/recipies.models';
-import { getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, MS_IN_MINUTE, sortCommentsByDate, sortRecipiesByDate } from '../../calendar.utils';
+import { getCurrentDayRecipies, getRecipyPrepStart, getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, MS_IN_MINUTE, sortCommentsByDate, sortRecipiesByDate } from '../../calendar.utils';
 import { CalendarReworkedService } from '../../calendar-reworked.service';
 
 @Component({
@@ -33,8 +33,8 @@ export class CalendarComponent {
       const [currentDay, plannedComments] = res;
 
       const selectedDate = currentDay.toDate().toDateString();
-      let commentsToDisplay: CalendarComment[] = plannedComments.filter(entry => iSameDay(new Date(entry.date), new Date(selectedDate)) );
-      return commentsToDisplay.sort((a,b) => sortCommentsByDate(a,b))
+      let commentsToDisplay: CalendarComment[] = plannedComments.filter(entry => iSameDay(new Date(entry.date), new Date(selectedDate)));
+      return commentsToDisplay.sort((a, b) => sortCommentsByDate(a, b))
     })
   )
 
@@ -50,7 +50,7 @@ export class CalendarComponent {
       const selectedDate = currentDay.toDate().toDateString();
       let recipiesoDisplay: RecipyForCalendar_Reworked[] = [];
 
-      const currentDayRecipies: RecipyForCalendar_Reworked[] = this.getCurrentDayRecipies(plannedRecipies, selectedDate, allRecipies);
+      const currentDayRecipies: RecipyForCalendar_Reworked[] = getCurrentDayRecipies(plannedRecipies, selectedDate, allRecipies);
       recipiesoDisplay = recipiesoDisplay.concat(currentDayRecipies);
 
       this.calendarService.setCurrentDayRecipies(recipiesoDisplay)
@@ -68,7 +68,7 @@ export class CalendarComponent {
         });
         recipiesoDisplay = recipiesoDisplay.concat(mapped)
       }
-      return recipiesoDisplay.sort((a,b) => sortRecipiesByDate(a,b))
+      return recipiesoDisplay.sort((a, b) => sortRecipiesByDate(a, b))
     })
   )
 
@@ -80,7 +80,7 @@ export class CalendarComponent {
         if (found) {
           return {
             ...recipy,
-            prepStart: this.getRecipyPrepStart(found, recipy.endTime)
+            prepStart: getRecipyPrepStart(found, recipy.endTime)
           }
         }
         return recipy
@@ -93,22 +93,5 @@ export class CalendarComponent {
     return []
   }
 
-  getRecipyPrepStart(recipy: Recipy, endTime: Date) {
-    const recipyTimeInMs = getRecipyTimeOfPrepInMinutes(recipy) * MS_IN_MINUTE;
-    const start = Date.parse(endTime.toString()) - recipyTimeInMs;
-    return new Date(start)
-  }
-
-
-  getCurrentDayRecipies(plannedRecipies: CalendarRecipyInDatabase_Reworked[], selectedDate: string, allRecipies: Recipy[]) {
-    const currentDayRecipies = plannedRecipies.filter(recipy => new Date(recipy.endTime).toDateString() === selectedDate);
-    const currentDayRecipiesFullData: RecipyForCalendar_Reworked[] = currentDayRecipies.map(recipy => {
-      const found = allRecipies.find(item => item.id === recipy.recipyId);
-      if (found) {
-        return { ...found, ...recipy, prepStart: this.getRecipyPrepStart(found, recipy.endTime)}
-      } else return { ...allRecipies[0], ...recipy }
-    })
-    return currentDayRecipiesFullData
-  }
 
 }

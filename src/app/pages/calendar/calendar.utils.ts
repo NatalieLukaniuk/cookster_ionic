@@ -89,3 +89,19 @@ export const iSameDay = (dayToCheck: Date, dayToCheckAgainst: Date) =>
     }
 
 
+export function getCurrentDayRecipies(plannedRecipies: CalendarRecipyInDatabase_Reworked[], selectedDate: string, allRecipies: Recipy[]) {
+  const currentDayRecipies = plannedRecipies.filter(recipy => new Date(recipy.endTime).toDateString() === selectedDate);
+  const currentDayRecipiesFullData: RecipyForCalendar_Reworked[] = currentDayRecipies.map(recipy => {
+    const found = allRecipies.find(item => item.id === recipy.recipyId);
+    if (found) {
+      return { ...found, ...recipy, prepStart: getRecipyPrepStart(found, recipy.endTime)}
+    } else return { ...allRecipies[0], ...recipy }
+  })
+  return currentDayRecipiesFullData
+}
+
+export function  getRecipyPrepStart(recipy: Recipy, endTime: Date) {
+  const recipyTimeInMs = getRecipyTimeOfPrepInMinutes(recipy) * MS_IN_MINUTE;
+  const start = Date.parse(endTime.toString()) - recipyTimeInMs;
+  return new Date(start)
+}
