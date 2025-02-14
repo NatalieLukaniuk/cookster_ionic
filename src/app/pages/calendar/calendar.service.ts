@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 
@@ -54,7 +54,7 @@ export class CalendarService {
 
 
 @Injectable()
-export class OpenedRecipiesGuardService implements CanActivate {
+export class OpenedRecipiesGuardService  {
 
   constructor(private calendarService: CalendarService,private router:Router, private route: ActivatedRoute){}
   canActivate(): Observable<boolean> {
