@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { getIsNewer, iSameDay } from '../../calendar.utils';
+import { SaveAsPdfService } from 'src/app/services/save-as-pdf.service';
 
 interface TreeEl {
   [key: string]: Date | RecipyForCalendar_Reworked[]
@@ -25,7 +26,7 @@ export class SaveCalendarAsPdfPreviewComponent implements OnInit {
   lunchStart = 11;
   dinnerStart = 16;
 
-  constructor() { }
+  constructor(private saveService: SaveAsPdfService) { }
 
   ngOnInit() {
     this.recipies.forEach(recipy => {
@@ -62,6 +63,10 @@ export class SaveCalendarAsPdfPreviewComponent implements OnInit {
     } else {
       return 'dinner'
     }
+  }
+
+  export() {
+    this.saveService.captureScreen('calendar-preview', 'menu')
   }
 
 }

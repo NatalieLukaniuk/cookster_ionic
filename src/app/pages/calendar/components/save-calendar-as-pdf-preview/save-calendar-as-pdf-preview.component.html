@@ -1,3 +1,41 @@
-<p>
-  save-calendar-as-pdf-preview works!
-</p>
+<div id="calendar-preview">
+  <div *ngFor="let element of tree">
+    <div class="element-date">{{element.date | date: 'EEEE, dd MMM yyyy'}}</div>
+    <div *ngIf="element.breakfast.length">
+      <div class="meal-name">Сніданок</div>
+
+      <div class="recipy-list">
+        <div *ngFor="let recipy of element.breakfast">
+          <app-calendar-pdf-preview-short-recipy
+          [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
+        </div>
+        
+      </div>
+    </div>
+    <div *ngIf="element.lunch.length">
+      <div class="meal-name">Обід</div>
+      <div class="recipy-list">
+        <div *ngFor="let recipy of element.lunch">
+          <app-calendar-pdf-preview-short-recipy
+          [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="element.dinner.length">
+      <div class="meal-name">Вечеря</div>
+      <div class="recipy-list">
+        <div *ngFor="let recipy of element.dinner">
+          <app-calendar-pdf-preview-short-recipy
+          [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" (click)="export()">Зберегти як pdf</ion-button>
+
+
+  </ion-toolbar>
+</ion-footer> -->

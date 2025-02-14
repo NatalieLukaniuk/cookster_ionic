@@ -1,0 +1,18 @@
+<div class="recipy-content">
+  <div class="recipy-text">
+    <div class="recipy-title">{{ recipy.name }}</div>
+    <div><span>{{ recipy.portions }} порцій</span>, <span>{{ recipy.amountPerPortion }} гр/порцію</span></div>
+    
+    <div *ngIf="recipy.calorificValue">
+      {{
+      Math.round(
+      (recipy.calorificValue * recipy.amountPerPortion) / 100
+      )
+      }}
+      ккал/порцію
+    </div>
+  </div>
+  <div class="recipy-photo" *ngIf="recipy.photo">
+    <app-image [imagePath]="recipy.photo"></app-image>
+  </div>
+</div>

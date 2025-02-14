@@ -1,3 +1,4 @@
+import { SaveCalendarAsPdfPreviewComponent } from './components/save-calendar-as-pdf-preview/save-calendar-as-pdf-preview.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarComponent } from './components/calendar-smart-wrapper/calendar.component';
@@ -20,6 +21,7 @@ import { AddCommentToCalendarModalComponent } from './components/add-comment-to-
 import { CalendarPageRoutingModule } from './calendar-routing.module';
 import { CalendarTimelineRecipyComponent } from './components/calendar-timeline-recipy/calendar-timeline-recipy.component';
 import { OpenedRecipiesGuardService } from './calendar.service';
+import { CalendarPdfPreviewShortRecipyComponent } from './components/save-calendar-as-pdf-preview/calendar-pdf-preview-short-recipy/calendar-pdf-preview-short-recipy.component';
 
 
 
@@ -33,7 +35,9 @@ import { OpenedRecipiesGuardService } from './calendar.service';
     ViewRecipiesComponent,
     CalendarPage,
     ProductsPerDayComponent,
-    CalendarTimelineRecipyComponent
+    CalendarTimelineRecipyComponent,
+    CalendarPdfPreviewShortRecipyComponent,
+    SaveCalendarAsPdfPreviewComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,50 @@
+.recipy-list {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    flex-wrap: wrap;
+
+    &>div {
+        width: 100%;
+    }
+}
+
+#calendar-preview {
+    font-size: 14px;
+    overflow-y: auto;
+}
+
+.element-date {
+    text-align: center;
+    margin-block: 10px;
+    font-weight: bold;
+}
+
+.meal-name {
+    padding-inline: 5px;
+    font-size: smaller;
+}
+
+@media print {
+    .recipy-list {
+        margin-bottom: 20px;
+        gap: 20px;
+
+        &>div {
+            width: 25%;
+        }
+    }
+
+    #calendar-preview {
+        overflow: visible;
+        padding: 25px;
+    }
+
+    .element-date {
+        font-size: 18px;
+    }
+
+    .meal-name {
+        font-size: 14px;
+    }
+}
