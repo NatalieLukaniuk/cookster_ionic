@@ -1,3 +1,13 @@
-<div class="wrapper">
+<ng-container *ngIf="!isPrint; else print">
+  <div class="wrapper">
   <img *ngIf="url" [src]="url" loading="lazy">
 </div>
+</ng-container>
+
+<ng-template #print>
+  <div class="wrapper" style="height: 100%;">
+    <img *ngIf="url" [src]="url" loading="lazy" style="object-fit: cover;
+    width: 100%;
+    height: 100%;">
+  </div>
+</ng-template>

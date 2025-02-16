@@ -12,6 +12,7 @@ export enum ImageType {
 export class ImageComponent implements OnChanges {
   @Input() imageType: ImageType = ImageType.RecipyMain;
   @Input() imagePath!: string;
+  @Input() isPrint = false;
 
   recipiesBasePath =
     'https://firebasestorage.googleapis.com/v0/b/cookster-12ac8.appspot.com/o/recipies%2F';

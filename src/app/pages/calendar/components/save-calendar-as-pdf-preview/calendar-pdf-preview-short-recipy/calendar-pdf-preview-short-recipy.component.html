@@ -1,8 +1,12 @@
-<div class="recipy-content">
-  <div class="recipy-text">
-    <div class="recipy-title">{{ recipy.name }}</div>
+<div class="recipy-content" style="display: flex;
+padding-left: 5px;
+font-size: 12px;">
+  <div class="recipy-text" style="flex-grow: 1;">
+    <div class="recipy-title" style="white-space: normal;
+    font-size: 16px;
+    font-weight: 600;">{{ recipy.name }}</div>
     <div><span>{{ recipy.portions }} порцій</span>, <span>{{ recipy.amountPerPortion }} гр/порцію</span></div>
-    
+
     <div *ngIf="recipy.calorificValue">
       {{
       Math.round(
@@ -12,7 +16,11 @@
       ккал/порцію
     </div>
   </div>
-  <div class="recipy-photo" *ngIf="recipy.photo">
-    <app-image [imagePath]="recipy.photo"></app-image>
+  <div class="recipy-photo" *ngIf="recipy.photo" style=" height: auto;
+  width: 140px;
+  min-width: 140px;
+  margin-left: 10px;
+  aspect-ratio: 4 / 3;">
+    <app-image [imagePath]="recipy.photo" [isPrint]="true"></app-image>
   </div>
 </div>

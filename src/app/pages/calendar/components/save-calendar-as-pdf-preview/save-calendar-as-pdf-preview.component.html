@@ -1,41 +1,52 @@
-<div id="calendar-preview">
+<div id="calendar-preview" style="overflow: visible; padding: 25px;">
   <div *ngFor="let element of tree">
-    <div class="element-date">{{element.date | date: 'EEEE, dd MMM yyyy'}}</div>
+    <div class="element-date" style="text-align: center;
+    margin-block: 10px;
+    font-weight: bold; font-size: 18px;">{{element.date | date: 'EEEE, dd MMM yyyy'}}</div>
     <div *ngIf="element.breakfast.length">
-      <div class="meal-name">Сніданок</div>
+      <div class="meal-name" style="padding-inline: 5px;
+    font-size: 14px;">Сніданок</div>
 
-      <div class="recipy-list">
-        <div *ngFor="let recipy of element.breakfast">
-          <app-calendar-pdf-preview-short-recipy
-          [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
+      <div class="recipy-list" style="display: flex;
+      gap: 25px;
+      width: 100%;
+      flex-wrap: wrap; margin-bottom: 20px;">
+        <div *ngFor="let recipy of element.breakfast" style="width: 25%">
+          <app-calendar-pdf-preview-short-recipy [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
         </div>
-        
+
       </div>
     </div>
     <div *ngIf="element.lunch.length">
-      <div class="meal-name">Обід</div>
-      <div class="recipy-list">
-        <div *ngFor="let recipy of element.lunch">
-          <app-calendar-pdf-preview-short-recipy
-          [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
+      <div class="meal-name" style="padding-inline: 5px;
+    font-size: 14px;">Обід</div>
+      <div class="recipy-list" style="display: flex;
+      gap: 25px;
+      width: 100%;
+      flex-wrap: wrap; margin-bottom: 20px;">
+        <div *ngFor="let recipy of element.lunch" style="width: 25%">
+          <app-calendar-pdf-preview-short-recipy [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
         </div>
       </div>
     </div>
     <div *ngIf="element.dinner.length">
-      <div class="meal-name">Вечеря</div>
-      <div class="recipy-list">
-        <div *ngFor="let recipy of element.dinner">
-          <app-calendar-pdf-preview-short-recipy
-          [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
+      <div class="meal-name" style="padding-inline: 5px;
+    font-size: 14px;">Вечеря</div>
+      <div class="recipy-list" style="display: flex;
+      gap: 25px;
+      width: 100%;
+      flex-wrap: wrap; margin-bottom: 20px;">
+        <div *ngFor="let recipy of element.dinner" style="width: 25%">
+          <app-calendar-pdf-preview-short-recipy [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!-- <ion-footer>
+<ion-footer>
   <ion-toolbar>
     <ion-button expand="full" (click)="export()">Зберегти як pdf</ion-button>
 
 
   </ion-toolbar>
-</ion-footer> -->
+</ion-footer>
