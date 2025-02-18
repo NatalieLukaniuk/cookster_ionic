@@ -1,0 +1,77 @@
+<ion-item-sliding>
+
+  <ion-item detail="false" button (click)="onRecipyClicked()">
+    <div class="ion-item-wrapper">
+      <ion-label class="recipy-content">
+        <div class="recipy-text" [class.limitedWidth]="!!recipy.photo">
+          <h2 class="ion-text-wrap">{{ recipy.name }}</h2>
+          <div class="recipy-details">
+            <div>
+              <span>
+                <ion-icon name="american-football-outline"></ion-icon>
+                {{ activePreparationTime(recipy) | normalizeTime }}
+              </span>
+              <span>
+                <ion-icon name="beer-outline"></ion-icon>
+                {{ passivePreparationTime(recipy) | normalizeTime }}
+              </span>
+            </div>
+            <span>
+              <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation(recipy)"></ion-icon>
+              <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
+            </span>
+
+            <span *ngIf="recipy.calorificValue">{{ Math.round(recipy.calorificValue) }} ккал в 100гр.</span>
+            <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon>
+              {{recipy.portionSize}}гр./порцію</div>
+            <div><ion-icon name="today-outline"></ion-icon>
+              <span *ngIf="recipy.lastPrepared">{{recipy.lastPrepared | lastPreparedDate }}</span>
+              <span class="color-warning" *ngIf="!recipy.lastPrepared">не готувався</span>
+            </div>
+            <div class="collection-tags">
+              <span><ion-icon name="pricetags-outline"></ion-icon> </span>
+              <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+                DishType[tag]
+                }}</ion-chip>
+            </div>
+            <!-- <div class="chip-selection-list">
+            <ng-container *ngIf="productChips?.length">
+              <ng-container *ngFor="let item of productChips">
+                <ion-chip *ngIf="getIsInRecipy(item.productId, recipy)" class="collection-chip"
+                  [color]="item.color">
+                  {{item.name}}: {{getProductText(item.productId)}}
+                </ion-chip>
+              </ng-container>
+            </ng-container>
+          </div> -->
+            <app-cost-of-recipy [ingredients]="recipy.ingrediends" [isFullscreenModal]="true"
+              [isCostDetails]="false"></app-cost-of-recipy>
+
+          </div>
+        </div>
+        <div class="recipy-photo" *ngIf="recipy.photo">
+          <app-image [imagePath]="recipy.photo"></app-image>
+        </div>
+
+      </ion-label>
+      <app-comments-block [recipyId]="recipy.id" [recipyName]="recipy.name"></app-comments-block>
+    </div>
+
+  </ion-item>
+
+  <ion-item-options side="start">
+    <div class="steps-block-wrapper">
+      <div class="title">Приготування:</div>
+      <div *ngFor="let step of recipyPrep">{{step}}</div>
+    </div>
+
+  </ion-item-options>
+  <ion-item-options side="end">
+    <div class="ingrediends-block-wrapper">
+      <div class="title">Інгридієнти:</div>
+      <div *ngFor="let ingred of recipyIngredients">{{ingred}}</div>
+    </div>
+
+
+  </ion-item-options>
+</ion-item-sliding>

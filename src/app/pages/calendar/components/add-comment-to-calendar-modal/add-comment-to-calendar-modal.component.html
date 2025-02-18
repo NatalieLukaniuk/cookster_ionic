@@ -1,0 +1,19 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Cancel</ion-button>
+        </ion-buttons>
+        <ion-title>{{title}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <ion-item class="add-new-list" button detail="false">
+        <ion-label position="floating">Введіть {{title.toLowerCase()}}:</ion-label>
+        <ion-input [(ngModel)]="comment"></ion-input>
+    </ion-item>
+    <h6>Виберіть дату і час:</h6>
+    <app-recipy-in-calendar-select-date [initialValue]="selectedTime?.toISOString()"
+        (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
+    <ion-button class="add-btn" expand="full" [disabled]="!isValid" (click)="confirm()">Зберегти</ion-button>
+</ion-content>

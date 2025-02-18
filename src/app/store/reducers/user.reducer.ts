@@ -32,7 +32,7 @@ export function UserReducers(
     case UserActionTypes.USER_LOADED: {
       return {
         ...state,
-        currentUser: action.user,
+        currentUser: {...action.user},
       };
     }
 

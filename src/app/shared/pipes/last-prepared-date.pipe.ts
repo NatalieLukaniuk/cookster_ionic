@@ -5,8 +5,8 @@ import * as moment from 'moment';
   name: 'lastPreparedDate'
 })
 export class LastPreparedDatePipe implements PipeTransform {
-
-  transform(value: string, args?: any): string {
+// TODO: NEEDS REVISION
+  transform(value: Date, args?: any): string {
     // e.g. 26111987
     const momentDate = moment(value, 'DDMMYYYY')
     const today = moment();

@@ -30,7 +30,7 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
   @Input() portions?: number;
   @Input() amountPerPortion?: number;
   @Input() ingredStartOptions: ItemOption[] = [];
-  @Input() day: Date = new Date();
+
 
   @Output() portionsChanged = new EventEmitter<{
     portions: number;
@@ -57,13 +57,6 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.portions) {
-      this.portionsToServe = this.portions;
-    }
-
-    if (this.amountPerPortion) {
-      this.portionSize = this.amountPerPortion;
-    }
 
     if (!this.portions && !this.amountPerPortion) {
       this.store.pipe(select(getUserPreferences), takeUntil(this.destroy$)).subscribe(preferences => {
@@ -83,15 +76,26 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
       })
     }
 
-
-    this.getCoeficient();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.recipy.isSplitIntoGroups) {
-      this.isSplitToGroups = true;
-      this.getIngredientsByGroup();
+
+    if (changes['portions'] && changes['portions'].currentValue !== changes['portions'].previousValue) {
+      this.portionsToServe = changes['portions'].currentValue;
     }
+
+    if (changes['amountPerPortion'] && changes['amountPerPortion'].currentValue !== changes['amountPerPortion'].previousValue) {
+      this.portionSize = changes['amountPerPortion'].currentValue;
+    }
+
+    this.getCoeficient();
+    this.isSplitToGroups = this.recipy.isSplitIntoGroups;
+    if (this.recipy.isSplitIntoGroups) {
+      this.getIngredientsByGroup();
+    } else {
+      this.groups = []
+    }
+
   }
 
   getIngredientsByGroup() {
@@ -123,8 +127,8 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
 
   onPortionsChanged() {
     this.portionsChanged.emit({
-      portions: this.portionsToServe,
-      amountPerPortion: this.portionSize,
+      portions: +this.portionsToServe,
+      amountPerPortion: +this.portionSize,
     });
 
     this.isEditPortions = false;

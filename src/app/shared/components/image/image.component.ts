@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 
 export enum ImageType {
   RecipyMain,
@@ -9,16 +9,17 @@ export enum ImageType {
   templateUrl: './image.component.html',
   styleUrls: ['./image.component.scss'],
 })
-export class ImageComponent implements OnInit {
+export class ImageComponent implements OnChanges {
   @Input() imageType: ImageType = ImageType.RecipyMain;
   @Input() imagePath!: string;
+  @Input() isPrint = false;
 
   recipiesBasePath =
     'https://firebasestorage.googleapis.com/v0/b/cookster-12ac8.appspot.com/o/recipies%2F';
   mediaStuff = '?alt=media';
   url: string | undefined;
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.url = this.recipiesBasePath + this.imagePath + this.mediaStuff;
   }
 }

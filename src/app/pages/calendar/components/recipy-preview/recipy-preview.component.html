@@ -1,0 +1,99 @@
+<ion-item-sliding>
+  <ion-item>
+    <div class="recipy-wrapper">
+      <div class="recipy-header">
+        <span class="recipy-title">{{ recipy.name }}</span>
+        <span class="icons">
+          <span class="prep-boundaries" [class.overflowing]="getIsOverflowing()">{{recipy.prepStart | date:
+            getFormatting()}} - {{recipy.endTime | date: getFormatting()}}</span>
+          <ion-icon name="alarm" *ngIf="showNeedsAdvancePreparation"></ion-icon>
+          <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
+        </span>
+      </div>
+      <div class="recipy-content">
+        <div class="recipy-text">
+
+          <div class="additional-info">
+            <!-- <span>кінець приготування: {{recipy.endTime | date: 'EEE, dd MMM yyyy, HH:mm'}}</span> -->
+            <div>
+              <span>
+                <ion-icon name="american-football-outline"></ion-icon>
+                {{ activePreparationTime() | normalizeTime }}
+              </span>
+              <span>
+                <ion-icon name="beer-outline"></ion-icon>
+                {{ passivePreparationTime() | normalizeTime }}
+              </span>
+            </div>
+            <span>{{ recipy.portions }} порцій</span>
+            <span><ion-icon name="calendar-outline"></ion-icon>{{ recipy.amountPerPortion }} гр/порцію</span>
+            <span *ngIf="recipy.calorificValue">
+              {{
+              Math.round(
+              (recipy.calorificValue * recipy.amountPerPortion) / 100
+              )
+              }}
+              ккал/порцію
+            </span>
+
+
+            <div *ngIf="recipy.portionSize"><ion-icon name="sparkles-outline"></ion-icon>
+              {{recipy.portionSize}}гр./порцію
+            </div>
+            <div class="collection-tags">
+              <span><ion-icon name="pricetags-outline"></ion-icon> </span>
+              <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
+                DishType[tag]
+                }}</ion-chip>
+            </div>
+            <app-cost-of-recipy [amountPerPortion]="recipy.amountPerPortion" [ingredients]="recipy.ingrediends"
+              [portions]="recipy.portions"></app-cost-of-recipy>
+          </div>
+        </div>
+        <div class="recipy-photo" *ngIf="recipy.photo">
+          <app-image [imagePath]="recipy.photo"></app-image>
+        </div>
+      </div>
+    </div>
+
+
+
+  </ion-item>
+  <ion-item-options side="start">
+    <div class="steps-block-wrapper">
+      <div class="title">Приготування:</div>
+      <div *ngFor="let step of recipyPrep">{{step}}</div>
+    </div>
+
+  </ion-item-options>
+  <ion-item-options side="end">
+    <div class="ingrediends-block-wrapper">
+      <div class="title">Інгридієнти:</div>
+      <div *ngFor="let ingred of recipyIngredients">{{ingred}}</div>
+    </div>
+
+
+  </ion-item-options>
+</ion-item-sliding>
+<div class="recipy-actions">
+  <ion-button (click)="viewRecipy()">
+    <div>
+      <ion-icon name="search-outline"></ion-icon>
+      <p>Переглянути</p>
+    </div>
+  </ion-button>
+
+  <ion-button (click)="onEditRecipy()">
+    <div>
+      <ion-icon name="create-outline"></ion-icon>
+      <p>Змінити запис</p>
+    </div>
+  </ion-button>
+
+  <ion-button (click)="onDelete()" color="danger">
+    <div>
+      <ion-icon name="trash-outline"></ion-icon>
+      <p>Видалити</p>
+    </div>
+  </ion-button>
+</div>

@@ -1,9 +1,0 @@
-<ion-content [fullscreen]="true">
-  <div *ngIf="!!currentPlanner; else noPlanner">
-    <app-calendar-core
-      [addRecipies]="true"
-    ></app-calendar-core>
-  </div>
-
-  <ng-template #noPlanner>This planner doesn't exist</ng-template>
-</ion-content>

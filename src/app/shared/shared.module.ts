@@ -4,7 +4,6 @@ import { AddGroupModalComponent } from './components/recipy-constructor/add-grou
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { SwipeLeftNoConfirmationDirective } from './directives/swipe-left-no-confirmation.directive';
 import { InputDialogComponent } from './components/dialogs/input-dialog/input-dialog.component';
-import { SelectOptionDialogComponent } from './components/dialogs/select-option-dialog/select-option-dialog.component';
 
 import { InfoTabComponent } from './components/recipy-full-view/info-tab/info-tab.component';
 import { ImageComponent } from './components/image/image.component';
@@ -29,7 +28,6 @@ import { PrepsComponent } from './components/recipy-constructor/preps/preps.comp
 import { ControllerInputDialogComponent } from './components/dialogs/controller-input-dialog/controller-input-dialog.component';
 import { RecipyModalComponent } from './components/dialogs/recipy-modal/recipy-modal.component';
 import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-short-view.component';
-import { AddReminderModalComponent } from './components/dialogs/add-reminder-modal/add-reminder-modal.component';
 import { ControllerListSelectDialogComponent } from './components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { AddProductFormComponent } from './components/add-product-form/add-product-form.component';
 import { InputWithAutocompleteComponent } from './components/input-with-autocomplete/input-with-autocomplete.component';
@@ -37,6 +35,7 @@ import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recip
 import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
 import { CollectionsActionSheetComponent } from './components/collections-action-sheet/collections-action-sheet.component';
 import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/add-recipy-to-no-show.component';
+import { MultipleDatesPickerModalComponent } from './components/multiple-dates-picker-modal/multiple-dates-picker-modal.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +49,6 @@ import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/a
     IngredientComponent,
     NormalizeDisplayedAmountPipe,
     ConvertToSelectedUnitPipe,
-    SelectOptionDialogComponent,
     InputDialogComponent,
     SwipeLeftDirective,
     SwipeLeftNoConfirmationDirective,
@@ -65,14 +63,14 @@ import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/a
     ControllerInputDialogComponent,
     RecipyModalComponent,
     RecipyShortViewComponent,
-    AddReminderModalComponent,
     ControllerListSelectDialogComponent,
     AddProductFormComponent,
     InputWithAutocompleteComponent,
     CostOfRecipyComponent,
     LastPreparedDatePipe,
     CollectionsActionSheetComponent,
-    AddRecipyToNoShowComponent
+    AddRecipyToNoShowComponent,
+    MultipleDatesPickerModalComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule, AutocompleteLibModule, ReactiveFormsModule],
   exports: [
@@ -81,7 +79,6 @@ import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/a
     ImageComponent,
     NormalizeTimePipe,
     RecipyFullViewComponent,
-    SelectOptionDialogComponent,
     InputDialogComponent,
     SwipeLeftDirective,
     NormalizeDisplayedAmountPipe,
@@ -100,7 +97,8 @@ import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/a
     CostOfRecipyComponent,
     LastPreparedDatePipe,
     CollectionsActionSheetComponent,
-    AddRecipyToNoShowComponent
+    AddRecipyToNoShowComponent,
+    MultipleDatesPickerModalComponent
   ],
   providers: [NormalizeDisplayedAmountPipe, ConvertToSelectedUnitPipe],
 })

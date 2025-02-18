@@ -1,8 +1,9 @@
-import { CalendarRecipyFullViewComponent } from './pages/calendar-recipy-full-view/calendar-recipy-full-view.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { CalendarPage } from './calendar.page';
+import { ViewRecipiesComponent } from './components/view-recipies/view-recipies.component';
+import { OpenedRecipiesGuardService } from './calendar.service';
 
 const routes: Routes = [
   {
@@ -10,10 +11,10 @@ const routes: Routes = [
     component: CalendarPage
   },
   {
-    path: 'recipy/:id',
-    component: CalendarRecipyFullViewComponent,
-    pathMatch: 'full',
-  }
+    path: 'view-recipies',
+    component: ViewRecipiesComponent,
+    canActivate: [OpenedRecipiesGuardService]
+  },
 ];
 
 @NgModule({

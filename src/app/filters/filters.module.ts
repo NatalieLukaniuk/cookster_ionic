@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { SharedModule } from '../shared/shared.module';
 import { ActiveFiltersExpensesWidgetComponent } from './components/active-filters-expenses-widget/active-filters-expenses-widget.component';
 import { DishTypeSelectorComponent } from './components/dish-type-selector/dish-type-selector.component';
+import { CollectionSelectorComponent } from './components/collection-selector/collection-selector.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { DishTypeSelectorComponent } from './components/dish-type-selector/dish-
     ActiveFiltersWidgetComponent,
     SearchRecipiesFilterComponent,
     ActiveFiltersExpensesWidgetComponent,
-    DishTypeSelectorComponent
+    DishTypeSelectorComponent,
+    CollectionSelectorComponent
   ],
   imports: [CommonModule, IonicModule, SharedModule],
   exports: [

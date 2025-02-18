@@ -1,0 +1,15 @@
+.recipy-list {
+    gap: 5px !important;
+    &>div {
+        width: 100% !important;
+    }
+}
+
+#calendar-preview {
+    overflow-y: auto !important;
+    padding: 5px !important;
+}
+
+.element-date {
+   font-size: 16px !important;
+}

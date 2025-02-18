@@ -1,22 +1,20 @@
-import { ExpenseItem } from '../expenses/expenses-models';
-import { DayDetails, Reminder } from './calendar.models';
-import { PlannerByDate, ShoppingList, ShoppingListItem } from './planner.models';
+import { CalendarComment, CalendarRecipyInDatabase_Reworked } from './calendar.models';
 import { DraftRecipy, RecipyCollection } from './recipies.models';
+import { ShoppingList } from './shopping-list.models';
 
 export interface User {
   email: string;
   uid: string;
-  details?: DayDetails[];
   id?: string;
   shoppingLists?: ShoppingList[];
-  savedPreps?: Reminder[];
   img?: string;
   role: Role;
-  planner?: PlannerByDate[];
   collections?: RecipyCollection[];
   draftRecipies?: DraftRecipy[];
   preferences?: Preferences;
   family?: FamilyMember[];
+  plannedRecipies?: CalendarRecipyInDatabase_Reworked[],
+  plannedComments?: CalendarComment[]
 }
 
 export enum Role {

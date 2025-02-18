@@ -3,20 +3,20 @@ import { IonContent, ModalController } from '@ionic/angular';
 import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { Observable, Subject, Subscription, combineLatest, filter, map, take, takeUntil, tap } from 'rxjs';
-import { Day, DayDetails, RecipyForCalendar } from 'src/app/models/calendar.models';
-import { SLItem, ShoppingList, ShoppingListItem } from 'src/app/models/planner.models';
+import { Subject, Subscription, combineLatest, filter, map, take, takeUntil, tap } from 'rxjs';
 import { Ingredient, Recipy } from 'src/app/models/recipies.models';
-import { AddToListModalComponent } from 'src/app/pages/planner/components/add-to-list-modal/add-to-list-modal.component';
 import { NormalizeDisplayedAmountGetNumber, convertAmountToSelectedUnit, getRecipyNameById, getUnitText, transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
-import { CalendarService } from 'src/app/services/calendar.service';
+
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { DialogsService } from 'src/app/services/dialogs.service';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { IAppState } from 'src/app/store/reducers';
-import { getCalendar } from 'src/app/store/selectors/calendar.selectors';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getUserPlannedRecipies, getUserShoppingList } from 'src/app/store/selectors/user.selectors';
+import { AddToListModalComponent } from '../add-to-list-modal/add-to-list-modal.component';
+import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
+import { iSameDay } from 'src/app/pages/calendar/calendar.utils';
+import { ShoppingListItem, SLItem, ShoppingList } from 'src/app/models/shopping-list.models';
 
 @Component({
   selector: 'app-ingredients-for-dates-array',
@@ -33,19 +33,8 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
     .pipe(select(getAllRecipies))
 
   fullIngredsList$ = new Subject<ShoppingListItem[]>();
-  calendar$: Observable<Day[] | null> = this.store.pipe(select(getCalendar));
-  canedar$ = combineLatest([
-    this.store.pipe(select(getUserPlannedRecipies)),
-    this.allRecipies$
-  ]).pipe(
-    map((combinedResult: [DayDetails[] | undefined, Recipy[]]) => {
-      if (combinedResult[0] && combinedResult[1]) {
-        this.calendarService.buildCalendarForDates(this.datesArray, combinedResult[0], combinedResult[1]);
-        this.canedarSub?.unsubscribe()
-      }
-    }
-    )
-  )
+
+  plannedRecipies$ = this.store.pipe(select(getUserPlannedRecipies))
 
   itemsTree: SLItem[] | undefined;
 
@@ -61,8 +50,6 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
 
   resetScrollPoint = true;
 
-  canedarSub: Subscription | undefined;
-
   @ViewChild(IonContent) content: IonContent | undefined;
 
   constructor(
@@ -70,14 +57,11 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
     private store: Store<IAppState>,
     private dialog: DialogsService,
     private shoppingListService: ShoppingListService,
-    private modalCtrl: ModalController,
-    private calendarService: CalendarService
+    private modalCtrl: ModalController
   ) {
     const path = window.location.pathname.split('/');
     const datesString = path[path.length - 1];
     this.datesArray = datesString.split('&');
-
-    this.canedarSub = this.canedar$.subscribe();
 
     this.store
       .pipe(select(getAllRecipies), takeUntil(this.destroyed$))
@@ -105,29 +89,36 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
       }
     });
 
-    combineLatest([this.calendar$, this.shoppingList$]).pipe(
+    combineLatest([this.plannedRecipies$, this.shoppingList$, this.allRecipies$]).pipe(
       takeUntil(this.destroyed$),
       filter(res => res[0] !== null),
-      map(res => ({ calendar: res[0], shoppingList: res[1] }))).subscribe(res => {
-        if (res.calendar) {
-          const dayItemsToAdd = res.calendar.filter(
-            (detail: Day) =>
-              !!this.datesArray.find(date => moment(detail.details.day, 'DDMMYYYY').isSame(moment(date, 'YYYYMMDD')))
+      map(res => ({ plannedRecipies: res[0], shoppingList: res[1], allRecipies: res[2] }))).subscribe(res => {
+        if (res.plannedRecipies) {
+          const dayItemsToAdd = res.plannedRecipies.filter(
+            (detail: CalendarRecipyInDatabase_Reworked) =>
+              !!this.datesArray.find(date => iSameDay(new Date(detail.endTime), new Date(date)))
           );
           let list: any[] = [];
-          dayItemsToAdd.forEach((day: Day) => {
-            if (day.details.breakfastRecipies.length) {
-              let newList = this.processMealtime('breakfast', day);
-              list = list.concat(newList);
+          dayItemsToAdd.forEach((plannedRecipy: CalendarRecipyInDatabase_Reworked) => {
+            const foundRecipy = res.allRecipies.find(recipy => recipy.id === plannedRecipy.recipyId);
+            if(foundRecipy){
+              const coeficient = this.dataMapping.getCoeficient(
+                foundRecipy.ingrediends,
+                plannedRecipy.portions,
+                plannedRecipy.amountPerPortion
+              );
+              foundRecipy.ingrediends.forEach((ingr: Ingredient) => {
+              let itemToPush = {
+                product: ingr.product,
+                amount: (ingr.amount * coeficient).toString(),
+                defaultUnit: ingr.defaultUnit,
+                recipyId: [foundRecipy.id],
+                date: plannedRecipy.endTime
+              };
+              list.push(itemToPush);
+            });
             }
-            if (day.details.lunchRecipies.length) {
-              let newList = this.processMealtime('lunch', day);
-              list = list.concat(newList);
-            }
-            if (day.details.dinnerRecipies.length) {
-              let newList = this.processMealtime('dinner', day);
-              list = list.concat(newList);
-            }
+            
           });
           this.fullIngredsList$.next(list);
         }
@@ -146,41 +137,7 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
       })
   }
 
-  processMealtime(meal: string, day: Day) {
-    let key: 'breakfastRecipies' | 'lunchRecipies' | 'dinnerRecipies' | null;
-    let sublist: any[] = [];
-    switch (meal) {
-      case 'breakfast':
-        key = 'breakfastRecipies';
-        break;
-      case 'lunch':
-        key = 'lunchRecipies';
-        break;
-      case 'dinner':
-        key = 'dinnerRecipies';
-        break;
-      default:
-        key = null;
-    }
-    if (key) {
-      day.details[key].forEach((recipy: RecipyForCalendar) => {
-        const coef = this.getCoef(recipy);
-        recipy.ingrediends.forEach((ingr: Ingredient) => {
-          let itemToPush = {
-            product: ingr.product,
-            amount: (ingr.amount * coef).toString(),
-            defaultUnit: ingr.defaultUnit,
-            recipyId: [recipy.id],
-            day: [{ day: day.details.day, meal: meal }],
-          };
-          sublist.push(itemToPush);
-        });
-      });
-    }
-    return sublist;
-  }
-
-  getCoef(recipy: RecipyForCalendar): number {
+  getCoef(recipy: RecipyForCalendar_Reworked): number {
     let totalAmount = 0;
     recipy.ingrediends.forEach((ingr) => {
       if (this.dataMapping.getIsIngredientIncludedInAmountCalculation(ingr)) {

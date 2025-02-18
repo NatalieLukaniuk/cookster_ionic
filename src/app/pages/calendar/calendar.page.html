@@ -1,9 +1,19 @@
 <app-header>
-  <span title>Заплановані рецепти</span>
-  <ion-button right-button (click)="togglePlannerMode()"><ion-icon slot="icon-only"
-      name="construct-outline"></ion-icon></ion-button>
+  <div title>
+    <app-calendar-day-selector></app-calendar-day-selector>
+  </div>
+  <div right-button>
+    <app-multiple-dates-picker-modal (datesSelected)="exportToPDF($event)">
+      <ion-icon button-inside name="save-outline" slot="icon-only"></ion-icon>
+    </app-multiple-dates-picker-modal>
+    <app-products-per-day></app-products-per-day>
+    <ion-button id="open-add-action-sheet"><ion-icon name="add-circle-outline"></ion-icon></ion-button>
+    <ion-action-sheet trigger="open-add-action-sheet" header="Виберіть що потрібно додати:"
+      [buttons]="actionSheetButtons" (didDismiss)="onActionSelected($event)"></ion-action-sheet>
+
+  </div>
 </app-header>
 
 <ion-content>
-  <app-calendar-core [addRecipies]="isPlannerMode" (currentTabChanged)="currentTab = $event"></app-calendar-core>
+  <app-calendar-wrapper></app-calendar-wrapper>
 </ion-content>

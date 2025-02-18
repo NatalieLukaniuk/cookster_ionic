@@ -1,4 +1,3 @@
-import { PlannerState, InitialPlannerState, PlannerReducers } from './planner.reducers';
 import { ActionReducerMap } from '@ngrx/store';
 
 import { CalendarReducers, CalendarState, InitialCalendarState } from './calendar.reducers';
@@ -11,7 +10,6 @@ import { ExpensesReducers, ExpensesState, InitialExpensesState } from './expense
 export interface IAppState {
   ui: UiState,
   calendar: CalendarState,
-  planner: PlannerState,
   user: IUserState,
   recipies: IRecipiesState,
   comments: CommentsState,
@@ -21,7 +19,6 @@ export interface IAppState {
 export const InitialAppState: IAppState = {
   ui: InitialUiState,
   calendar: InitialCalendarState,
-  planner: InitialPlannerState,
   user: InitialUserState,
   recipies: InitialRecipiesState,
   comments: InitialCommentsState,
@@ -31,7 +28,6 @@ export const InitialAppState: IAppState = {
 export const reducers: ActionReducerMap<IAppState, any> = {
   ui: UiReducers,
   calendar: CalendarReducers,
-  planner: PlannerReducers,
   user: UserReducers,
   recipies: RecipiesReducers,
   comments: CommentsReducers,

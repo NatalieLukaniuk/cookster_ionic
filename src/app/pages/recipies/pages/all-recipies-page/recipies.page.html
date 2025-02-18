@@ -9,8 +9,8 @@
     <div *ngFor="let recipy of recipies; let index = index">
       <app-recipy-short-view *ngIf="index < numberOfRecipiesToDisplay" [currentUser]="user$ | async" [recipy]="recipy"
         [productPreferencesChips]="productChips" [isBigScreen]="isBigScreen"></app-recipy-short-view>
-      <app-comments-block *ngIf="index < numberOfRecipiesToDisplay" [currentUser]="currentUser"
-        [recipyId]="recipy.id"></app-comments-block>
+      <app-comments-block *ngIf="index < numberOfRecipiesToDisplay"
+        [recipyId]="recipy.id" [recipyName]="recipy.name"></app-comments-block>
     </div>
     <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= recipies.length" (ionInfinite)="onIonInfinite($event)">
       <ion-infinite-scroll-content></ion-infinite-scroll-content>

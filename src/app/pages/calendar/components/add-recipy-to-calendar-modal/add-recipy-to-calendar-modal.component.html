@@ -1,0 +1,95 @@
+<ng-container *ngIf="!isEditMode">
+  <ion-button [id]="'add-recipy-to-calendar'" class="trigger-btn">
+    <ion-icon name="add-circle-outline"></ion-icon>
+  </ion-button>
+
+  <ion-modal [trigger]="'add-recipy-to-calendar'">
+    <ng-template>
+      <ng-container *ngTemplateOutlet="modalTemplate"></ng-container>
+    </ng-template>
+  </ion-modal>
+</ng-container>
+
+
+<ng-container *ngIf="isEditMode">
+  <ng-container *ngTemplateOutlet="modalTemplate"></ng-container>
+</ng-container>
+
+
+<ng-template #modalTemplate>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="cancel()"><ion-icon name="close-outline"></ion-icon></ion-button>
+      </ion-buttons>
+      <ion-title>
+        <div class="recipy-selection-result">
+          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectRecipy)">
+            <span>Рецепт:</span>
+            <span>{{selectedRecipy?.name}}</span>
+          </div>
+          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectDate)">
+            <span>Час:</span>
+            <span>{{(selectedTime | date: 'EEE, dd MMM yyyy, HH:mm') || '-'}}</span>
+          </div>
+          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SetAmount)">
+            <span>Порцій:</span>
+            <span>{{portions || '-'}}</span>
+            <span>Розмір порції:</span>
+            <span>{{portionSize || '-'}}</span>
+          </div>
+
+        </div>
+      </ion-title>
+      <ng-container *ngIf="currentView === AddRecipyToCalView.SelectRecipy">
+        <ion-buttons slot="end">
+          <app-filters [pageId]="'add-recipy-to-cal'"></app-filters>
+        </ion-buttons>
+      </ng-container>
+    </ion-toolbar>
+
+  </ion-header>
+
+  <ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
+    <ng-container *ngIf="currentView === AddRecipyToCalView.SelectRecipy">
+      <ion-list *ngIf="(recipies$ | async) as allRecipies" lines="none">
+        <ng-container *ngFor="let recipy of allRecipies; let index = index">
+          <app-recipy-in-calendar-short-view *ngIf="index < numberOfRecipiesToDisplay" [recipy]="recipy"
+            (recipyClicked)="onRecipyClicked(recipy)"></app-recipy-in-calendar-short-view>
+        </ng-container>
+        <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= recipies.length" (ionInfinite)="onIonInfinite($event)">
+          <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-list>
+      <ion-fab *ngIf="showGoTop" (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button>
+          <ion-icon name="chevron-up-circle"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ng-container>
+
+    <ng-container *ngIf="currentView === AddRecipyToCalView.SelectDate">
+      <app-recipy-in-calendar-select-date [initialValue]="selectedTime?.toISOString()"
+        (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
+        <div>
+          <div>Shortcuts:</div>
+          <ion-chip *ngFor="let item of (timeShortcuts$ | async)" (click)="changeTime(item)">{{item}}</ion-chip>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="currentView === AddRecipyToCalView.SetAmount">
+      <app-recipy-in-calendar-select-portions-and-amount (amountValueChanged)="onAmountSelected($event)"
+        (portionsValueChanged)="onPortionsSelected($event)" [initialPortionsValue]="portions" [initialAmountValue]="portionSize"></app-recipy-in-calendar-select-portions-and-amount>
+    </ng-container>
+
+  </ion-content>
+  <ion-footer>
+    <ion-toolbar>
+      <ion-button *ngIf="!isEditMode" expand="full" [disabled]="isAddDisabled"
+        (click)="addRecipyToCalendar()">{{saveButtonText}}</ion-button>
+      <ion-button *ngIf="isEditMode" expand="full" [disabled]="isAddDisabled"
+        (click)="saveUpdatedRecipyToCalendar()">{{saveButtonText}}</ion-button>
+
+    </ion-toolbar>
+  </ion-footer>
+</ng-template>

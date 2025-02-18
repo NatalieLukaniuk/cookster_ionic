@@ -87,3 +87,21 @@
         flex-grow: 1;
     }
 }
+
+ion-header {
+    border-top: 2px solid var(--ion-color-light);
+}
+
+::ng-deep ion-toolbar.comments-modal-header {
+    --min-height: 25px;
+    padding-block: 4px;
+}
+
+.title {
+    padding-inline: 10px;
+
+    span {
+        font-size: 12px;
+        white-space: normal;
+    }
+}

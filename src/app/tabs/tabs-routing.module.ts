@@ -17,7 +17,7 @@ const routes: Routes = [
       },
       {
         path: 'calendar',
-        loadChildren: () => import('../pages/calendar/calendar.module').then(m => m.CalendarPageModule)
+        loadChildren: () => import('../pages/calendar/calendar.module').then(m => m.CalendarModule)
       },
       {
         path: 'shopping-list',
@@ -35,10 +35,6 @@ const routes: Routes = [
       {
         path: 'profile',
         loadChildren: () => import('../pages/user/user.module').then(m => m.UserPageModule)
-      },
-      {
-        path: 'planner',
-        loadChildren: () => import('../pages/planner/planner.module').then(m => m.PlannerPageModule)
       },
       {
         path: 'draft-recipies',

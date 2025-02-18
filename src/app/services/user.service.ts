@@ -36,7 +36,7 @@ export class UserService {
           this.getCurrentUserData(found.cooksterId);
           this.expApi.userCooksterId = found.cooksterId;
           this.expApi.getExpenses().pipe(take(1)).subscribe(res => {
-            this.store.dispatch(new ExpensesLoadedAction(res.expenses))
+            this.store.dispatch(new ExpensesLoadedAction(res?.expenses || []))
           })
         } else {
           this.store.dispatch(new UIActions.ErrorAction('no such user found'));
@@ -47,11 +47,15 @@ export class UserService {
   getCurrentUserData(cooksterId: string) {
     this.authApiService.getUser(cooksterId).pipe(take(1)).subscribe(user => {
       this.currentUser = user;
+      if(!this.currentUser.id){
+        this.currentUser.id = cooksterId;
+        this.currentUserId = cooksterId;
+      }
       if (user.id) {
         this.currentUserId = user.id;
       }
-      if (!('details' in this.currentUser!)) {
-        this.currentUser!.details = [];
+      if (!('plannedRecipies' in this.currentUser!)) {
+        this.currentUser!.plannedRecipies = [];
       }
       this.store.dispatch(new UserActions.UserLoadedAction(user));
     })

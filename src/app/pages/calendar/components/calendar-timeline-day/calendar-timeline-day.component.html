@@ -1,0 +1,48 @@
+<div class="timeline-container" [style]="'height: ' + PIXELS_IN_DAY + 'px'">
+  <div class="timeline-scale">
+    <ng-container *ngIf="timelineScaleItems">
+      <div *ngFor="let scale of timelineScaleItems; let i=index;" class="scale-item" [class.night]="i < dayStartIndex || i >= dayEndIndex" [id]="'scale-item-' + i">
+        <span class="time-label" [class.transparent]="i===0">{{scale}}:00</span>
+      </div>
+    </ng-container>
+
+  </div>
+  <div class="timeline-body" #recipiesContainer>
+    <ng-container *ngIf="timelineScaleItems">
+      <div class="background-grid">
+        <div *ngFor="let scale of timelineScaleItems; let i=index;" class="scale-item" [class.night]="i < dayStartIndex || i >= dayEndIndex"  [id]="'scale-grid-item-' + i"> </div>
+      </div>
+
+      <div class="recipies-container" [style]="'width:' + recipiesContainer.offsetWidth + 'px'">
+        <div class="recipies-container-scrolling">
+          <ng-container *ngFor="let comment of comments">
+            <div class="timeline-comment"
+              [style]="'height:'+ commentHeight + 'px; margin-top: ' + getCommentTopMargin(comment) + 'px; background-color: ' + getCommentBackground(comment)" (click)="onCommentClicked(comment)">
+              {{comment.comment}}
+
+            </div>
+          </ng-container>
+          <ng-container *ngFor="let recipy of recipies">
+            <div class="timeline-recipy"
+              [style]="'height: ' + getRecipyHeight(recipy) + 'px; margin-top: ' + getRecipyTopMargin(recipy) + 'px'"
+              [id]="recipy.id + '_' + recipy.endTime">
+              <app-calendar-timeline-recipy [recipy]="recipy"></app-calendar-timeline-recipy>
+
+            </div>
+            <ion-popover #popover class="recipy-preview" [trigger]="recipy.id + '_' + recipy.endTime"
+              triggerAction="click">
+              <ng-template>
+                <ion-content>
+                  <app-recipy-preview [recipy]="recipy" (closePopover)="popover.dismiss()"
+                    (editClicked)="onEditRecipy($event)"></app-recipy-preview></ion-content>
+              </ng-template>
+            </ion-popover>
+          </ng-container>
+          
+
+        </div>
+
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -14,7 +14,6 @@ import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CalendarEffects } from './store/effects/calendar.effects';
-import { PlannerEffects } from './store/effects/planner.effects';
 import { RecipiesEffects } from './store/effects/recipies.effects';
 import { UserEffects } from './store/effects/user.effects';
 import { reducers } from './store/reducers';
@@ -35,7 +34,6 @@ import { ExpensesEffects } from './store/effects/expenses.effects';
       RecipiesEffects,
       UserEffects,
       CalendarEffects,
-      PlannerEffects,
       CommentsEffects,
       ExpensesEffects
     ]),

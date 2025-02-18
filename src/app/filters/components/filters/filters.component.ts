@@ -30,6 +30,8 @@ export class FiltersComponent implements OnInit {
     })
   );
 
+  userCollections$ = this.filtersService.userCollections$.pipe(map(collections => collections?.length? collections.map(item => item.name) : []))
+
 
   constructor(
     public filtersService: FiltersService,

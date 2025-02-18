@@ -12,7 +12,9 @@ import {
 } from 'src/app/models/recipies.models';
 import * as _ from 'lodash';
 import { IAppState } from 'src/app/store/reducers';
-import { UpdateUserAction } from 'src/app/store/actions/user.actions';
+import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
+import { ModalController } from '@ionic/angular';
+import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 
 @Component({
   selector: 'app-recipy-short-view',
@@ -91,6 +93,7 @@ export class RecipyShortViewComponent implements OnInit {
     private store: Store<IAppState>,
     private router: Router,
     private route: ActivatedRoute,
+    private modalCtrl: ModalController,
   ) { }
 
   ngOnInit() {
@@ -139,4 +142,21 @@ export class RecipyShortViewComponent implements OnInit {
   getIsInRecipy(productId: string) {
     return !!this.recipy.ingrediends.find(ingred => ingred.product === productId);
   }
+
+  async onAddRecipyToCalendar() {
+      const modal = await this.modalCtrl.create({
+        component: AddRecipyToCalendarModalComponent,
+        componentProps: {
+          selectedRecipy: this.recipy,
+          isEditMode: true
+        }
+      });
+      modal.present();
+  
+      const { data, role } = await modal.onWillDismiss();
+  
+      if (role === 'confirm') {
+        this.store.dispatch(new AddRecipyToCalendarActionNew(data))
+      }
+    }
 }
