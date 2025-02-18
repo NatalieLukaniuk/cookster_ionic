@@ -585,3 +585,27 @@ export function getCalorificValue(
 ): number {
   return allProducts.find((product) => product.id == ingr.product)!.calories;
 }
+
+export function getPreparationTime(recipy: Recipy) {
+  let time = 0;
+  for (let step of recipy.steps) {
+    time = time + +step.timeActive + +step.timePassive;
+  }
+  return time;
+}
+
+export function getActivePreparationTime(recipy: Recipy) {
+  let time = 0;
+  for (let step of recipy.steps) {
+    time = time + +step.timeActive;
+  }
+  return time;
+}
+
+export function getPassivePreparationTime(recipy: Recipy) {
+  let time = 0;
+  for (let step of recipy.steps) {
+    time = time + +step.timePassive;
+  }
+  return time;
+}

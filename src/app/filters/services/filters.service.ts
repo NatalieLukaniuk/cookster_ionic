@@ -1,5 +1,5 @@
 import { Preferences, defaultPrefs } from './../../models/auth.models';
-import { Filters } from 'src/app/models/filters.models';
+import { Filters, RecipySorting, RecipySortingDirection } from 'src/app/models/filters.models';
 import { BehaviorSubject, map, shareReplay, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Recipy, RecipyCollection } from 'src/app/models/recipies.models';
@@ -9,7 +9,12 @@ import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import * as _ from 'lodash';
 import { ExpenseItem } from 'src/app/expenses/expenses-models';
-import { getUserCollections, getUserPreferences } from 'src/app/store/selectors/user.selectors';
+import { getUserCollections, getUserPlannedRecipies, getUserPreferences } from 'src/app/store/selectors/user.selectors';
+import { CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
+import { getLastPreparedDate } from 'src/app/pages/calendar/calendar.utils';
+import * as moment from 'moment';
+import { getActivePreparationTime, getPreparationTime } from 'src/app/pages/recipies/utils/recipy.utils';
+import { getExpenses } from 'src/app/store/selectors/expenses.selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +22,8 @@ import { getUserCollections, getUserPreferences } from 'src/app/store/selectors/
 export class FiltersService {
   filteredRecipies: number = 0;
 
-  userCollections: RecipyCollection[] = []
+  userCollections: RecipyCollection[] = [];
+  userPlannedRecipies: CalendarRecipyInDatabase_Reworked[] = [];
   constructor(private store: Store<IAppState>) { }
   recipies$ = this.store.pipe(select(getAllRecipies));
 
@@ -31,6 +37,8 @@ export class FiltersService {
     tagsToExclude: [],
     collectionsToInclude: [],
     search: '',
+    sorting: RecipySorting.Default,
+    sortingDirection: RecipySortingDirection.SmallToBig
   };
 
   currentFilters: Filters = _.cloneDeep(this.clearedFilters);
@@ -40,6 +48,20 @@ export class FiltersService {
   userCollections$ = this.store.pipe(select(getUserCollections), tap(collections => {
     if (collections) {
       this.userCollections = collections
+    }
+  }))
+
+  expenses: ExpenseItem[] | null = null;
+
+  userExpenses$ = this.store.pipe(select(getExpenses), tap(userExpenses => {
+    if (userExpenses) {
+      this.expenses = userExpenses;
+    }
+  }))
+
+  userPlannedRecipies$ = this.store.pipe(select(getUserPlannedRecipies), tap(plannedRecipies => {
+    if (plannedRecipies) {
+      this.userPlannedRecipies = plannedRecipies;
     }
   }))
 
@@ -110,7 +132,75 @@ export class FiltersService {
       );
     }
     this.filteredRecipies = _recipies.length;
-    return _recipies;
+    return this.applySorting(_recipies, filters.sorting, filters.sortingDirection);
+  }
+
+  applySorting(recipies: Recipy[], sorting: RecipySorting, sortingDirection: RecipySortingDirection) {
+    let _recipies: Recipy[] = [];
+    switch (sorting) {
+      case RecipySorting.Default: _recipies = recipies;
+        break;
+      case RecipySorting.ByLastPrepared: _recipies = this.sortByLastPrepared(recipies);
+        break;
+      case RecipySorting.ByTotalPreparationTime: recipies = this.sortByTotalPreparationTime(recipies);
+        break;
+      case RecipySorting.ByActivePreparationTime: recipies = this.sortByActivePreparationTime(recipies);
+        break;
+    }
+    if (sortingDirection === RecipySortingDirection.BigToSmall) {
+      _recipies.reverse()
+    }
+    return _recipies
+  }
+
+  sortByTotalPreparationTime(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    cloned.sort((a, b) => getPreparationTime(a) - getPreparationTime(b));
+    return cloned
+  }
+  sortByActivePreparationTime(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    cloned.sort((a, b) => getActivePreparationTime(a) - getActivePreparationTime(b));
+    return cloned
+  }
+
+  sortByLastPrepared(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    const mapped = recipies.map(recipy => this.addLastPrepared(recipy, this.userPlannedRecipies));
+    const sorted = this.getSortedByLastPrepared(mapped as Recipy[]);
+    return sorted
+
+  }
+
+  getSortedByLastPrepared(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    cloned.sort((a, b) => this._sortByLastPrepared(a, b));
+    return cloned
+  }
+
+  _sortByLastPrepared(a: Recipy, b: Recipy) {
+    if (!a.lastPrepared && !b.lastPrepared) {
+      return 0
+    } F
+    if (!a.lastPrepared) {
+      return -1
+    }
+    if (!b.lastPrepared) {
+      return 1
+    }
+    if (moment(a.lastPrepared, 'DDMMYYYY').clone().isAfter(moment(b.lastPrepared, 'DDMMYYYY').clone())) {
+      return 1
+    } else {
+      return -1
+    }
+  }
+
+  addLastPrepared(recipy: Recipy, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[] | undefined) {
+    let updated = {
+      ...recipy,
+      lastPrepared: allPlannedRecipies ? getLastPreparedDate(recipy.id, allPlannedRecipies) : 'N/A'
+    }
+    return updated
   }
 
   applyFiltersToExpenses(expenseItems: ExpenseItem[], filters: Filters) {
