@@ -181,7 +181,7 @@ export class FiltersService {
   _sortByLastPrepared(a: Recipy, b: Recipy) {
     if (!a.lastPrepared && !b.lastPrepared) {
       return 0
-    } F
+    } 
     if (!a.lastPrepared) {
       return -1
     }
