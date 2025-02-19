@@ -47,7 +47,7 @@
         </ion-buttons>
       </ng-container>
     </ion-toolbar>
-
+    <ion-toolbar *ngIf="isShowWidget"><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
   </ion-header>
 
   <ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
@@ -71,15 +71,16 @@
     <ng-container *ngIf="currentView === AddRecipyToCalView.SelectDate">
       <app-recipy-in-calendar-select-date [initialValue]="selectedTime?.toISOString()"
         (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
-        <div>
-          <div>Shortcuts:</div>
-          <ion-chip *ngFor="let item of (timeShortcuts$ | async)" (click)="changeTime(item)">{{item}}</ion-chip>
-        </div>
+      <div>
+        <div>Shortcuts:</div>
+        <ion-chip *ngFor="let item of (timeShortcuts$ | async)" (click)="changeTime(item)">{{item}}</ion-chip>
+      </div>
     </ng-container>
 
     <ng-container *ngIf="currentView === AddRecipyToCalView.SetAmount">
       <app-recipy-in-calendar-select-portions-and-amount (amountValueChanged)="onAmountSelected($event)"
-        (portionsValueChanged)="onPortionsSelected($event)" [initialPortionsValue]="portions" [initialAmountValue]="portionSize"></app-recipy-in-calendar-select-portions-and-amount>
+        (portionsValueChanged)="onPortionsSelected($event)" [initialPortionsValue]="portions"
+        [initialAmountValue]="portionSize"></app-recipy-in-calendar-select-portions-and-amount>
     </ng-container>
 
   </ion-content>

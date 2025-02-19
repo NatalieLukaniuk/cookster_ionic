@@ -315,4 +315,12 @@ export class FiltersService {
     this.currentFilters = _.cloneDeep(this.clearedFilters);
     this.filters$.next(this.clearedFilters);
   }
+
+  get isShowWidget(){
+    return this.currentFilters.ingredientsToInclude.length ||
+    this.currentFilters.ingredientsToExclude.length ||
+    this.currentFilters.tagsToShow.length ||
+    this.currentFilters.tagsToExclude.length ||
+    !!this.currentFilters.maxPrepTime || this.currentFilters.collectionsToInclude.length
+  }
 }

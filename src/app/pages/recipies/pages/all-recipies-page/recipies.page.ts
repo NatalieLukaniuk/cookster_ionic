@@ -119,4 +119,8 @@ export class RecipiesContainer implements OnDestroy {
     this.numberOfRecipiesToDisplay += 10;
     (event as InfiniteScrollCustomEvent).target.complete();
   }
+
+  get isShowWidget(){
+    return this.filtersService.isShowWidget
+  }
 }

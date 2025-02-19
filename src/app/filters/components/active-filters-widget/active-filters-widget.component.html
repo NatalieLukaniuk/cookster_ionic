@@ -1,11 +1,5 @@
 <div *ngIf="!!currentFilters" class="wrapper">
-  <div class="title" *ngIf="
-      currentFilters.ingredientsToInclude.length ||
-      currentFilters.ingredientsToExclude.length ||
-      currentFilters.tagsToShow.length ||
-      currentFilters.tagsToExclude.length ||
-      !!currentFilters.maxPrepTime || currentFilters.collectionsToInclude.length
-    ">
+  <div class="title" *ngIf="isShowWidget">
     <div class="ingreds-to-include" *ngIf="currentFilters.ingredientsToInclude.length">
       <ion-chip *ngFor="let tag of currentFilters.ingredientsToInclude" (click)="removeIngrToInclude(tag)">
         <ion-label>{{ getIngredientText(tag) }}</ion-label>

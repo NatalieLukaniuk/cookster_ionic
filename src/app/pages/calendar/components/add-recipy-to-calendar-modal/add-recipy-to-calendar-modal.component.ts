@@ -237,4 +237,8 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     }
   }
 
+  get isShowWidget(){
+    return this.filtersService.isShowWidget
+  }
+
 }

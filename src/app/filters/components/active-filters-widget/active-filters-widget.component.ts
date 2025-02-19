@@ -66,4 +66,8 @@ export class ActiveFiltersWidgetComponent implements OnDestroy {
   removeCollection(collection: string){
     this.filtersService.toggleCollectionToShow(collection)
   }
+
+  get isShowWidget(){
+    return this.filtersService.isShowWidget
+  }
 }
