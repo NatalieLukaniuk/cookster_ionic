@@ -62,4 +62,8 @@ export class ActiveFiltersWidgetComponent implements OnDestroy {
   getIngredientText(ingr: string): string {
     return this.recipiesService.getProductNameById(ingr);
   }
+
+  removeCollection(collection: string){
+    this.filtersService.toggleCollectionToShow(collection)
+  }
 }

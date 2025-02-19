@@ -4,7 +4,7 @@
       currentFilters.ingredientsToExclude.length ||
       currentFilters.tagsToShow.length ||
       currentFilters.tagsToExclude.length ||
-      !!currentFilters.maxPrepTime
+      !!currentFilters.maxPrepTime || currentFilters.collectionsToInclude.length
     ">
     <div class="ingreds-to-include" *ngIf="currentFilters.ingredientsToInclude.length">
       <ion-chip *ngFor="let tag of currentFilters.ingredientsToInclude" (click)="removeIngrToInclude(tag)">
@@ -28,6 +28,12 @@
     <div class="tags-to-hide" *ngIf="currentFilters.tagsToExclude.length">
       <ion-chip *ngFor="let tag of currentFilters.tagsToExclude" (click)="removeTagToExclude(tag)">
         <ion-label>{{ getTagsText(tag) }}</ion-label>
+        <ion-icon name="close"></ion-icon>
+      </ion-chip>
+    </div>
+    <div class="collection-to-show" *ngIf="currentFilters.collectionsToInclude.length">
+      <ion-chip *ngFor="let tag of currentFilters.collectionsToInclude" (click)="removeCollection(tag)">
+        <ion-label>{{ tag }}</ion-label>
         <ion-icon name="close"></ion-icon>
       </ion-chip>
     </div>
