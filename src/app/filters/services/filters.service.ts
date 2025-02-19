@@ -41,9 +41,9 @@ export class FiltersService {
     sortingDirection: RecipySortingDirection.SmallToBig
   };
 
-  currentFilters: Filters = _.cloneDeep(this.clearedFilters);
+  private currentFilters: Filters = _.cloneDeep(this.clearedFilters);
 
-  filters$: BehaviorSubject<Filters> = new BehaviorSubject(this.clearedFilters);
+  private filters$: BehaviorSubject<Filters> = new BehaviorSubject(this.clearedFilters);
 
   userCollections$ = this.store.pipe(select(getUserCollections), tap(collections => {
     if (collections) {
@@ -66,6 +66,10 @@ export class FiltersService {
   }))
 
   getFilters = this.filters$.asObservable().pipe(shareReplay(1));
+
+  getCurrentFiltersValue(){
+    return this.currentFilters;
+  }
 
   applyFilters(recipies: Recipy[], filters: Filters, noShowIds?: string[]) {
     let _recipies = recipies.map((recipy) => recipy);
@@ -142,9 +146,9 @@ export class FiltersService {
         break;
       case RecipySorting.ByLastPrepared: _recipies = this.sortByLastPrepared(recipies);
         break;
-      case RecipySorting.ByTotalPreparationTime: recipies = this.sortByTotalPreparationTime(recipies);
+      case RecipySorting.ByTotalPreparationTime: _recipies = this.sortByTotalPreparationTime(recipies);
         break;
-      case RecipySorting.ByActivePreparationTime: recipies = this.sortByActivePreparationTime(recipies);
+      case RecipySorting.ByActivePreparationTime: _recipies = this.sortByActivePreparationTime(recipies);
         break;
     }
     if (sortingDirection === RecipySortingDirection.BigToSmall) {
@@ -166,7 +170,7 @@ export class FiltersService {
 
   sortByLastPrepared(recipies: Recipy[]) {
     const cloned = _.cloneDeep(recipies);
-    const mapped = recipies.map(recipy => this.addLastPrepared(recipy, this.userPlannedRecipies));
+    const mapped = cloned.map(recipy => this.addLastPrepared(recipy, this.userPlannedRecipies));
     const sorted = this.getSortedByLastPrepared(mapped as Recipy[]);
     return sorted
 
@@ -291,6 +295,20 @@ export class FiltersService {
   toggleSearch(word: string) {
     this.currentFilters.search = word;
     this.onFiltersChange();
+  }
+
+  toggleSorting(value: RecipySorting){
+    this.currentFilters.sorting = value;
+    this.onFiltersChange();
+  }
+
+  toggleSortingDirection(){
+    if(this.currentFilters.sortingDirection === RecipySortingDirection.SmallToBig){
+      this.currentFilters.sortingDirection = RecipySortingDirection.BigToSmall;
+    } else {
+      this.currentFilters.sortingDirection = RecipySortingDirection.SmallToBig;
+    }
+    this.onFiltersChange()
   }
 
   resetFilters() {

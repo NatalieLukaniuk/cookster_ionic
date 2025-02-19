@@ -11,10 +11,10 @@ export interface Filters {
 }
 
 export enum RecipySorting {
-    Default = 'default',
-    ByLastPrepared = 'lastPrepared',
-    ByTotalPreparationTime = 'totalPreparationTime',
-    ByActivePreparationTime = 'activePreparationTime',
+    Default,
+    ByLastPrepared,
+    ByTotalPreparationTime,
+    ByActivePreparationTime,
 }
 
 export enum RecipySortingDirection {

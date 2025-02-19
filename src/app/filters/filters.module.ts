@@ -8,6 +8,8 @@ import { SharedModule } from '../shared/shared.module';
 import { ActiveFiltersExpensesWidgetComponent } from './components/active-filters-expenses-widget/active-filters-expenses-widget.component';
 import { DishTypeSelectorComponent } from './components/dish-type-selector/dish-type-selector.component';
 import { CollectionSelectorComponent } from './components/collection-selector/collection-selector.component';
+import { SortingFilterComponent } from './components/sorting-filter/sorting-filter.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,9 +18,10 @@ import { CollectionSelectorComponent } from './components/collection-selector/co
     SearchRecipiesFilterComponent,
     ActiveFiltersExpensesWidgetComponent,
     DishTypeSelectorComponent,
-    CollectionSelectorComponent
+    CollectionSelectorComponent,
+    SortingFilterComponent
   ],
-  imports: [CommonModule, IonicModule, SharedModule],
+  imports: [CommonModule, IonicModule, SharedModule, FormsModule],
   exports: [
     FiltersComponent,
     ActiveFiltersWidgetComponent,
