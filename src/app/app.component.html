@@ -24,7 +24,8 @@
             </ion-item>
           </ion-menu-toggle>
           <ion-menu-toggle autoHide="false">
-            <ion-item routerLink="/tabs/expenses/check-price" routerLinkActive="active" routerDirection="root" detail="false">
+            <ion-item routerLink="/tabs/expenses/check-price" routerLinkActive="active" routerDirection="root"
+              detail="false">
               <ion-icon slot="start" name="search-outline"></ion-icon>
               <ion-label>
                 Перевірити ціну
@@ -55,14 +56,14 @@
 
 
         </ion-list>
-
+        <div class="version">Version: {{version}}</div>
       </ion-content>
-    </ion-menu>    
+    </ion-menu>
 
     <ion-router-outlet id="main-content"></ion-router-outlet>
 
   </ion-split-pane>
   <app-loading-overlay [isUserLoaded]="isAuthCheckComplete && ((isLoggedIn && !!(user$ | async)) || !isLoggedIn)"
-      [isRecipiesLoaded]="!!(recipies$ | async)" [isProductsLoaded]="!!(products$ | async)" *ngIf="(isLoading$ | async)
+    [isRecipiesLoaded]="!!(recipies$ | async)" [isProductsLoaded]="!!(products$ | async)" *ngIf="(isLoading$ | async)
   || !isAuthCheckComplete || isLoggedIn && !(user$ | async)"></app-loading-overlay>
 </ion-app>
