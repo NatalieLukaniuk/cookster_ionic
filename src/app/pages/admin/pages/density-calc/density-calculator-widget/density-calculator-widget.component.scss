@@ -1,0 +1,20 @@
+.inline {
+    display: flex;
+    gap: 10px;
+
+    ion-input {
+        width: 40%;
+    }
+    ion-select {
+        width: auto;
+    }
+}
+
+.wrapper {
+    padding: 10px;
+}
+
+.density-field {
+    margin: 20px 0;
+    font-size: larger;
+}
