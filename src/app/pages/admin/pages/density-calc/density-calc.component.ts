@@ -19,7 +19,7 @@ export class DensityCalcComponent implements OnInit {
       unit !== MeasuringUnit.coffeeSpoon
   );
 
-  selectedUnit: MeasuringUnit = MeasuringUnit.teaSpoon;
+  selectedUnit: MeasuringUnit = MeasuringUnit.tableSpoon;
 
   getMeasuringUnitText(unit: MeasuringUnit) {
     return MeasuringUnitText[unit];

@@ -4,33 +4,21 @@
 </app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list>
-    <ion-list-header>Виберіть одиницю виміру</ion-list-header>
-    <ion-radio-group [(ngModel)]="selectedUnit">
-      <ion-item *ngFor="let unit of MeasuringUnitOptions">
-        <ion-label>{{ getMeasuringUnitText(unit) }}</ion-label>
-        <ion-radio slot="end" [value]="unit"></ion-radio>
-      </ion-item>
-    </ion-radio-group>
-  </ion-list>
-  <ion-list>
-    <ion-list-header>Введіть дані:</ion-list-header>
-    <ion-item>
-      <ion-label
-        >Кількість в {{ getMeasuringUnitText(selectedUnit) }}</ion-label
-      >
-      <ion-input [(ngModel)]="quantityInSelectedUnit" type="number"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label
-        >Кількість в грамах</ion-label
-      >
-      <ion-input [(ngModel)]="quantityInGr" type="number"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label
-        >Щільність: {{density}}</ion-label
-      >      
-    </ion-item>
-  </ion-list>
+  <div class="wrapper">
+    <div class="inline">
+      <ion-input [(ngModel)]="quantityInSelectedUnit" type="number" fill="outline"></ion-input>
+      <ion-select [(ngModel)]="selectedUnit">
+        <ion-select-option *ngFor="let unit of MeasuringUnitOptions" [value]="unit">{{ getMeasuringUnitText(unit)
+          }}</ion-select-option>
+      </ion-select>
+    </div>
+    <div class="inline">
+
+      <ion-input [(ngModel)]="quantityInGr" type="number" fill="outline"></ion-input><span>гр.</span>
+
+    </div>
+    <div class="density-field">Щільність: {{density}} кг/м³</div>
+  </div>
+
+
 </ion-content>
