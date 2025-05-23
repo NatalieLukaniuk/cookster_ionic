@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MeasuringUnitOptionsFluid, MeasuringUnit, MeasuringUnitText } from 'src/app/models/recipies.models';
 import { getAmountInL } from 'src/app/pages/recipies/utils/recipy.utils';
 
@@ -8,6 +8,9 @@ import { getAmountInL } from 'src/app/pages/recipies/utils/recipy.utils';
   styleUrls: ['./density-calculator-widget.component.scss'],
 })
 export class DensityCalculatorWidgetComponent  implements OnInit {
+
+  @Input() isCheckMode = false;
+  @Input() presetDensity = 0;
 
   MeasuringUnitOptions = MeasuringUnitOptionsFluid.filter(
     (unit) =>
@@ -32,6 +35,10 @@ export class DensityCalculatorWidgetComponent  implements OnInit {
       (this.quantityInGr * getAmountInL(this.selectedUnit)) /
       this.quantityInSelectedUnit
     );
+  }
+
+  get calculatedGr(){
+    return this.presetDensity * this.quantityInSelectedUnit / getAmountInL(this.selectedUnit)
   }
 
   ngOnInit() {}
