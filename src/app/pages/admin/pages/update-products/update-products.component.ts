@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Product } from 'src/app/models/recipies.models';
+import { MeasuringUnitText, Product, ProductTypeText } from 'src/app/models/recipies.models';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 
@@ -103,5 +103,13 @@ export class UpdateProductsComponent implements OnInit {
     }
 
   }
+
+  getMeasuringUnitText(unit: any) {
+      return MeasuringUnitText[unit];
+    }
+
+    getProductTypeText(type: number) {
+        return ProductTypeText[type];
+      }
 
 }

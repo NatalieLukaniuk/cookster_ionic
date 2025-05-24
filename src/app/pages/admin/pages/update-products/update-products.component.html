@@ -18,7 +18,7 @@
         <ion-item fill="solid">
           <ion-label position="floating">Одиниця виміру за замовчуванням</ion-label>
           <ion-input type="tel" formControlName="defaultUnit"></ion-input>
-          <ion-note></ion-note>
+          <ion-note>{{ getMeasuringUnitText(productForm.controls['defaultUnit'].value) }}</ion-note>
         </ion-item>
         <ion-item fill="solid">
           <ion-label position="floating">Густина</ion-label>
@@ -35,7 +35,7 @@
         <ion-item fill="solid">
           <ion-label position="floating">Тип</ion-label>
           <ion-input type="text" formControlName="type"></ion-input>
-          <ion-note></ion-note>
+          <ion-note>{{ getProductTypeText(productForm.controls['type'].value) }}</ion-note>
         </ion-item>
         <ion-item fill="solid">
           <ion-label position="floating">Зміна кількості при приготуванні</ion-label>
