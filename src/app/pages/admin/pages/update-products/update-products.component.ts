@@ -74,14 +74,28 @@ export class UpdateProductsComponent implements OnInit {
   }
 
   submit() {
-
+    const values: Product = this.productForm.value;
+    const changes = this.detectChange(values);
+    if (changes.find(entry => entry[0] === 'density')) {
+      // update recipies with product
+    }
+    const mappedValues: { [key: string]: any } = {};
+    Object.entries(values).map(entryPair => {
+      if (entryPair[0] !== 'name') {
+        return [entryPair[0], +entryPair[1]]
+      } else {
+        return entryPair
+      }
+    }).forEach(entry => mappedValues[entry[0]] = entry[1])
+    mappedValues['id'] = this.selectedProduct?.id;
+    // save mappedValues - patch existing product by id
   }
 
   trackFormChanges() {
     this.formSubscription = this.productForm.valueChanges.subscribe(res => {
-      
+
       const changes = this.detectChange(res)
-      if(changes.length){
+      if (changes.length) {
         this.nochanges$.next(false)
       } else {
         this.nochanges$.next(true)
@@ -89,10 +103,10 @@ export class UpdateProductsComponent implements OnInit {
     })
   }
 
-  detectChange(formValues: Product){
-    if(this.selectedProduct){
+  detectChange(formValues: Product) {
+    if (this.selectedProduct) {
       return Object.entries(formValues).map(entryPair => {
-        if(entryPair[0] !== 'name'){
+        if (entryPair[0] !== 'name') {
           return [entryPair[0], +entryPair[1]]
         } else {
           return entryPair
@@ -105,11 +119,11 @@ export class UpdateProductsComponent implements OnInit {
   }
 
   getMeasuringUnitText(unit: any) {
-      return MeasuringUnitText[unit];
-    }
+    return MeasuringUnitText[unit];
+  }
 
-    getProductTypeText(type: number) {
-        return ProductTypeText[type];
-      }
+  getProductTypeText(type: number) {
+    return ProductTypeText[type];
+  }
 
 }
