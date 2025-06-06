@@ -137,6 +137,87 @@ export function convertAmountToSelectedUnit(
   }
 }
 
+export function convertAmountToSelectedUnitRawData( // MeasuringUnit.item not included
+  amountInGr: number,
+  unit: MeasuringUnit,
+  density: number
+) {
+  if (unit == MeasuringUnit.gr) {
+    return amountInGr;
+  } else {
+    let amount = 0;
+    switch (unit) {
+      case MeasuringUnit.kg:
+        amount = grToKg(amountInGr);
+        break;
+      case MeasuringUnit.l:
+      case MeasuringUnit.ml:
+      case MeasuringUnit.tableSpoon:
+      case MeasuringUnit.dessertSpoon:
+      case MeasuringUnit.teaSpoon:
+      case MeasuringUnit.coffeeSpoon:
+      case MeasuringUnit.cup:
+      case MeasuringUnit.cl:
+      case MeasuringUnit.us_cup:
+        amount =
+          (amountInGr * getAmountInL(unit)) /
+          density;
+        break;
+      case MeasuringUnit.pinch:
+        amount = grToPinch(amountInGr, density);
+        break;
+      case MeasuringUnit.bunch:
+        amount = grToBunch(amountInGr);
+        break;
+      // case MeasuringUnit.item:
+      //   amount = grToItems(amountInGr, getGrPerItem(ingredientId, allProducts));
+      //   break;
+      case MeasuringUnit.oz:
+        amount = grToOZ(amountInGr);
+        break;
+      case MeasuringUnit.lb:
+        amount = grToLb(amountInGr);
+        break;
+    }
+    return amount;
+  }
+}
+
+export function transformToGrRawData( // MeasuringUnit.item not included
+  amount: number,
+  unit: MeasuringUnit,
+  density: number
+): number {
+  switch (unit) {
+    case MeasuringUnit.gr:
+      return amount;
+    case MeasuringUnit.kg:
+      return kgToGR(amount);
+    case MeasuringUnit.bunch:
+      return bunchToGr(amount);
+    case MeasuringUnit.coffeeSpoon:
+    case MeasuringUnit.dessertSpoon:
+    case MeasuringUnit.tableSpoon:
+    case MeasuringUnit.teaSpoon:
+    case MeasuringUnit.ml:
+    case MeasuringUnit.l:
+    case MeasuringUnit.cup:
+    case MeasuringUnit.cl:
+    case MeasuringUnit.us_cup:
+      return (amount * density) / getAmountInL(unit);
+    case MeasuringUnit.pinch:
+      return pinchToGr(amount, density);
+    // case MeasuringUnit.item:
+    //   return itemsToGr(amount, grInOneItem);
+    case MeasuringUnit.oz:
+      return OZToGr(amount);
+    case MeasuringUnit.lb:
+      return LbToGr(amount);
+    default:
+      return 0;
+  }
+}
+
 export function getAmountInL(unit: MeasuringUnit) {
   switch (unit) {
     case MeasuringUnit.l:

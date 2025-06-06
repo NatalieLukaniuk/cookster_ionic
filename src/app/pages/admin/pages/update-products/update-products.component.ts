@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, take } from 'rxjs';
 import { MeasuringUnitText, Product, ProductTypeText } from 'src/app/models/recipies.models';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
+import { AdminService } from '../../services/admin.service';
+import { ProductsApiService } from 'src/app/services/products-api.service';
+import { ProductsLoadedAction } from 'src/app/store/actions/recipies.actions';
 
 @Component({
   selector: 'app-update-products',
@@ -34,7 +37,7 @@ export class UpdateProductsComponent implements OnInit {
 
   formSubscription: any;
 
-  constructor(private store: Store<IAppState>,) { }
+  constructor(private store: Store<IAppState>, private adminService: AdminService, private productsService: ProductsApiService) { }
 
   onProductSelected(selected: Product) {
     this.selectedProduct = selected;
@@ -76,8 +79,8 @@ export class UpdateProductsComponent implements OnInit {
   submit() {
     const values: Product = this.productForm.value;
     const changes = this.detectChange(values);
-    if (changes.find(entry => entry[0] === 'density')) {
-      // update recipies with product
+    if (changes.find(entry => entry[0] === 'density') && this.selectedProduct) {
+      this.adminService.updateRecipiesOnDensityChange(this.selectedProduct, this.productForm.value['density'])
     }
     const mappedValues: { [key: string]: any } = {};
     Object.entries(values).map(entryPair => {
@@ -88,7 +91,16 @@ export class UpdateProductsComponent implements OnInit {
       }
     }).forEach(entry => mappedValues[entry[0]] = entry[1])
     mappedValues['id'] = this.selectedProduct?.id;
-    // save mappedValues - patch existing product by id
+    this.productsService.updateProduct(this.selectedProduct!.id, mappedValues as Product).pipe(take(1)).subscribe(res => {
+      this.store.pipe(select(getAllProducts), take(1)).subscribe(allProducts => {
+        const updated = allProducts.map(prod => {
+          if (prod.id === this.selectedProduct!.id) {
+            return res
+          } else return prod
+        })
+        this.store.dispatch(new ProductsLoadedAction(updated))
+      })
+    })
   }
 
   trackFormChanges() {
