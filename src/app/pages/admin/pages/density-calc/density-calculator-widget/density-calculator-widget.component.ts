@@ -38,7 +38,7 @@ export class DensityCalculatorWidgetComponent  implements OnInit {
   }
 
   get calculatedGr(){
-    return this.presetDensity * this.quantityInSelectedUnit / getAmountInL(this.selectedUnit)
+    return Math.round(this.presetDensity * this.quantityInSelectedUnit / getAmountInL(this.selectedUnit))
   }
 
   ngOnInit() {}

@@ -23,7 +23,23 @@
         <ion-item fill="solid">
           <ion-label position="floating">Густина</ion-label>
           <ion-input type="tel" formControlName="density"></ion-input>
+          <ion-button slot="end" size="large" (click)="isShowDensityCalculator = !isShowDensityCalculator">
+            <ion-icon slot="icon-only" name="calculator-outline"></ion-icon>
+          </ion-button>
         </ion-item>
+        <div *ngIf="isShowDensityCalculator" class="density-calculator">
+          <div>
+            <h6>Перевірити вагу певної кількості продукту з поточною густиною:</h6>
+            <app-density-calculator-widget [isCheckMode]="true"
+              [presetDensity]="selectedProduct.density"></app-density-calculator-widget>
+
+          </div>
+          <div>
+            <h6>Порахувати густину якщо відома вага певної кількості подукту в грамах: </h6>
+            <app-density-calculator-widget></app-density-calculator-widget>
+
+          </div>
+        </div>
         <ion-item fill="solid">
           <ion-label position="floating">Грам в 1 шт.</ion-label>
           <ion-input type="tel" formControlName="grInOneItem"></ion-input>

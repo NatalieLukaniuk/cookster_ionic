@@ -1,3 +1,18 @@
 ion-note {
     margin-bottom: 3px;
 }
+
+.density-calculator {
+
+    font-size: 12px;
+
+    &>div {
+        border: 1px solid beige;
+        padding: 10px;
+
+        ::ng-deep .density-field {
+            margin: 5px 0;
+            font-size: larger;
+        }
+    }
+}

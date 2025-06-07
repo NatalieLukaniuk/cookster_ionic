@@ -11,9 +11,9 @@
       <ion-input [(ngModel)]="quantityInGr" type="number" fill="outline"></ion-input><span>гр.</span>
 
 </ng-container>
-<ng-container *ngIf="!isCheckMode">
-  <div>
-    <span>{{calculatedGr}}</span>
+<ng-container *ngIf="isCheckMode">
+  <div class="calculated-grams">
+    <span>{{calculatedGr}} </span>
     <span>гр.</span>
   </div>
 </ng-container>

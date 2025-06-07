@@ -37,6 +37,8 @@ export class UpdateProductsComponent implements OnInit {
 
   formSubscription: any;
 
+  isShowDensityCalculator = false;
+
   constructor(private store: Store<IAppState>, private adminService: AdminService, private productsService: ProductsApiService) { }
 
   onProductSelected(selected: Product) {
