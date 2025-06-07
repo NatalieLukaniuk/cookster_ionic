@@ -148,7 +148,8 @@ export class RecipyShortViewComponent implements OnInit {
         component: AddRecipyToCalendarModalComponent,
         componentProps: {
           selectedRecipy: this.recipy,
-          isEditMode: true
+          isEditMode: true,
+          portionSize: this.recipy.portionSize
         }
       });
       modal.present();
