@@ -71,11 +71,7 @@
     <ng-container *ngIf="currentView === AddRecipyToCalView.SelectDate">
       <app-recipy-in-calendar-select-date [initialValue]="selectedTime?.toISOString()"
         (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
-      <div>
-        <div>Shortcuts:</div>
-        <ion-chip *ngFor="let item of (timeShortcuts$ | async)" (click)="changeTime(item)">{{item}}</ion-chip>
-      </div>
-    </ng-container>
+          </ng-container>
 
     <ng-container *ngIf="currentView === AddRecipyToCalView.SetAmount">
       <app-recipy-in-calendar-select-portions-and-amount (amountValueChanged)="onAmountSelected($event)"

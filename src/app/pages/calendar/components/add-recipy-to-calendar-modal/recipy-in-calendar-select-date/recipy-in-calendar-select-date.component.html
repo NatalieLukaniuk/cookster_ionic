@@ -1,1 +1,5 @@
 <ion-datetime size="cover" color="primary" [value]="value" (ionChange)="onSelectionChanged($event)"></ion-datetime>
+<div>
+  <div>Shortcuts:</div>
+  <ion-chip *ngFor="let item of (timeShortcuts$ | async)" (click)="changeTime(item)">{{item}}</ion-chip>
+</div>

@@ -39,22 +39,6 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   isEditMode = false;
 
-  timeShortcuts$ = this.store.pipe(select(getUserPlannedRecipies), map(recipies => {
-    if (recipies?.length) {
-      const recipyTime = recipies.map(item => item.endTime).map(time => this.fixTime(new Date(time).getHours()) + ':' + this.fixTime(new Date(time).getMinutes()));
-      const uniques = new Set(recipyTime);
-      return Array.from(uniques)
-    } else { return [] }
-  }))
-
-  fixTime(value: number) {
-    if (value === 0) {
-      return '00'
-    } else if (value < 10) {
-      return '0' + value
-    } else return value.toString()
-  }
-
   constructor(
     private store: Store<IAppState>,
     private datamapping: DataMappingService,
@@ -228,14 +212,7 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   }
 
-  changeTime(item: string) {
-
-    if (this.selectedTime) {
-      const selectedDayString = new Date(this.selectedTime).toString();
-      const updated = selectedDayString.replace(/\d\d:\d\d:\d\d/gm, item + ':00')
-      this.selectedTime = new Date(updated)
-    }
-  }
+  
 
   get isShowWidget(){
     return this.filtersService.isShowWidget
