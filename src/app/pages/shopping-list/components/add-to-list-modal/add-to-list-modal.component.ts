@@ -30,7 +30,7 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
 
   selectedList = '';
 
-  amountToAdd = '';
+  amountToAdd = '1';
 
   getUnitText = getUnitText;
   moment = moment;
