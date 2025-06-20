@@ -70,4 +70,8 @@ export class FiltersComponent implements OnInit {
     this.withoutAutocomplete.clearSearch();
   }
 
+  get isShowWidget(){
+    return this.filtersService.isShowWidget
+  }
+
 }

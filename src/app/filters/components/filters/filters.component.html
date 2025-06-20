@@ -14,9 +14,9 @@
         </ion-buttons>
         <ion-title>Фільтри</ion-title>
       </ion-toolbar>
+      <ion-toolbar *ngIf="isShowWidget"><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding" *ngIf="!isExpensePage; else ExpensesTemplate">
-      <app-active-filters-widget></app-active-filters-widget>
+    <ion-content class="ion-padding" *ngIf="!isExpensePage; else ExpensesTemplate">      
       <h5 class="found-recipies-count">Знайдено {{ filtersService.filteredRecipies }} рецептів</h5>
       <div class="filter-item">
         <span class="filter-item-title">Пошук за назвою:</span>
