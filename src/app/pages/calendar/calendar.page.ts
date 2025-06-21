@@ -7,7 +7,7 @@ import { AddCommentToCalendarAction, AddRecipyToCalendarActionNew } from 'src/ap
 import { IAppState } from 'src/app/store/reducers';
 import { AddCommentToCalendarModalComponent } from './components/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
 import { SaveCalendarAsPdfPreviewComponent } from './components/save-calendar-as-pdf-preview/save-calendar-as-pdf-preview.component';
-import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
+import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { combineLatest, map, Observable, take } from 'rxjs';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
@@ -135,27 +135,33 @@ export class CalendarPage {
   }
 
   plannedRecipies$: Observable<CalendarRecipyInDatabase_Reworked[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedRecipies || []));
-  allRecipies$ = this.store.pipe(select(getAllRecipies))
+  allRecipies$ = this.store.pipe(select(getAllRecipies));
+  plannedComments$: Observable<CalendarComment[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedComments || []))
 
   exportToPDF(dates: string[]) {
 
     combineLatest([
       this.plannedRecipies$,
-      this.allRecipies$
+      this.allRecipies$,
+      this.plannedComments$
     ]).pipe(
       take(1)
     ).subscribe(async res => {
-      const [plannedRecipies, allRecipies] = res;
+      const [plannedRecipies, allRecipies, plannedComments] = res;
       let recipiesToPreview: RecipyForCalendar_Reworked[] = [];
+      let commentsToPreviw: CalendarComment[] = [];
       dates.forEach(day => {
         const selectedDate = new Date(day).toDateString();
         const currentDayRecipies: RecipyForCalendar_Reworked[] = getCurrentDayRecipies(plannedRecipies, selectedDate, allRecipies);
-        recipiesToPreview = recipiesToPreview.concat(currentDayRecipies)
+        recipiesToPreview = recipiesToPreview.concat(currentDayRecipies);
+        const currentDayComments = plannedComments.filter(comment => new Date(comment.date).toDateString() === selectedDate && !comment.isReminder);
+        commentsToPreviw = commentsToPreviw.concat(currentDayComments)        
       })
       const modal = await this.modalCtrl.create({
         component: SaveCalendarAsPdfPreviewComponent,
         componentProps: {
           recipies: recipiesToPreview,
+          comments: commentsToPreviw
         }
       });
       modal.present();

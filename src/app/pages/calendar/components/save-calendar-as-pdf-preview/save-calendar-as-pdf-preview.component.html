@@ -3,7 +3,7 @@
     <div class="element-date" style="text-align: center;
     margin-block: 10px;
     font-weight: bold; font-size: 18px;">{{element.date | date: 'EEEE, dd MMM yyyy'}}</div>
-    <div *ngIf="element.breakfast.length">
+    <div *ngIf="element.breakfast.length || element.breakfastComments.length">
       <div class="meal-name" style="padding-inline: 5px;
     font-size: 14px;">Сніданок</div>
 
@@ -11,31 +11,40 @@
       gap: 25px;
       width: 100%;
       flex-wrap: wrap; margin-bottom: 20px;">
+        <div *ngFor="let comment of element.breakfastComments">
+          <ng-container *ngTemplateOutlet="commentTemplate; context: {comment}"></ng-container>
+        </div>
         <div *ngFor="let recipy of element.breakfast" style="width: 300px; min-width: 300px;">
           <app-calendar-pdf-preview-short-recipy [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
         </div>
 
       </div>
     </div>
-    <div *ngIf="element.lunch.length">
+    <div *ngIf="element.lunch.length || element.lunchComments.length">
       <div class="meal-name" style="padding-inline: 5px;
     font-size: 14px;">Обід</div>
       <div class="recipy-list" style="display: flex;
       gap: 25px;
       width: 100%;
       flex-wrap: wrap; margin-bottom: 20px;">
+        <div *ngFor="let comment of element.lunchComments">
+          <ng-container *ngTemplateOutlet="commentTemplate; context: {comment}"></ng-container>
+        </div>
         <div *ngFor="let recipy of element.lunch" style="width: 300px; min-width: 300px">
           <app-calendar-pdf-preview-short-recipy [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
         </div>
       </div>
     </div>
-    <div *ngIf="element.dinner.length">
+    <div *ngIf="element.dinner.length || element.dinnerComments.length">
       <div class="meal-name" style="padding-inline: 5px;
     font-size: 14px;">Вечеря</div>
       <div class="recipy-list" style="display: flex;
       gap: 25px;
       width: 100%;
       flex-wrap: wrap; margin-bottom: 20px;">
+        <div *ngFor="let comment of element.dinnerComments">
+          <ng-container *ngTemplateOutlet="commentTemplate; context: {comment}"></ng-container>
+        </div>
         <div *ngFor="let recipy of element.dinner" style="width: 300px; min-width: 300px">
           <app-calendar-pdf-preview-short-recipy [recipy]="recipy"></app-calendar-pdf-preview-short-recipy>
         </div>
@@ -50,3 +59,8 @@
 
   </ion-toolbar>
 </ion-footer>
+
+<ng-template #commentTemplate let-comment="comment">
+  <p style="white-space: normal;
+    font-size: 14px;">{{comment.comment}}</p>
+</ng-template>

@@ -13,6 +13,11 @@ export const getUserPlannedRecipies = createSelector(
   (state) => state.currentUser?.plannedRecipies
 );
 
+export const getUserPlannedComments = createSelector(
+  getUserState,
+  (state) => state.currentUser?.plannedComments
+);
+
 export const getUserShoppingList = createSelector(
   getUserState,
   (state) => state.currentUser?.shoppingLists
