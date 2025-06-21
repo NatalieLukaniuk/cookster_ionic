@@ -12,12 +12,12 @@
         <ion-buttons slot="end">
           <ion-button (click)="confirm()">Застосувати</ion-button>
         </ion-buttons>
-        <ion-title>Фільтри</ion-title>
+        <ion-title><h5 class="found-recipies-count">Знайдено {{ filtersService.filteredRecipies }} рецептів</h5></ion-title>
       </ion-toolbar>
       <ion-toolbar *ngIf="isShowWidget"><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding" *ngIf="!isExpensePage; else ExpensesTemplate">      
-      <h5 class="found-recipies-count">Знайдено {{ filtersService.filteredRecipies }} рецептів</h5>
+      
       <div class="filter-item">
         <span class="filter-item-title">Пошук за назвою:</span>
         <app-search-recipies-filter [isClearOnDestroy]="false"></app-search-recipies-filter>
