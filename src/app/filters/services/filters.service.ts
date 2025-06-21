@@ -87,7 +87,7 @@ export class FiltersService {
           recipiesIdsToShow = recipiesIdsToShow.concat(add)
         }
       })
-      _recipies = recipies.filter(recipy => recipiesIdsToShow.includes(recipy.id))
+      _recipies = _recipies.filter(recipy => recipiesIdsToShow.includes(recipy.id))
     }
 
     if (!!filters.ingredientsToInclude.length) {
