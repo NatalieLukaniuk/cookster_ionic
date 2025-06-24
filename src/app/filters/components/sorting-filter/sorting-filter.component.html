@@ -4,12 +4,12 @@
       *ngFor="let option of sortingOptions">{{getOptionLabel(option)}}</ion-select-option>
   </ion-select>
   <ion-button (click)="toggleSortingDirection()" size="small" fill="outline">
-    <ion-icon name="arrow-down-outline"
+    <ion-icon name="arrow-up-outline"
       *ngIf="(sortingDirection$ | async) === RecipySortingDirection.SmallToBig; else bigToSmall"></ion-icon>
   </ion-button>
 </div>
 
 
 <ng-template #bigToSmall>
-  <ion-icon name="arrow-up-outline"></ion-icon>
+  <ion-icon name="arrow-down-outline"></ion-icon>
 </ng-template>
