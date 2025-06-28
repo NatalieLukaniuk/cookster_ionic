@@ -3,6 +3,9 @@ ion-card {
   margin: 10px 0 0;
   border-radius: 0;
   box-shadow: none;
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
 }
 
 ion-card-header {
@@ -20,7 +23,7 @@ ion-card-subtitle {
 }
 
 ion-card-content {
-  height: 250px;
+  flex-grow: 1;
   padding: 0;
 }
 
@@ -80,7 +83,7 @@ ion-card-content {
   }
 
   &.visible {
-    height: 260px;
+    height: 45vh;
     z-index: 2;
     bottom: 0;
 
@@ -141,6 +144,7 @@ ion-card-content {
 }
 
 .big-screen-card {
+  height: 550px;
   &-background {
     position: absolute;
     width: 100%;
@@ -148,9 +152,10 @@ ion-card-content {
     z-index: 1;
     padding-left: 37%;
   }
+
   &-content {
     width: 50%;
-    height: 550px;
+    height: 100%;
     background: linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 75%, rgba(255, 255, 255, 0.8) 87%, rgba(255, 255, 255, 0) 100%);
     z-index: 2;
     position: relative;
@@ -190,7 +195,7 @@ ion-card-content {
   }
 }
 
-@media (orientation: landscape) and (max-width: 1600px){
+@media (orientation: landscape) and (max-width: 1600px) {
   ::ng-deep app-recipies .big-screen-card-content {
     height: 70vh !important;
   }
