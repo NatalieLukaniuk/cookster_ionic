@@ -57,8 +57,18 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
       });
     }
 
+this.getCurrentView()
 
+  }
 
+  getCurrentView() {
+    if (!this.selectedRecipy) {
+      this.currentView = AddRecipyToCalView.SelectRecipy;
+    } else if (!this.selectedTime) {
+      this.currentView = AddRecipyToCalView.SelectDate;
+    } else {
+      this.currentView = AddRecipyToCalView.SetAmount;
+    }
   }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
@@ -212,9 +222,9 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   }
 
-  
 
-  get isShowWidget(){
+
+  get isShowWidget() {
     return this.filtersService.isShowWidget
   }
 
