@@ -7,6 +7,8 @@ import {
   ComplexityDescription,
   DishType,
   Ingredient,
+  MeasuringUnit,
+  MeasuringUnitText,
   Recipy,
   productPreferencesChip,
 } from 'src/app/models/recipies.models';
@@ -44,6 +46,10 @@ export class RecipyShortViewComponent implements OnInit {
 
   Math = Math;
   DishType = DishType;
+
+  coefficient = 1;
+
+  MeasuringUnit = MeasuringUnit;
 
   get preparationTime() {
     let time = 0;
@@ -100,6 +106,7 @@ export class RecipyShortViewComponent implements OnInit {
     this.isNeedsAdvancePreparation = this.recipy.type?.includes(
       DishType['потребує попередньої підготовки']
     );
+    this.getCoeficient()
   }
 
   onRecipyClicked() {
@@ -117,6 +124,17 @@ export class RecipyShortViewComponent implements OnInit {
     this.router.navigate(['recipy/', this.recipy.id], {
       relativeTo: this.route,
     });
+   this.cancelClick()
+    
+  }
+
+  cancelClick(){
+     setTimeout(() => {
+      this.isRecipyClicked = false;
+    }, 2)
+  }
+  cancelClickNoTimeout(){
+     this.isRecipyClicked = false;
   }
 
   activePreparationTime() {
@@ -144,6 +162,7 @@ export class RecipyShortViewComponent implements OnInit {
   }
 
   async onAddRecipyToCalendar() {
+    
       const modal = await this.modalCtrl.create({
         component: AddRecipyToCalendarModalComponent,
         componentProps: {
@@ -159,5 +178,24 @@ export class RecipyShortViewComponent implements OnInit {
       if (role === 'confirm') {
         this.store.dispatch(new AddRecipyToCalendarActionNew(data))
       }
+      this.isRecipyClicked = false;
+    }
+
+    getCoeficient() {
+    if (this.recipy && this.recipy.portionSize) {
+      this.coefficient = this.datamapping.getCoeficient(
+        this.recipy.ingrediends,
+        1,
+        this.recipy.portionSize
+      );
+    }
+  }
+
+    getUnitText(unit: MeasuringUnit) {
+      return MeasuringUnitText[unit];
+    }
+
+    isShowProductsWarning(){
+      return this.productPreferencesChips?.find(product => this.recipy.ingrediends.some(ingred => ingred.product === product.productId))
     }
 }

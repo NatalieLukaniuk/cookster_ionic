@@ -1,6 +1,6 @@
 import { defaultPrefs } from './../../../models/auth.models';
 import { Recipy } from 'src/app/models/recipies.models';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from 'src/app/models/auth.models';
 import * as _ from 'lodash';
 import { UpdatePreferencesAction } from 'src/app/store/actions/user.actions';
@@ -17,6 +17,8 @@ export class AddRecipyToNoShowComponent {
   @Input() recipy: Recipy | undefined;
   @Input() currentUser: User | null = null;
   @Input() isSmall = true;
+
+  @Output() btnClicked = new EventEmitter<void>()
 
   constructor(private store: Store<IAppState>){}
 
@@ -36,5 +38,6 @@ export class AddRecipyToNoShowComponent {
 
       this.store.dispatch(new UpdatePreferencesAction(cloned_preferences))
     }
+    this.btnClicked.emit()
   }
  }

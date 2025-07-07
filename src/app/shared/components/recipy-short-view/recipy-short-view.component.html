@@ -1,38 +1,73 @@
-<ion-card (click)="onRecipyClicked()" *ngIf="!isBigScreen">
-  <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
+<ion-item-sliding *ngIf="!isBigScreen">
+  <ion-item>
+    <ion-card (click)="onRecipyClicked()">
+      <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
 
-  <ion-card-content>
-    <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
-    <div *ngIf="!recipy.photo" class="ingredients-wrapper no-photo">
-      <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
-    </div>
-  </ion-card-content>
-
-  <div class="overlay once" [class.visible]="isRecipyClicked">
-    <div class="overlay-flex-container">
-      <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
-      <div>
-        <div class="ingredients-wrapper">
-          <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
+      <ion-card-content>
+        <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
+        <div *ngIf="!recipy.photo" class="photo-placeholder">
+          <ion-img class="humster" src="../../../../assets/images/humster_sm.png"></ion-img>
+          <div>Хом'ячок вже планує фотосесію для цього рецепту</div>
         </div>
+      </ion-card-content>
+
+      <div class="overlay once" [class.visible]="isRecipyClicked">
+        <div class="overlay-flex-container">
+          <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
+          <!-- <div>
+            <div class="ingredients-wrapper">
+              <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
+            </div>
+          </div> -->
+        </div>
+
+
       </div>
-    </div>
+    </ion-card>
+  </ion-item>
+  <ion-item-options>
 
     <div class="actions-pane">
-      <ion-button (click)="goFullRecipy()">
-
-        Перейти до рецепту
-      </ion-button>
-      <ion-button (click)="onAddRecipyToCalendar()">
+      <div class="actions-pane-info" *ngIf="!!currentUser"><ion-icon name="today-outline"></ion-icon>
+        <span *ngIf="recipy.lastPrepared">{{recipy.lastPrepared | lastPreparedDate }}</span>
+        <span class="color-warning" *ngIf="!recipy.lastPrepared">не готувався</span>
+      </div>
+      <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser"
+        [buttonColor]="'primary'" (btnClicked)="cancelClickNoTimeout()"></app-add-recipy-to-no-show>
+      <app-collections-action-sheet *ngIf="currentUser" [currentUser]="currentUser" [recipy]="recipy"
+        (dismissed)="cancelClickNoTimeout()"></app-collections-action-sheet>
+      <ion-button (click)="onAddRecipyToCalendar()" fill="clear">
 
         <ion-icon name="calendar-outline"></ion-icon>
       </ion-button>
-      <app-collections-action-sheet *ngIf="currentUser" [currentUser]="currentUser" [recipy]="recipy"></app-collections-action-sheet>
-      <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser" [buttonColor]="'light'"></app-add-recipy-to-no-show>
-      
+      <ion-button (click)="goFullRecipy()" fill="clear" class="go-recipy-btn">
+
+        Відкрити рецепт
+      </ion-button>
+
     </div>
-  </div>
-</ion-card>
+
+  </ion-item-options>
+  <ion-item-options side="start">
+<div class="steps-block-wrapper">
+  <div class="flex-container">
+          <div>
+            <span>
+              <ion-icon name="american-football-outline"></ion-icon>
+              {{ activePreparationTime() | normalizeTime }}
+            </span>
+            <span>
+              <ion-icon name="beer-outline"></ion-icon>
+              {{ passivePreparationTime() | normalizeTime }}
+            </span>
+          </div>
+          
+        </div>
+      <div class="title">Приготування:</div>
+      <div *ngFor="let step of recipy.steps">{{step.description}}</div>
+    </div>
+  </ion-item-options>
+</ion-item-sliding>
 
 <ion-card *ngIf="isBigScreen" class="big-screen-card">
   <div class="big-screen-card-background">
@@ -44,12 +79,14 @@
       <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
       <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
       <div class="big-screen-card-action-buttons" *ngIf="isShowActionButtons">
-        <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser" [buttonColor]="'light'"></app-add-recipy-to-no-show>
-        <app-collections-action-sheet [buttonColor]="'light'" *ngIf="currentUser" [currentUser]="currentUser" [recipy]="recipy"></app-collections-action-sheet>
+        <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser"
+          [buttonColor]="'light'"></app-add-recipy-to-no-show>
+        <app-collections-action-sheet [buttonColor]="'light'" *ngIf="currentUser" [currentUser]="currentUser"
+          [recipy]="recipy"></app-collections-action-sheet>
 
         <ion-button color="light" (click)="goFullRecipy()">
           Перейти до рецепту
-        </ion-button>        
+        </ion-button>
       </div>
 
     </ion-card-content>
@@ -58,32 +95,57 @@
 
 <ng-template #genericInfo>
   <ion-card-header>
-    <ion-card-title>{{ recipy.name }}</ion-card-title>
-    <ion-card-subtitle>
-      <div class="flex-container">
-        <div>
-          <span>
-            <ion-icon name="american-football-outline"></ion-icon>
-            {{ activePreparationTime() | normalizeTime }}
-          </span>
-          <span>
-            <ion-icon name="beer-outline"></ion-icon>
-            {{ passivePreparationTime() | normalizeTime }}
-          </span>
+    <div>
+      <ion-card-title>{{ recipy.name }}</ion-card-title>
+      <ion-card-subtitle>
+        <!-- <div class="flex-container">
+          <div>
+            <span>
+              <ion-icon name="american-football-outline"></ion-icon>
+              {{ activePreparationTime() | normalizeTime }}
+            </span>
+            <span>
+              <ion-icon name="beer-outline"></ion-icon>
+              {{ passivePreparationTime() | normalizeTime }}
+            </span>
+          </div>
+          <div>
+            <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
+            <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
+          </div>
+        </div> -->
+        <div class="collection-tags" *ngIf="includedInCollections.length">
+          <!-- <span>Мої колекції: </span> -->
+          <ion-chip class="collection-chip" *ngFor="let collection of includedInCollections">{{
+            collection
+            }}</ion-chip>
         </div>
-        <div>
-          <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
-          <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
-        </div>
-      </div>
-      <div class="collection-tags" *ngIf="includedInCollections.length">
-        <span>Мої колекції: </span>
-        <ion-chip class="collection-chip" *ngFor="let collection of includedInCollections">{{
-          collection
-          }}</ion-chip>
-      </div>
 
-    </ion-card-subtitle>
+      </ion-card-subtitle>
+    </div>
+    <div>
+      <div *ngIf="recipy.calorificValue" class="header-info-chip">
+        {{ Math.round(recipy.calorificValue) }} ккал/100гр.
+      </div>
+      <div class="header-info-chip">
+        <span>
+          <ion-icon name="american-football-outline"></ion-icon>
+          {{ activePreparationTime() | normalizeTime }}
+        </span>
+      </div>
+      <div class="header-info-chip">
+        <span>
+          <ion-icon name="beer-outline"></ion-icon>
+          {{ passivePreparationTime() | normalizeTime }}
+        </span>
+      </div>
+      <div class="header-info-chip">
+        <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
+        <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
+      </div>
+    </div>
+
+
   </ion-card-header>
 </ng-template>
 
@@ -105,36 +167,41 @@
 
       <span *ngIf="isNeedsAdvancePreparation">потребує попередньої підготовки</span>
     </div>
-    <div class="overlay-row">{{ complexity }} рецепт</div>
 
     <div class="advance-prep overlay-row" *ngIf="recipy.isCheckedAndApproved">
       <ion-icon name="checkmark-done"></ion-icon>
       рецепт перевірений на практиці
     </div>
-    <div *ngIf="recipy.calorificValue" class="overlay-row">
-      Калорійність: {{ Math.round(recipy.calorificValue) }} ккал в 100гр.
-    </div>
-    <div class="overlay-row">
-      Автор: {{ recipy.author }}
-    </div>
-    <div *ngIf="recipy.portionSize" class="overlay-row">Рекомендований розмір порції: {{recipy.portionSize}}гр.
-    </div>
+
     <div class="collection-tags overlay-row">
-      <span>Теги: </span>
       <ion-chip class="collection-chip" *ngFor="let tag of recipy.type">{{
         DishType[tag]
         }}</ion-chip>
     </div>
-    <div class="chip-selection-list" *ngIf="!!productPreferencesChips?.length">
-        <ng-container *ngFor="let item of productPreferencesChips">
-          <ion-chip *ngIf="getIsInRecipy(item.productId)" class="collection-chip" [color]="item.color">
-            {{item.name}}: {{getProductText(item.productId)}}
-          </ion-chip>
-        </ng-container>
+
+    <div class="chip-selection-list" *ngIf="isShowProductsWarning()">
+      <ng-container *ngFor="let item of productPreferencesChips">
+        <ion-chip *ngIf="getIsInRecipy(item.productId)" class="collection-chip" [color]="item.color">
+          {{item.name}}: {{getProductText(item.productId)}}
+        </ion-chip>
+      </ng-container>
     </div>
-    <div class="overlay-row" *ngIf="!!currentUser"><ion-icon name="today-outline"></ion-icon> 
-      <span *ngIf="recipy.lastPrepared">{{recipy.lastPrepared | lastPreparedDate }}</span>
-      <span class="color-warning" *ngIf="!recipy.lastPrepared">не готувався</span>
+    <div>
+      <h6>Інгридієнти на 1 порцію, {{recipy.portionSize}}гр.</h6>
+      <div *ngFor="let ingredient of recipy.ingrediends">
+        <span>
+          {{getIngredientText(ingredient).toLowerCase()}} - 
+        </span>
+        <span *ngIf="ingredient.defaultUnit !== MeasuringUnit.none" [innerHTML]="ingredient.amount * coefficient
+      | convertToSelectedUnit : ingredient.product : ingredient.defaultUnit
+      | normalizeDisplayedAmount : ingredient.defaultUnit">
+
+        </span>
+        <span>
+          {{getUnitText(ingredient.defaultUnit)}}
+        </span>
       </div>
+    </div>
+
   </div>
 </ng-template>
