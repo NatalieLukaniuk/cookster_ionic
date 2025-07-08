@@ -35,7 +35,7 @@ export class RecipyInCalendarSelectDateComponent implements OnChanges {
     if (recipies?.length) {
       const recipyTime = recipies.map(item => item.endTime).map(time => this.fixTime(new Date(time).getHours()) + ':' + this.fixTime(new Date(time).getMinutes()));
       const uniques = new Set(recipyTime);
-      return Array.from(uniques)
+      return Array.from(uniques).sort((a,b) => a.localeCompare(b))
     } else { return [] }
   }))
 

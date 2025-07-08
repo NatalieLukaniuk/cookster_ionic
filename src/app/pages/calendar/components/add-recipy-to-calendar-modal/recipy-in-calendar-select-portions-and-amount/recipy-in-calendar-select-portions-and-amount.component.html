@@ -1,8 +1,12 @@
-<ion-item>
+<ion-item lines="none">
   <ion-label position="floating">Кількість порцій:</ion-label>
   <ion-input [(ngModel)]="portions" type="tel" (ngModelChange)="onPortionsValueChanged($event)"></ion-input>
+  <ion-icon name="add-outline" slot="end" (click)="portions = portions + 1"></ion-icon>
+  <ion-icon name="remove-outline" slot="start" (click)="portions = portions - 1"></ion-icon>
 </ion-item>
-<ion-item>
+<ion-item lines="none">
   <ion-label position="floating">Вага порції в грамах:</ion-label>
   <ion-input [(ngModel)]="amount" type="tel" (ngModelChange)="onAmountValueChanged($event)"></ion-input>
+  <ion-icon name="add-outline" slot="end" (click)="amount = amount + 50"></ion-icon>
+  <ion-icon name="remove-outline" slot="start" (click)="amount = amount - 50"></ion-icon>
 </ion-item>

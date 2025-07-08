@@ -24,15 +24,15 @@
       </ion-buttons>
       <ion-title>
         <div class="recipy-selection-result">
-          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectRecipy)">
+          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectRecipy)" [class.active]="currentView === AddRecipyToCalView.SelectRecipy">
             <span>Рецепт:</span>
             <span>{{selectedRecipy?.name}}</span>
           </div>
-          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectDate)">
+          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectDate)" [class.active]="currentView === AddRecipyToCalView.SelectDate">
             <span>Час:</span>
             <span>{{(selectedTime | date: 'EEE, dd MMM yyyy, HH:mm') || '-'}}</span>
           </div>
-          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SetAmount)">
+          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SetAmount)" [class.active]="currentView === AddRecipyToCalView.SetAmount">
             <span>Порцій:</span>
             <span>{{portions || '-'}}</span>
             <span>Розмір порції:</span>

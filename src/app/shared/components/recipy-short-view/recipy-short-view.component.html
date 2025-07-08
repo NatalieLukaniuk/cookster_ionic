@@ -7,7 +7,7 @@
         <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
         <div *ngIf="!recipy.photo" class="photo-placeholder">
           <ion-img class="humster" src="../../../../assets/images/humster_sm.png"></ion-img>
-          <div>Хом'ячок вже планує фотосесію для цього рецепту</div>
+          <div class="photo-placeholder-text">Хом'ячок вже планує фотосесію для цього рецепту</div>
         </div>
       </ion-card-content>
 
