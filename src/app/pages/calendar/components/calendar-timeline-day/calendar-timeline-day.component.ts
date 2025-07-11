@@ -5,7 +5,7 @@ import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } fro
 import { RemoveCommentFromCalendarActionNew, UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
-import { iSameDay, MINUTES_IN_DAY } from '../../calendar.utils';
+import { iSameDay, MINUTES_IN_DAY, newDateIgnoreimezone } from '../../calendar.utils';
 import { DialogsService } from 'src/app/services/dialogs.service';
 
 
@@ -161,6 +161,7 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
       componentProps: {
         selectedRecipy: event,
         selectedTime: new Date(event.endTime),
+        initialSelectDate: newDateIgnoreimezone(event.endTime as unknown as string).toISOString(),
         portions: event.portions,
         portionSize: event.amountPerPortion,
         isEditMode: true

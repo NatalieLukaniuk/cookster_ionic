@@ -113,3 +113,15 @@ export function getRecipyPrepStart(recipy: Recipy, endTime: Date) {
   const start = Date.parse(endTime.toString()) - recipyTimeInMs;
   return new Date(start)
 }
+
+export function newDateIgnoreimezone(newDate: string) {
+  const year = new Date(newDate).getFullYear()
+    const month = new Date(newDate).getMonth()
+    const day = new Date(newDate).getDate();
+    const hours = new Date(newDate).getHours();
+    const minutes = new Date(newDate).getMinutes();
+    const seconds = new Date(newDate).getSeconds();
+    const milliseconds = new Date(newDate).getMilliseconds()
+    const dateUTC = Date.UTC(year, month, day, hours, minutes, seconds, milliseconds)
+    return new Date(dateUTC);
+}

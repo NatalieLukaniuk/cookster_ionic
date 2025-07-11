@@ -12,7 +12,7 @@ import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
-import { getLastPreparedDate } from '../../calendar.utils';
+import { getLastPreparedDate, newDateIgnoreimezone } from '../../calendar.utils';
 
 enum AddRecipyToCalView {
   SelectRecipy = 'select-recipy',
@@ -39,6 +39,8 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   isEditMode = false;
 
+  initialSelectDate = this.selectedTime?.toISOString();
+
   constructor(
     private store: Store<IAppState>,
     private datamapping: DataMappingService,
@@ -47,7 +49,7 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    debugger
     if (!this.isEditMode || !this.portions) {
       const sub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
         if (res) {
@@ -57,7 +59,7 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
       });
     }
 
-this.getCurrentView()
+    this.getCurrentView()
 
   }
 
@@ -168,6 +170,7 @@ this.getCurrentView()
 
   onDateChanged(newDate: string) {
     this.selectedTime = new Date(newDate);
+    this.initialSelectDate = newDateIgnoreimezone(newDate).toISOString()
   }
 
   onAmountSelected(event: number) {
