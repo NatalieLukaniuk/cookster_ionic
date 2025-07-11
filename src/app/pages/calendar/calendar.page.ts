@@ -43,13 +43,13 @@ export class CalendarPage {
         action: 'reminder',
       },
     },
-    {
-      text: 'Cancel',
-      role: 'cancel',
-      data: {
-        action: 'cancel',
-      },
-    },
+    // {
+    //   text: 'Cancel',
+    //   role: 'cancel',
+    //   data: {
+    //     action: 'cancel',
+    //   },
+    // },
   ];
 
   onActionSelected(event: any) {
