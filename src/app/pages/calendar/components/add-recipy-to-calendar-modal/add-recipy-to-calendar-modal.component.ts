@@ -3,7 +3,7 @@ import { InfiniteScrollCustomEvent, IonModal, ModalController } from '@ionic/ang
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { combineLatest, take, map, tap } from 'rxjs';
+import { combineLatest, take, map, tap, Subscription } from 'rxjs';
 import { FiltersService } from 'src/app/filters/services/filters.service';
 import { Recipy } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
@@ -41,6 +41,8 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   initialSelectDate = this.selectedTime?.toISOString();
 
+  familyMembersSub: Subscription | undefined;
+
   constructor(
     private store: Store<IAppState>,
     private datamapping: DataMappingService,
@@ -49,13 +51,15 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    debugger
     if (!this.isEditMode || !this.portions) {
-      const sub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
+      this.familyMembersSub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
         if (res) {
           this.portions = res.length;
         } else { this.portions = 4; }
-        sub.unsubscribe()
+        if (this.familyMembersSub) {
+          this.familyMembersSub.unsubscribe()
+        }
+
       });
     }
 

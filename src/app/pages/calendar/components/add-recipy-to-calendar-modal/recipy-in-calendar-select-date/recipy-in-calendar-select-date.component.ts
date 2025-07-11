@@ -35,7 +35,7 @@ export class RecipyInCalendarSelectDateComponent implements OnChanges {
     if (recipies?.length) {
       const recipyTime = recipies.map(item => item.endTime).map(time => this.fixTime(new Date(time).getHours()) + ':' + this.fixTime(new Date(time).getMinutes()));
       const uniques = new Set(recipyTime);
-      return Array.from(uniques).sort((a,b) => a.localeCompare(b))
+      return Array.from(uniques).sort((a, b) => a.localeCompare(b))
     } else { return [] }
   }))
 
@@ -48,13 +48,16 @@ export class RecipyInCalendarSelectDateComponent implements OnChanges {
   }
 
   changeTime(item: string) {
-
+    let selectedDayString;
     if (this.value) {
-      const selectedDayString = new Date(this.value).toString();
-      const updated = selectedDayString.replace(/\d\d:\d\d:\d\d/gm, item + ':00')
-      this.value = new Date(updated)
-      this.valueChanged.emit(updated)
+      selectedDayString = new Date(this.value).toString();
+
+    } else {
+      selectedDayString = new Date().toString();
     }
+    const updated = selectedDayString.replace(/\d\d:\d\d:\d\d/gm, item + ':00')
+    this.value = new Date(updated)
+    this.valueChanged.emit(updated)
   }
 
 
