@@ -205,37 +205,52 @@ ion-card-content {
     display: flex;
     flex-direction: column;
     position: relative;
+
+    .title {
+      margin-top: 20px;
+    }
+    
   }
 
   &-action-buttons {
+    display: flex;
+    // margin-block: 10px;
+    background: var(--ion-color-primary);
     position: absolute;
     bottom: 0;
-    display: flex;
-
-    .collections.visible {
-      height: 550px;
-      width: 300px;
-      opacity: 1;
-      display: flex;
-      flex-direction: column;
-      padding-block: 0 20px;
-
-      .close-btn {
-        align-self: flex-end;
-        margin-right: -10px;
-      }
-
-      ion-list {
-        max-height: 100%;
-      }
-    }
+    right: 0;
   }
 
   ion-card-content {
-    height: unset;
-    flex-grow: 1;
+    overflow-y: auto;
+    padding-block: 20px;
+  }
+
+  .collections.visible {
+    height: 550px;
+    width: 300px;
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    padding-block: 0 20px;
+
+    .close-btn {
+      align-self: flex-end;
+      margin-right: -10px;
+    }
+
+    ion-list {
+      max-height: 100%;
+    }
   }
 }
+
+ion-card-content {
+  height: unset;
+  flex-grow: 1;
+
+}
+
 
 .photo-placeholder {
   height: 100%;

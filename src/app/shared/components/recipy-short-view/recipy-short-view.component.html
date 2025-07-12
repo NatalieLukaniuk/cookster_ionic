@@ -61,10 +61,9 @@
               {{ passivePreparationTime() | normalizeTime }}
             </span>
           </div>
-          
+          <ng-container *ngTemplateOutlet="preparation"></ng-container>
         </div>
-      <div class="title">Приготування:</div>
-      <div *ngFor="let step of recipy.steps">{{step.description}}</div>
+      
     </div>
   </ion-item-options>
 </ion-item-sliding>
@@ -72,26 +71,33 @@
 <ion-card *ngIf="isBigScreen" class="big-screen-card">
   <div class="big-screen-card-background">
     <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
-  </div>
-  <div class="big-screen-card-content">
-    <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
-    <ion-card-content>
-      <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
-      <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container>
-      <div class="big-screen-card-action-buttons" *ngIf="isShowActionButtons">
+    <div class="big-screen-card-action-buttons" *ngIf="isShowActionButtons">
         <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser"
           [buttonColor]="'light'"></app-add-recipy-to-no-show>
         <app-collections-action-sheet [buttonColor]="'light'" *ngIf="currentUser" [currentUser]="currentUser"
           [recipy]="recipy"></app-collections-action-sheet>
 
-        <ion-button color="light" (click)="goFullRecipy()">
+        <ion-button color="primary" (click)="goFullRecipy()">
           Перейти до рецепту
         </ion-button>
       </div>
+  </div>
+  <div class="big-screen-card-content">
+    <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
+    <ion-card-content>
+      <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
+      <ng-container *ngTemplateOutlet="preparation"></ng-container>
+      <!-- <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container> -->
+      
 
     </ion-card-content>
   </div>
 </ion-card>
+
+<ng-template #preparation>
+<div class="title">Приготування:</div>
+      <div *ngFor="let step of recipy.steps">{{step.description}}</div>
+</ng-template>
 
 <ng-template #genericInfo>
   <ion-card-header>
