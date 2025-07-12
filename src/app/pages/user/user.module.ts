@@ -13,6 +13,8 @@ import { GenericSettingsComponent } from './components/generic-settings/generic-
 import { EditFamilyComponent } from './components/edit-family/edit-family.component';
 import { ManageCollectionsComponent } from './components/manage-collections/manage-collections.component';
 import { ExpensesPageComponent } from './components/expenses-page/expenses-page.component';
+import { HiddenRecipiesComponent } from './components/hidden-recipies/hidden-recipies.component';
+import { CommentsModule } from 'src/app/comments/comments.module';
 
 @NgModule({
   imports: [
@@ -20,8 +22,9 @@ import { ExpensesPageComponent } from './components/expenses-page/expenses-page.
     FormsModule,
     IonicModule,
     UserPageRoutingModule,
-    SharedModule
+    SharedModule,
+    CommentsModule
   ],
-  declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent, EditFamilyComponent, ManageCollectionsComponent, ExpensesPageComponent]
+  declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent, EditFamilyComponent, ManageCollectionsComponent, ExpensesPageComponent, HiddenRecipiesComponent]
 })
 export class UserPageModule { }

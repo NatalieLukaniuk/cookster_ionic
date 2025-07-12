@@ -16,17 +16,31 @@
     </div>
 
   </div>
-  <ion-list>
-    <ion-item-divider color="primary" *ngIf="familyMembers$ | async">
+
+  <ion-segment [value]="currentPage" [(ngModel)]="currentPage">
+    <ion-segment-button [value]="ProfileTabs.FamilyMembers">
+      <ion-label>Члени Родини</ion-label>
+    </ion-segment-button>
+    <ion-segment-button [value]="ProfileTabs.HiddenRecipies">
+      <ion-label>Приховані рецепти</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+
+  <ion-list *ngIf="currentPage === ProfileTabs.FamilyMembers">
+    <!-- <ion-item-divider color="primary" *ngIf="familyMembers$ | async">
       <ion-label>Члени родини:</ion-label>
-    </ion-item-divider>
+    </ion-item-divider> -->
     <ng-container *ngIf="familyMembers$ | async">
       <ion-item *ngFor="let member of (familyMembers$ | async)" class="family-member">
         <ng-container *ngTemplateOutlet="familyMemberBlock; context: {member}"></ng-container>
       </ion-item>
     </ng-container>
-   
+
   </ion-list>
+  <div *ngIf="currentPage === ProfileTabs.HiddenRecipies">
+    <app-hidden-recipies></app-hidden-recipies>
+  </div>
   <ng-container *ngTemplateOutlet="settingsBottomsheet"></ng-container>
 </ion-content>
 
