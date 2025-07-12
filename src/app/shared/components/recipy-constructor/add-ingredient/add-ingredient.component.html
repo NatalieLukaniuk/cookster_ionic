@@ -5,13 +5,13 @@
   </div>
 
 
-  <ion-item class="quantity-input-item" [color]="quantity? 'tertiary' : ''">
+  <ion-item class="quantity-input-item" [color]="quantity? 'tertiary' : ''" lines="none">
     <ion-label>Кількість:</ion-label>
     <ion-input type="tel" [(ngModel)]="quantity"></ion-input>
   </ion-item>
 
   <div>
-    <ion-item color="tertiary">
+    <ion-item color="tertiary" lines="none">
       <ion-label>Одиниця виміру: {{ getMeasuringUnitText(unit)}}</ion-label>
     </ion-item>
     <div class="chip-selection-list">

@@ -6,3 +6,8 @@
 .border-bottom {
     border-bottom: 1px solid var(--ion-color-tertiary-shade);
 }
+
+ion-item {
+  border: 1px solid var(--ion-color-light);
+  --background: white;
+}
