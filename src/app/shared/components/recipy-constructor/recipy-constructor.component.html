@@ -56,17 +56,13 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="tabs[1].value">
+    
     <ion-item lines="none">
       <ion-checkbox slot="start" [checked]="isSplitIntoGroups" (ionChange)="onSplitChange($event)"></ion-checkbox>
       <ion-label>Розділити інгридієнти на групи</ion-label>
     </ion-item>
-    <ion-item lines="none">
-      <ion-label position="floating">Рекомендований розмір порції (для дорослого)*:</ion-label>
-      <ion-input [(ngModel)]="portionSize" type="number"></ion-input>
-    </ion-item>
-    <ion-button *ngIf="!!ingredients.length" (click)="getRecommendedPortion()">Порахувати рекомендований розмір
-      порції</ion-button>
-    <h4 *ngIf="ingredients.length" class="padding-inline">Додані інгридієнти:</h4>
+   <div class="add-product-box" *ngIf="ingredients.length">   
+    <h4 class="padding-inline">Додані інгридієнти:</h4>
     <ion-list>
       <ion-item swipeLeftNoConfirmation *ngFor="let ingredient of ingredients; let index = index"
         (itemSwiped)="onDeleteIngr(index)">
@@ -88,6 +84,16 @@
         </ion-label>
       </ion-item>
     </ion-list>
+    </div>
+    <div class="add-product-box" *ngIf="!!ingredients.length">
+      <ion-item lines="none">
+      <ion-label position="floating">Рекомендований розмір порції (для дорослого)*:</ion-label>
+      <ion-input [(ngModel)]="portionSize" type="number"></ion-input>
+      <ion-button size="large" slot="end" (click)="getRecommendedPortion()" class="calculate-portion-btn"><ion-icon name="calculator-outline"></ion-icon></ion-button>
+    </ion-item>
+    
+    </div>
+     
     <div class="add-product-box">
       <h4 class="padding-inline">Додати інгридієнт*:</h4>
     <app-add-ingredient [isSplitIntoGroups]="isSplitIntoGroups" [groups]="groups"
