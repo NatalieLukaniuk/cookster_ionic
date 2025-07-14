@@ -11,7 +11,7 @@ import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_R
 import { combineLatest, map, Observable, take } from 'rxjs';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { getCurrentDayRecipies } from './calendar.utils';
+import { getCurrentDayRecipies, newDateIgnoreimezone } from './calendar.utils';
 
 
 
@@ -122,7 +122,8 @@ export class CalendarPage {
       component: AddRecipyToCalendarModalComponent,
       componentProps: {
         isEditMode: true,
-        selectedTime: currentDay
+        selectedTime: currentDay,
+        initialSelectDate: newDateIgnoreimezone(currentDay.toString()).toISOString(),
       }
     });
     modal.present();
