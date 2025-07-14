@@ -280,6 +280,12 @@ ion-card-content {
   overflow-y: auto;
 }
 
+.preparation-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 
 @media (orientation: landscape) and (max-width: 1600px) {
   ::ng-deep app-recipies .big-screen-card-content {

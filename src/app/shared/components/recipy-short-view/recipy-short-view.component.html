@@ -49,21 +49,21 @@
 
   </ion-item-options>
   <ion-item-options side="start">
-<div class="steps-block-wrapper">
-  <div class="flex-container">
-          <div>
-            <span>
-              <ion-icon name="american-football-outline"></ion-icon>
-              {{ activePreparationTime() | normalizeTime }}
-            </span>
-            <span>
-              <ion-icon name="beer-outline"></ion-icon>
-              {{ passivePreparationTime() | normalizeTime }}
-            </span>
-          </div>
-          <ng-container *ngTemplateOutlet="preparation"></ng-container>
+    <div class="steps-block-wrapper">
+      <div class="preparation-block">
+        <div>
+          <span>
+            <ion-icon name="american-football-outline"></ion-icon>
+            {{ activePreparationTime() | normalizeTime }}
+          </span>
+          <span>
+            <ion-icon name="beer-outline"></ion-icon>
+            {{ passivePreparationTime() | normalizeTime }}
+          </span>
         </div>
-      
+        <ng-container *ngTemplateOutlet="preparation"></ng-container>
+      </div>
+
     </div>
   </ion-item-options>
 </ion-item-sliding>
@@ -72,15 +72,15 @@
   <div class="big-screen-card-background">
     <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
     <div class="big-screen-card-action-buttons" *ngIf="isShowActionButtons">
-        <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser"
-          [buttonColor]="'light'"></app-add-recipy-to-no-show>
-        <app-collections-action-sheet [buttonColor]="'light'" *ngIf="currentUser" [currentUser]="currentUser"
-          [recipy]="recipy"></app-collections-action-sheet>
+      <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser"
+        [buttonColor]="'light'"></app-add-recipy-to-no-show>
+      <app-collections-action-sheet [buttonColor]="'light'" *ngIf="currentUser" [currentUser]="currentUser"
+        [recipy]="recipy"></app-collections-action-sheet>
 
-        <ion-button color="primary" (click)="goFullRecipy()">
-          Перейти до рецепту
-        </ion-button>
-      </div>
+      <ion-button color="primary" (click)="goFullRecipy()">
+        Перейти до рецепту
+      </ion-button>
+    </div>
   </div>
   <div class="big-screen-card-content">
     <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
@@ -88,15 +88,18 @@
       <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
       <ng-container *ngTemplateOutlet="preparation"></ng-container>
       <!-- <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container> -->
-      
+
 
     </ion-card-content>
   </div>
 </ion-card>
 
 <ng-template #preparation>
-<div class="title">Приготування:</div>
-      <div *ngFor="let step of recipy.steps">{{step.description}}</div>
+
+  <div class="title">Приготування:</div>
+  <div *ngFor="let step of recipy.steps">{{step.description}}</div>
+
+
 </ng-template>
 
 <ng-template #genericInfo>
@@ -196,7 +199,7 @@
       <h6>Інгридієнти на 1 порцію, {{recipy.portionSize}}гр.</h6>
       <div *ngFor="let ingredient of recipy.ingrediends">
         <span>
-          {{getIngredientText(ingredient).toLowerCase()}} - 
+          {{getIngredientText(ingredient).toLowerCase()}} -
         </span>
         <span *ngIf="ingredient.defaultUnit !== MeasuringUnit.none" [innerHTML]="ingredient.amount * coefficient
       | convertToSelectedUnit : ingredient.product : ingredient.defaultUnit
