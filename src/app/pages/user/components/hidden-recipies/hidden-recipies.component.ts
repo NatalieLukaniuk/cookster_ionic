@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, map, Subject, takeUntil, tap } from 'rxjs';
 import { FiltersService } from 'src/app/filters/services/filters.service';
@@ -24,6 +25,8 @@ export class HiddenRecipiesComponent implements OnInit, OnDestroy {
   recipies: Recipy[] = [];
   noShowIds: string[] = [];
 
+  numberOfRecipiesToDisplay = 10;
+
   recipies$ = combineLatest([
     this.store.pipe(select(getAllRecipies)),
     this.filtersService.noShowRecipies$,
@@ -31,10 +34,10 @@ export class HiddenRecipiesComponent implements OnInit, OnDestroy {
     takeUntil(this.destroy$),
     map(result => {
       const [allRecipies, noShowIds] = result;
-      if(noShowIds){
+      if (noShowIds) {
         this.noShowIds = noShowIds;
       }
-      
+
       const filtered = allRecipies.filter(recipy => noShowIds?.includes(recipy.id));
       this.recipies = filtered
       return filtered
@@ -50,4 +53,11 @@ export class HiddenRecipiesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next()
   }
+
+  onIonInfinite(event: any) {
+    this.numberOfRecipiesToDisplay += 10;
+    (event as InfiniteScrollCustomEvent).target.complete();
+  }
+
+
 }

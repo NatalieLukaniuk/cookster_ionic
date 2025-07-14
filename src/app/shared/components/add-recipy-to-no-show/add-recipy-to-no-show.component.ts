@@ -20,18 +20,22 @@ export class AddRecipyToNoShowComponent {
 
   @Output() btnClicked = new EventEmitter<void>()
 
-  constructor(private store: Store<IAppState>){}
+  constructor(private store: Store<IAppState>) { }
 
-  addToNoShow(){
-    if(this.recipy && this.currentUser){
+  addToNoShow() {
+    if (this.recipy && this.currentUser) {
       let cloned_preferences = _.cloneDeep(this.currentUser).preferences;
-      if(!cloned_preferences){
+      if (!cloned_preferences) {
         cloned_preferences = {
           ...defaultPrefs,
           noShowRecipies: [this.recipy.id]
         }
-      } else if(cloned_preferences.noShowRecipies){
-        cloned_preferences.noShowRecipies.push(this.recipy.id)
+      } else if (cloned_preferences.noShowRecipies) {
+        if (cloned_preferences.noShowRecipies.includes(this.recipy.id)) {
+          cloned_preferences.noShowRecipies = cloned_preferences.noShowRecipies.filter(id => id !== this.recipy!.id)
+        } else {
+          cloned_preferences.noShowRecipies.push(this.recipy.id)
+        }
       } else {
         cloned_preferences.noShowRecipies = [this.recipy.id]
       }
@@ -40,4 +44,11 @@ export class AddRecipyToNoShowComponent {
     }
     this.btnClicked.emit()
   }
- }
+
+  isHidden(){
+    if(this.recipy && this.currentUser){
+      return this.currentUser.preferences?.noShowRecipies.includes(this.recipy.id)
+    }
+    return false
+  }
+}
