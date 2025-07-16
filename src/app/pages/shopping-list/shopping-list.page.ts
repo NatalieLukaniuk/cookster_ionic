@@ -1,4 +1,4 @@
-import { map, Subject, takeUntil } from 'rxjs';
+import { combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
@@ -6,7 +6,7 @@ import { IAppState } from 'src/app/store/reducers';
 import * as _ from 'lodash';
 import { ModalController } from '@ionic/angular';
 
-import { ShoppingListService } from 'src/app/services/shopping-list.service';
+import { ShoppingListService, ShoppingListTimestamp } from 'src/app/services/shopping-list.service';
 import { Router } from '@angular/router';
 import { DialogsService } from 'src/app/services/dialogs.service';
 import { ControllerInputDialogComponent } from 'src/app/shared/components/dialogs/controller-input-dialog/controller-input-dialog.component';
@@ -24,17 +24,26 @@ import { ShoppingList, ShoppingListItem } from 'src/app/models/shopping-list.mod
 export class ShoppingListPage implements OnInit, OnDestroy {
   destroyed$ = new Subject<void>();
   activeList: ShoppingList[] | undefined;
+  timestamps: ShoppingListTimestamp[] = [];
 
-  activeList$ = this.store.pipe(
-    select(getCurrentUser),
+  userShoppingLists$ = combineLatest([
+    this.store.pipe(select(getCurrentUser)),
+    this.shoppingListService.shoppingTimestampsObservable()
+  ]).pipe(
     takeUntil(this.destroyed$),
-    map((user) => {
+    map(result => {
+      const [user, timestamps] = result;
+      this.timestamps = timestamps;
       if (user && user.shoppingLists) {
-        this.activeList = user.shoppingLists;
-        return user.shoppingLists;
+        this.activeList = _.cloneDeep(user.shoppingLists);
+
+
+        return this.activeList;
       } else return [];
     })
-  );
+  )
+
+
 
   tabs = [
     { name: 'купити', icon: 'calendar-outline' },
@@ -53,7 +62,9 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     private expensesService: ExpencesService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.shoppingListService.loadTimestamps();
+  }
 
   ngOnDestroy(): void {
     this.destroyed$.next();
@@ -96,7 +107,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
       component: AddToListModalComponent,
       componentProps: {
         ingredient: {},
-        lists: cloned,
+        lists: this.shoppingListService.sortListByTimestamps(cloned!, this.timestamps),
         isPlannedIngredient: false,
       },
     });

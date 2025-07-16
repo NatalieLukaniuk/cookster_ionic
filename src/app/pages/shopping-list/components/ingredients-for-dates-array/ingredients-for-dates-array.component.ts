@@ -233,11 +233,12 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
 
   async addToList(ingred: SLItem) {
     this.resetScrollPoint = false;
+    const timestamps = this.shoppingListService.getCurrentTimestamps()
     const modal = await this.modalCtrl.create({
       component: AddToListModalComponent,
       componentProps: {
         ingredient: ingred,
-        lists: this.myLists,
+        lists: this.shoppingListService.sortListByTimestamps(this.myLists, timestamps) ,
         allRecipies: this.allRecipies,
         isPlannedIngredient: true,
       },

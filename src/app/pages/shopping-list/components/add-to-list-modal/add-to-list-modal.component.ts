@@ -13,6 +13,7 @@ import { DialogsService } from 'src/app/services/dialogs.service';
 import { ExpencesService } from 'src/app/expenses/expences.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ShoppingList, SLItem } from 'src/app/models/shopping-list.models';
+import { ShoppingListService } from 'src/app/services/shopping-list.service';
 
 @Component({
   selector: 'app-add-to-list-modal',
@@ -42,7 +43,10 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
 
   destroy$ = new Subject<void>();
 
+  timestamps$ = this.shoppingListService.shoppingTimestampsObservable()
+
   ngOnInit() {
+    
     if (this.isPlannedIngredient) {
       let converted = convertAmountToSelectedUnit(
         this.ingredient.total,
@@ -66,7 +70,8 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private datamapping: DataMappingService,
     private dialog: DialogsService,
-    private expensesService: ExpencesService
+    private expensesService: ExpencesService,
+    private shoppingListService: ShoppingListService
   ) { }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -89,6 +94,7 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
             editMode: false,
             completed: false,
           });
+          this.shoppingListService.updateTimeStamp(list)
         }
       });
     } else {
@@ -103,6 +109,7 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
             editMode: false,
             completed: false,
           });
+          this.shoppingListService.updateTimeStamp(list)
         }
       });
     }

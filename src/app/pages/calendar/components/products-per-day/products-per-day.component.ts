@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { IonModal, ModalController } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import { Ingredient } from 'src/app/models/recipies.models';
@@ -18,7 +18,7 @@ import { CalendarReworkedService } from '../../calendar-reworked.service';
   templateUrl: './products-per-day.component.html',
   styleUrls: ['./products-per-day.component.scss'],
 })
-export class ProductsPerDayComponent implements OnDestroy {
+export class ProductsPerDayComponent implements OnDestroy, OnInit {
 
   recipies$: Observable<RecipyForCalendar_Reworked[]> = this.calendarService.getCurrentDayRecipies();
 
@@ -49,6 +49,9 @@ export class ProductsPerDayComponent implements OnDestroy {
       recipies.forEach(recipy => this.processRecipy(recipy))
       this.products.sort((a, b) => a.ingredient!.localeCompare(b.ingredient!));
     })
+  }
+  ngOnInit(): void {
+    this.shoppingListService.loadTimestamps()
   }
   ngOnDestroy(): void {
     this.destroy$.next()
@@ -95,11 +98,12 @@ export class ProductsPerDayComponent implements OnDestroy {
       unit: ingred.defaultUnit,
       items: []
     }
+    const timestamps = this.shoppingListService.getCurrentTimestamps();
     const modal = await this.modalCtrl.create({
       component: AddToListModalComponent,
       componentProps: {
         ingredient: ingredToSlItem,
-        lists: cloned,
+        lists: this.shoppingListService.sortListByTimestamps(cloned!, timestamps),
         isPlannedIngredient: true,
       },
     });
