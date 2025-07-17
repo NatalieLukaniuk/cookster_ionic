@@ -85,8 +85,27 @@
   <div class="big-screen-card-content">
     <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
     <ion-card-content>
-      <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
-      <ng-container *ngTemplateOutlet="preparation"></ng-container>
+      <ion-accordion-group [multiple]="true" [value]="['first']">
+        <ion-accordion value="first">
+          <ion-item slot="header" color="light">
+            <ion-label>Інгридієнти</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ng-container *ngTemplateOutlet="additionalInfo"></ng-container>
+          </div>
+        </ion-accordion>
+        <ion-accordion value="second">
+          <ion-item slot="header" color="light">
+            <ion-label>Приготування</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ng-container *ngTemplateOutlet="preparation"></ng-container>
+          </div>
+        </ion-accordion>
+
+      </ion-accordion-group>
+
+
       <!-- <ng-container *ngTemplateOutlet="ingredsInfo"></ng-container> -->
 
 
