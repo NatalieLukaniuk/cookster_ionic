@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { newDateIgnoreimezone } from '../../calendar.utils';
 
 @Component({
   selector: 'app-add-comment-to-calendar-modal',
@@ -8,6 +9,7 @@ import { ModalController } from '@ionic/angular';
 })
 export class AddCommentToCalendarModalComponent {
   selectedTime: Date | null = null;
+  initialSelectDate = this.selectedTime?.toISOString();
 
   comment = '';
 
@@ -31,5 +33,6 @@ export class AddCommentToCalendarModalComponent {
 
   onDateChanged(newDate: string) {
     this.selectedTime = new Date(newDate);
+    this.initialSelectDate = newDateIgnoreimezone(newDate).toISOString()
   }
 }

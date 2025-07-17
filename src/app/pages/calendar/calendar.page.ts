@@ -97,7 +97,8 @@ export class CalendarPage {
     const modal = await this.modalCtrl.create({
       component: AddCommentToCalendarModalComponent,
       componentProps: {
-        selectedTime: currentDay
+        selectedTime: currentDay,
+        initialSelectDate: newDateIgnoreimezone(currentDay.toString()).toISOString(),
       }
     });
     modal.present();

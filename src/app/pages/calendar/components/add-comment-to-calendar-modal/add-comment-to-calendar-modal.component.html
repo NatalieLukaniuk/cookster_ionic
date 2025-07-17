@@ -12,8 +12,8 @@
         <ion-label position="floating">Введіть {{title.toLowerCase()}}:</ion-label>
         <ion-input [(ngModel)]="comment"></ion-input>
     </ion-item>
-    <h6>Виберіть дату і час:</h6>
-    <app-recipy-in-calendar-select-date [initialValue]="selectedTime?.toISOString()"
+    <h6>Виберіть дату і час: {{(selectedTime | date: 'EEE, dd MMM yyyy, HH:mm') || '-'}}</h6>
+    <app-recipy-in-calendar-select-date [initialValue]="initialSelectDate"
         (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
     <ion-button class="add-btn" expand="full" [disabled]="!isValid" (click)="confirm()">Зберегти</ion-button>
 </ion-content>
