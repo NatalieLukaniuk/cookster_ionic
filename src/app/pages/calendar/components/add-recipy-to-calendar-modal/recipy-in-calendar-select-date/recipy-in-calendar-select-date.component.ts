@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
-import { getCurrentDayRecipies, sortRecipiesByDate } from '../../../calendar.utils';
+import { getCurrentDayRecipies, isLessThanCertainDays, sortRecipiesByDate } from '../../../calendar.utils';
 
 @Component({
   selector: 'app-recipy-in-calendar-select-date',
@@ -58,7 +58,7 @@ export class RecipyInCalendarSelectDateComponent implements OnChanges, OnDestroy
 
   timeShortcuts$ = this.store.pipe(select(getUserPlannedRecipies), map(recipies => {
     if (recipies?.length) {
-      const recipyTime = recipies.map(item => item.endTime).map(time => this.fixTime(new Date(time).getHours()) + ':' + this.fixTime(new Date(time).getMinutes()));
+      const recipyTime = recipies.filter(rec => isLessThanCertainDays(new Date(rec.endTime), 20)).map(item => item.endTime).map(time => this.fixTime(new Date(time).getHours()) + ':' + this.fixTime(new Date(time).getMinutes()));
       const uniques = new Set(recipyTime);
       return Array.from(uniques).sort((a, b) => a.localeCompare(b))
     } else { return [] }

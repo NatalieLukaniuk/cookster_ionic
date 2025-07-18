@@ -125,3 +125,9 @@ export function newDateIgnoreimezone(newDate: string) {
     const dateUTC = Date.UTC(year, month, day, hours, minutes, seconds, milliseconds)
     return new Date(dateUTC);
 }
+
+export function isLessThanCertainDays(dateToCheck: Date, numberOfDays: number){
+  const dateNow = new Date();
+  dateNow.setDate(dateNow.getDate() - numberOfDays);
+  return getIsNewer(dateToCheck, dateNow)
+}
