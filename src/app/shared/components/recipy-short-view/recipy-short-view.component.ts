@@ -17,6 +17,7 @@ import { IAppState } from 'src/app/store/reducers';
 import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
+import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'app-recipy-short-view',
@@ -94,12 +95,25 @@ export class RecipyShortViewComponent implements OnInit {
     } else return [];
   }
 
+  get isMobile(){
+    return this.layoutService.getIsMobile()
+  }
+
+  get isTablet(){
+    return this.layoutService.getIsTablet()
+  }
+
+  get isDesktop(){
+    return this.layoutService.getIsDesktop()
+  }
+
   constructor(
     private datamapping: DataMappingService,
     private store: Store<IAppState>,
     private router: Router,
     private route: ActivatedRoute,
     private modalCtrl: ModalController,
+    private layoutService: LayoutService,
   ) { }
 
   ngOnInit() {

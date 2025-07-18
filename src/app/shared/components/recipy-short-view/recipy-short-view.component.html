@@ -1,4 +1,4 @@
-<ion-item-sliding *ngIf="!isBigScreen">
+<ion-item-sliding *ngIf="isMobile || isTablet">
   <ion-item>
     <ion-card (click)="onRecipyClicked()">
       <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
@@ -68,7 +68,7 @@
   </ion-item-options>
 </ion-item-sliding>
 
-<ion-card *ngIf="isBigScreen" class="big-screen-card">
+<ion-card *ngIf="isDesktop" class="big-screen-card">
   <div class="big-screen-card-background">
     <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
     <div class="big-screen-card-action-buttons" *ngIf="isShowActionButtons">
