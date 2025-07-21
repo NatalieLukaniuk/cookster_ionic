@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 const TABLET_MIN_WIDTH = 600;
 const TABLET_MAX_WIDTH = 800;
 const TABLET_MIN_HEIGHT = 962;
-const TABLET_MAX_HEIGHT = 1199;
+const TABLET_MAX_HEIGHT = 1000;
 
 @Injectable({
   providedIn: 'root'
