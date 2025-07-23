@@ -1,4 +1,4 @@
-<ion-item-sliding *ngIf="isMobile || isTablet">
+<ion-item-sliding *ngIf="isMobile || isTablet" (ionDrag)="ondragged($event)">
   <ion-item>
     <ion-card (click)="onRecipyClicked()">
       <ng-container *ngTemplateOutlet="genericInfo"></ng-container>
@@ -27,14 +27,14 @@
   </ion-item>
   <ion-item-options>
 
-    <div class="actions-pane">
-      <div class="actions-pane-info" *ngIf="!!currentUser"><ion-icon name="today-outline"></ion-icon>
+    <div class="actions-pane" *ngIf="!!currentUser">
+      <div class="actions-pane-info"><ion-icon name="today-outline"></ion-icon>
         <span *ngIf="recipy.lastPrepared">{{recipy.lastPrepared | lastPreparedDate }}</span>
         <span class="color-warning" *ngIf="!recipy.lastPrepared">не готувався</span>
       </div>
-      <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser"
+      <app-add-recipy-to-no-show [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser"
         [buttonColor]="'primary'" (btnClicked)="cancelClickNoTimeout()"></app-add-recipy-to-no-show>
-      <app-collections-action-sheet *ngIf="currentUser" [currentUser]="currentUser" [recipy]="recipy"
+      <app-collections-action-sheet [currentUser]="currentUser" [recipy]="recipy"
         (dismissed)="cancelClickNoTimeout()"></app-collections-action-sheet>
       <ion-button (click)="onAddRecipyToCalendar()" fill="clear">
 

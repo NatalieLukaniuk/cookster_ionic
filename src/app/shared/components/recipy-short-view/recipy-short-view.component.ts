@@ -95,15 +95,15 @@ export class RecipyShortViewComponent implements OnInit {
     } else return [];
   }
 
-  get isMobile(){
+  get isMobile() {
     return this.layoutService.getIsMobile()
   }
 
-  get isTablet(){
+  get isTablet() {
     return this.layoutService.getIsTablet()
   }
 
-  get isDesktop(){
+  get isDesktop() {
     return this.layoutService.getIsDesktop()
   }
 
@@ -138,17 +138,17 @@ export class RecipyShortViewComponent implements OnInit {
     this.router.navigate(['recipy/', this.recipy.id], {
       relativeTo: this.route,
     });
-   this.cancelClick()
-    
+    this.cancelClick()
+
   }
 
-  cancelClick(){
-     setTimeout(() => {
+  cancelClick() {
+    setTimeout(() => {
       this.isRecipyClicked = false;
     }, 2)
   }
-  cancelClickNoTimeout(){
-     this.isRecipyClicked = false;
+  cancelClickNoTimeout() {
+    this.isRecipyClicked = false;
   }
 
   activePreparationTime() {
@@ -176,26 +176,26 @@ export class RecipyShortViewComponent implements OnInit {
   }
 
   async onAddRecipyToCalendar() {
-    
-      const modal = await this.modalCtrl.create({
-        component: AddRecipyToCalendarModalComponent,
-        componentProps: {
-          selectedRecipy: this.recipy,
-          isEditMode: true,
-          portionSize: this.recipy.portionSize
-        }
-      });
-      modal.present();
-  
-      const { data, role } = await modal.onWillDismiss();
-  
-      if (role === 'confirm') {
-        this.store.dispatch(new AddRecipyToCalendarActionNew(data))
-      }
-      this.isRecipyClicked = false;
-    }
 
-    getCoeficient() {
+    const modal = await this.modalCtrl.create({
+      component: AddRecipyToCalendarModalComponent,
+      componentProps: {
+        selectedRecipy: this.recipy,
+        isEditMode: true,
+        portionSize: this.recipy.portionSize
+      }
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      this.store.dispatch(new AddRecipyToCalendarActionNew(data))
+    }
+    this.isRecipyClicked = false;
+  }
+
+  getCoeficient() {
     if (this.recipy && this.recipy.portionSize) {
       this.coefficient = this.datamapping.getCoeficient(
         this.recipy.ingrediends,
@@ -205,11 +205,17 @@ export class RecipyShortViewComponent implements OnInit {
     }
   }
 
-    getUnitText(unit: MeasuringUnit) {
-      return MeasuringUnitText[unit];
-    }
+  getUnitText(unit: MeasuringUnit) {
+    return MeasuringUnitText[unit];
+  }
 
-    isShowProductsWarning(){
-      return this.productPreferencesChips?.find(product => this.recipy.ingrediends.some(ingred => ingred.product === product.productId))
+  isShowProductsWarning() {
+    return this.productPreferencesChips?.find(product => this.recipy.ingrediends.some(ingred => ingred.product === product.productId))
+  }
+
+  ondragged(event: any) {
+    if (!this.currentUser && event.detail.amount > 20) {
+      this.goFullRecipy()
     }
+  }
 }
