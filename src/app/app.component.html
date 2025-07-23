@@ -1,10 +1,10 @@
 <ion-app class="app-container">
   <ion-split-pane contentId="main-content" when="false">
 
-    <ion-menu contentId="main-content">
+    <ion-menu contentId="main-content" *ngIf="user$ | async">
       <ion-content>
 
-        <ion-list *ngIf="user$ | async" lines="none">
+        <ion-list lines="none">
 
 
           <ion-menu-toggle autoHide="false">
