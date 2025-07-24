@@ -43,7 +43,7 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
   groups: string[] = [];
 
   portionsToServe: number = 4;
-  portionSize: number = AVERAGE_PORTION;
+  portionSize: number =  AVERAGE_PORTION;
 
   coeficient: number = 1;
 
@@ -56,8 +56,7 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
     this.destroy$.next();
   }
 
-  ngOnInit() {
-
+  ngOnInit() {   
     if (!this.portions && !this.amountPerPortion) {
       this.store.pipe(select(getUserPreferences), takeUntil(this.destroy$)).subscribe(preferences => {
         if (preferences && !preferences.isUsePersonalizedPortionSize && (!preferences.isUseRecommendedPortionSize || !this.recipy.portionSize)) {
@@ -65,6 +64,9 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
           this.getCoeficient()
         } else if (preferences && preferences.isUseRecommendedPortionSize && this.recipy.portionSize) {
           this.portionSize = this.recipy.portionSize;
+          this.getCoeficient()
+        } else {
+          this.portionSize = this.recipy?.portionSize ? this.recipy.portionSize : AVERAGE_PORTION;
           this.getCoeficient()
         }
       })
