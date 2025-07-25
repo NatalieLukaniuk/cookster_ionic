@@ -109,10 +109,9 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     map((res) => {
       let [recipies, filters, plannedRecipies, noShowIds] = res;
       const clonedRecipies = _.cloneDeep(recipies);
-      const filtered = this.filtersService.applyFilters(clonedRecipies, filters, noShowIds);
-      const mapped = filtered.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
-      const sorted = this.getSortedByLastPrepared(mapped as Recipy[]);
-      return sorted
+      const mapped = clonedRecipies.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
+      const filtered = this.filtersService.applyFilters(mapped as Recipy[], filters, noShowIds);
+      return filtered
     }),
     tap(recipies => this.recipies = recipies)
   );
