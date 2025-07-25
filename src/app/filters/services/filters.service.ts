@@ -67,7 +67,7 @@ export class FiltersService {
 
   getFilters = this.filters$.asObservable().pipe(shareReplay(1));
 
-  getCurrentFiltersValue(){
+  getCurrentFiltersValue() {
     return this.currentFilters;
   }
 
@@ -75,69 +75,93 @@ export class FiltersService {
     let _recipies = recipies.map((recipy) => recipy);
 
     _recipies = _recipies.filter((recipy) => !recipy.notApproved);
+    
     if (noShowIds) {
-      _recipies = _recipies.filter((recipy) => !noShowIds.includes(recipy.id))
+      _recipies = this.excludeNoShow(noShowIds, _recipies)
     }
 
     if (filters.collectionsToInclude.length && this.userCollections.length) {
-      let recipiesIdsToShow: string[] = [];
-      filters.collectionsToInclude.forEach(collection => {
-        const add = this.userCollections.find(item => item.name === collection)?.recipies;
-        if (add?.length) {
-          recipiesIdsToShow = recipiesIdsToShow.concat(add)
-        }
-      })
-      _recipies = _recipies.filter(recipy => recipiesIdsToShow.includes(recipy.id))
+      _recipies = this.filterByCollections(_recipies, filters.collectionsToInclude)
     }
 
     if (!!filters.ingredientsToInclude.length) {
-      _recipies = _recipies.filter((recipy) => {
-        let recipyIngredientsIds = recipy.ingrediends.map(
-          (ingr) => ingr.product
-        );
-        return filters.ingredientsToInclude.every((id) =>
-          recipyIngredientsIds.includes(id)
-        );
-      });
+      _recipies = this.filterByIngredients(true, _recipies, filters.ingredientsToInclude)
     }
     if (!!filters.ingredientsToExclude.length) {
-      _recipies = _recipies.filter((recipy) => {
-        let recipyIngredientsIds = recipy.ingrediends.map(
-          (ingr) => ingr.product
-        );
-        return !recipy.ingrediends.find((ingr) =>
-          filters.ingredientsToExclude.includes(ingr.product)
-        );
-      });
+      _recipies = this.filterByIngredients(false, _recipies, filters.ingredientsToExclude)
     }
     if (!!filters.tagsToShow.length) {
-      _recipies = _recipies.filter((recipy) => {
-        return filters.tagsToShow.some((tag) => recipy.type.includes(tag));
-      });
+      _recipies = this.filterByTags(true, _recipies, filters.tagsToShow)
     }
     if (!!filters.tagsToExclude.length) {
-      _recipies = _recipies.filter((recipy) => {
-        return !filters.tagsToExclude.some((tag) => recipy.type.includes(tag));
-      });
+      _recipies = this.filterByTags(false, _recipies, filters.tagsToExclude)
     }
     if (!!filters.maxPrepTime) {
-      const maxTime = filters.maxPrepTime;
-      _recipies = _recipies.filter((recipy) => {
-        let prepTime = 0;
-        recipy.steps.forEach((step) => {
-          prepTime = prepTime + (step.timeActive + step.timePassive);
-        });
-        return prepTime <= maxTime;
-      });
+      _recipies = this.filterByMaxPrepTime(_recipies, filters.maxPrepTime)
     }
     if (filters.search.length) {
-      _recipies = _recipies.filter((recipy) =>
-        recipy.name.toLowerCase().includes(filters.search.toLowerCase())
-      );
+      _recipies = this.filterBySearchWord(_recipies, filters.search)
     }
     this.filteredRecipies = _recipies.length;
     return this.applySorting(_recipies, filters.sorting, filters.sortingDirection);
   }
+
+  excludeNoShow(noShowIds: string[], recipies: Recipy[]) {
+    return recipies.filter((recipy) => !noShowIds.includes(recipy.id))
+  }
+
+  filterByCollections(recipies: Recipy[], collectionsToInclude: string[]) {
+    let recipiesIdsToShow: string[] = [];
+    collectionsToInclude.forEach(collection => {
+      const add = this.userCollections.find(item => item.name === collection)?.recipies;
+      if (add?.length) {
+        recipiesIdsToShow = recipiesIdsToShow.concat(add)
+      }
+    })
+    return recipies.filter(recipy => recipiesIdsToShow.includes(recipy.id))
+  }
+
+  filterByIngredients(isInclude: boolean, recipies: Recipy[], ingredientIds: string[]) {
+    if (isInclude) {
+      return recipies.filter((recipy) => {
+        let recipyIngredientsIds = recipy.ingrediends.map(
+          (ingr) => ingr.product
+        );
+        return ingredientIds.every((id) =>
+          recipyIngredientsIds.includes(id)
+        );
+      });
+    } else {
+      return recipies.filter((recipy) => {
+        return !recipy.ingrediends.find((ingr) =>
+          ingredientIds.includes(ingr.product)
+        );
+      });
+    }
+  }
+
+  filterByTags(isInclude: boolean, recipies: Recipy[], tags: number[]) {
+    return recipies.filter((recipy) => {
+      return isInclude ? tags.some((tag) => recipy.type.includes(tag)) : !tags.some((tag) => recipy.type.includes(tag));
+    });
+  }
+
+  filterByMaxPrepTime(recipies: Recipy[], maxPrepTime: number) {
+    return recipies.filter((recipy) => {
+      let prepTime = 0;
+      recipy.steps.forEach((step) => {
+        prepTime = prepTime + (step.timeActive + step.timePassive);
+      });
+      return prepTime <= maxPrepTime;
+    });
+  }
+
+  filterBySearchWord(recipies: Recipy[], searchWord: string){
+    return recipies.filter((recipy) =>
+        recipy.name.toLowerCase().includes(searchWord.toLowerCase())
+      );
+  }
+
 
   applySorting(recipies: Recipy[], sorting: RecipySorting, sortingDirection: RecipySortingDirection) {
     let _recipies: Recipy[] = [];
@@ -185,7 +209,7 @@ export class FiltersService {
   _sortByLastPrepared(a: Recipy, b: Recipy) {
     if (!a.lastPrepared && !b.lastPrepared) {
       return 0
-    } 
+    }
     if (!a.lastPrepared) {
       return -1
     }
@@ -297,13 +321,13 @@ export class FiltersService {
     this.onFiltersChange();
   }
 
-  toggleSorting(value: RecipySorting){
+  toggleSorting(value: RecipySorting) {
     this.currentFilters.sorting = value;
     this.onFiltersChange();
   }
 
-  toggleSortingDirection(){
-    if(this.currentFilters.sortingDirection === RecipySortingDirection.SmallToBig){
+  toggleSortingDirection() {
+    if (this.currentFilters.sortingDirection === RecipySortingDirection.SmallToBig) {
       this.currentFilters.sortingDirection = RecipySortingDirection.BigToSmall;
     } else {
       this.currentFilters.sortingDirection = RecipySortingDirection.SmallToBig;
@@ -316,11 +340,11 @@ export class FiltersService {
     this.filters$.next(this.clearedFilters);
   }
 
-  get isShowWidget(){
+  get isShowWidget() {
     return this.currentFilters.ingredientsToInclude.length ||
-    this.currentFilters.ingredientsToExclude.length ||
-    this.currentFilters.tagsToShow.length ||
-    this.currentFilters.tagsToExclude.length ||
-    !!this.currentFilters.maxPrepTime || this.currentFilters.collectionsToInclude.length
+      this.currentFilters.ingredientsToExclude.length ||
+      this.currentFilters.tagsToShow.length ||
+      this.currentFilters.tagsToExclude.length ||
+      !!this.currentFilters.maxPrepTime || this.currentFilters.collectionsToInclude.length
   }
 }
