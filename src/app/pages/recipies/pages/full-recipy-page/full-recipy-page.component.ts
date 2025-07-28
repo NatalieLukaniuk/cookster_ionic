@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 import { Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { Role } from 'src/app/models/auth.models';
 
 @Component({
   selector: 'app-full-recipy-page',
@@ -37,9 +38,9 @@ export class FullRecipyPageComponent implements OnInit, OnDestroy {
   );
 
   user$ = this.store.pipe(select(getCurrentUser));
-  isOwnRecipy$ = combineLatest([this.user$, this.recipy$]).pipe(
+  isCanEdit$ = combineLatest([this.user$, this.recipy$]).pipe(
     filter((res) => !!res[0] && !!res[1]),
-    map((res) => res[0]?.email === res[1]?.author)
+    map((res) => res[0]?.email === res[1]?.author || res[0]?.role === Role.Admin)
   );
   constructor(private store: Store<IAppState>, private router: Router, private titleService: Title) {
     const path = window.location.pathname.split('/');
