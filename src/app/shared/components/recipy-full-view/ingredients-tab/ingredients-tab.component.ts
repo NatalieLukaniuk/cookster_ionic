@@ -18,6 +18,7 @@ import { Store, select } from '@ngrx/store';
 import { getFamilyMembers, getUserPreferences } from 'src/app/store/selectors/user.selectors';
 import { Subject, takeUntil } from 'rxjs';
 import { AVERAGE_PORTION } from 'src/app/shared/constants';
+import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
   selector: 'app-ingredients-tab',
@@ -122,7 +123,8 @@ export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
       this.coeficient = this.datamapping.getCoeficient(
         this.recipy.ingrediends,
         this.portionsToServe,
-        this.portionSize
+        this.portionSize,
+        isDrinkOrSoup(this.recipy)
       );
     }
   }

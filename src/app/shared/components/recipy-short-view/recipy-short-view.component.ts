@@ -18,6 +18,7 @@ import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/compon
 import { ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { LayoutService } from 'src/app/services/layout.service';
+import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
   selector: 'app-recipy-short-view',
@@ -200,7 +201,8 @@ export class RecipyShortViewComponent implements OnInit {
       this.coefficient = this.datamapping.getCoeficient(
         this.recipy.ingrediends,
         1,
-        this.recipy.portionSize
+        this.recipy.portionSize,
+        isDrinkOrSoup(this.recipy)
       );
     }
   }

@@ -12,6 +12,7 @@ import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { ShoppingList, SLItem } from 'src/app/models/shopping-list.models';
 import { CalendarReworkedService } from '../../calendar-reworked.service';
+import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
   selector: 'app-products-per-day',
@@ -80,7 +81,8 @@ export class ProductsPerDayComponent implements OnDestroy, OnInit {
       return this.datamapping.getCoeficient(
         recipy.ingrediends,
         recipy.portions,
-        recipy.amountPerPortion
+        recipy.amountPerPortion,
+        isDrinkOrSoup(recipy)
       );
     } else return 0;
   }

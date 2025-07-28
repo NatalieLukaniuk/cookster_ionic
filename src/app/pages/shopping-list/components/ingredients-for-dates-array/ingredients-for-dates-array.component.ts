@@ -4,8 +4,8 @@ import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Subject, Subscription, combineLatest, filter, map, take, takeUntil, tap } from 'rxjs';
-import { Ingredient, Recipy } from 'src/app/models/recipies.models';
-import { NormalizeDisplayedAmountGetNumber, convertAmountToSelectedUnit, getRecipyNameById, getUnitText, transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
+import { DishType, Ingredient, Recipy } from 'src/app/models/recipies.models';
+import { NormalizeDisplayedAmountGetNumber, convertAmountToSelectedUnit, getRecipyNameById, getUnitText, isDrinkOrSoup, transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
 
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { DialogsService } from 'src/app/services/dialogs.service';
@@ -105,7 +105,8 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
               const coeficient = this.dataMapping.getCoeficient(
                 foundRecipy.ingrediends,
                 plannedRecipy.portions,
-                plannedRecipy.amountPerPortion
+                plannedRecipy.amountPerPortion,
+                isDrinkOrSoup(foundRecipy)
               );
               foundRecipy.ingrediends.forEach((ingr: Ingredient) => {
               let itemToPush = {
@@ -139,8 +140,9 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
 
   getCoef(recipy: RecipyForCalendar_Reworked): number {
     let totalAmount = 0;
+    const isLiquid = isDrinkOrSoup(recipy)
     recipy.ingrediends.forEach((ingr) => {
-      if (this.dataMapping.getIsIngredientIncludedInAmountCalculation(ingr)) {
+      if (this.dataMapping.getIsIngredientIncludedInAmountCalculation(ingr, isLiquid)) {
         totalAmount = totalAmount + +ingr.amount;
       }
     });

@@ -196,7 +196,8 @@ export class ExpencesService {
     const coef = this.dataMapping.getCoeficient(
       ingredients,
       portionsToServe,
-      portionSize
+      portionSize,
+      false
     );
 
     const totalCostInfo: RecipyCostInfo = {
@@ -260,7 +261,8 @@ export class ExpencesService {
     const coef = this.dataMapping.getCoeficient(
       ingredients,
       portionsToServe,
-      portionSize
+      portionSize,
+      false
     );
 
     const totalCostInfo: RecipyCostInfo = {
