@@ -23,7 +23,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import * as _ from 'lodash';
-import { User } from 'src/app/models/auth.models';
+import { Role, User } from 'src/app/models/auth.models';
 import {
   Complexity,
   ComplexityDescription,
@@ -180,7 +180,8 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
       isBaseRecipy: this.isBaseRecipy,
       source: this.recipySource,
       photo: this.photo,
-      portionSize: +this.portionSize
+      portionSize: +this.portionSize,
+      notApproved: !this.isAddAsApproved()
     };
   }
   collectDataExistingRecipy(): Recipy | null {
@@ -207,6 +208,10 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     let recipy: NewRecipy = this.collectDataNewRecipyOrDraft();
     this.store.dispatch(new AddNewRecipyAction(recipy));
     this.reset()
+  }
+
+  isAddAsApproved(){
+    return this.currentUser?.role === Role.Admin
   }
 
   updateRecipy() {

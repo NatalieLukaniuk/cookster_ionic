@@ -47,7 +47,7 @@ export class AddRecipyToNoShowComponent {
 
   isHidden(){
     if(this.recipy && this.currentUser){
-      return this.currentUser.preferences?.noShowRecipies.includes(this.recipy.id)
+      return this.currentUser.preferences?.noShowRecipies?.includes(this.recipy.id)
     }
     return false
   }

@@ -15,6 +15,7 @@ import { getLastPreparedDate } from 'src/app/pages/calendar/calendar.utils';
 import * as moment from 'moment';
 import { getActivePreparationTime, getPreparationTime } from 'src/app/pages/recipies/utils/recipy.utils';
 import { getExpenses } from 'src/app/store/selectors/expenses.selectors';
+import { UserService } from 'src/app/services/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,9 +26,7 @@ export class FiltersService {
   userCollections: RecipyCollection[] = [];
   userPlannedRecipies: CalendarRecipyInDatabase_Reworked[] = [];
 
-  currentUser: User | null = null;
-
-  constructor(private store: Store<IAppState>) { }
+  constructor(private store: Store<IAppState>, private userService: UserService) { }
   recipies$ = this.store.pipe(select(getAllRecipies));
 
   noShowRecipies$ = this.store.pipe(select(getUserPreferences), map(prefs => prefs ? prefs : defaultPrefs), map((preferences: Preferences) => preferences.noShowRecipies), shareReplay())
@@ -63,9 +62,7 @@ export class FiltersService {
   }))
 
   userPlannedRecipies$ = this.store.pipe(
-    select(getCurrentUser),
-    tap(user => this.currentUser = user),
-    map(user => user?.plannedRecipies),
+    select(getUserPlannedRecipies),
     tap(plannedRecipies => {
     if (plannedRecipies) {
       this.userPlannedRecipies = plannedRecipies;
@@ -81,7 +78,7 @@ export class FiltersService {
   applyFilters(recipies: Recipy[], filters: Filters, noShowIds?: string[]) {
     let _recipies = recipies.map((recipy) => recipy);
 
-    _recipies = _recipies.filter((recipy) => this.isShowRecipy(recipy, this.currentUser));
+    _recipies = _recipies.filter((recipy) => this.isShowRecipy(recipy, this.userService.currentUser));
 
     if (noShowIds) {
       _recipies = this.excludeNoShow(noShowIds, _recipies)
@@ -113,7 +110,7 @@ export class FiltersService {
     return this.applySorting(_recipies, filters.sorting, filters.sortingDirection);
   }
 
-  isShowRecipy(recipy: Recipy, currentUser: User | null) {
+  isShowRecipy(recipy: Recipy, currentUser: User | undefined) {    
     return !recipy.notApproved ? true : currentUser? (recipy.author === currentUser.email || currentUser.role === Role.Admin) : false;
   }
 
