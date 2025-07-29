@@ -1,4 +1,4 @@
-import { Preferences, defaultPrefs } from './../../models/auth.models';
+import { Preferences, Role, User, defaultPrefs } from './../../models/auth.models';
 import { Filters, RecipySorting, RecipySortingDirection } from 'src/app/models/filters.models';
 import { BehaviorSubject, map, shareReplay, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -9,7 +9,7 @@ import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import * as _ from 'lodash';
 import { ExpenseItem } from 'src/app/expenses/expenses-models';
-import { getUserCollections, getUserPlannedRecipies, getUserPreferences } from 'src/app/store/selectors/user.selectors';
+import { getCurrentUser, getUserCollections, getUserPlannedRecipies, getUserPreferences } from 'src/app/store/selectors/user.selectors';
 import { CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
 import { getLastPreparedDate } from 'src/app/pages/calendar/calendar.utils';
 import * as moment from 'moment';
@@ -24,6 +24,9 @@ export class FiltersService {
 
   userCollections: RecipyCollection[] = [];
   userPlannedRecipies: CalendarRecipyInDatabase_Reworked[] = [];
+
+  currentUser: User | null = null;
+
   constructor(private store: Store<IAppState>) { }
   recipies$ = this.store.pipe(select(getAllRecipies));
 
@@ -59,7 +62,11 @@ export class FiltersService {
     }
   }))
 
-  userPlannedRecipies$ = this.store.pipe(select(getUserPlannedRecipies), tap(plannedRecipies => {
+  userPlannedRecipies$ = this.store.pipe(
+    select(getCurrentUser),
+    tap(user => this.currentUser = user),
+    map(user => user?.plannedRecipies),
+    tap(plannedRecipies => {
     if (plannedRecipies) {
       this.userPlannedRecipies = plannedRecipies;
     }
@@ -74,8 +81,8 @@ export class FiltersService {
   applyFilters(recipies: Recipy[], filters: Filters, noShowIds?: string[]) {
     let _recipies = recipies.map((recipy) => recipy);
 
-    _recipies = _recipies.filter((recipy) => !recipy.notApproved);
-    
+    _recipies = _recipies.filter((recipy) => this.isShowRecipy(recipy, this.currentUser));
+
     if (noShowIds) {
       _recipies = this.excludeNoShow(noShowIds, _recipies)
     }
@@ -104,6 +111,10 @@ export class FiltersService {
     }
     this.filteredRecipies = _recipies.length;
     return this.applySorting(_recipies, filters.sorting, filters.sortingDirection);
+  }
+
+  isShowRecipy(recipy: Recipy, currentUser: User | null) {
+    return !recipy.notApproved ? true : currentUser? (recipy.author === currentUser.email || currentUser.role === Role.Admin) : false;
   }
 
   excludeNoShow(noShowIds: string[], recipies: Recipy[]) {
@@ -156,10 +167,10 @@ export class FiltersService {
     });
   }
 
-  filterBySearchWord(recipies: Recipy[], searchWord: string){
+  filterBySearchWord(recipies: Recipy[], searchWord: string) {
     return recipies.filter((recipy) =>
-        recipy.name.toLowerCase().includes(searchWord.toLowerCase())
-      );
+      recipy.name.toLowerCase().includes(searchWord.toLowerCase())
+    );
   }
 
 
