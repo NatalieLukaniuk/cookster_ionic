@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { Role } from 'src/app/models/auth.models';
+import { Recipy } from 'src/app/models/recipies.models';
+import { UpdateRecipyAction } from 'src/app/store/actions/recipies.actions';
 
 @Component({
   selector: 'app-full-recipy-page',
@@ -19,6 +21,8 @@ import { Role } from 'src/app/models/auth.models';
 })
 export class FullRecipyPageComponent implements OnInit, OnDestroy {
   recipyId: string;
+
+  currentRecipy: Recipy | undefined;
 
   recipy$ = this.store.pipe(
     select(getAllRecipies),
@@ -34,13 +38,19 @@ export class FullRecipyPageComponent implements OnInit, OnDestroy {
         console.log('updated')
         return updatedRecipy;
       } else return recipy;
-    })
+    }),
+    tap(recipy => this.currentRecipy = recipy)
   );
 
   user$ = this.store.pipe(select(getCurrentUser));
   isCanEdit$ = combineLatest([this.user$, this.recipy$]).pipe(
     filter((res) => !!res[0] && !!res[1]),
     map((res) => res[0]?.email === res[1]?.author || res[0]?.role === Role.Admin)
+  );
+
+  isShowApproveBtn$ = combineLatest([this.user$, this.recipy$]).pipe(
+    filter((res) => !!res[0] && !!res[1]),
+    map((res) => res[0]?.role === Role.Admin && res[1]?.notApproved)
   );
   constructor(private store: Store<IAppState>, private router: Router, private titleService: Title) {
     const path = window.location.pathname.split('/');
@@ -55,4 +65,12 @@ export class FullRecipyPageComponent implements OnInit, OnDestroy {
   goEditRecipy() {
     this.router.navigate(['tabs', 'recipies', 'edit-recipy', this.recipyId]);
   }
+
+  approveRecipy(){
+    if(this.currentRecipy){
+      const updated = {...this.currentRecipy, notApproved: false};
+      this.store.dispatch(new UpdateRecipyAction(updated))
+    }
+  }
+  
 }
