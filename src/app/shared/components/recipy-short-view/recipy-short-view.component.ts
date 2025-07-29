@@ -2,7 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { DataMappingService } from '../../../services/data-mapping.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from 'src/app/models/auth.models';
+import { Role, User } from 'src/app/models/auth.models';
 import {
   ComplexityDescription,
   DishType,
@@ -219,5 +219,9 @@ export class RecipyShortViewComponent implements OnInit {
     if (!this.currentUser && event.detail.amount > 20) {
       this.goFullRecipy()
     }
+  }
+
+  get isApprovedRecipy() {
+    return !this.recipy.notApproved;
   }
 }

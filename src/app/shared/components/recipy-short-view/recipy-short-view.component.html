@@ -155,6 +155,7 @@
       <div *ngIf="recipy.calorificValue" class="header-info-chip">
         {{ Math.round(recipy.calorificValue) }} ккал/100гр.
       </div>
+
       <div class="header-info-chip">
         <span>
           <ion-icon name="american-football-outline"></ion-icon>
@@ -170,6 +171,12 @@
       <div class="header-info-chip">
         <ion-icon name="alarm" *ngIf="isNeedsAdvancePreparation"></ion-icon>
         <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
+      </div>
+      <div class="header-info-chip" *ngIf="!isApprovedRecipy">
+        <span>
+          <ion-icon color="danger" name="hand-right"></ion-icon>
+        </span>
+
       </div>
     </div>
 
