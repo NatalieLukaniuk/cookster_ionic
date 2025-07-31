@@ -1,6 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FiltersService } from '../../services/filters.service';
 import { BehaviorSubject, debounce, debounceTime, Subscription } from 'rxjs';
+import { IonSearchbar } from '@ionic/angular';
 
 @Component({
   selector: 'app-search-recipies-filter',
@@ -16,6 +17,8 @@ export class SearchRecipiesFilterComponent implements OnInit, OnDestroy {
 
   sub = new Subscription();
 
+  @ViewChild('searchbar') searchbar: IonSearchbar | undefined;
+
   constructor(private filtersService: FiltersService) { }
   ngOnDestroy(): void {
     if (this.isClearOnDestroy) {
@@ -30,6 +33,11 @@ export class SearchRecipiesFilterComponent implements OnInit, OnDestroy {
       debounceTime(100)
     ).subscribe(searchKey => {
       this.filtersService.toggleSearch(searchKey);
+    }))
+    this.sub.add(this.filtersService.clearSearch$.subscribe(() => {
+      if(this.searchbar){
+        this.searchbar.value = ''
+      }
     }))
   }
 

@@ -70,4 +70,8 @@ export class ActiveFiltersWidgetComponent implements OnDestroy {
   get isShowWidget(){
     return this.filtersService.isShowWidget
   }
+
+  removeSearch(){
+    this.filtersService.clearSearch()
+  }
 }

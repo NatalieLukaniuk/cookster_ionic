@@ -1,6 +1,6 @@
 import { Preferences, Role, User, defaultPrefs } from './../../models/auth.models';
 import { Filters, RecipySorting, RecipySortingDirection } from 'src/app/models/filters.models';
-import { BehaviorSubject, map, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, map, shareReplay, Subject, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Recipy, RecipyCollection } from 'src/app/models/recipies.models';
 import { Store, select } from '@ngrx/store';
@@ -42,6 +42,8 @@ export class FiltersService {
     sorting: RecipySorting.Default,
     sortingDirection: RecipySortingDirection.SmallToBig
   };
+
+  clearSearch$ = new Subject<void>();
 
   private currentFilters: Filters = _.cloneDeep(this.clearedFilters);
 
@@ -353,6 +355,11 @@ export class FiltersService {
       this.currentFilters.ingredientsToExclude.length ||
       this.currentFilters.tagsToShow.length ||
       this.currentFilters.tagsToExclude.length ||
-      !!this.currentFilters.maxPrepTime || this.currentFilters.collectionsToInclude.length
+      !!this.currentFilters.maxPrepTime || this.currentFilters.collectionsToInclude.length || this.currentFilters.search.length
+  }
+
+  clearSearch(){
+    this.toggleSearch('');
+    this.clearSearch$.next()
   }
 }
