@@ -1,7 +1,7 @@
 <app-header>
     <ion-searchbar title class="searchbar" placeholder="Пошук за назвою" show-clear-button="always" [debounce]="500"
         (ionInput)="onSearch($event)" (ionClear)="clear()"></ion-searchbar>
-    <app-filters right-button [isExpensePage]="true" [pageId]="'check-price'"></app-filters>
+    <app-filters right-button [isExpensePage]="true" [pageId]="'check-price'" [isUserLoggedIn]="true"></app-filters>
 </app-header>
 <ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
     <app-active-filters-expenses-widget></app-active-filters-expenses-widget>

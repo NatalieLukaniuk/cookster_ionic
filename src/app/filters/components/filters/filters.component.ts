@@ -16,6 +16,7 @@ import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 export class FiltersComponent implements OnInit, OnDestroy {
   @Input() isExpensePage = false;
   @Input() pageId: string = '';
+  @Input() isUserLoggedIn = false;
 
   products: Product[] = [];
   products$: Observable<Product[]> = this.store.pipe(

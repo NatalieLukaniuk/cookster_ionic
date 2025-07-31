@@ -43,7 +43,7 @@
       </ion-title>
       <ng-container *ngIf="currentView === AddRecipyToCalView.SelectRecipy">
         <ion-buttons slot="end">
-          <app-filters [pageId]="'add-recipy-to-cal'"></app-filters>
+          <app-filters [pageId]="'add-recipy-to-cal'" [isUserLoggedIn]="true"></app-filters>
         </ion-buttons>
       </ng-container>
     </ion-toolbar>
