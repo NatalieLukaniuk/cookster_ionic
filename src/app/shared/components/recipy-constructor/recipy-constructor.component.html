@@ -8,27 +8,14 @@
   <ng-container *ngSwitchCase="tabs[0].value">
     <ion-item lines="none">
       <ion-label position="floating">Назва рецепту*</ion-label>
-      <ion-input [(ngModel)]="recipyName"></ion-input>
+      <ion-input [(ngModel)]="recipyName" (ngModelChange)="onChanges()"></ion-input>
     </ion-item>
     <ion-item lines="none">
       <ion-label position="floating">Джерело рецепту*</ion-label>
-      <ion-input [(ngModel)]="recipySource"></ion-input>
+      <ion-input [(ngModel)]="recipySource" (ngModelChange)="onChanges()"></ion-input>
     </ion-item>
     
     <ion-accordion-group>
-      <!-- <ion-accordion value="first">
-        <ion-item slot="header" color="tertiary">
-          <ion-label>Виберіть складність</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-radio-group [(ngModel)]="complexity">
-            <ion-item *ngFor="let unit of complexityOptions">
-              <ion-label>{{ getComplexityOptionsText(unit) }}</ion-label>
-              <ion-radio slot="end" [value]="unit"></ion-radio>
-            </ion-item>
-          </ion-radio-group>
-        </div>
-      </ion-accordion> -->
       <ion-accordion value="second">
         <ion-item lines="none" slot="header" [color]="selectedTags.length ? 'tertiary' : 'light'">
           <ion-label>Виберіть теги*</ion-label>

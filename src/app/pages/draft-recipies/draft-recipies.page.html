@@ -13,7 +13,8 @@
     >
       <ion-label>
         <h5>{{draft.name}}</h5>
-        <p>{{draft.createdOn | date}}</p>
+        <p>Додано: {{draft.createdOn | date}}</p>
+        <p *ngIf="draft.lastEdited">Відредаговано: {{draft.lastEdited | date}}</p>
       </ion-label>
     </ion-item>
   </ion-list>

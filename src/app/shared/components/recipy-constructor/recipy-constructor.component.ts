@@ -7,7 +7,7 @@ import {
   UpdateRecipyAction,
 } from './../../../store/actions/recipies.actions';
 import { AddDraftRecipyAction } from '../../../store/actions/recipies.actions';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import {
   DishType,
   DraftRecipy,
@@ -21,6 +21,7 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  OnDestroy,
 } from '@angular/core';
 import * as _ from 'lodash';
 import { Role, User } from 'src/app/models/auth.models';
@@ -30,13 +31,17 @@ import {
 } from 'src/app/models/recipies.models';
 import { getUnitText } from 'src/app/pages/recipies/utils/recipy.utils';
 import { ItemReorderEventDetail } from '@ionic/angular';
+import { debounceTime, Subject, Subscription, take } from 'rxjs';
+import { getUserDraftRecipies } from 'src/app/store/selectors/user.selectors';
+
+const SAVE_CHANGES_AFTER = 5400;
 
 @Component({
   selector: 'app-recipy-constructor',
   templateUrl: './recipy-constructor.component.html',
   styleUrls: ['./recipy-constructor.component.scss'],
 })
-export class RecipyConstructorComponent implements OnChanges, OnInit {
+export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy {
   @Input() recipyToPatch: DraftRecipy | Recipy | undefined | null;
   @Input() recipyToPatchOrder: number | undefined;
   @Input() currentUser!: User | null;
@@ -47,14 +52,16 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     { value: 'steps', icon: '', name: 'Приготування' }
   ];
 
-  get isPublished() {
+  changesDetected$ = new Subject<void>()
+
+  get isPublished(): boolean {
     if (this.recipyToPatch) {
       return 'id' in this.recipyToPatch;
     } else return false;
   }
 
-  get isSavedDraft() {
-    return this.recipyToPatch && this.recipyToPatchOrder;
+  get isSavedDraft(): boolean {
+    return !!(this.recipyToPatch && this.recipyToPatchOrder);
   }
 
   recipyName = '';
@@ -77,6 +84,8 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   isAddNewProduct = false;
 
+  subscriptions = new Subscription()
+
   get groups(): Set<string> {
     let mappedArray = this.ingredients.map((ingr) => ingr.group);
     let filteredarray = mappedArray.filter((group) => group !== undefined);
@@ -86,6 +95,9 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
   editStepIndex: number | null = null;
 
   constructor(private store: Store, private dataMapping: DataMappingService) { }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe()
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (
       !areObjectsEqual(
@@ -101,6 +113,14 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   ngOnInit(): void {
     this.tags = this.gettags();
+    if (!this.recipyToPatch || !('id' in this.recipyToPatch)) {
+      this.subscriptions.add(
+        this.changesDetected$.pipe(debounceTime(SAVE_CHANGES_AFTER)).subscribe(() => {
+          this.saveEditedDraft()
+        })
+      )
+    }
+
   }
 
   patchExistingRecipy() {
@@ -160,10 +180,32 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   saveEditedDraft() {
     let draftRecipy: DraftRecipy = this.collectDataNewRecipyOrDraft();
+    draftRecipy.lastEdited = Date.now()
+
     if (this.recipyToPatchOrder) {
       this.store.dispatch(
         new UpdateDraftRecipyAction(draftRecipy, this.recipyToPatchOrder)
       );
+    } else {
+      this.store.pipe(select(getUserDraftRecipies), take(1)).subscribe(res => {
+        if (res) {
+          const existingDraftIndex = res.findIndex(recipy => recipy.name.trim() === this.recipyName.trim());
+          if (existingDraftIndex >= 0) {
+            const found = res.find(recipy => recipy.name.trim() === this.recipyName.trim())
+            if(found){
+              draftRecipy.createdOn = found.createdOn;
+            }
+            this.store.dispatch(
+              new UpdateDraftRecipyAction(draftRecipy, existingDraftIndex)
+            );
+          } else {
+            this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
+          }
+        } else {
+          this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
+        }
+      })
+
     }
   }
 
@@ -175,7 +217,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
       steps: this.steps,
       type: this.selectedTags,
       author: this.currentUser!.email,
-      createdOn: Date.now(),
+      createdOn: this.recipyToPatch ? this.recipyToPatch.createdOn : Date.now(),
       isSplitIntoGroups: this.isSplitIntoGroups,
       isBaseRecipy: this.isBaseRecipy,
       source: this.recipySource,
@@ -210,7 +252,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     this.reset()
   }
 
-  isAddAsApproved(){
+  isAddAsApproved() {
     return this.currentUser?.role === Role.Admin
   }
 
@@ -228,6 +270,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   onBaseChange(event: any) {
     this.isBaseRecipy = event.detail.checked;
+    this.onChanges()
   }
 
   onTagClicked(tag: DishType) {
@@ -236,6 +279,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     } else {
       this.selectedTags = this.selectedTags.filter((item) => item !== tag);
     }
+    this.onChanges()
   }
 
   get isReadyToPublish() {
@@ -287,20 +331,24 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   onAddIngredient(event: Ingredient) {
     this.ingredients.push(event);
+    this.onChanges()
   }
 
   onDeleteIngr(index: number) {
     this.ingredients = this.ingredients.filter((item, i) => i !== index);
+    this.onChanges()
   }
 
   onDeleteStep(step: PreparationStep) {
     this.steps = this.steps.filter(
       (item) => item.description !== step.description
     );
+    this.onChanges()
   }
 
   onAddNewStep(step: PreparationStep) {
     this.steps.push(step);
+    this.onChanges()
   }
 
   getIngredient(product: string) {
@@ -310,6 +358,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
   handleReorder(ev: CustomEvent<ItemReorderEventDetail>) {
     ev.detail.complete();
     this.steps = this.move(ev.detail.from, ev.detail.to, this.steps);
+    this.onChanges()
   }
 
   move(from: number, to: number, arr: any[]) {
@@ -321,6 +370,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   onFileUploaded(event: string) {
     this.photo = event;
+    this.onChanges()
   }
 
   onGroupSelected(event: string, index: number) {
@@ -329,6 +379,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
 
   saveStep() {
     this.editStepIndex = null;
+    this.onChanges()
   }
 
   editStep(index: number) {
@@ -376,5 +427,10 @@ export class RecipyConstructorComponent implements OnChanges, OnInit {
     const totalCal = this.dataMapping.countRecipyTotalCalories(this.ingredients);
     const recommended = totalPortion * recommendedCaloriesPerPortion / totalCal;
     this.portionSize = Math.round(recommended).toString();
+    this.onChanges()
+  }
+
+  onChanges() {
+    this.changesDetected$.next()
   }
 }
