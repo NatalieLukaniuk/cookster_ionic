@@ -1,9 +1,19 @@
 <div *ngIf="!!currentFilters" class="wrapper">
   <div class="title" *ngIf="isShowWidget">
-    <div class="search-bar" *ngIf="currentFilters.search.length">
-      <ion-chip (click)="removeSearch()">
+    <div class="search-bar"
+      *ngIf="currentFilters.search.length || currentFilters.sorting !== DEFAULT_SORTING || currentFilters.sortingDirection !== DEFAULT_SORTING_DIRECTION">
+      <ion-chip (click)="removeSearch()" *ngIf="currentFilters.search.length">
         <ion-icon name="search-outline" color="secondary"></ion-icon>
         <ion-label>{{currentFilters.search}}</ion-label>
+        <ion-icon name="close" color="secondary"></ion-icon>
+      </ion-chip>
+      <ion-chip (click)="clearSorting()"
+        *ngIf="currentFilters.sorting !== DEFAULT_SORTING || currentFilters.sortingDirection !== DEFAULT_SORTING_DIRECTION">
+        <ion-icon *ngIf="currentFilters.sortingDirection === RecipySortingDirection.SmallToBig" name="arrow-up-outline"
+          color="secondary"></ion-icon>
+        <ion-icon *ngIf="currentFilters.sortingDirection === RecipySortingDirection.BigToSmall"
+          name="arrow-down-outline" color="secondary"></ion-icon>
+        <ion-label>{{getOptionLabel(currentFilters.sorting)}}</ion-label>
         <ion-icon name="close" color="secondary"></ion-icon>
       </ion-chip>
     </div>

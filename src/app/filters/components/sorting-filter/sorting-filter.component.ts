@@ -3,6 +3,9 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Filters, RecipySorting, RecipySortingDirection } from 'src/app/models/filters.models';
 import { FiltersService } from '../../services/filters.service';
 
+export const DEFAULT_SORTING = RecipySorting.Default;
+export const DEFAULT_SORTING_DIRECTION = RecipySortingDirection.SmallToBig;
+
 @Component({
   selector: 'app-sorting-filter',
   templateUrl: './sorting-filter.component.html',
@@ -30,7 +33,7 @@ export class SortingFilterComponent implements OnChanges {
 
   RecipySortingDirection = RecipySortingDirection;
 
-  sortingValue: RecipySorting = RecipySorting.Default;
+  sortingValue: RecipySorting = DEFAULT_SORTING;
 
   constructor(private filtersService: FiltersService) { }
 

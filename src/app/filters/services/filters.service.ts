@@ -1,3 +1,4 @@
+import { DEFAULT_SORTING, DEFAULT_SORTING_DIRECTION } from './../components/sorting-filter/sorting-filter.component';
 import { Preferences, Role, User, defaultPrefs } from './../../models/auth.models';
 import { Filters, RecipySorting, RecipySortingDirection } from 'src/app/models/filters.models';
 import { BehaviorSubject, map, shareReplay, Subject, tap } from 'rxjs';
@@ -39,8 +40,8 @@ export class FiltersService {
     tagsToExclude: [],
     collectionsToInclude: [],
     search: '',
-    sorting: RecipySorting.Default,
-    sortingDirection: RecipySortingDirection.SmallToBig
+    sorting: DEFAULT_SORTING,
+    sortingDirection: DEFAULT_SORTING_DIRECTION
   };
 
   clearSearch$ = new Subject<void>();
@@ -345,6 +346,12 @@ export class FiltersService {
     this.onFiltersChange()
   }
 
+  resetSortingToDefault(){
+    this.currentFilters.sortingDirection = DEFAULT_SORTING_DIRECTION;
+    this.currentFilters.sorting = DEFAULT_SORTING;
+     this.onFiltersChange()
+  }
+
   resetFilters() {
     this.currentFilters = _.cloneDeep(this.clearedFilters);
     this.filters$.next(this.clearedFilters);
@@ -355,7 +362,11 @@ export class FiltersService {
       this.currentFilters.ingredientsToExclude.length ||
       this.currentFilters.tagsToShow.length ||
       this.currentFilters.tagsToExclude.length ||
-      !!this.currentFilters.maxPrepTime || this.currentFilters.collectionsToInclude.length || this.currentFilters.search.length
+      !!this.currentFilters.maxPrepTime ||
+      this.currentFilters.collectionsToInclude.length ||
+      this.currentFilters.search.length ||
+      this.currentFilters.sorting !== DEFAULT_SORTING ||
+      this.currentFilters.sortingDirection !== DEFAULT_SORTING_DIRECTION
   }
 
   clearSearch(){
