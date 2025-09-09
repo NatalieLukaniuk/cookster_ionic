@@ -3,7 +3,7 @@
     <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
   </ion-button>
   <span class="date-title">{{
-    (currentDay$ | async)?.toString() | date : "EEEE, d MMMM"
+    (currentDay$ | async)?.toString() | date : "EEE, d MMM"
     }}</span>
   <ion-button size="small" (click)="goNextDay()" color="primary" fill="clear">
     <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
