@@ -30,9 +30,9 @@
     "@capacitor/keyboard": "^6.0.0",
     "@capacitor/status-bar": "^6.0.0",
     "@ionic/angular": "^8.4.3",
-    "@ngrx/effects": "^17.2.0",
-    "@ngrx/store": "^17.2.0",
-    "@ngrx/store-devtools": "^17.2.0",
+    "@ngrx/effects": "^18.1.1",
+    "@ngrx/store": "^18.1.1",
+    "@ngrx/store-devtools": "^18.1.1",
     "angular-device-information": "^4.0.0",
     "angular-ng-autocomplete": "^2.0.12",
     "firebase": "^9.16.0",
@@ -41,7 +41,8 @@
     "moment": "^2.29.4",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.10"
+    "zone.js": "~0.14.10",
+    "@ngrx/operators": "^18.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.21",
