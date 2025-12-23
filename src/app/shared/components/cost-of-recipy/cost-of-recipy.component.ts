@@ -5,10 +5,9 @@ import { ExpencesService, RecipyCostInfo } from 'src/app/expenses/expences.servi
 import { Ingredient } from 'src/app/models/recipies.models';
 
 @Component({
-    selector: 'app-cost-of-recipy',
-    templateUrl: './cost-of-recipy.component.html',
-    styleUrls: ['./cost-of-recipy.component.scss'],
-    standalone: false
+  selector: 'app-cost-of-recipy',
+  templateUrl: './cost-of-recipy.component.html',
+  styleUrls: ['./cost-of-recipy.component.scss']
 })
 export class CostOfRecipyComponent implements OnInit {
   @Input() ingredients: Ingredient[] = [];

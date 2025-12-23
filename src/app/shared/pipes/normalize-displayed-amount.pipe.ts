@@ -3,8 +3,7 @@ import { MeasuringUnit } from 'src/app/models/recipies.models';
 import { NormalizeDisplayedAmount } from '../../pages/recipies/utils/recipy.utils';
 
 @Pipe({
-    name: 'normalizeDisplayedAmount',
-    standalone: false
+  name: 'normalizeDisplayedAmount',
 })
 export class NormalizeDisplayedAmountPipe implements PipeTransform {
   transform(realAmount: number, unit: MeasuringUnit): any {

@@ -10,10 +10,9 @@ import * as _ from 'lodash';
 import { ExpencesService } from 'src/app/expenses/expences.service';
 
 @Component({
-    selector: 'app-products',
-    templateUrl: './products.component.html',
-    styleUrls: ['./products.component.scss'],
-    standalone: false
+  selector: 'app-products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent implements OnInit {
   productsTableData: string[][] = [];

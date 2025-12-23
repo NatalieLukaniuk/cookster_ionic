@@ -8,10 +8,9 @@ import { ShowSuccessMessageAction } from 'src/app/store/actions/ui.actions';
 import { IAppState } from 'src/app/store/reducers';
 
 @Component({
-    selector: 'app-add-product-form',
-    templateUrl: './add-product-form.component.html',
-    styleUrls: ['./add-product-form.component.scss'],
-    standalone: false
+  selector: 'app-add-product-form',
+  templateUrl: './add-product-form.component.html',
+  styleUrls: ['./add-product-form.component.scss']
 })
 export class AddProductFormComponent implements OnInit {
   productForm!: UntypedFormGroup;

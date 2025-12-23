@@ -3,10 +3,9 @@ import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 
 @Component({
-    selector: 'app-multiple-dates-picker-modal',
-    templateUrl: './multiple-dates-picker-modal.component.html',
-    styleUrls: ['./multiple-dates-picker-modal.component.scss'],
-    standalone: false
+  selector: 'app-multiple-dates-picker-modal',
+  templateUrl: './multiple-dates-picker-modal.component.html',
+  styleUrls: ['./multiple-dates-picker-modal.component.scss'],
 })
 export class MultipleDatesPickerModalComponent {
 @Output() datesSelected = new EventEmitter<string[]>();

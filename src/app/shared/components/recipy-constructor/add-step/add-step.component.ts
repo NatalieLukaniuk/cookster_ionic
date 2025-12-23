@@ -2,10 +2,9 @@ import { PreparationStep } from '../../../../models/recipies.models';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
-    selector: 'app-add-step',
-    templateUrl: './add-step.component.html',
-    styleUrls: ['./add-step.component.scss'],
-    standalone: false
+  selector: 'app-add-step',
+  templateUrl: './add-step.component.html',
+  styleUrls: ['./add-step.component.scss'],
 })
 export class AddStepComponent implements OnInit {
   @Output() addNewStep = new EventEmitter<PreparationStep>();

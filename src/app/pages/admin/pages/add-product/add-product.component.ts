@@ -8,10 +8,9 @@ import { Observable, map } from 'rxjs';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 
 @Component({
-    selector: 'app-add-product',
-    templateUrl: './add-product.component.html',
-    styleUrls: ['./add-product.component.scss'],
-    standalone: false
+  selector: 'app-add-product',
+  templateUrl: './add-product.component.html',
+  styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent {
   products: Product[] = [];

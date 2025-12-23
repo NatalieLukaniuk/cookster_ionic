@@ -8,10 +8,9 @@ import { UpdateUserAction } from 'src/app/store/actions/user.actions';
 import { IAppState } from 'src/app/store/reducers';
 
 @Component({
-    selector: 'app-collections-action-sheet',
-    templateUrl: './collections-action-sheet.component.html',
-    styleUrls: ['./collections-action-sheet.component.scss'],
-    standalone: false
+  selector: 'app-collections-action-sheet',
+  templateUrl: './collections-action-sheet.component.html',
+  styleUrls: ['./collections-action-sheet.component.scss'],
 })
 export class CollectionsActionSheetComponent implements OnInit {
   ngOnInit(): void {

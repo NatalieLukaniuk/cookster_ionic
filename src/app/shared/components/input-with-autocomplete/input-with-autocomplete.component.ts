@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
-    selector: 'app-input-with-autocomplete',
-    templateUrl: './input-with-autocomplete.component.html',
-    styleUrls: ['./input-with-autocomplete.component.scss'],
-    standalone: false
+  selector: 'app-input-with-autocomplete',
+  templateUrl: './input-with-autocomplete.component.html',
+  styleUrls: ['./input-with-autocomplete.component.scss']
 })
 export class InputWithAutocompleteComponent {
   @Input() suggestions: string[] = [];

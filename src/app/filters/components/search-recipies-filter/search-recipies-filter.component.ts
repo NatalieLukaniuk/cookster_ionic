@@ -4,10 +4,9 @@ import { BehaviorSubject, debounce, debounceTime, Subscription } from 'rxjs';
 import { IonSearchbar } from '@ionic/angular';
 
 @Component({
-    selector: 'app-search-recipies-filter',
-    templateUrl: './search-recipies-filter.component.html',
-    styleUrls: ['./search-recipies-filter.component.scss'],
-    standalone: false
+  selector: 'app-search-recipies-filter',
+  templateUrl: './search-recipies-filter.component.html',
+  styleUrls: ['./search-recipies-filter.component.scss'],
 })
 export class SearchRecipiesFilterComponent implements OnInit, OnDestroy {
   @Input() isClearOnDestroy = true;

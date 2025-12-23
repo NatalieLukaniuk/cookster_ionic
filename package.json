@@ -15,12 +15,12 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^19.2.17",
-    "@angular/core": "^19.2.17",
-    "@angular/forms": "^19.2.17",
-    "@angular/platform-browser": "^19.2.17",
-    "@angular/platform-browser-dynamic": "^19.2.17",
-    "@angular/router": "^19.2.17",
+    "@angular/common": "^18.2.14",
+    "@angular/core": "^18.2.14",
+    "@angular/forms": "^18.2.14",
+    "@angular/platform-browser": "^18.2.14",
+    "@angular/platform-browser-dynamic": "^18.2.14",
+    "@angular/router": "^18.2.14",
     "@awesome-cordova-plugins/screen-orientation": "^6.6.0",
     "@bcyesil/capacitor-plugin-printer": "^0.0.5",
     "@capacitor/android": "^6.0.0",
@@ -41,19 +41,19 @@
     "moment": "^2.29.4",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.1",
+    "zone.js": "~0.14.10",
     "@ngrx/operators": "^18.0.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.2.19",
+    "@angular-devkit/build-angular": "^18.2.21",
     "@angular-eslint/builder": "^14.0.0",
     "@angular-eslint/eslint-plugin": "^14.0.0",
     "@angular-eslint/eslint-plugin-template": "^14.0.0",
     "@angular-eslint/template-parser": "^14.0.0",
-    "@angular/cli": "^19.2.19",
-    "@angular/compiler": "^19.2.17",
-    "@angular/compiler-cli": "^19.2.17",
-    "@angular/language-service": "^19.2.17",
+    "@angular/cli": "^18.2.21",
+    "@angular/compiler": "^18.2.14",
+    "@angular/compiler-cli": "^18.2.14",
+    "@angular/language-service": "^18.2.14",
     "@capacitor/cli": "^6.0.0",
     "@ionic/angular-toolkit": "9.0.0",
     "@types/jasmine": "~4.0.0",
@@ -74,7 +74,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "ts-node": "~8.3.0",
-    "typescript": "~5.8.3"
+    "typescript": "~5.4.5"
   },
   "description": "An Ionic project"
 }

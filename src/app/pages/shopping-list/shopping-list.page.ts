@@ -17,10 +17,9 @@ import { AddToListModalComponent } from './components/add-to-list-modal/add-to-l
 import { ShoppingList, ShoppingListItem } from 'src/app/models/shopping-list.models';
 
 @Component({
-    selector: 'app-shopping-list',
-    templateUrl: './shopping-list.page.html',
-    styleUrls: ['./shopping-list.page.scss'],
-    standalone: false
+  selector: 'app-shopping-list',
+  templateUrl: './shopping-list.page.html',
+  styleUrls: ['./shopping-list.page.scss'],
 })
 export class ShoppingListPage implements OnInit, OnDestroy {
   destroyed$ = new Subject<void>();

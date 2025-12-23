@@ -6,10 +6,9 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
-    standalone: false
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
   @Input() isShowDoubleToolbar = true;

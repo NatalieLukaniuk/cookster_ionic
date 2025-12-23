@@ -14,10 +14,9 @@ import { CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.model
 import { getLastPreparedDate } from 'src/app/pages/calendar/calendar.utils';
 
 @Component({
-    selector: 'app-recipies',
-    templateUrl: 'recipies.page.html',
-    styleUrls: ['recipies.page.scss'],
-    standalone: false
+  selector: 'app-recipies',
+  templateUrl: 'recipies.page.html',
+  styleUrls: ['recipies.page.scss'],
 })
 export class RecipiesContainer implements OnDestroy {
   filters$ = this.filtersService.getFilters;

@@ -4,10 +4,9 @@ import { from } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 @Component({
-    selector: 'app-file-upload',
-    templateUrl: './file-upload.component.html',
-    styleUrls: ['./file-upload.component.scss'],
-    standalone: false
+  selector: 'app-file-upload',
+  templateUrl: './file-upload.component.html',
+  styleUrls: ['./file-upload.component.scss'],
 })
 export class FileUploadComponent {
   @Output() fileUploaded = new EventEmitter<string>(); //emits file name

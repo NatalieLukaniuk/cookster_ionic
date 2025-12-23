@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
-    selector: 'app-controller-list-select-dialog',
-    templateUrl: './controller-list-select-dialog.component.html',
-    styleUrls: ['./controller-list-select-dialog.component.scss'],
-    standalone: false
+  selector: 'app-controller-list-select-dialog',
+  templateUrl: './controller-list-select-dialog.component.html',
+  styleUrls: ['./controller-list-select-dialog.component.scss']
 })
 export class ControllerListSelectDialogComponent {
   list: string[] = [];

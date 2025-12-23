@@ -3,10 +3,9 @@ import { MeasuringUnitOptionsFluid, MeasuringUnit, MeasuringUnitText } from 'src
 import { getAmountInL } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
-    selector: 'app-density-calculator-widget',
-    templateUrl: './density-calculator-widget.component.html',
-    styleUrls: ['./density-calculator-widget.component.scss'],
-    standalone: false
+  selector: 'app-density-calculator-widget',
+  templateUrl: './density-calculator-widget.component.html',
+  styleUrls: ['./density-calculator-widget.component.scss'],
 })
 export class DensityCalculatorWidgetComponent  implements OnInit {
 

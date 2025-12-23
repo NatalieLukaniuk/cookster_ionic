@@ -37,10 +37,9 @@ import { getUserDraftRecipies } from 'src/app/store/selectors/user.selectors';
 const SAVE_CHANGES_AFTER = 5400;
 
 @Component({
-    selector: 'app-recipy-constructor',
-    templateUrl: './recipy-constructor.component.html',
-    styleUrls: ['./recipy-constructor.component.scss'],
-    standalone: false
+  selector: 'app-recipy-constructor',
+  templateUrl: './recipy-constructor.component.html',
+  styleUrls: ['./recipy-constructor.component.scss'],
 })
 export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy {
   @Input() recipyToPatch: DraftRecipy | Recipy | undefined | null;

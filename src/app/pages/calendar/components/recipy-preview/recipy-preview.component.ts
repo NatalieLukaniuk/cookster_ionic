@@ -9,10 +9,9 @@ import { Store } from '@ngrx/store';
 import { iSameDay } from '../../calendar.utils';
 
 @Component({
-    selector: 'app-recipy-preview',
-    templateUrl: './recipy-preview.component.html',
-    styleUrls: ['./recipy-preview.component.scss'],
-    standalone: false
+  selector: 'app-recipy-preview',
+  templateUrl: './recipy-preview.component.html',
+  styleUrls: ['./recipy-preview.component.scss'],
 })
 export class RecipyPreviewComponent implements OnInit {
   @Input() recipy!: RecipyForCalendar_Reworked;

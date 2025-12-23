@@ -22,10 +22,9 @@ import * as _ from 'lodash';
 import { ExpencesService } from 'src/app/expenses/expences.service';
 
 @Component({
-    selector: 'app-recipies',
-    templateUrl: './recipies.component.html',
-    styleUrls: ['./recipies.component.scss'],
-    standalone: false
+  selector: 'app-recipies',
+  templateUrl: './recipies.component.html',
+  styleUrls: ['./recipies.component.scss'],
 })
 export class RecipiesComponent implements OnInit {
   Object = Object;

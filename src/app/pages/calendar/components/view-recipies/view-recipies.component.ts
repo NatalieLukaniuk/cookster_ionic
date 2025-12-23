@@ -9,10 +9,9 @@ import { DialogsService } from 'src/app/services/dialogs.service';
 import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 
 @Component({
-    selector: 'app-view-recipies',
-    templateUrl: './view-recipies.component.html',
-    styleUrls: ['./view-recipies.component.scss'],
-    standalone: false
+  selector: 'app-view-recipies',
+  templateUrl: './view-recipies.component.html',
+  styleUrls: ['./view-recipies.component.scss'],
 })
 export class ViewRecipiesComponent implements OnInit {
   openedRecipies$: Observable<RecipyForCalendar_Reworked[]> = this.calendarService.getOpenedRecipies().pipe(tap(openedRecipies => {

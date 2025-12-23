@@ -21,10 +21,9 @@ enum AddRecipyToCalView {
 }
 
 @Component({
-    selector: 'app-add-recipy-to-calendar-modal',
-    templateUrl: './add-recipy-to-calendar-modal.component.html',
-    styleUrls: ['./add-recipy-to-calendar-modal.component.scss'],
-    standalone: false
+  selector: 'app-add-recipy-to-calendar-modal',
+  templateUrl: './add-recipy-to-calendar-modal.component.html',
+  styleUrls: ['./add-recipy-to-calendar-modal.component.scss'],
 })
 export class AddRecipyToCalendarModalComponent implements OnInit {
 

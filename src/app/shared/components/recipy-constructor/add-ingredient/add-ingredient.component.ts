@@ -30,10 +30,9 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { Role } from 'src/app/models/auth.models';
 
 @Component({
-    selector: 'app-add-ingredient',
-    templateUrl: './add-ingredient.component.html',
-    styleUrls: ['./add-ingredient.component.scss'],
-    standalone: false
+  selector: 'app-add-ingredient',
+  templateUrl: './add-ingredient.component.html',
+  styleUrls: ['./add-ingredient.component.scss'],
 })
 export class AddIngredientComponent implements OnInit, OnDestroy {
   @Output() addNewIngredient = new EventEmitter<Ingredient>();

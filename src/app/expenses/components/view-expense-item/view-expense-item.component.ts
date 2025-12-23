@@ -5,10 +5,9 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { ExpencesService } from '../../expences.service';
 
 @Component({
-    selector: 'app-view-expense-item',
-    templateUrl: './view-expense-item.component.html',
-    styleUrls: ['./view-expense-item.component.scss'],
-    standalone: false
+  selector: 'app-view-expense-item',
+  templateUrl: './view-expense-item.component.html',
+  styleUrls: ['./view-expense-item.component.scss']
 })
 export class ViewExpenseItemComponent {
   @Input() expenseItem!: ExpenseItem;

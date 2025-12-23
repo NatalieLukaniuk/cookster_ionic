@@ -15,10 +15,9 @@ import { CalendarReworkedService } from '../../calendar-reworked.service';
 import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
-    selector: 'app-products-per-day',
-    templateUrl: './products-per-day.component.html',
-    styleUrls: ['./products-per-day.component.scss'],
-    standalone: false
+  selector: 'app-products-per-day',
+  templateUrl: './products-per-day.component.html',
+  styleUrls: ['./products-per-day.component.scss'],
 })
 export class ProductsPerDayComponent implements OnDestroy, OnInit {
 

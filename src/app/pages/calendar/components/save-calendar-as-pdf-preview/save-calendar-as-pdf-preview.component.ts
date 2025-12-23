@@ -21,10 +21,9 @@ interface PreviewTreeItem {
 }
 
 @Component({
-    selector: 'app-save-calendar-as-pdf-preview',
-    templateUrl: './save-calendar-as-pdf-preview.component.html',
-    styleUrls: ['./save-calendar-as-pdf-preview.component.scss'],
-    standalone: false
+  selector: 'app-save-calendar-as-pdf-preview',
+  templateUrl: './save-calendar-as-pdf-preview.component.html',
+  styleUrls: ['./save-calendar-as-pdf-preview.component.scss'],
 })
 export class SaveCalendarAsPdfPreviewComponent implements OnInit {
   recipies: RecipyForCalendar_Reworked[] = [];

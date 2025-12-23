@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { CalendarReworkedService } from '../../calendar-reworked.service';
 
 @Component({
-    selector: 'app-calendar-day-selector',
-    templateUrl: './calendar-day-selector.component.html',
-    styleUrls: ['./calendar-day-selector.component.scss'],
-    standalone: false
+  selector: 'app-calendar-day-selector',
+  templateUrl: './calendar-day-selector.component.html',
+  styleUrls: ['./calendar-day-selector.component.scss'],
 })
 export class CalendarDaySelectorComponent {
   

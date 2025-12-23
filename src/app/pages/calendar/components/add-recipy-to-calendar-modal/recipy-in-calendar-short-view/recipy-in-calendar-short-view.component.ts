@@ -2,10 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DishType, Recipy } from 'src/app/models/recipies.models';
 
 @Component({
-    selector: 'app-recipy-in-calendar-short-view',
-    templateUrl: './recipy-in-calendar-short-view.component.html',
-    styleUrls: ['./recipy-in-calendar-short-view.component.scss'],
-    standalone: false
+  selector: 'app-recipy-in-calendar-short-view',
+  templateUrl: './recipy-in-calendar-short-view.component.html',
+  styleUrls: ['./recipy-in-calendar-short-view.component.scss'],
 })
 export class RecipyInCalendarShortViewComponent implements OnInit {
 

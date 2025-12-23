@@ -9,10 +9,9 @@ import { IAppState } from 'src/app/store/reducers';
 import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 
 @Component({
-    selector: 'app-filters',
-    templateUrl: './filters.component.html',
-    styleUrls: ['./filters.component.scss'],
-    standalone: false
+  selector: 'app-filters',
+  templateUrl: './filters.component.html',
+  styleUrls: ['./filters.component.scss'],
 })
 export class FiltersComponent implements OnInit, OnDestroy {
   @Input() isExpensePage = false;

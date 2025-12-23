@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-    selector: 'app-recipy-in-calendar-select-portions-and-amount',
-    templateUrl: './recipy-in-calendar-select-portions-and-amount.component.html',
-    styleUrls: ['./recipy-in-calendar-select-portions-and-amount.component.scss'],
-    standalone: false
+  selector: 'app-recipy-in-calendar-select-portions-and-amount',
+  templateUrl: './recipy-in-calendar-select-portions-and-amount.component.html',
+  styleUrls: ['./recipy-in-calendar-select-portions-and-amount.component.scss'],
 })
 export class RecipyInCalendarSelectPortionsAndAmountComponent implements OnInit {
   @Input() initialPortionsValue: number | null = null;

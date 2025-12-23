@@ -11,10 +11,9 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { getUnitText } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
-    selector: 'app-preps',
-    templateUrl: './preps.component.html',
-    styleUrls: ['./preps.component.scss'],
-    standalone: false
+  selector: 'app-preps',
+  templateUrl: './preps.component.html',
+  styleUrls: ['./preps.component.scss'],
 })
 export class PrepsComponent implements OnChanges {
   @Input() ingredients!: Ingredient[];

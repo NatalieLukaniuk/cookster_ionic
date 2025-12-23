@@ -4,10 +4,9 @@ import { FiltersService } from '../../services/filters.service';
 import { map, tap } from 'rxjs';
 
 @Component({
-    selector: 'app-dish-type-selector',
-    templateUrl: './dish-type-selector.component.html',
-    styleUrls: ['./dish-type-selector.component.scss'],
-    standalone: false
+  selector: 'app-dish-type-selector',
+  templateUrl: './dish-type-selector.component.html',
+  styleUrls: ['./dish-type-selector.component.scss'],
 })
 export class DishTypeSelectorComponent implements OnInit {
   @Input() isTagsToShow = true;

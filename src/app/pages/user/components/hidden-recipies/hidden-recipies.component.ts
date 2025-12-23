@@ -10,10 +10,9 @@ import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
-    selector: 'app-hidden-recipies',
-    templateUrl: './hidden-recipies.component.html',
-    styleUrls: ['./hidden-recipies.component.scss'],
-    standalone: false
+  selector: 'app-hidden-recipies',
+  templateUrl: './hidden-recipies.component.html',
+  styleUrls: ['./hidden-recipies.component.scss'],
 })
 export class HiddenRecipiesComponent implements OnInit, OnDestroy {
   currentUser: User | null | undefined;

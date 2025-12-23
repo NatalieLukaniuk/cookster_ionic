@@ -15,10 +15,9 @@ enum DisplayMode {
 }
 
 @Component({
-    selector: 'app-update-expenses',
-    templateUrl: './update-expenses.component.html',
-    styleUrls: ['./update-expenses.component.scss'],
-    standalone: false
+  selector: 'app-update-expenses',
+  templateUrl: './update-expenses.component.html',
+  styleUrls: ['./update-expenses.component.scss'],
 })
 export class UpdateExpensesComponent {
 

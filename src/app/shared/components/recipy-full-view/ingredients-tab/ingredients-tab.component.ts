@@ -21,10 +21,9 @@ import { AVERAGE_PORTION } from 'src/app/shared/constants';
 import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
-    selector: 'app-ingredients-tab',
-    templateUrl: './ingredients-tab.component.html',
-    styleUrls: ['./ingredients-tab.component.scss'],
-    standalone: false
+  selector: 'app-ingredients-tab',
+  templateUrl: './ingredients-tab.component.html',
+  styleUrls: ['./ingredients-tab.component.scss'],
 })
 export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
   @Input() recipy!: Recipy;

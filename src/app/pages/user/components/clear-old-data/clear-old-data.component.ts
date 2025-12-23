@@ -8,10 +8,9 @@ import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
-    selector: 'app-clear-old-data',
-    templateUrl: './clear-old-data.component.html',
-    styleUrls: ['./clear-old-data.component.scss'],
-    standalone: false
+  selector: 'app-clear-old-data',
+  templateUrl: './clear-old-data.component.html',
+  styleUrls: ['./clear-old-data.component.scss']
 })
 export class ClearOldDataComponent implements OnInit {
 

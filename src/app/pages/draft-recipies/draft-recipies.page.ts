@@ -8,10 +8,9 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-    selector: 'app-draft-recipies',
-    templateUrl: './draft-recipies.page.html',
-    styleUrls: ['./draft-recipies.page.scss'],
-    standalone: false
+  selector: 'app-draft-recipies',
+  templateUrl: './draft-recipies.page.html',
+  styleUrls: ['./draft-recipies.page.scss'],
 })
 export class DraftRecipiesPage implements OnInit {
   draftRecipies$ = this.store.pipe(
