@@ -9,10 +9,6 @@ export const getSelectedRecipy = createSelector(
   getCalendarState,
   (state: CalendarState) => state.selectedRecipy
 );
-export const getSelectedDay = createSelector(
-  getCalendarState,
-  (state: CalendarState) => state.selectedDay
-);
 export const getaddToCartDateRange = createSelector(
   getCalendarState,
   (state: CalendarState) => state.addToCartDateRange
@@ -21,8 +17,4 @@ export const getaddToCartDateRange = createSelector(
 export const getPreviewRecipy = createSelector(
   getCalendarState,
   (state: CalendarState) => state.previewRecipy
-);
-export const getCalendar = createSelector(
-  getCalendarState,
-  (state) => state.calendar
 );

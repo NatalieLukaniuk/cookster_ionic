@@ -2,7 +2,14 @@
   <ion-back-button left-button defaultHref="tabs/recipies"></ion-back-button>
   <p title *ngIf="recipy$ | async">{{ (recipy$ | async)!.name }}</p>
   <ion-button
-    *ngIf="isOwnRecipy$ | async"
+    *ngIf="isShowApproveBtn$ | async"
+    right-button
+    size="small"
+    (click)="approveRecipy()"
+    ><ion-icon name="thumbs-up-outline" slot="icon-only"></ion-icon
+  ></ion-button>
+  <ion-button
+    *ngIf="isCanEdit$ | async"
     right-button
     size="small"
     (click)="goEditRecipy()"

@@ -1,0 +1,10 @@
+ion-icon {
+    align-self: center;
+}
+
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-block: 20px;
+}

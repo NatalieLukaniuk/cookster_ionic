@@ -5,5 +5,19 @@ export interface Filters {
     tagsToShow: number[],
     tagsToExclude: number[],
     collectionsToInclude: string[],
-    search: string
+    search: string,
+    sorting: RecipySorting,
+    sortingDirection: RecipySortingDirection
+}
+
+export enum RecipySorting {
+    Default,
+    ByLastPrepared,
+    ByTotalPreparationTime,
+    ByActivePreparationTime,
+}
+
+export enum RecipySortingDirection {
+    SmallToBig = 'ascending',
+    BigToSmall = 'descending'
 }

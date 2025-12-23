@@ -26,6 +26,7 @@ import { ModalController } from '@ionic/angular';
 import * as _ from 'lodash';
 import { LoadCommentsAction } from './store/actions/comments.actions';
 import { LayoutService } from './services/layout.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -53,6 +54,8 @@ export class AppComponent implements OnInit {
 
   products$ = this.store.pipe(select(getAllProducts));
   recipies$ = this.store.pipe(select(getAllRecipies));
+
+  version = environment.version;
 
   adminPages = [
     { name: 'Рецепти', path: `recipies` },

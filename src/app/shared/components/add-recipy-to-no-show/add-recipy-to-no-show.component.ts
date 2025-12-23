@@ -1,6 +1,6 @@
 import { defaultPrefs } from './../../../models/auth.models';
 import { Recipy } from 'src/app/models/recipies.models';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from 'src/app/models/auth.models';
 import * as _ from 'lodash';
 import { UpdatePreferencesAction } from 'src/app/store/actions/user.actions';
@@ -18,23 +18,37 @@ export class AddRecipyToNoShowComponent {
   @Input() currentUser: User | null = null;
   @Input() isSmall = true;
 
-  constructor(private store: Store<IAppState>){}
+  @Output() btnClicked = new EventEmitter<void>()
 
-  addToNoShow(){
-    if(this.recipy && this.currentUser){
+  constructor(private store: Store<IAppState>) { }
+
+  addToNoShow() {
+    if (this.recipy && this.currentUser) {
       let cloned_preferences = _.cloneDeep(this.currentUser).preferences;
-      if(!cloned_preferences){
+      if (!cloned_preferences) {
         cloned_preferences = {
           ...defaultPrefs,
           noShowRecipies: [this.recipy.id]
         }
-      } else if(cloned_preferences.noShowRecipies){
-        cloned_preferences.noShowRecipies.push(this.recipy.id)
+      } else if (cloned_preferences.noShowRecipies) {
+        if (cloned_preferences.noShowRecipies.includes(this.recipy.id)) {
+          cloned_preferences.noShowRecipies = cloned_preferences.noShowRecipies.filter(id => id !== this.recipy!.id)
+        } else {
+          cloned_preferences.noShowRecipies.push(this.recipy.id)
+        }
       } else {
         cloned_preferences.noShowRecipies = [this.recipy.id]
       }
 
       this.store.dispatch(new UpdatePreferencesAction(cloned_preferences))
     }
+    this.btnClicked.emit()
   }
- }
+
+  isHidden(){
+    if(this.recipy && this.currentUser){
+      return this.currentUser.preferences?.noShowRecipies?.includes(this.recipy.id)
+    }
+    return false
+  }
+}

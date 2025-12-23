@@ -7,8 +7,7 @@
       slot="icon-only"></ion-icon></ion-button>
   <ng-container *ngIf="currentTab === tabs[0].name" right-button>
     <app-multiple-dates-picker-modal (datesSelected)="addFromCalendar($event)">
-      <ion-icon button-inside
-  name="add-circle-outline" slot="icon-only"></ion-icon>
+      <ion-icon button-inside name="add-circle-outline" slot="icon-only"></ion-icon>
     </app-multiple-dates-picker-modal>
   </ng-container>
 
@@ -26,7 +25,7 @@
   <ng-container [ngSwitch]="currentTab">
     <ng-container *ngSwitchCase="tabs[0].name">
       <ion-accordion-group>
-        <ng-container *ngFor="let list of (activeList$ | async)">
+        <ng-container *ngFor="let list of (userShoppingLists$ | async)">
           <ion-accordion [value]="list.name" *ngIf="hasNotBought(list)">
             <ion-item slot="header" color="primary">
               <ion-label>{{list.name}}</ion-label>
@@ -75,7 +74,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="tabs[1].name">
       <ion-accordion-group>
-        <ng-container *ngFor="let list of (activeList$ | async)">
+        <ng-container *ngFor="let list of (userShoppingLists$ | async)">
           <ion-accordion [value]="list.name" *ngIf="hasBought(list)">
             <ion-item slot="header" color="primary">
               <ion-label>{{list.name}}</ion-label>

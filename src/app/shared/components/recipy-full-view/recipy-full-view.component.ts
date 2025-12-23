@@ -40,7 +40,7 @@ export class RecipyFullViewComponent implements OnChanges {
   tabs = [
     { value: 'ingredients', icon: '', name: 'Інгридієнти' },
     { value: 'steps', icon: '', name: 'Приготування' },
-    { value: 'info', icon: '', name: 'Інформація' },
+    { value: 'info', icon: '', name: 'Інфо' },
   ];
 
   currentTab = this.tabs[0].value;

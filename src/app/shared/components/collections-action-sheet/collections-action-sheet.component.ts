@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActionSheetButton } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import * as _ from 'lodash';
@@ -28,6 +28,8 @@ export class CollectionsActionSheetComponent implements OnInit {
   @Input() buttonTitle = '';
   @Input() buttonColor = 'primary'
 
+  @Output() dismissed = new EventEmitter<void>()
+
 constructor(private store: Store<IAppState>,){}
 
   getItems(): ActionSheetButton[] {
@@ -48,6 +50,7 @@ constructor(private store: Store<IAppState>,){}
     if(selected){
       this.onCollectionSelected(selected)
     }
+    this.dismissed.emit()
     
   }
 

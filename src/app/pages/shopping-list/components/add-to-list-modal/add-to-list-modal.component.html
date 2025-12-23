@@ -64,11 +64,7 @@
               <span *ngIf="ingredient.unit !== 13 && +childItem.amount"> {{ getUnitText(ingredient.unit) }}</span>
             </h4>
             <p>
-              {{
-              moment(childItem.day[0].day, "DDMMYYYY")
-              .clone()
-              .format("ddd, DD MMMM")
-              }}
+              {{childItem.date | date}}
             </p>
           </ion-label>
         </ion-item>

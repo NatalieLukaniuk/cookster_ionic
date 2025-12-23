@@ -50,6 +50,7 @@ export interface DraftRecipy {
   photo?: string;
   author: string;
   createdOn: number;
+  lastEdited?: number;
   clonedBy?: string;
   clonedOn?: number;
   originalRecipy?: string;

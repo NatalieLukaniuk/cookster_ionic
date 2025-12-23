@@ -16,6 +16,7 @@ import { UserService } from './user.service';
   providedIn: 'root',
 })
 export class AuthService {
+
   constructor(private userService: UserService, private store: Store) {}
 
   registerUser(email: string, password: string) {
@@ -72,6 +73,7 @@ export class AuthService {
   }
 
   processIsNotLoggedIn() {
+    this.userService.currentUser = undefined;
     this.store.dispatch(new UserActions.UserLoggedOutAction());
   }
 }

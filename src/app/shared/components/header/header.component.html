@@ -2,10 +2,7 @@
   <ion-toolbar>
     <ion-title>
       <div class="main-header">
-        <ion-img
-          class="logo"
-          src="../../../../assets/images/humster_sm.png"
-        ></ion-img>
+        <ion-img class="logo" src="../../../../assets/images/humster_sm.png"></ion-img>
         <div class="title">
           <div class="title-main">Cookster</div>
           <div class="title-sub">Organize your cooking!</div>
@@ -14,6 +11,7 @@
     </ion-title>
     <ion-buttons slot="end">
       <ng-content select="[top-header-right-button]"></ng-content>
+      <ion-button *ngIf="!(isLoggedIn$ | async)" (click)="goLogin()"><ion-icon name="person-outline"></ion-icon></ion-button>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
@@ -26,6 +24,8 @@
     </ion-title>
     <ion-buttons slot="end">
       <ng-content select="[right-button]"></ng-content>
+
     </ion-buttons>
   </ion-toolbar>
+  <ng-content select="[additional-toolbar]"></ng-content>
 </ion-header>

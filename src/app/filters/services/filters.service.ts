@@ -1,6 +1,7 @@
-import { Preferences, defaultPrefs } from './../../models/auth.models';
-import { Filters } from 'src/app/models/filters.models';
-import { BehaviorSubject, map, shareReplay, tap } from 'rxjs';
+import { DEFAULT_SORTING, DEFAULT_SORTING_DIRECTION } from './../components/sorting-filter/sorting-filter.component';
+import { Preferences, Role, User, defaultPrefs } from './../../models/auth.models';
+import { Filters, RecipySorting, RecipySortingDirection } from 'src/app/models/filters.models';
+import { BehaviorSubject, map, shareReplay, Subject, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Recipy, RecipyCollection } from 'src/app/models/recipies.models';
 import { Store, select } from '@ngrx/store';
@@ -9,7 +10,13 @@ import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import * as _ from 'lodash';
 import { ExpenseItem } from 'src/app/expenses/expenses-models';
-import { getUserCollections, getUserPreferences } from 'src/app/store/selectors/user.selectors';
+import { getCurrentUser, getUserCollections, getUserPlannedRecipies, getUserPreferences } from 'src/app/store/selectors/user.selectors';
+import { CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
+import { getLastPreparedDate } from 'src/app/pages/calendar/calendar.utils';
+import * as moment from 'moment';
+import { getActivePreparationTime, getPreparationTime } from 'src/app/pages/recipies/utils/recipy.utils';
+import { getExpenses } from 'src/app/store/selectors/expenses.selectors';
+import { UserService } from 'src/app/services/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +24,10 @@ import { getUserCollections, getUserPreferences } from 'src/app/store/selectors/
 export class FiltersService {
   filteredRecipies: number = 0;
 
-  userCollections: RecipyCollection[] = []
-  constructor(private store: Store<IAppState>) { }
+  userCollections: RecipyCollection[] = [];
+  userPlannedRecipies: CalendarRecipyInDatabase_Reworked[] = [];
+
+  constructor(private store: Store<IAppState>, private userService: UserService) { }
   recipies$ = this.store.pipe(select(getAllRecipies));
 
   noShowRecipies$ = this.store.pipe(select(getUserPreferences), map(prefs => prefs ? prefs : defaultPrefs), map((preferences: Preferences) => preferences.noShowRecipies), shareReplay())
@@ -31,11 +40,15 @@ export class FiltersService {
     tagsToExclude: [],
     collectionsToInclude: [],
     search: '',
+    sorting: DEFAULT_SORTING,
+    sortingDirection: DEFAULT_SORTING_DIRECTION
   };
 
-  currentFilters: Filters = _.cloneDeep(this.clearedFilters);
+  clearSearch$ = new Subject<void>();
 
-  filters$: BehaviorSubject<Filters> = new BehaviorSubject(this.clearedFilters);
+  private currentFilters: Filters = _.cloneDeep(this.clearedFilters);
+
+  private filters$: BehaviorSubject<Filters> = new BehaviorSubject(this.clearedFilters);
 
   userCollections$ = this.store.pipe(select(getUserCollections), tap(collections => {
     if (collections) {
@@ -43,74 +56,190 @@ export class FiltersService {
     }
   }))
 
+  expenses: ExpenseItem[] | null = null;
+
+  userExpenses$ = this.store.pipe(select(getExpenses), tap(userExpenses => {
+    if (userExpenses) {
+      this.expenses = userExpenses;
+    }
+  }))
+
+  userPlannedRecipies$ = this.store.pipe(
+    select(getUserPlannedRecipies),
+    tap(plannedRecipies => {
+    if (plannedRecipies) {
+      this.userPlannedRecipies = plannedRecipies;
+    }
+  }))
+
   getFilters = this.filters$.asObservable().pipe(shareReplay(1));
+
+  getCurrentFiltersValue() {
+    return this.currentFilters;
+  }
 
   applyFilters(recipies: Recipy[], filters: Filters, noShowIds?: string[]) {
     let _recipies = recipies.map((recipy) => recipy);
 
-    _recipies = _recipies.filter((recipy) => !recipy.notApproved);
+    _recipies = _recipies.filter((recipy) => this.isShowRecipy(recipy, this.userService.currentUser));
+
     if (noShowIds) {
-      _recipies = _recipies.filter((recipy) => !noShowIds.includes(recipy.id))
+      _recipies = this.excludeNoShow(noShowIds, _recipies)
     }
 
     if (filters.collectionsToInclude.length && this.userCollections.length) {
-      let recipiesIdsToShow: string[] = [];
-      filters.collectionsToInclude.forEach(collection => {
-        const add = this.userCollections.find(item => item.name === collection)?.recipies;
-        if (add?.length) {
-          recipiesIdsToShow = recipiesIdsToShow.concat(add)
-        }
-      })
-      _recipies = recipies.filter(recipy => recipiesIdsToShow.includes(recipy.id))
+      _recipies = this.filterByCollections(_recipies, filters.collectionsToInclude)
     }
 
     if (!!filters.ingredientsToInclude.length) {
-      _recipies = _recipies.filter((recipy) => {
+      _recipies = this.filterByIngredients(true, _recipies, filters.ingredientsToInclude)
+    }
+    if (!!filters.ingredientsToExclude.length) {
+      _recipies = this.filterByIngredients(false, _recipies, filters.ingredientsToExclude)
+    }
+    if (!!filters.tagsToShow.length) {
+      _recipies = this.filterByTags(true, _recipies, filters.tagsToShow)
+    }
+    if (!!filters.tagsToExclude.length) {
+      _recipies = this.filterByTags(false, _recipies, filters.tagsToExclude)
+    }
+    if (!!filters.maxPrepTime) {
+      _recipies = this.filterByMaxPrepTime(_recipies, filters.maxPrepTime)
+    }
+    if (filters.search.length) {
+      _recipies = this.filterBySearchWord(_recipies, filters.search)
+    }
+    this.filteredRecipies = _recipies.length;
+    return this.applySorting(_recipies, filters.sorting, filters.sortingDirection);
+  }
+
+  isShowRecipy(recipy: Recipy, currentUser: User | undefined) {    
+    return !recipy.notApproved ? true : currentUser? (recipy.author === currentUser.email || currentUser.role === Role.Admin) : false;
+  }
+
+  excludeNoShow(noShowIds: string[], recipies: Recipy[]) {
+    return recipies.filter((recipy) => !noShowIds.includes(recipy.id))
+  }
+
+  filterByCollections(recipies: Recipy[], collectionsToInclude: string[]) {
+    let recipiesIdsToShow: string[] = [];
+    collectionsToInclude.forEach(collection => {
+      const add = this.userCollections.find(item => item.name === collection)?.recipies;
+      if (add?.length) {
+        recipiesIdsToShow = recipiesIdsToShow.concat(add)
+      }
+    })
+    return recipies.filter(recipy => recipiesIdsToShow.includes(recipy.id))
+  }
+
+  filterByIngredients(isInclude: boolean, recipies: Recipy[], ingredientIds: string[]) {
+    if (isInclude) {
+      return recipies.filter((recipy) => {
         let recipyIngredientsIds = recipy.ingrediends.map(
           (ingr) => ingr.product
         );
-        return filters.ingredientsToInclude.every((id) =>
+        return ingredientIds.every((id) =>
           recipyIngredientsIds.includes(id)
         );
       });
-    }
-    if (!!filters.ingredientsToExclude.length) {
-      _recipies = _recipies.filter((recipy) => {
-        let recipyIngredientsIds = recipy.ingrediends.map(
-          (ingr) => ingr.product
-        );
+    } else {
+      return recipies.filter((recipy) => {
         return !recipy.ingrediends.find((ingr) =>
-          filters.ingredientsToExclude.includes(ingr.product)
+          ingredientIds.includes(ingr.product)
         );
       });
     }
-    if (!!filters.tagsToShow.length) {
-      _recipies = _recipies.filter((recipy) => {
-        return filters.tagsToShow.some((tag) => recipy.type.includes(tag));
+  }
+
+  filterByTags(isInclude: boolean, recipies: Recipy[], tags: number[]) {
+    return recipies.filter((recipy) => {
+      return isInclude ? tags.some((tag) => recipy.type.includes(tag)) : !tags.some((tag) => recipy.type.includes(tag));
+    });
+  }
+
+  filterByMaxPrepTime(recipies: Recipy[], maxPrepTime: number) {
+    return recipies.filter((recipy) => {
+      let prepTime = 0;
+      recipy.steps.forEach((step) => {
+        prepTime = prepTime + (step.timeActive + step.timePassive);
       });
+      return prepTime <= maxPrepTime;
+    });
+  }
+
+  filterBySearchWord(recipies: Recipy[], searchWord: string) {
+    return recipies.filter((recipy) =>
+      recipy.name.toLowerCase().includes(searchWord.toLowerCase())
+    );
+  }
+
+
+  applySorting(recipies: Recipy[], sorting: RecipySorting, sortingDirection: RecipySortingDirection) {
+    let _recipies: Recipy[] = [];
+    switch (sorting) {
+      case RecipySorting.Default: _recipies = recipies;
+        break;
+      case RecipySorting.ByLastPrepared: _recipies = this.sortByLastPrepared(recipies);
+        break;
+      case RecipySorting.ByTotalPreparationTime: _recipies = this.sortByTotalPreparationTime(recipies);
+        break;
+      case RecipySorting.ByActivePreparationTime: _recipies = this.sortByActivePreparationTime(recipies);
+        break;
     }
-    if (!!filters.tagsToExclude.length) {
-      _recipies = _recipies.filter((recipy) => {
-        return !filters.tagsToExclude.some((tag) => recipy.type.includes(tag));
-      });
+    if (sortingDirection === RecipySortingDirection.BigToSmall) {
+      _recipies.reverse()
     }
-    if (!!filters.maxPrepTime) {
-      const maxTime = filters.maxPrepTime;
-      _recipies = _recipies.filter((recipy) => {
-        let prepTime = 0;
-        recipy.steps.forEach((step) => {
-          prepTime = prepTime + (step.timeActive + step.timePassive);
-        });
-        return prepTime <= maxTime;
-      });
+    return _recipies
+  }
+
+  sortByTotalPreparationTime(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    cloned.sort((a, b) => getPreparationTime(a) - getPreparationTime(b));
+    return cloned
+  }
+  sortByActivePreparationTime(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    cloned.sort((a, b) => getActivePreparationTime(a) - getActivePreparationTime(b));
+    return cloned
+  }
+
+  sortByLastPrepared(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    const mapped = cloned.map(recipy => this.addLastPrepared(recipy, this.userPlannedRecipies));
+    const sorted = this.getSortedByLastPrepared(mapped as Recipy[]);
+    return sorted
+
+  }
+
+  getSortedByLastPrepared(recipies: Recipy[]) {
+    const cloned = _.cloneDeep(recipies);
+    cloned.sort((a, b) => this._sortByLastPrepared(a, b));
+    return cloned
+  }
+
+  _sortByLastPrepared(a: Recipy, b: Recipy) {
+    if (!a.lastPrepared && !b.lastPrepared) {
+      return 0
     }
-    if (filters.search.length) {
-      _recipies = _recipies.filter((recipy) =>
-        recipy.name.toLowerCase().includes(filters.search.toLowerCase())
-      );
+    if (!a.lastPrepared) {
+      return -1
     }
-    this.filteredRecipies = _recipies.length;
-    return _recipies;
+    if (!b.lastPrepared) {
+      return 1
+    }
+    if (moment(a.lastPrepared, 'DDMMYYYY').clone().isAfter(moment(b.lastPrepared, 'DDMMYYYY').clone())) {
+      return 1
+    } else {
+      return -1
+    }
+  }
+
+  addLastPrepared(recipy: Recipy, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[] | undefined) {
+    let updated = {
+      ...recipy,
+      lastPrepared: allPlannedRecipies ? getLastPreparedDate(recipy.id, allPlannedRecipies) : 'N/A'
+    }
+    return updated
   }
 
   applyFiltersToExpenses(expenseItems: ExpenseItem[], filters: Filters) {
@@ -203,8 +332,45 @@ export class FiltersService {
     this.onFiltersChange();
   }
 
+  toggleSorting(value: RecipySorting) {
+    this.currentFilters.sorting = value;
+    this.onFiltersChange();
+  }
+
+  toggleSortingDirection() {
+    if (this.currentFilters.sortingDirection === RecipySortingDirection.SmallToBig) {
+      this.currentFilters.sortingDirection = RecipySortingDirection.BigToSmall;
+    } else {
+      this.currentFilters.sortingDirection = RecipySortingDirection.SmallToBig;
+    }
+    this.onFiltersChange()
+  }
+
+  resetSortingToDefault(){
+    this.currentFilters.sortingDirection = DEFAULT_SORTING_DIRECTION;
+    this.currentFilters.sorting = DEFAULT_SORTING;
+     this.onFiltersChange()
+  }
+
   resetFilters() {
     this.currentFilters = _.cloneDeep(this.clearedFilters);
     this.filters$.next(this.clearedFilters);
+  }
+
+  get isShowWidget() {
+    return this.currentFilters.ingredientsToInclude.length ||
+      this.currentFilters.ingredientsToExclude.length ||
+      this.currentFilters.tagsToShow.length ||
+      this.currentFilters.tagsToExclude.length ||
+      !!this.currentFilters.maxPrepTime ||
+      this.currentFilters.collectionsToInclude.length ||
+      this.currentFilters.search.length ||
+      this.currentFilters.sorting !== DEFAULT_SORTING ||
+      this.currentFilters.sortingDirection !== DEFAULT_SORTING_DIRECTION
+  }
+
+  clearSearch(){
+    this.toggleSearch('');
+    this.clearSearch$.next()
   }
 }

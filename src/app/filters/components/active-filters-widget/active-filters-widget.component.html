@@ -1,34 +1,51 @@
 <div *ngIf="!!currentFilters" class="wrapper">
-  <div class="title" *ngIf="
-      currentFilters.ingredientsToInclude.length ||
-      currentFilters.ingredientsToExclude.length ||
-      currentFilters.tagsToShow.length ||
-      currentFilters.tagsToExclude.length ||
-      !!currentFilters.maxPrepTime
-    ">
+  <div class="title" *ngIf="isShowWidget">
+    <div class="search-bar"
+      *ngIf="currentFilters.search.length || currentFilters.sorting !== DEFAULT_SORTING || currentFilters.sortingDirection !== DEFAULT_SORTING_DIRECTION">
+      <ion-chip (click)="removeSearch()" *ngIf="currentFilters.search.length">
+        <ion-icon name="search-outline" color="secondary"></ion-icon>
+        <ion-label>{{currentFilters.search}}</ion-label>
+        <ion-icon name="close" color="secondary"></ion-icon>
+      </ion-chip>
+      <ion-chip (click)="clearSorting()"
+        *ngIf="currentFilters.sorting !== DEFAULT_SORTING || currentFilters.sortingDirection !== DEFAULT_SORTING_DIRECTION">
+        <ion-icon *ngIf="currentFilters.sortingDirection === RecipySortingDirection.SmallToBig" name="arrow-up-outline"
+          color="secondary"></ion-icon>
+        <ion-icon *ngIf="currentFilters.sortingDirection === RecipySortingDirection.BigToSmall"
+          name="arrow-down-outline" color="secondary"></ion-icon>
+        <ion-label>{{getOptionLabel(currentFilters.sorting)}}</ion-label>
+        <ion-icon name="close" color="secondary"></ion-icon>
+      </ion-chip>
+    </div>
     <div class="ingreds-to-include" *ngIf="currentFilters.ingredientsToInclude.length">
       <ion-chip *ngFor="let tag of currentFilters.ingredientsToInclude" (click)="removeIngrToInclude(tag)">
         <ion-label>{{ getIngredientText(tag) }}</ion-label>
-        <ion-icon name="close"></ion-icon>
+        <ion-icon name="close" color="secondary"></ion-icon>
       </ion-chip>
     </div>
 
     <div class="ingreds-to-exclude" *ngIf="currentFilters.ingredientsToExclude.length">
       <ion-chip *ngFor="let tag of currentFilters.ingredientsToExclude" (click)="removeIngrToExclude(tag)">
         <ion-label>{{ getIngredientText(tag) }}</ion-label>
-        <ion-icon name="close"></ion-icon>
+        <ion-icon name="close" color="secondary"></ion-icon>
       </ion-chip>
     </div>
     <div class="tags-to-show" *ngIf="currentFilters.tagsToShow.length">
       <ion-chip *ngFor="let tag of currentFilters.tagsToShow" (click)="removeTagToShow(tag)">
         <ion-label>{{ getTagsText(tag) }}</ion-label>
-        <ion-icon name="close"></ion-icon>
+        <ion-icon name="close" color="secondary"></ion-icon>
       </ion-chip>
     </div>
     <div class="tags-to-hide" *ngIf="currentFilters.tagsToExclude.length">
       <ion-chip *ngFor="let tag of currentFilters.tagsToExclude" (click)="removeTagToExclude(tag)">
         <ion-label>{{ getTagsText(tag) }}</ion-label>
-        <ion-icon name="close"></ion-icon>
+        <ion-icon name="close" color="secondary"></ion-icon>
+      </ion-chip>
+    </div>
+    <div class="collection-to-show" *ngIf="currentFilters.collectionsToInclude.length">
+      <ion-chip *ngFor="let tag of currentFilters.collectionsToInclude" (click)="removeCollection(tag)">
+        <ion-label>{{ tag }}</ion-label>
+        <ion-icon name="close" color="secondary"></ion-icon>
       </ion-chip>
     </div>
   </div>

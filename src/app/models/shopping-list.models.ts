@@ -24,6 +24,6 @@ export interface ShoppingList {
       amount: string;
       defaultUnit: number;
       recipyId: string;
-      day: { day: string; meal: string }[];
+      date: Date;
     }[];
   }

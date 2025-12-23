@@ -1,5 +1,6 @@
 <app-header [isShowDoubleToolbar]="false">
-  <app-filters top-header-right-button [pageId]="'all-recipies'"></app-filters>
+  <app-filters top-header-right-button [pageId]="'all-recipies'" [isUserLoggedIn]="!!(user$ | async)"></app-filters>
+  <ion-toolbar *ngIf="isShowWidget" additional-toolbar><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
 </app-header>
 
 <ion-content #scrollingContainer [fullscreen]="true" (ionScroll)="onscroll($event)" [scrollEvents]="true">

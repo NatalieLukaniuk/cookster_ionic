@@ -13,6 +13,11 @@ export const getUserPlannedRecipies = createSelector(
   (state) => state.currentUser?.plannedRecipies
 );
 
+export const getUserPlannedComments = createSelector(
+  getUserState,
+  (state) => state.currentUser?.plannedComments
+);
+
 export const getUserShoppingList = createSelector(
   getUserState,
   (state) => state.currentUser?.shoppingLists
@@ -23,3 +28,5 @@ export const getFamilyMembers = createSelector(getUserState, (state) => state.cu
 export const getUserPreferences = createSelector(getUserState, (state) => state.currentUser?.preferences);
 
 export const getUserCollections = createSelector(getUserState, (state) => state.currentUser?.collections);
+
+export const getUserDraftRecipies = createSelector(getUserState, (state) => state.currentUser?.draftRecipies);

@@ -1,16 +1,23 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
+import { CalendarComment, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { getIsNewer, iSameDay } from '../../calendar.utils';
 import { SaveAsPdfService } from 'src/app/services/save-as-pdf.service';
 
 interface TreeEl {
-  [key: string]: Date | RecipyForCalendar_Reworked[]
+  [key: string]: Date | RecipyForCalendar_Reworked[] | CalendarComment[]
 }
 interface PreviewTreeElement extends TreeEl {
   date: Date,
   breakfast: RecipyForCalendar_Reworked[],
   lunch: RecipyForCalendar_Reworked[],
-  dinner: RecipyForCalendar_Reworked[]
+  dinner: RecipyForCalendar_Reworked[],
+  breakfastComments: CalendarComment[],
+  lunchComments: CalendarComment[],
+  dinnerComments: CalendarComment[]
+}
+
+interface PreviewTreeItem {
+
 }
 
 @Component({
@@ -20,6 +27,7 @@ interface PreviewTreeElement extends TreeEl {
 })
 export class SaveCalendarAsPdfPreviewComponent implements OnInit {
   recipies: RecipyForCalendar_Reworked[] = [];
+  comments: CalendarComment[] = [];
 
   tree: PreviewTreeElement[] = [];
 
@@ -39,11 +47,33 @@ export class SaveCalendarAsPdfPreviewComponent implements OnInit {
           date: new Date(recipy.endTime),
           breakfast: [],
           lunch: [],
-          dinner: []
+          dinner: [],
+          breakfastComments: [],
+          lunchComments: [],
+          dinnerComments: []
         };
         (newElement[recipyTime] as RecipyForCalendar_Reworked[]).push(recipy);
         this.tree.push(newElement)
       }
+    })
+    this.comments.forEach(comment => {
+      const foundInTree = this.tree.find(el => iSameDay(el.date, new Date(comment.date)))
+      const commentTime = this.getCommentTime(comment)
+      if (foundInTree) {
+        (foundInTree[commentTime] as CalendarComment[]).push(comment)
+      } else {
+        const newElement: PreviewTreeElement = {
+          date: new Date(comment.date),
+          breakfast: [],
+          lunch: [],
+          dinner: [],
+          breakfastComments: [],
+          lunchComments: [],
+          dinnerComments: []
+        };
+        (newElement[commentTime] as CalendarComment[]).push(comment);
+        this.tree.push(newElement)
+      }      
     })
     this.tree.sort((a, b) => {
       if (getIsNewer(new Date(a.date), new Date(b.date))) {
@@ -62,6 +92,17 @@ export class SaveCalendarAsPdfPreviewComponent implements OnInit {
       return 'lunch'
     } else {
       return 'dinner'
+    }
+  }
+
+  getCommentTime(comment: CalendarComment): string {
+    const commentTime = new Date(comment.date).getHours()
+    if (commentTime < this.lunchStart) {
+      return 'breakfastComments'
+    } else if (commentTime < this.dinnerStart) {
+      return 'lunchComments'
+    } else {
+      return 'dinnerComments'
     }
   }
 

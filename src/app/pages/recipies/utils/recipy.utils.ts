@@ -1,8 +1,10 @@
 import {
+  DishType,
   Ingredient,
   MeasuringUnit,
   MeasuringUnitText,
   Product,
+  ProductType,
   Recipy,
 } from 'src/app/models/recipies.models';
 
@@ -43,7 +45,7 @@ export function getProductText(productId: string, allProducts: Product[]) {
   return productName;
 }
 
-export function getProductIdByName(name: string, allProducts: Product[]){
+export function getProductIdByName(name: string, allProducts: Product[]) {
   let productId = '';
   for (let product of allProducts) {
     if (product.name.toLowerCase() === name.toLowerCase()) {
@@ -53,7 +55,7 @@ export function getProductIdByName(name: string, allProducts: Product[]){
   return productId;
 }
 
-export function getProductById(id: string, allProducts: Product[]){
+export function getProductById(id: string, allProducts: Product[]) {
   return allProducts.find(product => product.id === id)
 }
 
@@ -72,9 +74,11 @@ export function getDefaultMeasuringUnit(
 
 export function isIngrIncludedInAmountCalculation(
   ingr: any,
-  allProducts: Product[]
+  allProducts: Product[],
+  isDrinkOrSoup: boolean
 ): boolean {
-  return getIngrCalories(ingr, allProducts) > 10;
+  const isIncluded = getIngrCalories(ingr, allProducts) > 10 && !(isLiquid(ingr, allProducts) && !isDrinkOrSoup)
+  return isIncluded;
 }
 
 export function getIngrCalories(
@@ -89,6 +93,18 @@ export function getIngrCalories(
   }
   return calories;
 }
+
+export function isLiquid(
+  ingr: Ingredient,
+  allProducts: Product[]
+): boolean {
+  const found = allProducts.find(prod => prod.id === ingr.product)
+  return found ? found.type === ProductType.fluid : false
+}
+
+export function isDrinkOrSoup(recipy: Recipy){
+  return recipy.type.includes(DishType.напій) || recipy.type.includes(DishType['перші страви'])
+} 
 
 export function convertAmountToSelectedUnit(
   amountInGr: number,
@@ -134,6 +150,87 @@ export function convertAmountToSelectedUnit(
         break;
     }
     return amount;
+  }
+}
+
+export function convertAmountToSelectedUnitRawData( // MeasuringUnit.item not included
+  amountInGr: number,
+  unit: MeasuringUnit,
+  density: number
+) {
+  if (unit == MeasuringUnit.gr) {
+    return amountInGr;
+  } else {
+    let amount = 0;
+    switch (unit) {
+      case MeasuringUnit.kg:
+        amount = grToKg(amountInGr);
+        break;
+      case MeasuringUnit.l:
+      case MeasuringUnit.ml:
+      case MeasuringUnit.tableSpoon:
+      case MeasuringUnit.dessertSpoon:
+      case MeasuringUnit.teaSpoon:
+      case MeasuringUnit.coffeeSpoon:
+      case MeasuringUnit.cup:
+      case MeasuringUnit.cl:
+      case MeasuringUnit.us_cup:
+        amount =
+          (amountInGr * getAmountInL(unit)) /
+          density;
+        break;
+      case MeasuringUnit.pinch:
+        amount = grToPinch(amountInGr, density);
+        break;
+      case MeasuringUnit.bunch:
+        amount = grToBunch(amountInGr);
+        break;
+      // case MeasuringUnit.item:
+      //   amount = grToItems(amountInGr, getGrPerItem(ingredientId, allProducts));
+      //   break;
+      case MeasuringUnit.oz:
+        amount = grToOZ(amountInGr);
+        break;
+      case MeasuringUnit.lb:
+        amount = grToLb(amountInGr);
+        break;
+    }
+    return amount;
+  }
+}
+
+export function transformToGrRawData( // MeasuringUnit.item not included
+  amount: number,
+  unit: MeasuringUnit,
+  density: number
+): number {
+  switch (unit) {
+    case MeasuringUnit.gr:
+      return amount;
+    case MeasuringUnit.kg:
+      return kgToGR(amount);
+    case MeasuringUnit.bunch:
+      return bunchToGr(amount);
+    case MeasuringUnit.coffeeSpoon:
+    case MeasuringUnit.dessertSpoon:
+    case MeasuringUnit.tableSpoon:
+    case MeasuringUnit.teaSpoon:
+    case MeasuringUnit.ml:
+    case MeasuringUnit.l:
+    case MeasuringUnit.cup:
+    case MeasuringUnit.cl:
+    case MeasuringUnit.us_cup:
+      return (amount * density) / getAmountInL(unit);
+    case MeasuringUnit.pinch:
+      return pinchToGr(amount, density);
+    // case MeasuringUnit.item:
+    //   return itemsToGr(amount, grInOneItem);
+    case MeasuringUnit.oz:
+      return OZToGr(amount);
+    case MeasuringUnit.lb:
+      return LbToGr(amount);
+    default:
+      return 0;
   }
 }
 
@@ -447,7 +544,7 @@ export function normalizeDecimalNumber(amount: number, places: number): number {
   } else return amount;
 }
 
-export function getNiceDecimalHalvesOnly(amount: number): string{
+export function getNiceDecimalHalvesOnly(amount: number): string {
   if ((amount * 10) % 10) {
     let remainder = (amount * 10) % 10;
     if (remainder > 0 && remainder < 3) {
@@ -460,7 +557,7 @@ export function getNiceDecimalHalvesOnly(amount: number): string{
   } else return amount.toString();
 }
 
-export function getNiceDecimalHalvesOnlyNumber(amount: number): number{
+export function getNiceDecimalHalvesOnlyNumber(amount: number): number {
   if ((amount * 10) % 10) {
     let remainder = (amount * 10) % 10;
     if (remainder > 0 && remainder < 3) {
@@ -476,7 +573,7 @@ export function getNiceDecimalHalvesOnlyNumber(amount: number): number{
 // return 1/2, 1/3, 1/4
 export function getNiceDecimal(amount: number): string {
   let remainder = (amount * 1000) % 1000;
-  if(amount < 1 && remainder){    
+  if (amount < 1 && remainder) {
     if (remainder > 0 && remainder < 125) {
       return '&#188;'
     } else if (remainder >= 125 && remainder < 275) {
@@ -506,14 +603,14 @@ export function getNiceDecimal(amount: number): string {
     } else if (remainder >= 675 && remainder < 875) {
       return (Math.floor(amount)).toString() + ' &#190;';
     } else {
-      return Math.ceil(amount) > 0? (Math.ceil(amount)).toString() : '&#188;';
+      return Math.ceil(amount) > 0 ? (Math.ceil(amount)).toString() : '&#188;';
     }
   } else return amount.toString();
 }
 
 export function getNiceDecimalNumber(amount: number): number {
   let remainder = (amount * 1000) % 1000;
- if (remainder) {
+  if (remainder) {
     if (remainder > 0 && remainder < 125) {
       return Math.floor(amount) > 0 ? Math.floor(amount) : 0.25;
     } else if (remainder >= 125 && remainder < 275) {
@@ -527,7 +624,7 @@ export function getNiceDecimalNumber(amount: number): number {
     } else if (remainder >= 675 && remainder < 875) {
       return Math.floor(amount) + 0.75;
     } else {
-      return Math.ceil(amount) > 0? Math.ceil(amount) : 0.25;
+      return Math.ceil(amount) > 0 ? Math.ceil(amount) : 0.25;
     }
   } else return amount;
 }
@@ -584,4 +681,28 @@ export function getCalorificValue(
   allProducts: Product[]
 ): number {
   return allProducts.find((product) => product.id == ingr.product)!.calories;
+}
+
+export function getPreparationTime(recipy: Recipy) {
+  let time = 0;
+  for (let step of recipy.steps) {
+    time = time + +step.timeActive + +step.timePassive;
+  }
+  return time;
+}
+
+export function getActivePreparationTime(recipy: Recipy) {
+  let time = 0;
+  for (let step of recipy.steps) {
+    time = time + +step.timeActive;
+  }
+  return time;
+}
+
+export function getPassivePreparationTime(recipy: Recipy) {
+  let time = 0;
+  for (let step of recipy.steps) {
+    time = time + +step.timePassive;
+  }
+  return time;
 }

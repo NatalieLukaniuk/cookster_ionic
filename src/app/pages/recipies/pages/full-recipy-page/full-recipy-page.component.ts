@@ -3,20 +3,26 @@ import { SetIsLoadingFalseAction } from './../../../../store/actions/ui.actions'
 import { filter, map, tap } from 'rxjs/operators';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { Store, select } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IAppState } from 'src/app/store/reducers';
 import { SetIsLoadingAction } from 'src/app/store/actions/ui.actions';
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
+import { Title } from '@angular/platform-browser';
+import { Role } from 'src/app/models/auth.models';
+import { Recipy } from 'src/app/models/recipies.models';
+import { UpdateRecipyAction } from 'src/app/store/actions/recipies.actions';
 
 @Component({
   selector: 'app-full-recipy-page',
   templateUrl: './full-recipy-page.component.html',
   styleUrls: ['./full-recipy-page.component.scss'],
 })
-export class FullRecipyPageComponent implements OnInit {
+export class FullRecipyPageComponent implements OnInit, OnDestroy {
   recipyId: string;
+
+  currentRecipy: Recipy | undefined;
 
   recipy$ = this.store.pipe(
     select(getAllRecipies),
@@ -28,19 +34,30 @@ export class FullRecipyPageComponent implements OnInit {
         let updatedRecipy = _.cloneDeep(recipy);
         updatedRecipy.ingrediends.sort((a, b) => b.amount - a.amount);
         this.store.dispatch(new SetIsLoadingFalseAction());
+        this.titleService.setTitle(recipy.name)
+        console.log('updated')
         return updatedRecipy;
       } else return recipy;
-    })
+    }),
+    tap(recipy => this.currentRecipy = recipy)
   );
 
   user$ = this.store.pipe(select(getCurrentUser));
-  isOwnRecipy$ = combineLatest([this.user$, this.recipy$]).pipe(
+  isCanEdit$ = combineLatest([this.user$, this.recipy$]).pipe(
     filter((res) => !!res[0] && !!res[1]),
-    map((res) => res[0]?.email === res[1]?.author)
+    map((res) => res[0]?.email === res[1]?.author || res[0]?.role === Role.Admin)
   );
-  constructor(private store: Store<IAppState>, private router: Router) {
+
+  isShowApproveBtn$ = combineLatest([this.user$, this.recipy$]).pipe(
+    filter((res) => !!res[0] && !!res[1]),
+    map((res) => res[0]?.role === Role.Admin && res[1]?.notApproved)
+  );
+  constructor(private store: Store<IAppState>, private router: Router, private titleService: Title) {
     const path = window.location.pathname.split('/');
     this.recipyId = path[path.length - 1];
+  }
+  ngOnDestroy(): void {
+    this.titleService.setTitle('Cookster')
   }
 
   ngOnInit() {}
@@ -48,4 +65,12 @@ export class FullRecipyPageComponent implements OnInit {
   goEditRecipy() {
     this.router.navigate(['tabs', 'recipies', 'edit-recipy', this.recipyId]);
   }
+
+  approveRecipy(){
+    if(this.currentRecipy){
+      const updated = {...this.currentRecipy, notApproved: false};
+      this.store.dispatch(new UpdateRecipyAction(updated))
+    }
+  }
+  
 }

@@ -1,5 +1,7 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FiltersService } from '../../services/filters.service';
+import { BehaviorSubject, debounce, debounceTime, Subscription } from 'rxjs';
+import { IonSearchbar } from '@ionic/angular';
 
 @Component({
   selector: 'app-search-recipies-filter',
@@ -9,24 +11,41 @@ import { FiltersService } from '../../services/filters.service';
 export class SearchRecipiesFilterComponent implements OnInit, OnDestroy {
   @Input() isClearOnDestroy = true;
 
-  value = ''
+  searchInput$ = new BehaviorSubject<string>('')
+
+  value = '';
+
+  sub = new Subscription();
+
+  @ViewChild('searchbar') searchbar: IonSearchbar | undefined;
 
   constructor(private filtersService: FiltersService) { }
   ngOnDestroy(): void {
     if (this.isClearOnDestroy) {
       this.clear()
     }
+    this.sub.unsubscribe()
   }
 
   ngOnInit() {
-    this.value = this.filtersService.currentFilters.search;
+    this.value = this.filtersService.getCurrentFiltersValue().search;
+    this.sub.add(this.searchInput$.pipe(
+      debounceTime(100)
+    ).subscribe(searchKey => {
+      this.filtersService.toggleSearch(searchKey);
+    }))
+    this.sub.add(this.filtersService.clearSearch$.subscribe(() => {
+      if(this.searchbar){
+        this.searchbar.value = ''
+      }
+    }))
   }
 
   onSearch(event: any) {
-    this.filtersService.toggleSearch(event.detail.value);
+    this.searchInput$.next(event.detail.value)
   }
 
   clear() {
-    this.filtersService.toggleSearch('');
+    this.searchInput$.next('')
   }
 }

@@ -1,1 +1,32 @@
-<ion-datetime size="cover" color="primary" [value]="value" (ionChange)="onSelectionChanged($event)"></ion-datetime>
+<ion-accordion-group value="first" [multiple]="true">
+  <ion-accordion value="first">
+    <ion-item slot="header" color="light">
+      <ion-label>Date and time selection</ion-label>
+    </ion-item>
+    <div class="shortcuts" slot="content">
+      <ion-datetime size="cover" color="primary" [value]="value" (ionChange)="onSelectionChanged($event)">
+        <div slot="time-label">Година:</div>
+      </ion-datetime>
+    </div>
+  </ion-accordion>
+  <ion-accordion value="second">
+    <ion-item slot="header" color="light">
+      <ion-label>Time shortcuts</ion-label>
+    </ion-item>
+    <div class="shortcuts" slot="content">
+      <ion-chip *ngFor="let item of (timeShortcuts$ | async)" (click)="changeTime(item)">{{item}}</ion-chip>
+    </div>
+  </ion-accordion>
+  <ion-accordion value="third">
+    <ion-item slot="header" color="light">
+      <ion-label>Planned for this date</ion-label>
+    </ion-item>
+    <div class="ion-padding" slot="content">
+      <div class="recipy" *ngFor="let recipy of (recipiesForSelectedDate$ | async)">
+        <div>{{recipy.endTime | date : 'H:mm'}}</div>
+          <app-recipy-in-calendar-short-view [recipy]="recipy"
+            (recipyClicked)="null"></app-recipy-in-calendar-short-view>
+        </div>
+    </div>
+  </ion-accordion>
+</ion-accordion-group>

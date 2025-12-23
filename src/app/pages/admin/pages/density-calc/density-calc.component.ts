@@ -12,30 +12,7 @@ import { getAmountInL } from 'src/app/pages/recipies/utils/recipy.utils';
   styleUrls: ['./density-calc.component.scss'],
 })
 export class DensityCalcComponent implements OnInit {
-  MeasuringUnitOptions = MeasuringUnitOptionsFluid.filter(
-    (unit) =>
-      unit !== MeasuringUnit.gr &&
-      unit !== MeasuringUnit.none &&
-      unit !== MeasuringUnit.coffeeSpoon
-  );
-
-  selectedUnit: MeasuringUnit = MeasuringUnit.teaSpoon;
-
-  getMeasuringUnitText(unit: MeasuringUnit) {
-    return MeasuringUnitText[unit];
-  }
-
-  quantityInSelectedUnit: number = 1;
-  quantityInGr: number = 1;
-
-  constructor() {}
-
-  get density() {
-    return (
-      (this.quantityInGr * getAmountInL(this.selectedUnit)) /
-      this.quantityInSelectedUnit
-    );
-  }
+  
 
   ngOnInit() {}
 }

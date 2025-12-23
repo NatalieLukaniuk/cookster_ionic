@@ -1,11 +1,65 @@
 <app-header>
-  <ion-back-button
-    left-button
-    defaultHref="tabs/recipies"
-  ></ion-back-button>
+  <ion-back-button left-button defaultHref="tabs/recipies"></ion-back-button>
   <span title>Редагування продуктів</span>
 </app-header>
 
 <ion-content [fullscreen]="true">
+  <div *ngIf="(products$ | async)">
+    <app-product-autocomplete #productAutocomplete [products]="products"
+      (productSelected)="onProductSelected($event)"></app-product-autocomplete>
 
+    <div *ngIf="selectedProduct">
+      <form [formGroup]="productForm" (ngSubmit)="submit()">
+        <ion-item fill="solid">
+          <ion-label position="floating">Калорій в 100гр.</ion-label>
+          <ion-input type="tel" formControlName="calories" #calories></ion-input>
+        </ion-item>
+
+        <ion-item fill="solid">
+          <ion-label position="floating">Одиниця виміру за замовчуванням</ion-label>
+          <ion-input type="tel" formControlName="defaultUnit"></ion-input>
+          <ion-note>{{ getMeasuringUnitText(productForm.controls['defaultUnit'].value) }}</ion-note>
+        </ion-item>
+        <ion-item fill="solid">
+          <ion-label position="floating">Густина</ion-label>
+          <ion-input type="tel" formControlName="density"></ion-input>
+          <ion-button slot="end" size="large" (click)="isShowDensityCalculator = !isShowDensityCalculator">
+            <ion-icon slot="icon-only" name="calculator-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <div *ngIf="isShowDensityCalculator" class="density-calculator">
+          <div>
+            <h6>Перевірити вагу певної кількості продукту з поточною густиною:</h6>
+            <app-density-calculator-widget [isCheckMode]="true"
+              [presetDensity]="selectedProduct.density"></app-density-calculator-widget>
+
+          </div>
+          <div>
+            <h6>Порахувати густину якщо відома вага певної кількості подукту в грамах: </h6>
+            <app-density-calculator-widget></app-density-calculator-widget>
+
+          </div>
+        </div>
+        <ion-item fill="solid">
+          <ion-label position="floating">Грам в 1 шт.</ion-label>
+          <ion-input type="tel" formControlName="grInOneItem"></ion-input>
+        </ion-item>
+        <ion-item fill="solid">
+          <ion-label position="floating">Назва</ion-label>
+          <ion-input type="text" formControlName="name"></ion-input>
+        </ion-item>
+        <ion-item fill="solid">
+          <ion-label position="floating">Тип</ion-label>
+          <ion-input type="text" formControlName="type"></ion-input>
+          <ion-note>{{ getProductTypeText(productForm.controls['type'].value) }}</ion-note>
+        </ion-item>
+        <ion-item fill="solid">
+          <ion-label position="floating">Зміна кількості при приготуванні</ion-label>
+          <ion-input type="text" formControlName="sizeChangeCoef"></ion-input>
+        </ion-item>
+
+        <ion-button expand="full" [disabled]="nochanges$ | async" type="submit">Зберегти</ion-button>
+      </form>
+    </div>
+  </div>
 </ion-content>

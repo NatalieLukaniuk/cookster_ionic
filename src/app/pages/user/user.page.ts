@@ -8,6 +8,10 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser, getFamilyMembers } from 'src/app/store/selectors/user.selectors';
 
+enum ProfileTabs {
+  FamilyMembers,
+  HiddenRecipies
+}
 @Component({
   selector: 'app-user',
   templateUrl: './user.page.html',
@@ -42,6 +46,9 @@ export class UserPage implements OnInit {
 
   sampleRecommendedPortion = 250;
 
+  currentPage: ProfileTabs = ProfileTabs.FamilyMembers;
+  ProfileTabs = ProfileTabs
+
   constructor(private router: Router, private route: ActivatedRoute, private store: Store<IAppState>, private datamapping: DataMappingService) { }
 
   ngOnInit() {
@@ -55,7 +62,7 @@ export class UserPage implements OnInit {
 
   goSettings(link: string) {
     this.dismissSettingsModal();
-    this.router.navigate([link], {relativeTo: this.route});
+    this.router.navigate([link], { relativeTo: this.route });
   }
 
   getProductText(id: string): string {

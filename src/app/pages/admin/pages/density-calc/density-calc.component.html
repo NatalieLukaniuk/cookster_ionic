@@ -4,33 +4,7 @@
 </app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list>
-    <ion-list-header>Виберіть одиницю виміру</ion-list-header>
-    <ion-radio-group [(ngModel)]="selectedUnit">
-      <ion-item *ngFor="let unit of MeasuringUnitOptions">
-        <ion-label>{{ getMeasuringUnitText(unit) }}</ion-label>
-        <ion-radio slot="end" [value]="unit"></ion-radio>
-      </ion-item>
-    </ion-radio-group>
-  </ion-list>
-  <ion-list>
-    <ion-list-header>Введіть дані:</ion-list-header>
-    <ion-item>
-      <ion-label
-        >Кількість в {{ getMeasuringUnitText(selectedUnit) }}</ion-label
-      >
-      <ion-input [(ngModel)]="quantityInSelectedUnit" type="number"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label
-        >Кількість в грамах</ion-label
-      >
-      <ion-input [(ngModel)]="quantityInGr" type="number"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label
-        >Щільність: {{density}}</ion-label
-      >      
-    </ion-item>
-  </ion-list>
+  <app-density-calculator-widget></app-density-calculator-widget>
+
+
 </ion-content>

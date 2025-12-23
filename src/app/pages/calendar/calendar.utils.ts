@@ -21,7 +21,7 @@ export function transformDate(date: Date): string {
   );
 }
 
-export function transfromMomentToDate(date: string){
+export function transfromMomentToDate(date: string) {
   return moment(date, 'DDMMYYYY').format('YYYY-MM-DD')
 }
 
@@ -37,56 +37,64 @@ export const convertMsToDays = (amountInMs: number) => amountInMs / MS_IN_DAY;
 export const convertMsToMinutes = (amountInMs: number) => amountInMs / MS_IN_MINUTE;
 
 export const getRecipyTimeOfPrepInMinutes = (recipy: Recipy): number => {
-    let time = 0;
-    for (let step of recipy.steps) {
-        time = time + +step.timeActive + +step.timePassive;
-    }
-    return time;
+  let time = 0;
+  for (let step of recipy.steps) {
+    time = time + +step.timeActive + +step.timePassive;
+  }
+  return time;
 }
 
 export const isDateBefore = (dayToCheck: Date, dayToCheckAgainst: Date) => {
-    return !iSameDay(dayToCheck, dayToCheckAgainst) && (Date.parse(dayToCheckAgainst.toString()) - Date.parse(dayToCheck.toString())) > 0;
+  return !iSameDay(dayToCheck, dayToCheckAgainst) && (Date.parse(dayToCheckAgainst.toString()) - Date.parse(dayToCheck.toString())) > 0;
 }
 
 export const isDateAfter = (dayToCheck: Date, dayToCheckAgainst: Date) => {
-    return !iSameDay(dayToCheck, dayToCheckAgainst) && (Date.parse(dayToCheck.toString()) - Date.parse(dayToCheckAgainst.toString())) > 0;
+  return !iSameDay(dayToCheck, dayToCheckAgainst) && (Date.parse(dayToCheck.toString()) - Date.parse(dayToCheckAgainst.toString())) > 0;
 }
 
 export const iSameDay = (dayToCheck: Date, dayToCheckAgainst: Date) =>
-    dayToCheck.getFullYear() === dayToCheckAgainst.getFullYear() &&
-    dayToCheck.getMonth() === dayToCheckAgainst.getMonth() &&
-    dayToCheck.getDate() === dayToCheckAgainst.getDate()
+  dayToCheck.getFullYear() === dayToCheckAgainst.getFullYear() &&
+  dayToCheck.getMonth() === dayToCheckAgainst.getMonth() &&
+  dayToCheck.getDate() === dayToCheckAgainst.getDate()
 
-    export const getLastPreparedDate = (recipyId: string, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[]): null | Date => {
-      let lastDate: Date | null = null;
-      const allPlanned = allPlannedRecipies.filter(plannedRecipy => plannedRecipy.recipyId === recipyId);
-      allPlanned.forEach(foundRecipy => {
-        if(!lastDate || isDateAfter(new Date(foundRecipy.endTime), lastDate)){
-          lastDate = new Date(foundRecipy.endTime)
-        }
-        })
-      return lastDate
+export const getLastPreparedDate = (recipyId: string, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[]): null | Date => {
+  let lastDate: Date | null = null;
+  const allPlanned = allPlannedRecipies.filter(plannedRecipy => plannedRecipy.recipyId === recipyId);
+  allPlanned.forEach(foundRecipy => {
+    if (!lastDate || isDateAfter(new Date(foundRecipy.endTime), lastDate)) {
+      lastDate = new Date(foundRecipy.endTime)
     }
-  
-    export const getIsNewer = (dateToCheck: Date, dateToCheckAgainst: Date) => {
-      return dateToCheck.valueOf() > dateToCheckAgainst.valueOf()
-    }
+  })
+  return lastDate
+}
 
-    export const sortRecipiesByDate = (a: RecipyForCalendar_Reworked, b: RecipyForCalendar_Reworked) => {
-      if (getIsNewer(new Date(a.endTime), new Date(b.endTime))) {
-        return 1
-      } else {
-        return -1
-      }
-    }
+export const getIsNewer = (dateToCheck: Date, dateToCheckAgainst: Date) => {
+  return dateToCheck.valueOf() > dateToCheckAgainst.valueOf()
+}
 
-    export const sortCommentsByDate = (a: CalendarComment, b: CalendarComment) => {
-      if (getIsNewer(new Date(a.date), new Date(b.date))) {
-        return 1
-      } else {
-        return -1
-      }
-    }
+export const sortRecipiesByDate = (a: RecipyForCalendar_Reworked, b: RecipyForCalendar_Reworked) => {
+  if (getIsNewer(new Date(a.endTime), new Date(b.endTime))) {
+    return 1
+  } else {
+    return -1
+  }
+}
+
+export const sortCommentsByDate = (a: CalendarComment, b: CalendarComment) => {
+  if (getIsNewer(new Date(a.date), new Date(b.date))) {
+    return 1
+  } else {
+    return -1
+  }
+}
+
+export const sortDate = (a: Date, b: Date) => {
+  if (getIsNewer(a, b)) {
+    return 1
+  } else {
+    return -1
+  }
+}
 
 
 export function getCurrentDayRecipies(plannedRecipies: CalendarRecipyInDatabase_Reworked[], selectedDate: string, allRecipies: Recipy[]) {
@@ -94,14 +102,32 @@ export function getCurrentDayRecipies(plannedRecipies: CalendarRecipyInDatabase_
   const currentDayRecipiesFullData: RecipyForCalendar_Reworked[] = currentDayRecipies.map(recipy => {
     const found = allRecipies.find(item => item.id === recipy.recipyId);
     if (found) {
-      return { ...found, ...recipy, prepStart: getRecipyPrepStart(found, recipy.endTime)}
+      return { ...found, ...recipy, prepStart: getRecipyPrepStart(found, recipy.endTime) }
     } else return { ...allRecipies[0], ...recipy }
   })
   return currentDayRecipiesFullData
 }
 
-export function  getRecipyPrepStart(recipy: Recipy, endTime: Date) {
+export function getRecipyPrepStart(recipy: Recipy, endTime: Date) {
   const recipyTimeInMs = getRecipyTimeOfPrepInMinutes(recipy) * MS_IN_MINUTE;
   const start = Date.parse(endTime.toString()) - recipyTimeInMs;
   return new Date(start)
+}
+
+export function newDateIgnoreimezone(newDate: string) {
+  const year = new Date(newDate).getFullYear()
+    const month = new Date(newDate).getMonth()
+    const day = new Date(newDate).getDate();
+    const hours = new Date(newDate).getHours();
+    const minutes = new Date(newDate).getMinutes();
+    const seconds = new Date(newDate).getSeconds();
+    const milliseconds = new Date(newDate).getMilliseconds()
+    const dateUTC = Date.UTC(year, month, day, hours, minutes, seconds, milliseconds)
+    return new Date(dateUTC);
+}
+
+export function isLessThanCertainDays(dateToCheck: Date, numberOfDays: number){
+  const dateNow = new Date();
+  dateNow.setDate(dateNow.getDate() - numberOfDays);
+  return getIsNewer(dateToCheck, dateNow)
 }

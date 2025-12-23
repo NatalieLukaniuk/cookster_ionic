@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { IonModal, ModalController } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import { Ingredient } from 'src/app/models/recipies.models';
@@ -12,13 +12,14 @@ import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { ShoppingList, SLItem } from 'src/app/models/shopping-list.models';
 import { CalendarReworkedService } from '../../calendar-reworked.service';
+import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
   selector: 'app-products-per-day',
   templateUrl: './products-per-day.component.html',
   styleUrls: ['./products-per-day.component.scss'],
 })
-export class ProductsPerDayComponent implements OnDestroy {
+export class ProductsPerDayComponent implements OnDestroy, OnInit {
 
   recipies$: Observable<RecipyForCalendar_Reworked[]> = this.calendarService.getCurrentDayRecipies();
 
@@ -50,6 +51,9 @@ export class ProductsPerDayComponent implements OnDestroy {
       this.products.sort((a, b) => a.ingredient!.localeCompare(b.ingredient!));
     })
   }
+  ngOnInit(): void {
+    this.shoppingListService.loadTimestamps()
+  }
   ngOnDestroy(): void {
     this.destroy$.next()
   }
@@ -77,7 +81,8 @@ export class ProductsPerDayComponent implements OnDestroy {
       return this.datamapping.getCoeficient(
         recipy.ingrediends,
         recipy.portions,
-        recipy.amountPerPortion
+        recipy.amountPerPortion,
+        isDrinkOrSoup(recipy)
       );
     } else return 0;
   }
@@ -95,11 +100,12 @@ export class ProductsPerDayComponent implements OnDestroy {
       unit: ingred.defaultUnit,
       items: []
     }
+    const timestamps = this.shoppingListService.getCurrentTimestamps();
     const modal = await this.modalCtrl.create({
       component: AddToListModalComponent,
       componentProps: {
         ingredient: ingredToSlItem,
-        lists: cloned,
+        lists: this.shoppingListService.sortListByTimestamps(cloned!, timestamps),
         isPlannedIngredient: true,
       },
     });

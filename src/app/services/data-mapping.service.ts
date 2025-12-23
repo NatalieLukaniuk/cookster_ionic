@@ -44,20 +44,21 @@ export class DataMappingService {
     return this.products$.value.find((ingr) => ingr.id == id);
   }
 
-  getIsIngredientIncludedInAmountCalculation(ingr: Ingredient): boolean {
-    return isIngrIncludedInAmountCalculation(ingr, this.products$.value);
+  getIsIngredientIncludedInAmountCalculation(ingr: Ingredient, isDrinkOrSoup: boolean): boolean {
+    return isIngrIncludedInAmountCalculation(ingr, this.products$.value, isDrinkOrSoup);
   }
 
   getCoeficient(
     ingredients: Ingredient[],
     portionsToServe: number,
-    portionSize: number
+    portionSize: number,
+    isDrinkOrSoup: boolean
   ) {
     let amount = 0;
     for (let ingr of ingredients) {
       if (
         this.getIsIngredientInDB(ingr.product) &&
-        this.getIsIngredientIncludedInAmountCalculation(ingr)
+        this.getIsIngredientIncludedInAmountCalculation(ingr, isDrinkOrSoup)
       ) {
         amount = ingr.amount * this.getAmountChangeCoef(ingr.product) + amount; // amount of ingreds with calories
       }

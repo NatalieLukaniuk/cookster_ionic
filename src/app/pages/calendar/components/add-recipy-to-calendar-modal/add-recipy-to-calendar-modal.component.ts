@@ -3,7 +3,7 @@ import { InfiniteScrollCustomEvent, IonModal, ModalController } from '@ionic/ang
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { combineLatest, take, map, tap } from 'rxjs';
+import { combineLatest, take, map, tap, Subscription } from 'rxjs';
 import { FiltersService } from 'src/app/filters/services/filters.service';
 import { Recipy } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
@@ -12,7 +12,7 @@ import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
-import { getLastPreparedDate } from '../../calendar.utils';
+import { getLastPreparedDate, newDateIgnoreimezone } from '../../calendar.utils';
 
 enum AddRecipyToCalView {
   SelectRecipy = 'select-recipy',
@@ -39,21 +39,9 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   isEditMode = false;
 
-  timeShortcuts$ = this.store.pipe(select(getUserPlannedRecipies), map(recipies => {
-    if (recipies?.length) {
-      const recipyTime = recipies.map(item => item.endTime).map(time => this.fixTime(new Date(time).getHours()) + ':' + this.fixTime(new Date(time).getMinutes()));
-      const uniques = new Set(recipyTime);
-      return Array.from(uniques)
-    } else { return [] }
-  }))
+  initialSelectDate = this.selectedTime?.toISOString();
 
-  fixTime(value: number) {
-    if (value === 0) {
-      return '00'
-    } else if (value < 10) {
-      return '0' + value
-    } else return value.toString()
-  }
+  familyMembersSub: Subscription | undefined;
 
   constructor(
     private store: Store<IAppState>,
@@ -63,18 +51,30 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
     if (!this.isEditMode || !this.portions) {
-      const sub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
+      this.familyMembersSub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
         if (res) {
           this.portions = res.length;
         } else { this.portions = 4; }
-        sub.unsubscribe()
+        if (this.familyMembersSub) {
+          this.familyMembersSub.unsubscribe()
+        }
+
       });
     }
 
+    this.getCurrentView()
 
+  }
 
+  getCurrentView() {
+    if (!this.selectedRecipy) {
+      this.currentView = AddRecipyToCalView.SelectRecipy;
+    } else if (!this.selectedTime) {
+      this.currentView = AddRecipyToCalView.SelectDate;
+    } else {
+      this.currentView = AddRecipyToCalView.SetAmount;
+    }
   }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
@@ -109,10 +109,9 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     map((res) => {
       let [recipies, filters, plannedRecipies, noShowIds] = res;
       const clonedRecipies = _.cloneDeep(recipies);
-      const filtered = this.filtersService.applyFilters(clonedRecipies, filters, noShowIds);
-      const mapped = filtered.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
-      const sorted = this.getSortedByLastPrepared(mapped as Recipy[]);
-      return sorted
+      const mapped = clonedRecipies.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
+      const filtered = this.filtersService.applyFilters(mapped as Recipy[], filters, noShowIds);
+      return filtered
     }),
     tap(recipies => this.recipies = recipies)
   );
@@ -174,6 +173,7 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   onDateChanged(newDate: string) {
     this.selectedTime = new Date(newDate);
+    this.initialSelectDate = newDateIgnoreimezone(newDate).toISOString()
   }
 
   onAmountSelected(event: number) {
@@ -228,13 +228,10 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   }
 
-  changeTime(item: string) {
 
-    if (this.selectedTime) {
-      const selectedDayString = new Date(this.selectedTime).toString();
-      const updated = selectedDayString.replace(/\d\d:\d\d:\d\d/gm, item + ':00')
-      this.selectedTime = new Date(updated)
-    }
+
+  get isShowWidget() {
+    return this.filtersService.isShowWidget
   }
 
 }

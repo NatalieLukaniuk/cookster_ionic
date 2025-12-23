@@ -2,11 +2,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { DataMappingService } from '../../../services/data-mapping.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from 'src/app/models/auth.models';
+import { Role, User } from 'src/app/models/auth.models';
 import {
   ComplexityDescription,
   DishType,
   Ingredient,
+  MeasuringUnit,
+  MeasuringUnitText,
   Recipy,
   productPreferencesChip,
 } from 'src/app/models/recipies.models';
@@ -15,6 +17,8 @@ import { IAppState } from 'src/app/store/reducers';
 import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
+import { LayoutService } from 'src/app/services/layout.service';
+import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
   selector: 'app-recipy-short-view',
@@ -44,6 +48,10 @@ export class RecipyShortViewComponent implements OnInit {
 
   Math = Math;
   DishType = DishType;
+
+  coefficient = 1;
+
+  MeasuringUnit = MeasuringUnit;
 
   get preparationTime() {
     let time = 0;
@@ -88,18 +96,32 @@ export class RecipyShortViewComponent implements OnInit {
     } else return [];
   }
 
+  get isMobile() {
+    return this.layoutService.getIsMobile()
+  }
+
+  get isTablet() {
+    return this.layoutService.getIsTablet()
+  }
+
+  get isDesktop() {
+    return this.layoutService.getIsDesktop()
+  }
+
   constructor(
     private datamapping: DataMappingService,
     private store: Store<IAppState>,
     private router: Router,
     private route: ActivatedRoute,
     private modalCtrl: ModalController,
+    private layoutService: LayoutService,
   ) { }
 
   ngOnInit() {
     this.isNeedsAdvancePreparation = this.recipy.type?.includes(
       DishType['потребує попередньої підготовки']
     );
+    this.getCoeficient()
   }
 
   onRecipyClicked() {
@@ -117,6 +139,17 @@ export class RecipyShortViewComponent implements OnInit {
     this.router.navigate(['recipy/', this.recipy.id], {
       relativeTo: this.route,
     });
+    this.cancelClick()
+
+  }
+
+  cancelClick() {
+    setTimeout(() => {
+      this.isRecipyClicked = false;
+    }, 2)
+  }
+  cancelClickNoTimeout() {
+    this.isRecipyClicked = false;
   }
 
   activePreparationTime() {
@@ -144,19 +177,51 @@ export class RecipyShortViewComponent implements OnInit {
   }
 
   async onAddRecipyToCalendar() {
-      const modal = await this.modalCtrl.create({
-        component: AddRecipyToCalendarModalComponent,
-        componentProps: {
-          selectedRecipy: this.recipy,
-          isEditMode: true
-        }
-      });
-      modal.present();
-  
-      const { data, role } = await modal.onWillDismiss();
-  
-      if (role === 'confirm') {
-        this.store.dispatch(new AddRecipyToCalendarActionNew(data))
+
+    const modal = await this.modalCtrl.create({
+      component: AddRecipyToCalendarModalComponent,
+      componentProps: {
+        selectedRecipy: this.recipy,
+        isEditMode: true,
+        portionSize: this.recipy.portionSize
       }
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      this.store.dispatch(new AddRecipyToCalendarActionNew(data))
     }
+    this.isRecipyClicked = false;
+  }
+
+  getCoeficient() {
+    if (this.recipy && this.recipy.portionSize) {
+      this.coefficient = this.datamapping.getCoeficient(
+        this.recipy.ingrediends,
+        1,
+        this.recipy.portionSize,
+        isDrinkOrSoup(this.recipy)
+      );
+    }
+  }
+
+  getUnitText(unit: MeasuringUnit) {
+    return MeasuringUnitText[unit];
+  }
+
+  isShowProductsWarning() {
+    return this.productPreferencesChips?.find(product => this.recipy.ingrediends.some(ingred => ingred.product === product.productId))
+  }
+
+  ondragged(event: any) {
+    if (!this.currentUser && event.detail.amount > 20) {
+      this.goFullRecipy()
+    }
+  }
+
+  get isApprovedRecipy() {
+    return !this.recipy.notApproved;
+  }
 }

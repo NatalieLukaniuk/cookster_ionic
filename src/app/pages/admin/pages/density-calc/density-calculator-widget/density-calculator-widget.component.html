@@ -1,0 +1,22 @@
+<div class="wrapper">
+  <div class="inline">
+    <ion-input [(ngModel)]="quantityInSelectedUnit" type="number" fill="outline"></ion-input>
+    <ion-select [(ngModel)]="selectedUnit">
+      <ion-select-option *ngFor="let unit of MeasuringUnitOptions" [value]="unit">{{ getMeasuringUnitText(unit)
+        }}</ion-select-option>
+    </ion-select>
+  </div>
+  <div class="inline">
+<ng-container *ngIf="!isCheckMode">
+      <ion-input [(ngModel)]="quantityInGr" type="number" fill="outline"></ion-input><span>гр.</span>
+
+</ng-container>
+<ng-container *ngIf="isCheckMode">
+  <div class="calculated-grams">
+    <span>{{calculatedGr}} </span>
+    <span>гр.</span>
+  </div>
+</ng-container>
+  </div>
+  <div class="density-field">Щільність: <ng-container *ngIf="!isCheckMode">{{density}}</ng-container><ng-container *ngIf="isCheckMode">{{presetDensity}}</ng-container> кг/м³</div>
+</div>
