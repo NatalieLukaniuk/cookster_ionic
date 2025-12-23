@@ -1,6 +1,6 @@
 import { FiltersModule } from './filters/filters.module';
 import { SharedModule } from './shared/shared.module';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -21,28 +21,22 @@ import { AngularDeviceInformationService } from 'angular-device-information';
 import { CommentsEffects } from './store/effects/comments.effects';
 import { ExpensesEffects } from './store/effects/expenses.effects';
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot(),
-    AppRoutingModule,
-    HttpClientModule,
-    SharedModule,
-    StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([
-      RecipiesEffects,
-      UserEffects,
-      CalendarEffects,
-      CommentsEffects,
-      ExpensesEffects
-    ]),
-    StoreDevtoolsModule.instrument({ 
-      maxAge: 25,
-      logOnly: environment.production,
-    connectInZone: true}),
-  ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AngularDeviceInformationService],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [AppComponent],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        IonicModule.forRoot(),
+        AppRoutingModule,
+        SharedModule,
+        StoreModule.forRoot(reducers),
+        EffectsModule.forRoot([
+            RecipiesEffects,
+            UserEffects,
+            CalendarEffects,
+            CommentsEffects,
+            ExpensesEffects
+        ]),
+        StoreDevtoolsModule.instrument({
+            maxAge: 25,
+            logOnly: environment.production,
+            connectInZone: true
+        })], providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AngularDeviceInformationService, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}
