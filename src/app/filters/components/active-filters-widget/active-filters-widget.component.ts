@@ -10,9 +10,10 @@ import { areObjectsEqual } from 'src/app/services/comparison';
 import { DEFAULT_SORTING, DEFAULT_SORTING_DIRECTION } from '../sorting-filter/sorting-filter.component';
 
 @Component({
-  selector: 'app-active-filters-widget',
-  templateUrl: './active-filters-widget.component.html',
-  styleUrls: ['./active-filters-widget.component.scss'],
+    selector: 'app-active-filters-widget',
+    templateUrl: './active-filters-widget.component.html',
+    styleUrls: ['./active-filters-widget.component.scss'],
+    standalone: false
 })
 export class ActiveFiltersWidgetComponent implements OnDestroy {
   destroy$ = new Subject<void>();

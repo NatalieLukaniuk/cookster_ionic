@@ -14,9 +14,10 @@ const MINUTES_IN_PIXEL = 2;
 const HOURS_IN_DAY = 24;
 
 @Component({
-  selector: 'app-calendar-timeline-day',
-  templateUrl: './calendar-timeline-day.component.html',
-  styleUrls: ['./calendar-timeline-day.component.scss'],
+    selector: 'app-calendar-timeline-day',
+    templateUrl: './calendar-timeline-day.component.html',
+    styleUrls: ['./calendar-timeline-day.component.scss'],
+    standalone: false
 })
 export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
   PIXELS_IN_DAY = (HOURS_IN_DAY * 60) / MINUTES_IN_PIXEL;

@@ -28,9 +28,10 @@ export enum ItemOptionActions {
 }
 
 @Component({
-  selector: 'app-ingredient',
-  templateUrl: './ingredient.component.html',
-  styleUrls: ['./ingredient.component.scss'],
+    selector: 'app-ingredient',
+    templateUrl: './ingredient.component.html',
+    styleUrls: ['./ingredient.component.scss'],
+    standalone: false
 })
 export class IngredientComponent implements OnInit {
   @Input() ingredient!: Ingredient;

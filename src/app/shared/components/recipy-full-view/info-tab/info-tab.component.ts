@@ -10,9 +10,10 @@ import { UpdateRecipyAction } from 'src/app/store/actions/recipies.actions';
 import { IAppState } from 'src/app/store/reducers';
 
 @Component({
-  selector: 'app-info-tab',
-  templateUrl: './info-tab.component.html',
-  styleUrls: ['./info-tab.component.scss'],
+    selector: 'app-info-tab',
+    templateUrl: './info-tab.component.html',
+    styleUrls: ['./info-tab.component.scss'],
+    standalone: false
 })
 export class InfoTabComponent implements OnInit {
   @Input() recipy!: Recipy;

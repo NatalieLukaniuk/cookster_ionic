@@ -29,9 +29,10 @@ import { LayoutService } from './services/layout.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss'],
+    selector: 'app-root',
+    templateUrl: 'app.component.html',
+    styleUrls: ['app.component.scss'],
+    standalone: false
 })
 export class AppComponent implements OnInit {
   firebaseConfig = {

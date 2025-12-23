@@ -21,9 +21,10 @@ import { LayoutService } from 'src/app/services/layout.service';
 import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
-  selector: 'app-recipy-short-view',
-  templateUrl: './recipy-short-view.component.html',
-  styleUrls: ['./recipy-short-view.component.scss'],
+    selector: 'app-recipy-short-view',
+    templateUrl: './recipy-short-view.component.html',
+    styleUrls: ['./recipy-short-view.component.scss'],
+    standalone: false
 })
 export class RecipyShortViewComponent implements OnInit {
   @Input()

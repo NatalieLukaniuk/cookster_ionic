@@ -15,9 +15,10 @@ enum sortDirection {
   Down
 }
 @Component({
-  selector: 'app-admin-table',
-  templateUrl: './admin-table.component.html',
-  styleUrls: ['./admin-table.component.scss'],
+    selector: 'app-admin-table',
+    templateUrl: './admin-table.component.html',
+    styleUrls: ['./admin-table.component.scss'],
+    standalone: false
 })
 export class AdminTableComponent implements OnChanges {
   @Input() data!: any[][];

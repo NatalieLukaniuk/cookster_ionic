@@ -9,9 +9,10 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
-  selector: 'app-view-expenses-page',
-  templateUrl: './view-expenses-page.component.html',
-  styleUrls: ['./view-expenses-page.component.scss']
+    selector: 'app-view-expenses-page',
+    templateUrl: './view-expenses-page.component.html',
+    styleUrls: ['./view-expenses-page.component.scss'],
+    standalone: false
 })
 export class ViewExpensesPageComponent {
   expenses$: Observable<ExpenseItem[]> = this.store.pipe(select(getExpenses), map(expenses => {

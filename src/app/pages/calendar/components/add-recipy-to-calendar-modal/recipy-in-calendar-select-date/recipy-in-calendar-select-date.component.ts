@@ -7,9 +7,10 @@ import { getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 import { getCurrentDayRecipies, isLessThanCertainDays, sortRecipiesByDate } from '../../../calendar.utils';
 
 @Component({
-  selector: 'app-recipy-in-calendar-select-date',
-  templateUrl: './recipy-in-calendar-select-date.component.html',
-  styleUrls: ['./recipy-in-calendar-select-date.component.scss'],
+    selector: 'app-recipy-in-calendar-select-date',
+    templateUrl: './recipy-in-calendar-select-date.component.html',
+    styleUrls: ['./recipy-in-calendar-select-date.component.scss'],
+    standalone: false
 })
 export class RecipyInCalendarSelectDateComponent implements OnChanges, OnDestroy {
 

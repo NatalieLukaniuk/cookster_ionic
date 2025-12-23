@@ -3,9 +3,10 @@ import { FiltersService } from '../../services/filters.service';
 import { map, tap } from 'rxjs';
 
 @Component({
-  selector: 'app-collection-selector',
-  templateUrl: './collection-selector.component.html',
-  styleUrls: ['./collection-selector.component.scss'],
+    selector: 'app-collection-selector',
+    templateUrl: './collection-selector.component.html',
+    styleUrls: ['./collection-selector.component.scss'],
+    standalone: false
 })
 export class CollectionSelectorComponent {
   @Input() userCollections: string[] | null = [];

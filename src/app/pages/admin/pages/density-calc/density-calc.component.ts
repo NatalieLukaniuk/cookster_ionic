@@ -7,9 +7,10 @@ import {
 import { getAmountInL } from 'src/app/pages/recipies/utils/recipy.utils';
 
 @Component({
-  selector: 'app-density-calc',
-  templateUrl: './density-calc.component.html',
-  styleUrls: ['./density-calc.component.scss'],
+    selector: 'app-density-calc',
+    templateUrl: './density-calc.component.html',
+    styleUrls: ['./density-calc.component.scss'],
+    standalone: false
 })
 export class DensityCalcComponent implements OnInit {
   

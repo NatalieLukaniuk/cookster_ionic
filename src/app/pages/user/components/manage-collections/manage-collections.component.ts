@@ -6,9 +6,10 @@ import { getUserCollections } from 'src/app/store/selectors/user.selectors';
 import { InputDialogComponent } from 'src/app/shared/components/dialogs/input-dialog/input-dialog.component';
 
 @Component({
-  selector: 'app-manage-collections',
-  templateUrl: './manage-collections.component.html',
-  styleUrls: ['./manage-collections.component.scss']
+    selector: 'app-manage-collections',
+    templateUrl: './manage-collections.component.html',
+    styleUrls: ['./manage-collections.component.scss'],
+    standalone: false
 })
 export class ManageCollectionsComponent {
 

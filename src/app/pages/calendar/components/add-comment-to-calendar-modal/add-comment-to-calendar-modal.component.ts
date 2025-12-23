@@ -3,9 +3,10 @@ import { ModalController } from '@ionic/angular';
 import { newDateIgnoreimezone } from '../../calendar.utils';
 
 @Component({
-  selector: 'app-add-comment-to-calendar-modal',
-  templateUrl: './add-comment-to-calendar-modal.component.html',
-  styleUrls: ['./add-comment-to-calendar-modal.component.scss']
+    selector: 'app-add-comment-to-calendar-modal',
+    templateUrl: './add-comment-to-calendar-modal.component.html',
+    styleUrls: ['./add-comment-to-calendar-modal.component.scss'],
+    standalone: false
 })
 export class AddCommentToCalendarModalComponent {
   selectedTime: Date | null = null;

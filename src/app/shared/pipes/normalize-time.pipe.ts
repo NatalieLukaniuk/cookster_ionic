@@ -3,7 +3,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 const MINUTES_IN_DAY = 1440;
 
 @Pipe({
-  name: 'normalizeTime',
+    name: 'normalizeTime',
+    standalone: false
 })
 export class NormalizeTimePipe implements PipeTransform {
   transform(value: number, args?: any): string {

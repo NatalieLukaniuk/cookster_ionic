@@ -10,9 +10,10 @@ import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
-  selector: 'app-recipy-modal',
-  templateUrl: './recipy-modal.component.html',
-  styleUrls: ['./recipy-modal.component.scss']
+    selector: 'app-recipy-modal',
+    templateUrl: './recipy-modal.component.html',
+    styleUrls: ['./recipy-modal.component.scss'],
+    standalone: false
 })
 export class RecipyModalComponent implements OnInit {
   @Input() modalType: ModalType = ModalType.ViewRecipy;

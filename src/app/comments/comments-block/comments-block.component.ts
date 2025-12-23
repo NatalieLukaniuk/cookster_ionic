@@ -11,9 +11,10 @@ import { DialogsService } from 'src/app/services/dialogs.service';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
-  selector: 'app-comments-block',
-  templateUrl: './comments-block.component.html',
-  styleUrls: ['./comments-block.component.scss']
+    selector: 'app-comments-block',
+    templateUrl: './comments-block.component.html',
+    styleUrls: ['./comments-block.component.scss'],
+    standalone: false
 })
 export class CommentsBlockComponent implements OnChanges, OnDestroy {
   // TODO: functionality when the user is not logged in

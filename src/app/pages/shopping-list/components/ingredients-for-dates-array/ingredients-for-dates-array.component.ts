@@ -19,9 +19,10 @@ import { iSameDay } from 'src/app/pages/calendar/calendar.utils';
 import { ShoppingListItem, SLItem, ShoppingList } from 'src/app/models/shopping-list.models';
 
 @Component({
-  selector: 'app-ingredients-for-dates-array',
-  templateUrl: './ingredients-for-dates-array.component.html',
-  styleUrls: ['./ingredients-for-dates-array.component.scss']
+    selector: 'app-ingredients-for-dates-array',
+    templateUrl: './ingredients-for-dates-array.component.html',
+    styleUrls: ['./ingredients-for-dates-array.component.scss'],
+    standalone: false
 })
 export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
 

@@ -10,9 +10,10 @@ import { ProductsApiService } from 'src/app/services/products-api.service';
 import { ProductsLoadedAction } from 'src/app/store/actions/recipies.actions';
 
 @Component({
-  selector: 'app-update-products',
-  templateUrl: './update-products.component.html',
-  styleUrls: ['./update-products.component.scss']
+    selector: 'app-update-products',
+    templateUrl: './update-products.component.html',
+    styleUrls: ['./update-products.component.scss'],
+    standalone: false
 })
 export class UpdateProductsComponent implements OnInit {
 

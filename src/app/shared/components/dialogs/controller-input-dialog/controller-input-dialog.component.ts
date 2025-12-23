@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-controller-input-dialog',
-  templateUrl: './controller-input-dialog.component.html',
-  styleUrls: ['./controller-input-dialog.component.scss']
+    selector: 'app-controller-input-dialog',
+    templateUrl: './controller-input-dialog.component.html',
+    styleUrls: ['./controller-input-dialog.component.scss'],
+    standalone: false
 })
 export class ControllerInputDialogComponent implements OnInit {
   inputFieldLabel!: string;

@@ -11,9 +11,10 @@ import { IonModal } from '@ionic/angular';
 import { areSetsEqual } from 'src/app/shared/constants';
 
 @Component({
-  selector: 'app-add-group-modal',
-  templateUrl: './add-group-modal.component.html',
-  styleUrls: ['./add-group-modal.component.scss'],
+    selector: 'app-add-group-modal',
+    templateUrl: './add-group-modal.component.html',
+    styleUrls: ['./add-group-modal.component.scss'],
+    standalone: false
 })
 export class AddGroupModalComponent implements OnChanges {
   @Input() groups: Set<string> | undefined;

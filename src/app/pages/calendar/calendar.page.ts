@@ -16,9 +16,10 @@ import { getCurrentDayRecipies, newDateIgnoreimezone } from './calendar.utils';
 
 
 @Component({
-  selector: 'app-calendar',
-  templateUrl: './calendar.page.html',
-  styleUrls: ['./calendar.page.scss'],
+    selector: 'app-calendar',
+    templateUrl: './calendar.page.html',
+    styleUrls: ['./calendar.page.scss'],
+    standalone: false
 })
 export class CalendarPage {
 

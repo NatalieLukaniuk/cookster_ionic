@@ -7,9 +7,10 @@ export const DEFAULT_SORTING = RecipySorting.Default;
 export const DEFAULT_SORTING_DIRECTION = RecipySortingDirection.SmallToBig;
 
 @Component({
-  selector: 'app-sorting-filter',
-  templateUrl: './sorting-filter.component.html',
-  styleUrls: ['./sorting-filter.component.scss'],
+    selector: 'app-sorting-filter',
+    templateUrl: './sorting-filter.component.html',
+    styleUrls: ['./sorting-filter.component.scss'],
+    standalone: false
 })
 export class SortingFilterComponent implements OnChanges {
   @Input() isUserLoggedIn = false;

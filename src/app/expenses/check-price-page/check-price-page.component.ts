@@ -15,9 +15,10 @@ import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
-  selector: 'app-check-price-page',
-  templateUrl: './check-price-page.component.html',
-  styleUrls: ['./check-price-page.component.scss']
+    selector: 'app-check-price-page',
+    templateUrl: './check-price-page.component.html',
+    styleUrls: ['./check-price-page.component.scss'],
+    standalone: false
 })
 export class CheckPricePageComponent {
   expenses$: Observable<ExpenseItem[]> = this.expenceService.getExpenses()

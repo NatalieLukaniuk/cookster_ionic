@@ -9,7 +9,8 @@ import {
 import { DomController, Gesture, GestureController } from '@ionic/angular';
 
 @Directive({
-  selector: '[swipeLeftNoConfirmation]',
+    selector: '[swipeLeftNoConfirmation]',
+    standalone: false
 })
 export class SwipeLeftNoConfirmationDirective implements AfterViewInit {
   @Output() itemSwiped = new EventEmitter<void>();

@@ -7,9 +7,10 @@ import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
-  selector: 'app-edit-draft',
-  templateUrl: './edit-draft.component.html',
-  styleUrls: ['./edit-draft.component.scss'],
+    selector: 'app-edit-draft',
+    templateUrl: './edit-draft.component.html',
+    styleUrls: ['./edit-draft.component.scss'],
+    standalone: false
 })
 export class EditDraftComponent implements OnInit {
   recipy$: Observable<DraftRecipy>;

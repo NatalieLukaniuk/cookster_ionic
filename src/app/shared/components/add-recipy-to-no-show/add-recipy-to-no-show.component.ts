@@ -8,9 +8,10 @@ import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
 
 @Component({
-  selector: 'app-add-recipy-to-no-show',
-  templateUrl: './add-recipy-to-no-show.component.html',
-  styleUrls: ['./add-recipy-to-no-show.component.scss'],
+    selector: 'app-add-recipy-to-no-show',
+    templateUrl: './add-recipy-to-no-show.component.html',
+    styleUrls: ['./add-recipy-to-no-show.component.scss'],
+    standalone: false
 })
 export class AddRecipyToNoShowComponent {
   @Input() buttonColor = 'primary';

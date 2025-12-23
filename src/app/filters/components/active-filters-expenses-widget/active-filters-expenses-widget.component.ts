@@ -6,9 +6,10 @@ import { FiltersService } from '../../services/filters.service';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 
 @Component({
-  selector: 'app-active-filters-expenses-widget',
-  templateUrl: './active-filters-expenses-widget.component.html',
-  styleUrls: ['./active-filters-expenses-widget.component.scss']
+    selector: 'app-active-filters-expenses-widget',
+    templateUrl: './active-filters-expenses-widget.component.html',
+    styleUrls: ['./active-filters-expenses-widget.component.scss'],
+    standalone: false
 })
 export class ActiveFiltersExpensesWidgetComponent {
   destroy$ = new Subject<void>();

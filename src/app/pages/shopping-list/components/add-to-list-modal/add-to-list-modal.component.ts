@@ -16,9 +16,10 @@ import { ShoppingList, SLItem } from 'src/app/models/shopping-list.models';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 
 @Component({
-  selector: 'app-add-to-list-modal',
-  templateUrl: './add-to-list-modal.component.html',
-  styleUrls: ['./add-to-list-modal.component.scss'],
+    selector: 'app-add-to-list-modal',
+    templateUrl: './add-to-list-modal.component.html',
+    styleUrls: ['./add-to-list-modal.component.scss'],
+    standalone: false
 })
 export class AddToListModalComponent implements OnInit, OnDestroy {
   // TODO needs review

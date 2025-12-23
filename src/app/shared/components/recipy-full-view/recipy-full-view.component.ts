@@ -13,9 +13,10 @@ import { Recipy } from 'src/app/models/recipies.models';
 import { ItemOption } from '../ingredient/ingredient.component';
 import { LayoutService } from 'src/app/services/layout.service';
 @Component({
-  selector: 'app-recipy-full-view',
-  templateUrl: './recipy-full-view.component.html',
-  styleUrls: ['./recipy-full-view.component.scss'],
+    selector: 'app-recipy-full-view',
+    templateUrl: './recipy-full-view.component.html',
+    styleUrls: ['./recipy-full-view.component.scss'],
+    standalone: false
 })
 export class RecipyFullViewComponent implements OnChanges {
   @Input() recipy: Recipy | undefined | null;

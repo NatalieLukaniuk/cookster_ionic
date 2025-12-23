@@ -9,9 +9,10 @@ import { IAppState } from 'src/app/store/reducers';
 import { getFamilyMembers, getUserPreferences } from 'src/app/store/selectors/user.selectors';
 
 @Component({
-  selector: 'app-generic-settings',
-  templateUrl: './generic-settings.component.html',
-  styleUrls: ['./generic-settings.component.scss']
+    selector: 'app-generic-settings',
+    templateUrl: './generic-settings.component.html',
+    styleUrls: ['./generic-settings.component.scss'],
+    standalone: false
 })
 export class GenericSettingsComponent implements OnDestroy {
 

@@ -4,7 +4,8 @@ import { MeasuringUnit } from 'src/app/models/recipies.models';
 import { convertAmountToSelectedUnit } from '../../pages/recipies/utils/recipy.utils';
 
 @Pipe({
-  name: 'convertToSelectedUnit',
+    name: 'convertToSelectedUnit',
+    standalone: false
 })
 export class ConvertToSelectedUnitPipe implements PipeTransform {
   constructor(private datamapping: DataMappingService) {}

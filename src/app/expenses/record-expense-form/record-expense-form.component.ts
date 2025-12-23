@@ -13,9 +13,10 @@ import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 import { Currency, ExpenseItem, CurrencyOptions, CurrencyText } from '../expenses-models';
 
 @Component({
-  selector: 'app-record-expense-form',
-  templateUrl: './record-expense-form.component.html',
-  styleUrls: ['./record-expense-form.component.scss'],
+    selector: 'app-record-expense-form',
+    templateUrl: './record-expense-form.component.html',
+    styleUrls: ['./record-expense-form.component.scss'],
+    standalone: false
 })
 export class RecordExpenseFormComponent   implements OnInit, OnDestroy {
 @Input() isModal = false;

@@ -11,9 +11,10 @@ import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
-  selector: 'app-edit-recipy',
-  templateUrl: './edit-recipy.component.html',
-  styleUrls: ['./edit-recipy.component.scss'],
+    selector: 'app-edit-recipy',
+    templateUrl: './edit-recipy.component.html',
+    styleUrls: ['./edit-recipy.component.scss'],
+    standalone: false
 })
 export class EditRecipyComponent implements OnInit {
   recipyId: string;

@@ -4,9 +4,10 @@ import { Store, select } from '@ngrx/store';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-tabs',
-  templateUrl: 'tabs.page.html',
-  styleUrls: ['tabs.page.scss'],
+    selector: 'app-tabs',
+    templateUrl: 'tabs.page.html',
+    styleUrls: ['tabs.page.scss'],
+    standalone: false
 })
 export class TabsPage {
   isLoggedIn$ = this.store.pipe(select(getCurrentUser));

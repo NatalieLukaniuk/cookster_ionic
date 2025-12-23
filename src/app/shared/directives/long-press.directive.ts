@@ -2,7 +2,8 @@ import { Directive, ElementRef, EventEmitter, Input, NgZone, Output } from '@ang
 import { GestureController } from '@ionic/angular';
 
 @Directive({
-  selector: '[appLongPress]'
+    selector: '[appLongPress]',
+    standalone: false
 })
 export class LongPressDirective {
 

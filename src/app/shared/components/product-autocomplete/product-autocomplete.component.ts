@@ -11,9 +11,10 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'app-product-autocomplete',
-  templateUrl: './product-autocomplete.component.html',
-  styleUrls: ['./product-autocomplete.component.scss'],
+    selector: 'app-product-autocomplete',
+    templateUrl: './product-autocomplete.component.html',
+    styleUrls: ['./product-autocomplete.component.scss'],
+    standalone: false
 })
 export class ProductAutocompleteComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {

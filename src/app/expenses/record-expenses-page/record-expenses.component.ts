@@ -14,9 +14,10 @@ import { getExpenses } from 'src/app/store/selectors/expenses.selectors';
 import { AddExpenseAction } from 'src/app/store/actions/expenses.actions';
 
 @Component({
-  selector: 'app-record-expenses',
-  templateUrl: './record-expenses.component.html',
-  styleUrls: ['./record-expenses.component.scss']
+    selector: 'app-record-expenses',
+    templateUrl: './record-expenses.component.html',
+    styleUrls: ['./record-expenses.component.scss'],
+    standalone: false
 })
 export class RecordExpensesComponent {
   

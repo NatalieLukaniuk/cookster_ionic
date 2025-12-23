@@ -9,7 +9,8 @@ import {
 import { DomController, Gesture, GestureController } from '@ionic/angular';
 
 @Directive({
-  selector: '[swipeLeftDelete]',
+    selector: '[swipeLeftDelete]',
+    standalone: false
 })
 export class SwipeLeftDirective implements AfterViewInit {
   @Output() deleteItem = new EventEmitter<void>();

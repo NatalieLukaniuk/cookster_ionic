@@ -10,9 +10,10 @@ import { getCurrentDayRecipies, getRecipyPrepStart, getRecipyTimeOfPrepInMinutes
 import { CalendarReworkedService } from '../../calendar-reworked.service';
 
 @Component({
-  selector: 'app-calendar-wrapper',
-  templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss'],
+    selector: 'app-calendar-wrapper',
+    templateUrl: './calendar.component.html',
+    styleUrls: ['./calendar.component.scss'],
+    standalone: false
 })
 export class CalendarComponent {
 

@@ -6,9 +6,10 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 
 @Component({
-  selector: 'app-add-recipy',
-  templateUrl: 'add-recipy.page.html',
-  styleUrls: ['add-recipy.page.scss'],
+    selector: 'app-add-recipy',
+    templateUrl: 'add-recipy.page.html',
+    styleUrls: ['add-recipy.page.scss'],
+    standalone: false
 })
 export class AddRecipyPage {
   currentUser$ = this.store.pipe(

@@ -5,9 +5,10 @@ export enum ImageType {
 }
 
 @Component({
-  selector: 'app-image',
-  templateUrl: './image.component.html',
-  styleUrls: ['./image.component.scss'],
+    selector: 'app-image',
+    templateUrl: './image.component.html',
+    styleUrls: ['./image.component.scss'],
+    standalone: false
 })
 export class ImageComponent implements OnChanges {
   @Input() imageType: ImageType = ImageType.RecipyMain;

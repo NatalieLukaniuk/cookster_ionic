@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
 
 @Pipe({
-  name: 'lastPreparedDate'
+    name: 'lastPreparedDate',
+    standalone: false
 })
 export class LastPreparedDatePipe implements PipeTransform {
 // TODO: NEEDS REVISION

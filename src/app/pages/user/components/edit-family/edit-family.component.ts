@@ -13,9 +13,10 @@ import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 import { getFamilyMembers } from 'src/app/store/selectors/user.selectors';
 
 @Component({
-  selector: 'app-edit-family',
-  templateUrl: './edit-family.component.html',
-  styleUrls: ['./edit-family.component.scss']
+    selector: 'app-edit-family',
+    templateUrl: './edit-family.component.html',
+    styleUrls: ['./edit-family.component.scss'],
+    standalone: false
 })
 export class EditFamilyComponent implements OnDestroy {
   newMember = '';
