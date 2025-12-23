@@ -31,6 +31,7 @@
     "@capacitor/status-bar": "^6.0.0",
     "@ionic/angular": "^8.4.3",
     "@ngrx/effects": "^18.1.1",
+    "@ngrx/operators": "^18.0.0",
     "@ngrx/store": "^18.1.1",
     "@ngrx/store-devtools": "^18.1.1",
     "angular-device-information": "^4.0.0",
@@ -41,8 +42,7 @@
     "moment": "^2.29.4",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.10",
-    "@ngrx/operators": "^18.0.0"
+    "zone.js": "~0.14.10"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.21",
@@ -59,9 +59,9 @@
     "@types/jasmine": "~4.0.0",
     "@types/lodash": "^4.14.191",
     "@types/node": "^12.11.1",
-    "@typescript-eslint/eslint-plugin": "5.3.0",
-    "@typescript-eslint/parser": "5.3.0",
-    "eslint": "^7.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
+    "eslint": "^7.32.0",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsdoc": "30.7.6",
     "eslint-plugin-prefer-arrow": "1.2.2",
