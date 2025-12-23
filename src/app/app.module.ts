@@ -40,7 +40,7 @@ import { ExpensesEffects } from './store/effects/expenses.effects';
     StoreDevtoolsModule.instrument({ 
       maxAge: 25,
       logOnly: environment.production,
-    }),
+    connectInZone: true}),
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, AngularDeviceInformationService],
   bootstrap: [AppComponent],
