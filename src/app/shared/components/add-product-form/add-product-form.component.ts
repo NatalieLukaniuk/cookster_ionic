@@ -1,10 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { MeasuringUnit, MeasuringUnitOptions, MeasuringUnitText, ProductTypeOptions, ProductTypeText } from 'src/app/models/recipies.models';
 import { ProductsApiService } from 'src/app/services/products-api.service';
+import { UiService } from 'src/app/services/ui.service';
 import { AddNewIngredientAction } from 'src/app/store/actions/recipies.actions';
-import { ShowSuccessMessageAction } from 'src/app/store/actions/ui.actions';
 import { IAppState } from 'src/app/store/reducers';
 
 @Component({
@@ -13,12 +13,14 @@ import { IAppState } from 'src/app/store/reducers';
   styleUrls: ['./add-product-form.component.scss']
 })
 export class AddProductFormComponent implements OnInit {
+  uiService = inject(UiService);
+
   productForm!: UntypedFormGroup;
 
   @Output() productAdded = new EventEmitter<void>();
 
-  constructor(private productsApi: ProductsApiService, private store: Store<IAppState>){}
-  
+  constructor(private productsApi: ProductsApiService, private store: Store<IAppState>) { }
+
   ngOnInit(): void {
     this.initForm();
   }
@@ -52,9 +54,7 @@ export class AddProductFormComponent implements OnInit {
           id: res.name,
         })
       );
-      this.store.dispatch(
-        new ShowSuccessMessageAction(`${productToAdd.name} додано`)
-      );
+      this.uiService.showSuccessMessage(`${productToAdd.name} додано`);
     });
     this.clearForm();
   }

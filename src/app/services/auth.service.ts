@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   createUserWithEmailAndPassword,
@@ -7,15 +7,16 @@ import {
   signOut,
 } from 'firebase/auth';
 import { Role, User } from '../models/auth.models';
-import * as UIActions from '../store/actions/ui.actions';
 import * as UserActions from '../store/actions/user.actions';
 
 import { UserService } from './user.service';
+import { UiService } from './ui.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+uiService = inject(UiService);
 
   constructor(private userService: UserService, private store: Store) {}
 
@@ -27,36 +28,36 @@ export class AuthService {
         this.userService.addUser(auth);
       })
       .catch((error: { code: any; message: any }) => {
-        this.store.dispatch(new UIActions.ErrorAction(error.message));
+        this.uiService.setError(error.message);
       });
   }
 
   loginUser(email: string, password: string) {
-    this.store.dispatch(new UIActions.SetIsLoadingAction());
+    this.uiService.setIsLoadingTrue();
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential: { user: any }) => {
         // Signed in
         this.processIsLoggedIn(userCredential.user);
-        this.store.dispatch(new UIActions.SetIsLoadingFalseAction());
+        this.uiService.setIsLoadingFalse();
       })
       .catch((error: { code: any; message: any }) => {
-        this.store.dispatch(new UIActions.SetIsLoadingFalseAction());
-        this.store.dispatch(new UIActions.ErrorAction(error.message));
+        this.uiService.setIsLoadingFalse();
+        this.uiService.setError(error.message);
       });
   }
 
   logoutUser() {
-    this.store.dispatch(new UIActions.SetIsLoadingAction());
+    this.uiService.setIsLoadingTrue();
     const auth = getAuth();
     signOut(auth)
       .then(() => {
         this.processIsNotLoggedIn();
-        this.store.dispatch(new UIActions.SetIsLoadingFalseAction());
+        this.uiService.setIsLoadingFalse();
       })
       .catch((error) => {
-        this.store.dispatch(new UIActions.SetIsLoadingFalseAction());
-        this.store.dispatch(new UIActions.ErrorAction(error.message));
+        this.uiService.setIsLoadingFalse();
+        this.uiService.setError(error.message);
       });
   }
 

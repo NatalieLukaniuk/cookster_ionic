@@ -1,11 +1,9 @@
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { SetIsLoadingFalseAction } from './../../../../store/actions/ui.actions';
 import { filter, map, tap } from 'rxjs/operators';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { Store, select } from '@ngrx/store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { IAppState } from 'src/app/store/reducers';
-import { SetIsLoadingAction } from 'src/app/store/actions/ui.actions';
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
@@ -13,13 +11,16 @@ import { Title } from '@angular/platform-browser';
 import { Role } from 'src/app/models/auth.models';
 import { Recipy } from 'src/app/models/recipies.models';
 import { UpdateRecipyAction } from 'src/app/store/actions/recipies.actions';
+import { UiService } from 'src/app/services/ui.service';
 
 @Component({
   selector: 'app-full-recipy-page',
   templateUrl: './full-recipy-page.component.html',
   styleUrls: ['./full-recipy-page.component.scss'],
 })
-export class FullRecipyPageComponent implements OnInit, OnDestroy {
+export class FullRecipyPageComponent implements OnDestroy {
+  uiService = inject(UiService);
+  
   recipyId: string;
 
   currentRecipy: Recipy | undefined;
@@ -27,13 +28,13 @@ export class FullRecipyPageComponent implements OnInit, OnDestroy {
   recipy$ = this.store.pipe(
     select(getAllRecipies),
     filter((res) => !!res.length),
-    tap(() => this.store.dispatch(new SetIsLoadingAction())),
+    tap(() => this.uiService.setIsLoadingTrue()),
     map((res) => res.find((recipy) => recipy.id === this.recipyId)),
     map((recipy) => {
       if (recipy && recipy.ingrediends) {
         let updatedRecipy = _.cloneDeep(recipy);
         updatedRecipy.ingrediends.sort((a, b) => b.amount - a.amount);
-        this.store.dispatch(new SetIsLoadingFalseAction());
+        this.uiService.setIsLoadingFalse();
         this.titleService.setTitle(recipy.name)
         console.log('updated')
         return updatedRecipy;
@@ -60,7 +61,6 @@ export class FullRecipyPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle('Cookster')
   }
 
-  ngOnInit() {}
 
   goEditRecipy() {
     this.router.navigate(['tabs', 'recipies', 'edit-recipy', this.recipyId]);

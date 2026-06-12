@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
 import { filter, tap, map } from 'rxjs';
 import { ModalType } from 'src/app/services/dialogs.service';
-import { SetIsLoadingAction, SetIsLoadingFalseAction } from 'src/app/store/actions/ui.actions';
+import { UiService } from 'src/app/services/ui.service';
 import { IAppState } from 'src/app/store/reducers';
 import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
@@ -14,7 +14,8 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
   templateUrl: './recipy-modal.component.html',
   styleUrls: ['./recipy-modal.component.scss']
 })
-export class RecipyModalComponent implements OnInit {
+export class RecipyModalComponent {
+   uiService = inject(UiService);
   @Input() modalType: ModalType = ModalType.ViewRecipy;
 
   ModalType = ModalType;
@@ -24,13 +25,13 @@ export class RecipyModalComponent implements OnInit {
   recipy$ = this.store.pipe(
     select(getAllRecipies),
     filter((res) => !!res.length),
-    tap(() => this.store.dispatch(new SetIsLoadingAction())),
+    tap(() => this.uiService.setIsLoadingTrue()),
     map((res) => res.find((recipy) => recipy.id === this.data.recipyId)),
     map((recipy) => {
       if (recipy && recipy.ingrediends) {
         let updatedRecipy = _.cloneDeep(recipy);
         updatedRecipy.ingrediends.sort((a, b) => b.amount - a.amount);
-        this.store.dispatch(new SetIsLoadingFalseAction());
+        this.uiService.setIsLoadingFalse();
         return updatedRecipy;
       } else return recipy;
     })
@@ -39,8 +40,6 @@ export class RecipyModalComponent implements OnInit {
   user$ = this.store.pipe(select(getCurrentUser));
 
   constructor(private modalCtrl: ModalController, private store: Store<IAppState>) { }
-  ngOnInit(): void {    
-  }
 
   close() {
     return this.modalCtrl.dismiss(null, 'cancel');

@@ -1,5 +1,5 @@
 import { AddRecipyToCalendarActionNew, UpdateRecipyInCalendarActionNew, RemoveRecipyFromCalendarActionNew, AddCommentToCalendarAction, UpdateCommentInCalendarActionNew, RemoveCommentFromCalendarActionNew } from './../actions/calendar.actions';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import * as _ from 'lodash';
@@ -7,16 +7,17 @@ import { map, switchMap, take } from 'rxjs/operators';
 import {
   CalendarActionTypes,
 } from '../actions/calendar.actions';
-import { ErrorAction } from '../actions/ui.actions';
-import { UpdateUserAction } from '../actions/user.actions';
+import { UpdateUserAction, UserLoggedOutAction } from '../actions/user.actions';
 import { IAppState } from '../reducers';
 import { getCurrentUser } from '../selectors/user.selectors';
 import { User } from 'src/app/models/auth.models';
 import { CalendarComment, CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
 import { CalendarService } from 'src/app/pages/calendar/calendar.service';
 
+
 @Injectable()
 export class CalendarEffects {
+ 
   
   addRecipyToCal_Rework$ = createEffect(() =>
     this.actions$.pipe(
@@ -44,7 +45,7 @@ export class CalendarEffects {
                 updatedUser,
                 `${action.recipyEntry.name} додано`
               );
-            } else return new ErrorAction('no user');
+            } else return new UserLoggedOutAction();
           })
         )
       )
@@ -71,7 +72,7 @@ export class CalendarEffects {
           updatedUser,
           `${action.isReminder? 'Нагадування' : 'Коментар'} додано`
         );
-      } else return new ErrorAction('no user');
+      } else return new UserLoggedOutAction();
     })))
   ))
 
@@ -94,7 +95,7 @@ export class CalendarEffects {
             updatedUser,
             `${action.previousEntry.isReminder? 'Нагадування' : 'Коментар'} оновлено`
           );
-        } else return new ErrorAction('no user');
+        } else return new UserLoggedOutAction();
       })))
     ))
 
@@ -113,7 +114,7 @@ export class CalendarEffects {
               updatedUser,
               `${action.comment.isReminder? 'Нагадування' : 'Коментар'} видалено`
             );
-          } else return new ErrorAction('no user');
+          } else return new UserLoggedOutAction();
         })))
       ))
 
@@ -150,7 +151,7 @@ export class CalendarEffects {
                 updatedUser,
                 `${action.newEntry.name} оновлено`
               );
-            } else return new ErrorAction('no user');
+            } else return new UserLoggedOutAction();
           })
         )
       )
@@ -178,7 +179,7 @@ export class CalendarEffects {
                 updatedUser,
                 `${action.recipyEntry.name} видалено`
               );
-            } else return new ErrorAction('no user');
+            } else return new UserLoggedOutAction();
           })
         )
       )

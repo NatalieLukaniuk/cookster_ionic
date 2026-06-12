@@ -1,20 +1,22 @@
 import { ExpensesApiService } from 'src/app/services/expenses-api.service';
 import { Role, UserMappingItem } from './../models/auth.models';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { User } from '../models/auth.models';
 
 import * as UserActions from '../store/actions/user.actions';
-import * as UIActions from '../store/actions/ui.actions';
 import { AuthApiService } from './auth-api.service';
 import { ExpensesLoadedAction } from '../store/actions/expenses.actions';
+import { UiService } from './ui.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  uiService = inject(UiService);
+
   currentUser: User | undefined;
   allUsers: User[] | undefined;
   userAtFirebaseAuth: User | undefined;
@@ -39,7 +41,7 @@ export class UserService {
             this.store.dispatch(new ExpensesLoadedAction(res?.expenses || []))
           })
         } else {
-          this.store.dispatch(new UIActions.ErrorAction('no such user found'));
+          this.uiService.setError('no such user found');
         }
       })
   }
@@ -47,7 +49,7 @@ export class UserService {
   getCurrentUserData(cooksterId: string) {
     this.authApiService.getUser(cooksterId).pipe(take(1)).subscribe(user => {
       this.currentUser = user;
-      if(!this.currentUser.id){
+      if (!this.currentUser.id) {
         this.currentUser.id = cooksterId;
         this.currentUserId = cooksterId;
       }
@@ -78,11 +80,10 @@ export class UserService {
         }
         let updatedUsers: UserMappingItem[] = this.allUsersMapping.concat(userToAdd)
         this.authApiService.addNewUser(updatedUsers).pipe(take(1)).subscribe(() => {
-          this.store.dispatch(
-            new UIActions.ShowSuccessMessageAction(
-              'Your registration was successful'
-            )
+          this.uiService.showSuccessMessage(
+            'Your registration was successful'
           );
+
           this.getCurrentUserData(res.name);
         })
       });

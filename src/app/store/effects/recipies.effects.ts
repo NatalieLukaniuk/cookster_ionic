@@ -1,24 +1,26 @@
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { SetIsLoadingAction } from './../actions/ui.actions';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 
 import { RecipiesActionTypes } from '../actions/recipies.actions';
 import * as RecipiesActions from '../actions/recipies.actions';
-import * as UiActions from '../actions/ui.actions';
+
 import { select, Store } from '@ngrx/store';
 import { RecipiesApiService } from 'src/app/services/recipies-api.service';
 import { Product, Recipy } from 'src/app/models/recipies.models';
 import { ProductsApiService } from 'src/app/services/products-api.service';
 import { getCurrentUser } from '../selectors/user.selectors';
 import * as _ from 'lodash';
-import { UpdateUserAction } from '../actions/user.actions';
+import { UpdateUserAction, UserLoggedOutAction } from '../actions/user.actions';
+import { UiService } from 'src/app/services/ui.service';
 
 @Injectable()
 export class RecipiesEffects {
+  uiService = inject(UiService);
+  
   getRecipies$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RecipiesActionTypes.GET_RECIPIES),
@@ -40,7 +42,7 @@ export class RecipiesEffects {
           map((res: Recipy[]) => new RecipiesActions.RecipiesLoadedAction(res))
         )
       ),
-      catchError((error) => of(new UiActions.ErrorAction(error)))
+      catchError((error) => of((error)))
     )
   );
 
@@ -65,7 +67,7 @@ export class RecipiesEffects {
           map((res: Product[]) => new RecipiesActions.ProductsLoadedAction(res))
         )
       ),
-      catchError((error) => of(new UiActions.ErrorAction(error)))
+      catchError((error) => of((error)))
     )
   );
 
@@ -82,7 +84,7 @@ export class RecipiesEffects {
             ),
           },
         };
-        this.store.dispatch(new SetIsLoadingAction());
+        this.uiService.setIsLoadingTrue();
         return updated;
       }),
       switchMap((action: RecipiesActions.AddNewRecipyAction) =>
@@ -92,15 +94,13 @@ export class RecipiesEffects {
               ...action.recipy,
               id: res.name,
             };
+            this.uiService.showSuccessMessage(`${recipy.name} has been added to the recipies database`);
+            this.uiService.setIsLoadingFalse()
             return [
-              new RecipiesActions.AddNewRecipySuccessAction(recipy),
-              new UiActions.ShowSuccessMessageAction(
-                `${recipy.name} has been added to the recipies database`
-              ),
-              new UiActions.SetIsLoadingFalseAction(),
+              new RecipiesActions.AddNewRecipySuccessAction(recipy)
             ];
           }),
-          catchError((error) => of(new UiActions.ErrorAction(error)))
+          catchError((error) => of((error)))
         )
       )
     )
@@ -125,7 +125,7 @@ export class RecipiesEffects {
                 updatedUser,
                 `${action.recipy.name} додано в чернетки`
               );
-            } else return new UiActions.ErrorAction('no user');
+            } else return new UserLoggedOutAction;
           })
         )
       )
@@ -149,7 +149,7 @@ export class RecipiesEffects {
                 updatedUser,
                 `${action.recipy.name} - чернетку оновлено`
               );
-            } else return new UiActions.ErrorAction('no user');
+            } else return new UserLoggedOutAction;
           })
         )
       )
@@ -175,7 +175,7 @@ export class RecipiesEffects {
                 updatedUser,
                 `Чернетку видалено`
               );
-            } else return new UiActions.ErrorAction('no user');
+            } else return new UserLoggedOutAction;
           })
         )
       )
@@ -186,7 +186,7 @@ export class RecipiesEffects {
     this.actions$.pipe(
       ofType(RecipiesActionTypes.UPDATE_RECIPY),
       map((action: RecipiesActions.UpdateRecipyAction) => {
-        this.store.dispatch(new SetIsLoadingAction());
+        this.uiService.setIsLoadingTrue();
         let updated = {
           ...action,
           recipy: {
@@ -201,12 +201,11 @@ export class RecipiesEffects {
       switchMap((action: RecipiesActions.UpdateRecipyAction) =>
         this.recipiesService.updateRecipy(action.recipy.id, action.recipy).pipe(
           switchMap((res: any) => {
+            this.uiService.setIsLoadingFalse()
             return [
               new RecipiesActions.UpdateRecipySuccessAction(res),
-              new UiActions.SetIsLoadingFalseAction(),
             ];
-          }),
-          catchError((error) => of(new UiActions.ErrorAction(error)))
+          })          
         )
       )
     )
@@ -215,18 +214,17 @@ export class RecipiesEffects {
   updateProduct$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RecipiesActionTypes.UPDATE_PRODUCT),
-      tap(() => this.store.dispatch(new UiActions.SetIsLoadingAction())),
+      tap(() => this.uiService.setIsLoadingTrue()),
       switchMap((action: RecipiesActions.UpdateProductAction) =>
         this.productsApiService
           .updateProduct(action.product.id, action.product)
           .pipe(
             switchMap((res: any) => {
+              this.uiService.setIsLoadingFalse()
               return [
-                new RecipiesActions.UpdateProductSuccessAction(res),
-                new UiActions.SetIsLoadingFalseAction(),
+                new RecipiesActions.UpdateProductSuccessAction(res)
               ];
-            }),
-            catchError((error) => of(new UiActions.ErrorAction(error)))
+            })
           )
       )
     )
@@ -242,7 +240,7 @@ export class RecipiesEffects {
             (res: string[]) =>
               new RecipiesActions.NewIngredientsLoadedAction(res)
           ),
-          catchError((error) => of(new UiActions.ErrorAction(error)))
+          
         )
       )
     )

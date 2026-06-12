@@ -64,6 +64,6 @@
 
   </ion-split-pane>
   <app-loading-overlay [isUserLoaded]="isAuthCheckComplete && ((isLoggedIn && !!(user$ | async)) || !isLoggedIn)"
-    [isRecipiesLoaded]="!!(recipies$ | async)" [isProductsLoaded]="!!(products$ | async)" *ngIf="(isLoading$ | async)
+    [isRecipiesLoaded]="!!(recipies$ | async)" [isProductsLoaded]="!!(products$ | async)" *ngIf="$isLoading()
   || !isAuthCheckComplete || isLoggedIn && !(user$ | async)"></app-loading-overlay>
 </ion-app>

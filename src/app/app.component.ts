@@ -2,19 +2,15 @@ import { DialogsService } from './services/dialogs.service';
 import { DataMappingService } from './services/data-mapping.service';
 import { getCurrentUser } from './store/selectors/user.selectors';
 import { AuthService } from './services/auth.service';
-import {
-  getIsError,
-  getIsLoading,
-  getIsSuccessMessage,
-} from './store/selectors/ui.selectors';
+
 import {
   getAllProducts,
   getAllRecipies,
 } from './store/selectors/recipies.selectors';
 import { Store, select } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import * as RecipiesActions from './store/actions/recipies.actions';
-import * as UiActions from './store/actions/ui.actions';
+
 import { combineLatest, take } from 'rxjs';
 import { IAppState } from './store/reducers';
 import { initializeApp } from 'firebase/app';
@@ -27,6 +23,7 @@ import * as _ from 'lodash';
 import { LoadCommentsAction } from './store/actions/comments.actions';
 import { LayoutService } from './services/layout.service';
 import { environment } from 'src/environments/environment';
+import { UiService } from './services/ui.service';
 
 @Component({
   selector: 'app-root',
@@ -44,7 +41,12 @@ export class AppComponent implements OnInit {
     appId: '1:755799855022:web:69a08acd3c948e72cf023f',
   };
 
-  isLoading$ = this.store.pipe(select(getIsLoading));
+  uiService = inject(UiService);
+
+  $isLoading = this.uiService.getIsLoading;
+  $isError = this.uiService.getIsError;
+  $isSuccessMessage = this.uiService.getIsSuccessMessage;
+
   user$ = this.store.pipe(select(getCurrentUser));
 
   isAuthCheckComplete = false;
@@ -74,8 +76,25 @@ export class AppComponent implements OnInit {
     private router: Router,
     private deviceInformationService: AngularDeviceInformationService,
     private modalCtrl: ModalController,
-    private layoutService: LayoutService
-  ) { }
+    private layoutService: LayoutService,
+
+  ) {
+    effect(() => {
+      const error = this.$isError()
+      if(error?.length){
+        this.dialog.presentInfoToast(error);
+        this.uiService.resetError()
+      }
+    })
+
+    effect(() => {
+      const successMessage = this.$isSuccessMessage();
+      if(successMessage?.length){
+        this.dialog.presentInfoToast(successMessage);
+        this.uiService.dismissSuccessMessage()
+      }
+    })
+   }
   ngOnInit(): void {
     this.loadData();
 
@@ -83,23 +102,11 @@ export class AppComponent implements OnInit {
 
     this.subscribeIsLoggedIn();
 
-    this.store.pipe(select(getIsError)).subscribe((res) => {
-      if (res) {
-        this.dialog.presentInfoToast(res);
-        this.store.dispatch(new UiActions.ResetErrorAction());
-      }
-    });
 
-    this.store.pipe(select(getIsSuccessMessage)).subscribe((res) => {
-      if (res) {
-        this.dialog.presentInfoToast(res);
-        this.store.dispatch(new UiActions.DismissSuccessMessageAction());
-      }
-    });
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.store.dispatch(new UiActions.SetCurrentRouteAction(event.url));
+        this.uiService.setCurrentRoute(event.url);
       }
     })
 
@@ -107,7 +114,7 @@ export class AppComponent implements OnInit {
   }
 
   loadData() {
-    this.store.dispatch(new UiActions.SetIsLoadingAction());
+    this.uiService.setIsLoadingTrue();
     this.store.dispatch(new RecipiesActions.GetRecipiesAction());
     this.store.dispatch(new RecipiesActions.GetProductsAction());
     this.store.dispatch(new LoadCommentsAction())
@@ -121,7 +128,7 @@ export class AppComponent implements OnInit {
         this.dataMappingService.products$.next(products);
       }
       if (products.length && recipies.length) {
-        this.store.dispatch(new UiActions.SetIsLoadingFalseAction());
+        this.uiService.setIsLoadingFalse();
       }
     });
   }
