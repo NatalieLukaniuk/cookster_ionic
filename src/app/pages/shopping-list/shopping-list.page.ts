@@ -11,8 +11,6 @@ import { Router } from '@angular/router';
 import { DialogsService } from 'src/app/services/dialogs.service';
 import { ControllerInputDialogComponent } from 'src/app/shared/components/dialogs/controller-input-dialog/controller-input-dialog.component';
 import { ControllerListSelectDialogComponent } from 'src/app/shared/components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
-import { RecordExpensesComponent } from 'src/app/expenses/record-expenses-page/record-expenses.component';
-import { ExpencesService } from 'src/app/expenses/expences.service';
 import { AddToListModalComponent } from './components/add-to-list-modal/add-to-list-modal.component';
 import { ShoppingList, ShoppingListItem } from 'src/app/models/shopping-list.models';
 
@@ -51,15 +49,12 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   ];
   currentTab = this.tabs[0].name;
 
-  isRecordExpenseOnBought = false;
-
   constructor(
     private store: Store<IAppState>,
     private shoppingListService: ShoppingListService,
     private modalCtrl: ModalController,
     private router: Router,
-    private dialog: DialogsService,
-    private expensesService: ExpencesService
+    private dialog: DialogsService
   ) { }
 
   ngOnInit() {
@@ -95,10 +90,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
       }
       return ls;
     });
-    this.shoppingListService.updateShoppingList(updatedList);
-    if (this.isRecordExpenseOnBought && !item.completed) {
-      this.recordPrice(item)
-    }
+    this.shoppingListService.updateShoppingList(updatedList);    
   }
 
   async addCustomItem() {
@@ -145,22 +137,6 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   addFromCalendar(dates: string[]) {
     const datesToString = dates.join('&');
     this.router.navigate(['tabs', 'shopping-list', 'dates', datesToString]);
-  }
-
-
-
-  @ViewChild(RecordExpensesComponent) expensesModal: RecordExpensesComponent | undefined;
-
-  async recordPrice(item: ShoppingListItem) {
-    const modal = await this.modalCtrl.create({
-      component: RecordExpensesComponent,
-      componentProps: {
-        title: item.title,
-        isModal: true
-      },
-      initialBreakpoint: 0.75
-    });
-    modal.present();
   }
 
   async onChangeList(item: ShoppingListItem, previousListName: string) {
@@ -257,13 +233,5 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   closeSlidingItem() {
     document.querySelectorAll('.slidingContainer').forEach((item: any) => item.close())
-  }
-
-  getHighestPrice(title: string) {
-    return this.expensesService.getHighestPriceInfo(title)
-  }
-
-  getLowestPrice(title: string) {
-    return this.expensesService.getLowestPriceInfo(title);
   }
 }

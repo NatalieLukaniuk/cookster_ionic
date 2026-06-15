@@ -1,26 +1,26 @@
 import { FiltersService } from './../../../../filters/services/filters.service';
-import { getCurrentUser, getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { getCurrentUser, getFamilyMembers } from 'src/app/store/selectors/user.selectors';
+import { Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
-import { Recipy, productPreferencesChip } from 'src/app/models/recipies.models';
+import { Subject, map, takeUntil, tap } from 'rxjs';
+import { productPreferencesChip } from 'src/app/models/recipies.models';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
-import * as _ from 'lodash';
 import { User } from 'src/app/models/auth.models';
 import { LayoutService } from 'src/app/services/layout.service';
-import { CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
-import { getLastPreparedDate } from 'src/app/pages/calendar/calendar.utils';
+import { RecipiesService } from 'src/app/services/recipies.service';
 
 @Component({
   selector: 'app-recipies',
   templateUrl: 'recipies.page.html',
   styleUrls: ['recipies.page.scss'],
 })
-export class RecipiesContainer implements OnDestroy {
-  filters$ = this.filtersService.getFilters;
-  recipies: Recipy[] = []
+export class RecipiesContainerPage implements OnDestroy {
+  filtersService = inject(FiltersService);
+  recipiesService = inject(RecipiesService);
+  $currentFilters = this.filtersService.getCurrentFilters
+  $recipies = this.recipiesService.recipiesWithFilterEnabled;
+  $isShowWidget = this.filtersService.isShowWidget;
 
   showGoTop = false;
 
@@ -37,11 +37,9 @@ export class RecipiesContainer implements OnDestroy {
 
   constructor(
     private store: Store<IAppState>,
-    private filtersService: FiltersService,
     private layoutService: LayoutService,
   ) {
     this.subscribeForProductChips();
-    this.subscribeForRecipies()
   }
   ngOnDestroy(): void {
     this.destroy$.next()
@@ -77,34 +75,7 @@ export class RecipiesContainer implements OnDestroy {
     })).subscribe()
   }
 
-  subscribeForRecipies() {
-    combineLatest([
-      this.store.pipe(select(getAllRecipies)),
-      this.filters$,
-      this.filtersService.noShowRecipies$,
-      this.store.pipe(select(getUserPlannedRecipies)),
-    ]).pipe(
-      takeUntil(this.destroy$),
-      map(res => _.cloneDeep(res)),
-      map(res => {
-        if(res[3]){
-          res[0] = res[0].map(recipy => this.addLastPrepared(recipy, res[3]))          
-        }
-        return res
-      }), 
-      map((res) => this.filtersService.applyFilters(res[0], res[1], res[2])),           
-      tap(recipies => this.recipies = recipies)
-    ).subscribe()
-  }
-
-  addLastPrepared(recipy: Recipy, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[] | undefined): Recipy {
-    let updated = {
-      ...recipy,
-      lastPrepared: allPlannedRecipies ? getLastPreparedDate(recipy.id, allPlannedRecipies) : null
-    }
-    return updated
-  }
-
+  
   onscroll(event: any) {
     this.showGoTop = event.detail.scrollTop > 500;
   }
@@ -118,9 +89,5 @@ export class RecipiesContainer implements OnDestroy {
   onIonInfinite(event: any){
     this.numberOfRecipiesToDisplay += 10;
     (event as InfiniteScrollCustomEvent).target.complete();
-  }
-
-  get isShowWidget(){
-    return this.filtersService.isShowWidget
   }
 }

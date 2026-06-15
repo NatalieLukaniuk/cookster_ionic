@@ -44,10 +44,6 @@ const routes: Routes = [
         path: 'admin',
         loadChildren: () => import('../pages/admin/admin.module').then( m => m.AdminPageModule)
       },
-      {
-        path: 'expenses',
-        loadChildren: () => import('../expenses/expenses.module').then( m => m.ExpensesModule)
-      },
     ]
   },
   {

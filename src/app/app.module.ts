@@ -19,7 +19,6 @@ import { UserEffects } from './store/effects/user.effects';
 import { reducers } from './store/reducers';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import { CommentsEffects } from './store/effects/comments.effects';
-import { ExpensesEffects } from './store/effects/expenses.effects';
 
 @NgModule({ declarations: [AppComponent],
     bootstrap: [AppComponent], imports: [BrowserModule,
@@ -31,8 +30,7 @@ import { ExpensesEffects } from './store/effects/expenses.effects';
             RecipiesEffects,
             UserEffects,
             CalendarEffects,
-            CommentsEffects,
-            ExpensesEffects
+            CommentsEffects
         ]),
         StoreDevtoolsModule.instrument({
             maxAge: 25,

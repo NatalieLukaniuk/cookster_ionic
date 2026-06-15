@@ -31,7 +31,6 @@ import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-
 import { ControllerListSelectDialogComponent } from './components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { AddProductFormComponent } from './components/add-product-form/add-product-form.component';
 import { InputWithAutocompleteComponent } from './components/input-with-autocomplete/input-with-autocomplete.component';
-import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recipy.component';
 import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
 import { CollectionsActionSheetComponent } from './components/collections-action-sheet/collections-action-sheet.component';
 import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/add-recipy-to-no-show.component';
@@ -66,7 +65,6 @@ import { MultipleDatesPickerModalComponent } from './components/multiple-dates-p
     ControllerListSelectDialogComponent,
     AddProductFormComponent,
     InputWithAutocompleteComponent,
-    CostOfRecipyComponent,
     LastPreparedDatePipe,
     CollectionsActionSheetComponent,
     AddRecipyToNoShowComponent,
@@ -94,7 +92,6 @@ import { MultipleDatesPickerModalComponent } from './components/multiple-dates-p
     RecipyShortViewComponent,
     AddProductFormComponent,
     InputWithAutocompleteComponent,
-    CostOfRecipyComponent,
     LastPreparedDatePipe,
     CollectionsActionSheetComponent,
     AddRecipyToNoShowComponent,

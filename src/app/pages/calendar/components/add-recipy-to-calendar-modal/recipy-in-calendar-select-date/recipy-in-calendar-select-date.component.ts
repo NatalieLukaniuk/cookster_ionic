@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, map, Subject, takeUntil } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 import { getCurrentDayRecipies, isLessThanCertainDays, sortRecipiesByDate } from '../../../calendar.utils';
+import { RecipiesService } from 'src/app/services/recipies.service';
 
 @Component({
   selector: 'app-recipy-in-calendar-select-date',
@@ -12,10 +12,13 @@ import { getCurrentDayRecipies, isLessThanCertainDays, sortRecipiesByDate } from
   styleUrls: ['./recipy-in-calendar-select-date.component.scss'],
 })
 export class RecipyInCalendarSelectDateComponent implements OnChanges, OnDestroy {
+  recipiesService = inject(RecipiesService)
 
   @Input() initialValue: string | undefined;
 
   @Output() valueChanged = new EventEmitter<string>();
+
+  $recipies = this.recipiesService.getRecipies;
 
   constructor(
     private store: Store<IAppState>,
@@ -33,13 +36,12 @@ export class RecipyInCalendarSelectDateComponent implements OnChanges, OnDestroy
   recipiesForSelectedDate$ = combineLatest([
     this.store.pipe(select(getUserPlannedRecipies)),
     this.selectedDate$,
-    this.store.pipe(select(getAllRecipies))
   ]).pipe(
     takeUntil(this.destroyed$),
     map(res => {
-      const [userRecipies, selectedDate, allRecipies] = res;
-      if (userRecipies?.length && !!selectedDate && allRecipies.length) {
-        return getCurrentDayRecipies(userRecipies, new Date(selectedDate).toDateString(), allRecipies).sort((a, b) => sortRecipiesByDate(a, b))
+      const [userRecipies, selectedDate] = res;
+      if (userRecipies?.length && !!selectedDate && this.$recipies().length) {
+        return getCurrentDayRecipies(userRecipies, new Date(selectedDate).toDateString(), this.$recipies()).sort((a, b) => sortRecipiesByDate(a, b))
       } else return []
 
     })

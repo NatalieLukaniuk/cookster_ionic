@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { select, Store } from '@ngrx/store';
 import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
@@ -10,8 +10,8 @@ import { SaveCalendarAsPdfPreviewComponent } from './components/save-calendar-as
 import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { combineLatest, map, Observable, take } from 'rxjs';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { getCurrentDayRecipies, newDateIgnoreimezone } from './calendar.utils';
+import { RecipiesService } from 'src/app/services/recipies.service';
 
 
 
@@ -21,6 +21,8 @@ import { getCurrentDayRecipies, newDateIgnoreimezone } from './calendar.utils';
   styleUrls: ['./calendar.page.scss'],
 })
 export class CalendarPage {
+    recipiesService = inject(RecipiesService);
+      $recipies = this.recipiesService.getRecipies;
 
   constructor(private modalCtrl: ModalController, private store: Store<IAppState>, private calendarService: CalendarReworkedService) { }
 
@@ -137,24 +139,23 @@ export class CalendarPage {
   }
 
   plannedRecipies$: Observable<CalendarRecipyInDatabase_Reworked[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedRecipies || []));
-  allRecipies$ = this.store.pipe(select(getAllRecipies));
+
   plannedComments$: Observable<CalendarComment[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedComments || []))
 
   exportToPDF(dates: string[]) {
 
     combineLatest([
       this.plannedRecipies$,
-      this.allRecipies$,
       this.plannedComments$
     ]).pipe(
       take(1)
     ).subscribe(async res => {
-      const [plannedRecipies, allRecipies, plannedComments] = res;
+      const [plannedRecipies, plannedComments] = res;
       let recipiesToPreview: RecipyForCalendar_Reworked[] = [];
       let commentsToPreviw: CalendarComment[] = [];
       dates.forEach(day => {
         const selectedDate = new Date(day).toDateString();
-        const currentDayRecipies: RecipyForCalendar_Reworked[] = getCurrentDayRecipies(plannedRecipies, selectedDate, allRecipies);
+        const currentDayRecipies: RecipyForCalendar_Reworked[] = getCurrentDayRecipies(plannedRecipies, selectedDate, this.$recipies());
         recipiesToPreview = recipiesToPreview.concat(currentDayRecipies);
         const currentDayComments = plannedComments.filter(comment => new Date(comment.date).toDateString() === selectedDate && !comment.isReminder);
         commentsToPreviw = commentsToPreviw.concat(currentDayComments)        

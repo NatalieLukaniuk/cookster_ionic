@@ -1,15 +1,15 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
-import { BehaviorSubject, Observable, Subject, debounceTime, map, take, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, Subject, debounceTime, map, take, takeUntil, tap } from 'rxjs';
 import { FamilyMember, NewFamilyMember } from 'src/app/models/auth.models';
 import { Product } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
+import { ProductsService } from 'src/app/services/products.service';
 import { INPUT_DEBOUNCE_TIME } from 'src/app/shared/constants';
 import { UpdateFamilyAction } from 'src/app/store/actions/user.actions';
 import { IAppState } from 'src/app/store/reducers';
-import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
 import { getFamilyMembers } from 'src/app/store/selectors/user.selectors';
 
 @Component({
@@ -18,6 +18,7 @@ import { getFamilyMembers } from 'src/app/store/selectors/user.selectors';
   styleUrls: ['./edit-family.component.scss']
 })
 export class EditFamilyComponent implements OnDestroy {
+ productsService = inject(ProductsService);
   newMember = '';
 
   products: Product[] = [];
@@ -49,17 +50,7 @@ export class EditFamilyComponent implements OnDestroy {
 
   activeMember = '';
 
-  products$: Observable<Product[]> = this.store.pipe(
-    select(getAllProducts),
-    map((res) => {
-      if (res) {
-        let products = res.map((i) => i);
-        products.sort((a, b) => a.name.localeCompare(b.name));
-        this.products = products;
-        return products;
-      } else return [];
-    })
-  );
+  $products = this.productsService.getProducts;
 
   constructor(private store: Store<IAppState>, private datamapping: DataMappingService) {
     this.updatePortionSizePercentage();

@@ -1,56 +1,38 @@
 import { Product } from 'src/app/models/recipies.models';
-import { Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { combineLatest, take, tap } from 'rxjs';
-import { IAppState } from 'src/app/store/reducers';
-import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
+import { Component, computed, inject } from '@angular/core';
 import { TableService } from '../../services/table.service';
-import { UpdateProductAction } from 'src/app/store/actions/recipies.actions';
-import * as _ from 'lodash';
-import { ExpencesService } from 'src/app/expenses/expences.service';
+import { ProductsService } from 'src/app/services/products.service';
+import { UiService } from 'src/app/services/ui.service';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
 })
-export class ProductsComponent implements OnInit {
-  productsTableData: string[][] = [];
+export class ProductsComponent {
+  productsService = inject(ProductsService);
+  uiService = inject(UiService);
+  productsTableData = computed(() => this.tableService.buildProductsTable(this.$products()));
 
-  products$ = combineLatest([
-    this.store.pipe(select(getAllProducts)),
-    this.expencesService.getExpenses()
-  ]).pipe(
-    tap(
-      (res) => {
-        if (res[0].length && res[1].length) {
-          this.productsTableData = this.tableService.buildProductsTable(res[0], res[1]);
-        }
-      }
-    )
-  )
+  $products = this.productsService.getProducts;
 
   constructor(
-    private store: Store<IAppState>,
     private tableService: TableService,
-    private expencesService: ExpencesService
-  ) { }
+  ) {
 
-  ngOnInit() { }
+   }
 
   runUpdate() {
-    this.products$.pipe(take(1)).subscribe((res) => {
-      this.recursiveUpdate(0, res[0]);
-    });
+    this.recursiveUpdate(0, this.$products());
   }
 
-  recursiveUpdate(i: number, products: Product[]) {
+  recursiveUpdate(i: number, products: Product[]) {// TODO needs rework
     if (i < products.length) {
       setTimeout(() => {
         if (!products[i].sizeChangeCoef) {
           let update = this.updateScript(products[i]);
           console.log(update);
-          this.store.dispatch(new UpdateProductAction(update));
+          this.productsService.updateProduct(update).subscribe(() => this.uiService.showSuccessMessage(`${update.name} has been updated`));
         }
         console.log(i + ' of ' + products.length)
         i++;
@@ -60,7 +42,7 @@ export class ProductsComponent implements OnInit {
   }
 
   updateScript(product: Product): Product {
-    let _product = _.cloneDeep(product);
+    let _product = {...product};
     _product.sizeChangeCoef = 1;
     return _product;
   }

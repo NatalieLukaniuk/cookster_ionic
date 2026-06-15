@@ -12,7 +12,7 @@
         <ion-buttons slot="end">
           <ion-button (click)="confirm()">Застосувати</ion-button>
         </ion-buttons>
-        <ion-title><h5 class="found-recipies-count">Знайдено {{ filtersService.filteredRecipies }} рецептів</h5></ion-title>
+        <ion-title><h5 class="found-recipies-count">Знайдено {{ $filteredRecipiesCount() }} рецептів</h5></ion-title>
       </ion-toolbar>
       <ion-toolbar *ngIf="isShowWidget"><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
     </ion-header>
@@ -43,7 +43,7 @@
             <ion-label>Показати рецепти з інгридієнтами:</ion-label>
           </ion-item>
           <div class="ion-padding accordion-content" slot="content">
-            <app-product-autocomplete #withAutocomplete *ngIf="products$ | async" [products]="products"
+            <app-product-autocomplete #withAutocomplete [products]="$sortedProducts()"
               (productSelected)="addToDisplayWith($event)"></app-product-autocomplete>
           </div>
         </ion-accordion>
@@ -52,7 +52,7 @@
             <ion-label>Не показувати рецепти з інгридієнтами:</ion-label>
           </ion-item>
           <div class="ion-padding accordion-content" slot="content">
-            <app-product-autocomplete #withoutAutocomplete *ngIf="products$ | async" [products]="products"
+            <app-product-autocomplete #withoutAutocomplete [products]="$sortedProducts()"
               (productSelected)="addToDisplayWithout($event)"></app-product-autocomplete>
           </div>
         </ion-accordion>
@@ -63,14 +63,13 @@
 
 <ng-template #ExpensesTemplate>
   <ion-content class="ion-padding">
-    <app-active-filters-expenses-widget></app-active-filters-expenses-widget>
     <ion-accordion-group>
       <ion-accordion value="first">
         <ion-item slot="header" color="light">
           <ion-label>Фільтрувати за продуктом:</ion-label>
         </ion-item>
         <div class="ion-padding accordion-content" slot="content">
-          <app-product-autocomplete #withAutocomplete *ngIf="products$ | async" [products]="products"
+          <app-product-autocomplete #withAutocomplete [products]="$sortedProducts()"
             (productSelected)="addToDisplayWith($event)"></app-product-autocomplete>
         </div>
       </ion-accordion>

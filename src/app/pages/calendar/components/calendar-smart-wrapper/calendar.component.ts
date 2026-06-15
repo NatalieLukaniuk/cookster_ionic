@@ -1,13 +1,13 @@
 import { Observable, combineLatest, map } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { select, Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/reducers';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { Recipy } from 'src/app/models/recipies.models';
-import { getCurrentDayRecipies, getRecipyPrepStart, getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, MS_IN_MINUTE, sortCommentsByDate, sortRecipiesByDate } from '../../calendar.utils';
+import { getCurrentDayRecipies, getRecipyPrepStart, getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, sortCommentsByDate, sortRecipiesByDate } from '../../calendar.utils';
 import { CalendarReworkedService } from '../../calendar-reworked.service';
+import { RecipiesService } from 'src/app/services/recipies.service';
 
 @Component({
   selector: 'app-calendar-wrapper',
@@ -15,6 +15,9 @@ import { CalendarReworkedService } from '../../calendar-reworked.service';
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent {
+  recipiesService = inject(RecipiesService)
+
+  $recipies = this.recipiesService.getRecipies;
 
   constructor(private store: Store<IAppState>, private calendarService: CalendarReworkedService) { }
   currentDay$ = this.calendarService.getCurrentDay();
@@ -23,7 +26,6 @@ export class CalendarComponent {
 
   plannedComments$: Observable<CalendarComment[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedComments || []));
 
-  allRecipies$ = this.store.pipe(select(getAllRecipies))
 
   currentDayComments$ = combineLatest([
     this.currentDay$,
@@ -41,30 +43,29 @@ export class CalendarComponent {
   currentDateDetails$: Observable<RecipyForCalendar_Reworked[]> = combineLatest([
     this.currentDay$,
     this.plannedRecipies$,
-    this.allRecipies$
   ]).pipe(
     map(res => {
 
-      const [currentDay, plannedRecipies, allRecipies] = res;
+      const [currentDay, plannedRecipies] = res;
 
       const selectedDate = currentDay.toDate().toDateString();
       let recipiesoDisplay: RecipyForCalendar_Reworked[] = [];
 
-      const currentDayRecipies: RecipyForCalendar_Reworked[] = getCurrentDayRecipies(plannedRecipies, selectedDate, allRecipies);
+      const currentDayRecipies: RecipyForCalendar_Reworked[] = getCurrentDayRecipies(plannedRecipies, selectedDate, this.$recipies());
       recipiesoDisplay = recipiesoDisplay.concat(currentDayRecipies);
 
       this.calendarService.setCurrentDayRecipies(recipiesoDisplay)
 
-      const overflowingRecipies: CalendarRecipyInDatabase_Reworked[] = this.getOverflowingRecipies(plannedRecipies, selectedDate, allRecipies);
+      const overflowingRecipies: CalendarRecipyInDatabase_Reworked[] = this.getOverflowingRecipies(plannedRecipies, selectedDate, this.$recipies());
       if (overflowingRecipies.length) {
         const mapped: RecipyForCalendar_Reworked[] = overflowingRecipies.map(recipy => {
-          const found = allRecipies.find(r => r.id === recipy.recipyId);
+          const found = this.$recipies().find(r => r.id === recipy.recipyId);
           if (found) {
             return {
               ...found,
               ...recipy
             }
-          } else return { ...allRecipies[0], ...recipy }
+          } else return { ...this.$recipies()[0], ...recipy }
         });
         recipiesoDisplay = recipiesoDisplay.concat(mapped)
       }

@@ -1,5 +1,4 @@
-import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Recipy } from 'src/app/models/recipies.models';
 import {
@@ -10,10 +9,10 @@ import {
 } from 'src/app/pages/recipies/utils/recipy.utils';
 import * as moment from 'moment';
 import { DialogsService } from 'src/app/services/dialogs.service';
-import { ExpencesService } from 'src/app/expenses/expences.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ShoppingList, SLItem } from 'src/app/models/shopping-list.models';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
+import { ProductsService } from 'src/app/services/products.service';
 
 @Component({
   selector: 'app-add-to-list-modal',
@@ -21,6 +20,8 @@ import { ShoppingListService } from 'src/app/services/shopping-list.service';
   styleUrls: ['./add-to-list-modal.component.scss'],
 })
 export class AddToListModalComponent implements OnInit, OnDestroy {
+  productsService = inject(ProductsService);
+
   // TODO needs review
   ingredient!: SLItem;
   lists!: ShoppingList[];
@@ -52,7 +53,7 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
         this.ingredient.total,
         this.ingredient.unit,
         this.ingredient.id,
-        this.datamapping.products$.value
+        this.productsService.getProducts()
       );
       let normalized = NormalizeDisplayedAmountGetNumber(
         converted,
@@ -60,17 +61,13 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
       );
       this.amountToAdd = normalized + ' ' + getUnitText(this.ingredient.unit);
     } else {
-      this.expensesService.getTitleOptions().pipe(takeUntil(this.destroy$)).subscribe(res => {
-        this.titleAutocompleteOptions = res
-      });
+      //TODO what are the usecase for this?
     }
   }
 
   constructor(
     private modalCtrl: ModalController,
-    private datamapping: DataMappingService,
     private dialog: DialogsService,
-    private expensesService: ExpencesService,
     private shoppingListService: ShoppingListService
   ) { }
   ngOnDestroy(): void {
@@ -188,13 +185,5 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
 
   onItemSelected(event: string) {
     this.newItemName = event
-  }
-
-  getHighestPrice(title: string) {
-    return this.expensesService.getHighestPriceInfo(title)
-  }
-
-  getLowestPrice(title: string) {
-    return this.expensesService.getLowestPriceInfo(title);
   }
 }

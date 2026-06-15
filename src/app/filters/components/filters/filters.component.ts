@@ -1,12 +1,14 @@
+import { ProductsService } from 'src/app/services/products.service';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { DishType, Product } from 'src/app/models/recipies.models';
 import { FiltersService } from './../../services/filters.service';
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { select, Store } from '@ngrx/store';
 import { map, Observable, Subscription, tap } from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
-import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
+import { RecipiesService } from 'src/app/services/recipies.service';
+import { getUserCollections, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 
 @Component({
   selector: 'app-filters',
@@ -14,24 +16,18 @@ import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
   styleUrls: ['./filters.component.scss'],
 })
 export class FiltersComponent implements OnInit, OnDestroy {
+  productsService = inject(ProductsService);
+  recipiesService = inject(RecipiesService);
+
   @Input() isExpensePage = false;
   @Input() pageId: string = '';
   @Input() isUserLoggedIn = false;
 
-  products: Product[] = [];
-  products$: Observable<Product[]> = this.store.pipe(
-    select(getAllProducts),
-    map((res) => {
-      if (res) {
-        let products = res.map((i) => i);
-        products.sort((a, b) => a.name.localeCompare(b.name));
-        this.products = products;
-        return products;
-      } else return [];
-    })
-  );
-
-  userCollections$ = this.filtersService.userCollections$.pipe(map(collections => collections?.length? collections.map(item => item.name) : []))
+  $products = this.productsService.getProducts;
+  $sortedProducts = this.productsService.getSortedProducts;
+  $filteredRecipiesCount = this.recipiesService.recipiesWithFilterEnabledCount;
+  
+  userCollections$ = this.store.pipe(select(getUserCollections)).pipe(map(collections => collections?.length? collections.map(item => item.name) : [])) //TODO needs to be signal from userdata service
 
   subscription = new Subscription();
 
@@ -45,7 +41,7 @@ export class FiltersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription.add(this.filtersService.userPlannedRecipies$.subscribe())
+    this.subscription.add(this.store.pipe(select(getUserPlannedRecipies)).subscribe()) //TODO needs to be signal from userdata service
   }
 
   @ViewChild(IonModal) modal: IonModal | undefined;

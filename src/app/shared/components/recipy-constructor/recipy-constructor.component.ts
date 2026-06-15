@@ -3,8 +3,6 @@ import { DataMappingService } from './../../../services/data-mapping.service';
 import { MeasuringUnit, NewRecipy } from './../../../models/recipies.models';
 import {
   UpdateDraftRecipyAction,
-  AddNewRecipyAction,
-  UpdateRecipyAction,
 } from './../../../store/actions/recipies.actions';
 import { AddDraftRecipyAction } from '../../../store/actions/recipies.actions';
 import { select, Store } from '@ngrx/store';
@@ -22,6 +20,7 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
+  inject,
 } from '@angular/core';
 import * as _ from 'lodash';
 import { Role, User } from 'src/app/models/auth.models';
@@ -33,6 +32,7 @@ import { getUnitText } from 'src/app/pages/recipies/utils/recipy.utils';
 import { ItemReorderEventDetail } from '@ionic/angular';
 import { debounceTime, Subject, Subscription, take } from 'rxjs';
 import { getUserDraftRecipies } from 'src/app/store/selectors/user.selectors';
+import { RecipiesService } from 'src/app/services/recipies.service';
 
 const SAVE_CHANGES_AFTER = 5400;
 
@@ -42,6 +42,8 @@ const SAVE_CHANGES_AFTER = 5400;
   styleUrls: ['./recipy-constructor.component.scss'],
 })
 export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy {
+  recipiesService = inject(RecipiesService);
+
   @Input() recipyToPatch: DraftRecipy | Recipy | undefined | null;
   @Input() recipyToPatchOrder: number | undefined;
   @Input() currentUser!: User | null;
@@ -248,8 +250,10 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
 
   saveNewRecipy() {
     let recipy: NewRecipy = this.collectDataNewRecipyOrDraft();
-    this.store.dispatch(new AddNewRecipyAction(recipy));
-    this.reset()
+    this.recipiesService.addNewRecipy(recipy).subscribe(() => {
+      this.reset()
+    })
+    
   }
 
   isAddAsApproved() {
@@ -260,7 +264,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
     let updated: Recipy | null = this.collectDataExistingRecipy();
     console.log(updated);
     if (updated) {
-      this.store.dispatch(new UpdateRecipyAction(updated));
+      this.recipiesService.updateRecipy(updated).subscribe()
     }
   }
 

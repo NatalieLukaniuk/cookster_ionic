@@ -27,14 +27,14 @@
                 <p>Рекомендована порція: {{sampleRecommendedPortion}}гр</p>
                 <p>Порція для {{member.name}}: {{calculatedPortionSize$ | async}}гр</p>
             </div>
-            <ng-container *ngIf="products$ | async">
-                <h5 class="padding-inline">Любить:</h5>
-                <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'like' }"></ng-container>
-                <h5 class="padding-inline">Не любить:</h5>
-                <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noLike' }"></ng-container>
-                <h5 class="padding-inline">Не їсть:</h5>
-                <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noEat' }"></ng-container>
-            </ng-container>
+            @if($products()){
+            <h5 class="padding-inline">Любить:</h5>
+            <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'like' }"></ng-container>
+            <h5 class="padding-inline">Не любить:</h5>
+            <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noLike' }"></ng-container>
+            <h5 class="padding-inline">Не їсть:</h5>
+            <ng-container *ngTemplateOutlet="accContent; context:{ member, key: 'noEat' }"></ng-container>
+            }
         </ng-container>
     </div>
 </ion-content>
@@ -63,15 +63,18 @@
 <ng-template #accContent let-member="member" let-key="key">
     <div class="limited-height-autcomplete" slot="content">
         <div class="chip-selection-list">
-            <ng-container *ngFor="let product of (products$ | async)">
-                <ion-chip *ngIf="member[key] && member[key].includes(product.id)"
-                    (click)="onProductCheck(product, key, member.id)" [color]="'primary'">
-                    <span>{{ getProductText(product) }}</span>
-                    <ion-icon name="close-outline"></ion-icon>
-                </ion-chip>
-            </ng-container>
+            @for(product of $products(); track product.id){
+                <!-- TODO this logic is horrible, needs refactoring -->
+            @if(member[key] && member[key].includes(product.id)){ 
+            <ion-chip (click)="onProductCheck(product, key, member.id)" [color]="'primary'">
+                <span>{{ getProductText(product) }}</span>
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-chip>
+            }
+
+            }
         </div>
-        <app-product-autocomplete *ngIf="products$ | async" [products]="getFilteredProducts(key, member.id)"
+        <app-product-autocomplete [products]="getFilteredProducts(key, member.id)"
             (productSelected)="onProductCheck($event, key, member.id)"></app-product-autocomplete>
     </div>
 </ng-template>

@@ -1,4 +1,3 @@
-import { ExpensesApiService } from 'src/app/services/expenses-api.service';
 import { Role, UserMappingItem } from './../models/auth.models';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -8,7 +7,6 @@ import { User } from '../models/auth.models';
 
 import * as UserActions from '../store/actions/user.actions';
 import { AuthApiService } from './auth-api.service';
-import { ExpensesLoadedAction } from '../store/actions/expenses.actions';
 import { UiService } from './ui.service';
 
 @Injectable({
@@ -25,7 +23,7 @@ export class UserService {
 
   allUsersMapping: UserMappingItem[] = [];
 
-  constructor(private authApiService: AuthApiService, private store: Store, private expApi: ExpensesApiService) { }
+  constructor(private authApiService: AuthApiService, private store: Store) { }
 
   getUserData(user: User) {
     this.authApiService
@@ -35,11 +33,7 @@ export class UserService {
         this.allUsersMapping = userMappingData;
         const found = userMappingData.find(fbUser => fbUser.firebaseId === user.uid);
         if (found) {
-          this.getCurrentUserData(found.cooksterId);
-          this.expApi.userCooksterId = found.cooksterId;
-          this.expApi.getExpenses().pipe(take(1)).subscribe(res => {
-            this.store.dispatch(new ExpensesLoadedAction(res?.expenses || []))
-          })
+          this.getCurrentUserData(found.cooksterId);         
         } else {
           this.uiService.setError('no such user found');
         }

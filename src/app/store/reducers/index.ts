@@ -4,28 +4,24 @@ import { CalendarReducers, CalendarState, InitialCalendarState } from './calenda
 import { InitialUserState, IUserState, UserReducers } from './user.reducer';
 import { InitialRecipiesState, IRecipiesState, RecipiesReducers } from './recipies.reducer';
 import { CommentsReducers, CommentsState, InitialCommentsState } from './comments.reducers';
-import { ExpensesReducers, ExpensesState, InitialExpensesState } from './expenses.reducer';
 
 export interface IAppState {
   calendar: CalendarState,
   user: IUserState,
   recipies: IRecipiesState,
-  comments: CommentsState,
-  expenses: ExpensesState
+  comments: CommentsState
 }
 
 export const InitialAppState: IAppState = {
   calendar: InitialCalendarState,
   user: InitialUserState,
   recipies: InitialRecipiesState,
-  comments: InitialCommentsState,
-  expenses: InitialExpensesState
+  comments: InitialCommentsState
 }
 
 export const reducers: ActionReducerMap<IAppState, any> = {
   calendar: CalendarReducers,
   user: UserReducers,
   recipies: RecipiesReducers,
-  comments: CommentsReducers,
-  expenses: ExpensesReducers
+  comments: CommentsReducers
 };

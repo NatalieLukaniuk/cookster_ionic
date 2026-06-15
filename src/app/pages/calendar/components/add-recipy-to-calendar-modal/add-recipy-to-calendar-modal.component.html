@@ -24,15 +24,18 @@
       </ion-buttons>
       <ion-title>
         <div class="recipy-selection-result">
-          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectRecipy)" [class.active]="currentView === AddRecipyToCalView.SelectRecipy">
+          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectRecipy)"
+            [class.active]="currentView === AddRecipyToCalView.SelectRecipy">
             <span>Рецепт:</span>
             <span>{{selectedRecipy?.name}}</span>
           </div>
-          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectDate)" [class.active]="currentView === AddRecipyToCalView.SelectDate">
+          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SelectDate)"
+            [class.active]="currentView === AddRecipyToCalView.SelectDate">
             <span>Час:</span>
             <span>{{(selectedTime | date: 'EEE, dd MMM yyyy, HH:mm') || '-'}}</span>
           </div>
-          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SetAmount)" [class.active]="currentView === AddRecipyToCalView.SetAmount">
+          <div class="recipy-selection-section" (click)="changeCurrentView(AddRecipyToCalView.SetAmount)"
+            [class.active]="currentView === AddRecipyToCalView.SetAmount">
             <span>Порцій:</span>
             <span>{{portions || '-'}}</span>
             <span>Розмір порції:</span>
@@ -47,17 +50,20 @@
         </ion-buttons>
       </ng-container>
     </ion-toolbar>
-    <ion-toolbar *ngIf="isShowWidget"><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
+    @if($isShowWidget()){
+    <ion-toolbar><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
+    }
+
   </ion-header>
 
   <ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
     <ng-container *ngIf="currentView === AddRecipyToCalView.SelectRecipy">
-      <ion-list *ngIf="(recipies$ | async) as allRecipies" lines="none">
-        <ng-container *ngFor="let recipy of allRecipies; let index = index">
+      <ion-list lines="none">
+        <ng-container *ngFor="let recipy of $recipies(); let index = index">
           <app-recipy-in-calendar-short-view *ngIf="index < numberOfRecipiesToDisplay" [recipy]="recipy"
             (recipyClicked)="onRecipyClicked(recipy)"></app-recipy-in-calendar-short-view>
         </ng-container>
-        <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= recipies.length" (ionInfinite)="onIonInfinite($event)">
+        <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= $recipies().length" (ionInfinite)="onIonInfinite($event)">
           <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>
       </ion-list>
@@ -71,7 +77,7 @@
     <ng-container *ngIf="currentView === AddRecipyToCalView.SelectDate">
       <app-recipy-in-calendar-select-date [initialValue]="initialSelectDate"
         (valueChanged)="onDateChanged($event)"></app-recipy-in-calendar-select-date>
-          </ng-container>
+    </ng-container>
 
     <ng-container *ngIf="currentView === AddRecipyToCalView.SetAmount">
       <app-recipy-in-calendar-select-portions-and-amount (amountValueChanged)="onAmountSelected($event)"

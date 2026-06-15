@@ -15,15 +15,10 @@
         [placeholder]="'Введіть назву:'" (itemSelected)="onItemSelected($event)"></app-input-with-autocomplete>
     </div>
   </ng-container>
-  <div *ngIf="isPlannedIngredient ? ingredient.name : newItemName" class="price-info">
-    <p><ion-icon color="success" name="arrow-down-outline"></ion-icon> {{getLowestPrice(isPlannedIngredient ? ingredient.name :
-      newItemName) | async}}</p>
-    <p><ion-icon color="danger" name="arrow-up-outline"></ion-icon> {{getHighestPrice(isPlannedIngredient ? ingredient.name :
-      newItemName) | async}}</p>
-  </div>
+
   <h3>Виберіть список:</h3>
   <ion-list class="lists-container">
-    <ion-radio-group *ngIf="lists?.length" [value]="selectedList" (ionChange)="listChange($event)">
+    <ion-radio-group *ngIf="lists.length" [value]="selectedList" (ionChange)="listChange($event)">
       <ion-item swipeLeftNoConfirmation *ngFor="let list of lists" (itemSwiped)="onDeleteList(list)">
         <ion-label>{{ list.name }}</ion-label>
         <ion-radio slot="end" [value]="list.name"></ion-radio>

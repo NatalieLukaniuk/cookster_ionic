@@ -1,13 +1,13 @@
-import { DataMappingService } from '../../services/data-mapping.service';
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { MeasuringUnit } from 'src/app/models/recipies.models';
 import { convertAmountToSelectedUnit } from '../../pages/recipies/utils/recipy.utils';
+import { ProductsService } from 'src/app/services/products.service';
 
 @Pipe({
   name: 'convertToSelectedUnit',
 })
 export class ConvertToSelectedUnitPipe implements PipeTransform {
-  constructor(private datamapping: DataMappingService) {}
+  productsService = inject(ProductsService)
 
   transform(
     amountInGr: number,
@@ -18,7 +18,7 @@ export class ConvertToSelectedUnitPipe implements PipeTransform {
       amountInGr,
       selectedUnit,
       ingredientId,
-      this.datamapping.products$.value
+      this.productsService.getProducts()
     );
   }
 }

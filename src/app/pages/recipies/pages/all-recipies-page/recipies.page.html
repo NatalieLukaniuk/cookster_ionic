@@ -1,26 +1,36 @@
 <app-header [isShowDoubleToolbar]="false">
   <app-filters top-header-right-button [pageId]="'all-recipies'" [isUserLoggedIn]="!!(user$ | async)"></app-filters>
-  <ion-toolbar *ngIf="isShowWidget" additional-toolbar><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
+  @if($isShowWidget()){
+  <ion-toolbar additional-toolbar><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
+  }
+
 </app-header>
 
 <ion-content #scrollingContainer [fullscreen]="true" (ionScroll)="onscroll($event)" [scrollEvents]="true">
   <span id="top-anchor"></span>
-  
-  <div class="recipies-background">
-    <div *ngFor="let recipy of recipies; let index = index">
-      <app-recipy-short-view *ngIf="index < numberOfRecipiesToDisplay" [currentUser]="user$ | async" [recipy]="recipy"
-        [productPreferencesChips]="productChips" [isBigScreen]="isBigScreen"></app-recipy-short-view>
-      <app-comments-block *ngIf="index < numberOfRecipiesToDisplay"
-        [recipyId]="recipy.id" [recipyName]="recipy.name"></app-comments-block>
-    </div>
-    <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= recipies.length" (ionInfinite)="onIonInfinite($event)">
-      <ion-infinite-scroll-content></ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-  </div>
 
-  <ion-fab *ngIf="showGoTop" (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button>
-      <ion-icon name="chevron-up-circle"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  <div class="recipies-background">
+    @for(recipy of $recipies(); track recipy.id; let index = $index){
+    @if(index < numberOfRecipiesToDisplay){ <div>
+      <app-recipy-short-view [currentUser]="user$ | async" [recipy]="recipy" [productPreferencesChips]="productChips"
+        [isBigScreen]="isBigScreen"></app-recipy-short-view>
+      <app-comments-block [recipyId]="recipy.id" [recipyName]="recipy.name"></app-comments-block>
+  </div>
+  }
+
+  }
+  @if(numberOfRecipiesToDisplay <= $recipies().length){ <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    }
+
+    </div>
+    @if(showGoTop){
+    <ion-fab (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button>
+        <ion-icon name="chevron-up-circle"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    }
+
 </ion-content>

@@ -1,17 +1,14 @@
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { filter, map, tap } from 'rxjs/operators';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
+import { map } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { IAppState } from 'src/app/store/reducers';
-import * as _ from 'lodash';
 import { Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { Role } from 'src/app/models/auth.models';
-import { Recipy } from 'src/app/models/recipies.models';
-import { UpdateRecipyAction } from 'src/app/store/actions/recipies.actions';
+import { Ingredient, Recipy } from 'src/app/models/recipies.models';
 import { UiService } from 'src/app/services/ui.service';
+import { RecipiesService } from 'src/app/services/recipies.service';
 
 @Component({
   selector: 'app-full-recipy-page',
@@ -20,42 +17,34 @@ import { UiService } from 'src/app/services/ui.service';
 })
 export class FullRecipyPageComponent implements OnDestroy {
   uiService = inject(UiService);
+  recipiesService = inject(RecipiesService);
   
-  recipyId: string;
+  $recipyId = signal<string>('');
 
-  currentRecipy: Recipy | undefined;
+  $recipy = computed(() => {
+    const found = this.recipiesService.getRecipies().find((recipy) => recipy.id === this.$recipyId());
+    if(!found) return null;
 
-  recipy$ = this.store.pipe(
-    select(getAllRecipies),
-    filter((res) => !!res.length),
-    tap(() => this.uiService.setIsLoadingTrue()),
-    map((res) => res.find((recipy) => recipy.id === this.recipyId)),
-    map((recipy) => {
-      if (recipy && recipy.ingrediends) {
-        let updatedRecipy = _.cloneDeep(recipy);
-        updatedRecipy.ingrediends.sort((a, b) => b.amount - a.amount);
-        this.uiService.setIsLoadingFalse();
-        this.titleService.setTitle(recipy.name)
-        console.log('updated')
-        return updatedRecipy;
-      } else return recipy;
-    }),
-    tap(recipy => this.currentRecipy = recipy)
-  );
+    const updatedRecipy: Recipy = {
+      ...found
+    }
+    updatedRecipy.ingrediends.sort((a: Ingredient, b: Ingredient) => b.amount - a.amount);
+    this.titleService.setTitle(updatedRecipy.name);
+    return updatedRecipy
+  })
+
 
   user$ = this.store.pipe(select(getCurrentUser));
-  isCanEdit$ = combineLatest([this.user$, this.recipy$]).pipe(
-    filter((res) => !!res[0] && !!res[1]),
-    map((res) => res[0]?.email === res[1]?.author || res[0]?.role === Role.Admin)
+  isCanEdit$ = this.user$.pipe( // should eventually be converted to computed signal
+      map((res) => res?.email === this.$recipy()?.author || res?.role === Role.Admin)
   );
 
-  isShowApproveBtn$ = combineLatest([this.user$, this.recipy$]).pipe(
-    filter((res) => !!res[0] && !!res[1]),
-    map((res) => res[0]?.role === Role.Admin && res[1]?.notApproved)
+  isShowApproveBtn$ = this.user$.pipe(// should eventually be converted to computed signal
+    map((res) => res?.role === Role.Admin && this.$recipy()?.notApproved)
   );
   constructor(private store: Store<IAppState>, private router: Router, private titleService: Title) {
     const path = window.location.pathname.split('/');
-    this.recipyId = path[path.length - 1];
+    this.$recipyId.set(path[path.length - 1]);
   }
   ngOnDestroy(): void {
     this.titleService.setTitle('Cookster')
@@ -63,13 +52,14 @@ export class FullRecipyPageComponent implements OnDestroy {
 
 
   goEditRecipy() {
-    this.router.navigate(['tabs', 'recipies', 'edit-recipy', this.recipyId]);
+    this.router.navigate(['tabs', 'recipies', 'edit-recipy', this.$recipyId()]);
   }
 
   approveRecipy(){
-    if(this.currentRecipy){
-      const updated = {...this.currentRecipy, notApproved: false};
-      this.store.dispatch(new UpdateRecipyAction(updated))
+    const currentRecipy = this.$recipy()
+    if(currentRecipy){
+      const updated = {...currentRecipy, notApproved: false};
+      this.recipiesService.updateRecipy(updated);
     }
   }
   

@@ -1,4 +1,3 @@
-import { getAllProducts } from '../../../../store/selectors/recipies.selectors';
 import {
   Ingredient,
   MeasuringUnitOptionsGranular,
@@ -21,20 +20,22 @@ import {
   OnInit,
   Output,
   ViewChild,
-  OnDestroy,
   Input,
+  inject,
 } from '@angular/core';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Observable, map} from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { Role } from 'src/app/models/auth.models';
+import { ProductsService } from 'src/app/services/products.service';
 
 @Component({
   selector: 'app-add-ingredient',
   templateUrl: './add-ingredient.component.html',
   styleUrls: ['./add-ingredient.component.scss'],
 })
-export class AddIngredientComponent implements OnInit, OnDestroy {
+export class AddIngredientComponent implements OnInit {
+  productsService = inject(ProductsService);
   @Output() addNewIngredient = new EventEmitter<Ingredient>();
   @Output() onAddProduct = new EventEmitter<void>();
   @Input() isSplitIntoGroups: boolean = false;
@@ -42,9 +43,7 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
 
   _groups: string[] = ['Основна страва'];
 
-  data: Product[] = [];
-
-  destroyed$ = new Subject<void>();
+  $allProducts = this.productsService.getProducts;
 
   selectedProduct: Product | null = null;
   quantity: string = '';
@@ -56,16 +55,7 @@ export class AddIngredientComponent implements OnInit, OnDestroy {
   @ViewChild('autocomplete') autocomplete: any;
 
   constructor(private store: Store, private dataMapping: DataMappingService) {
-    this.store
-      .pipe(select(getAllProducts), takeUntil(this.destroyed$))
-      .subscribe((res) => {
-        if (res) {
-          this.data = res;
-        }
-      });
-  }
-  ngOnDestroy(): void {
-    this.destroyed$.next();
+
   }
 
   ngOnInit() {

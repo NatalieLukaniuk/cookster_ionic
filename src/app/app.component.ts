@@ -3,10 +3,6 @@ import { DataMappingService } from './services/data-mapping.service';
 import { getCurrentUser } from './store/selectors/user.selectors';
 import { AuthService } from './services/auth.service';
 
-import {
-  getAllProducts,
-  getAllRecipies,
-} from './store/selectors/recipies.selectors';
 import { Store, select } from '@ngrx/store';
 import { Component, effect, inject, OnInit } from '@angular/core';
 import * as RecipiesActions from './store/actions/recipies.actions';
@@ -24,6 +20,8 @@ import { LoadCommentsAction } from './store/actions/comments.actions';
 import { LayoutService } from './services/layout.service';
 import { environment } from 'src/environments/environment';
 import { UiService } from './services/ui.service';
+import { ProductsService } from './services/products.service';
+import { RecipiesService } from './services/recipies.service';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +40,8 @@ export class AppComponent implements OnInit {
   };
 
   uiService = inject(UiService);
+  productsService = inject(ProductsService);
+  recipiesService = inject(RecipiesService);
 
   $isLoading = this.uiService.getIsLoading;
   $isError = this.uiService.getIsError;
@@ -54,8 +54,11 @@ export class AppComponent implements OnInit {
 
   Role = Role;
 
-  products$ = this.store.pipe(select(getAllProducts));
-  recipies$ = this.store.pipe(select(getAllRecipies));
+  $products = this.productsService.getProducts;
+  $recipies = this.recipiesService.getRecipies;
+
+  $isRecipiesLoaded = this.recipiesService.getIsRecipiesLoaded;
+  $isProductsLoaded = this.productsService.getIsProductsLoaded;
 
   version = environment.version;
 
@@ -81,7 +84,7 @@ export class AppComponent implements OnInit {
   ) {
     effect(() => {
       const error = this.$isError()
-      if(error?.length){
+      if (error?.length) {
         this.dialog.presentInfoToast(error);
         this.uiService.resetError()
       }
@@ -89,12 +92,12 @@ export class AppComponent implements OnInit {
 
     effect(() => {
       const successMessage = this.$isSuccessMessage();
-      if(successMessage?.length){
+      if (successMessage?.length) {
         this.dialog.presentInfoToast(successMessage);
         this.uiService.dismissSuccessMessage()
       }
     })
-   }
+  }
   ngOnInit(): void {
     this.loadData();
 
@@ -115,21 +118,13 @@ export class AppComponent implements OnInit {
 
   loadData() {
     this.uiService.setIsLoadingTrue();
-    this.store.dispatch(new RecipiesActions.GetRecipiesAction());
-    this.store.dispatch(new RecipiesActions.GetProductsAction());
     this.store.dispatch(new LoadCommentsAction())
 
     combineLatest([
-      this.products$,
-      this.recipies$,
-    ]).subscribe((res) => {
-      let [products, recipies] = res;
-      if (products.length) {
-        this.dataMappingService.products$.next(products);
-      }
-      if (products.length && recipies.length) {
-        this.uiService.setIsLoadingFalse();
-      }
+      this.productsService.loadProducts(),
+      this.recipiesService.loadRecipies(),
+    ]).subscribe(([products, recipies]) => {
+      this.uiService.setIsLoadingFalse();
     });
   }
 
