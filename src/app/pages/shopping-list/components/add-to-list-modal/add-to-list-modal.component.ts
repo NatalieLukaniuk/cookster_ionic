@@ -44,8 +44,6 @@ export class AddToListModalComponent implements OnInit, OnDestroy {
 
   destroy$ = new Subject<void>();
 
-  timestamps$ = this.shoppingListService.shoppingTimestampsObservable()
-
   ngOnInit() {
     
     if (this.isPlannedIngredient) {

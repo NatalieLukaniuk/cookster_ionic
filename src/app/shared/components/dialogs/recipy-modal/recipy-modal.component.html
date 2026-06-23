@@ -2,10 +2,10 @@
     @if($recipy()){
     <h2>{{$recipy()!.name}}</h2>
     @if(!isView()){
-    <app-recipy-constructor [recipyToPatch]="$recipy()" [currentUser]="user$ | async"></app-recipy-constructor>
+    <app-recipy-constructor [recipyToPatch]="$recipy()"></app-recipy-constructor>
     }
     @else {
-    <app-recipy-full-view [recipy]="$recipy()" [currentUser]="user$ | async"></app-recipy-full-view>
+    <app-recipy-full-view [recipy]="$recipy()"></app-recipy-full-view>
     }
     }
     <!-- TODO add view when no recipy is found in db -->

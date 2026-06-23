@@ -1,9 +1,4 @@
-import { combineLatest, map, Subject, takeUntil } from 'rxjs';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { IAppState } from 'src/app/store/reducers';
-import * as _ from 'lodash';
+import { Component, OnInit, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 import { ShoppingListService, ShoppingListTimestamp } from 'src/app/services/shopping-list.service';
@@ -13,35 +8,19 @@ import { ControllerInputDialogComponent } from 'src/app/shared/components/dialog
 import { ControllerListSelectDialogComponent } from 'src/app/shared/components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { AddToListModalComponent } from './components/add-to-list-modal/add-to-list-modal.component';
 import { ShoppingList, ShoppingListItem } from 'src/app/models/shopping-list.models';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.page.html',
   styleUrls: ['./shopping-list.page.scss'],
 })
-export class ShoppingListPage implements OnInit, OnDestroy {
-  destroyed$ = new Subject<void>();
-  activeList: ShoppingList[] | undefined;
-  timestamps: ShoppingListTimestamp[] = [];
+export class ShoppingListPage implements OnInit {
+  userDataService = inject(UserDataService);
+  
+  $timestamps = this.shoppingListService.shoppingListTimestamps;
 
-  userShoppingLists$ = combineLatest([
-    this.store.pipe(select(getCurrentUser)),
-    this.shoppingListService.shoppingTimestampsObservable()
-  ]).pipe(
-    takeUntil(this.destroyed$),
-    map(result => {
-      const [user, timestamps] = result;
-      this.timestamps = timestamps;
-      if (user && user.shoppingLists) {
-        this.activeList = _.cloneDeep(user.shoppingLists);
-
-
-        return this.activeList;
-      } else return [];
-    })
-  )
-
-
+  $userShoppingLists = this.userDataService.userShoppingLists;
 
   tabs = [
     { name: 'купити', icon: 'calendar-outline' },
@@ -50,7 +29,6 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   currentTab = this.tabs[0].name;
 
   constructor(
-    private store: Store<IAppState>,
     private shoppingListService: ShoppingListService,
     private modalCtrl: ModalController,
     private router: Router,
@@ -59,10 +37,6 @@ export class ShoppingListPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.shoppingListService.loadTimestamps();
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next();
   }
 
   onTabChange(event: any) {
@@ -78,8 +52,8 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   }
 
   onSwiped(item: ShoppingListItem, list: string) {
-    let cloned = _.cloneDeep(this.activeList);
-    let updatedList: ShoppingList[] = cloned!.map((ls: ShoppingList) => {
+    let cloned = this.$userShoppingLists();
+    let updatedList: ShoppingList[] = cloned.map((ls: ShoppingList) => {
       if (ls.name === list) {
         ls.items = ls.items.map((ingr: ShoppingListItem) => {
           if (ingr.title === item.title) {
@@ -94,12 +68,12 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   }
 
   async addCustomItem() {
-    let cloned = _.cloneDeep(this.activeList);
+    let cloned = this.$userShoppingLists();
     const modal = await this.modalCtrl.create({
       component: AddToListModalComponent,
       componentProps: {
         ingredient: {},
-        lists: this.shoppingListService.sortListByTimestamps(cloned!, this.timestamps),
+        lists: this.shoppingListService.sortListByTimestamps(cloned!, this.$timestamps()),
         isPlannedIngredient: false,
       },
     });
@@ -120,7 +94,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
       )
       .then((res) => {
         if (res.role === 'confirm') {
-          const list = this.activeList?.map(listItem => {
+          const list = this.$userShoppingLists().map(listItem => {
             const updated = {
               ...listItem,
               items: listItem.items?.filter(item => !item.completed)
@@ -140,7 +114,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
   }
 
   async onChangeList(item: ShoppingListItem, previousListName: string) {
-    let cloned = _.cloneDeep(this.activeList);
+    let cloned = this.$userShoppingLists();
     const listNames = cloned?.map(list => list.name);
     const modal = await this.modalCtrl.create({
       component: ControllerListSelectDialogComponent,
@@ -201,7 +175,7 @@ export class ShoppingListPage implements OnInit, OnDestroy {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      let cloned = _.cloneDeep(this.activeList);
+      let cloned = this.$userShoppingLists();
       const list = cloned?.map(listItem => {
         if (listItem.name === listName) {
           const updated = {

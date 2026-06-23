@@ -12,7 +12,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { GenericSettingsComponent } from './components/generic-settings/generic-settings.component';
 import { EditFamilyComponent } from './components/edit-family/edit-family.component';
 import { ManageCollectionsComponent } from './components/manage-collections/manage-collections.component';
-import { ExpensesPageComponent } from './components/expenses-page/expenses-page.component';
 import { HiddenRecipiesComponent } from './components/hidden-recipies/hidden-recipies.component';
 import { CommentsModule } from 'src/app/comments/comments.module';
 
@@ -25,6 +24,6 @@ import { CommentsModule } from 'src/app/comments/comments.module';
     SharedModule,
     CommentsModule
   ],
-  declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent, EditFamilyComponent, ManageCollectionsComponent, ExpensesPageComponent, HiddenRecipiesComponent]
+  declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent, EditFamilyComponent, ManageCollectionsComponent, HiddenRecipiesComponent]
 })
 export class UserPageModule { }

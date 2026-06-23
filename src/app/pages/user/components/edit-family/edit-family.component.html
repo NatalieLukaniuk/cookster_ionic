@@ -10,12 +10,12 @@
     <ng-container *ngTemplateOutlet="addFamilyBottomsheet"></ng-container>
 
     <ion-segment [value]="activeMember" [scrollable]="true" *ngIf="familyMembers" (ionChange)="onTabChange($event)">
-        <ion-segment-button [value]="member.id" *ngFor="let member of (familyMembers$ | async)">
+        <ion-segment-button [value]="member.id" *ngFor="let member of $userFamily()">
             <ion-label>{{member.name}}</ion-label>
         </ion-segment-button>
     </ion-segment>
 
-    <div *ngFor="let member of (familyMembers$ | async)">
+    <div *ngFor="let member of $userFamily()">
         <ng-container *ngIf="member.id === activeMember">
             <h4 class="padding-inline">{{member.name}}</h4>
             <ion-item>

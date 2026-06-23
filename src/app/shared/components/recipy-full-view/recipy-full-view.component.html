@@ -23,7 +23,7 @@
       </ng-container>
 
       <ng-container *ngIf="currentTab === tabs[2].value">
-        <app-info-tab [currentUser]="currentUser" [recipy]="recipy"></app-info-tab>
+        <app-info-tab [recipy]="recipy"></app-info-tab>
       </ng-container>
     </ng-container>
     <div *ngIf="isBig" class="wide-screen-view">
@@ -41,7 +41,7 @@
         </ion-list>
       </div>
       <div class="scrollable wide-screen-view-info">
-        <app-info-tab [currentUser]="currentUser" [recipy]="recipy"></app-info-tab>
+        <app-info-tab [recipy]="recipy"></app-info-tab>
       </div>
     </div>
 

@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnDestroy, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
@@ -7,10 +7,10 @@ import { FamilyMember, NewFamilyMember } from 'src/app/models/auth.models';
 import { Product } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { ProductsService } from 'src/app/services/products.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 import { INPUT_DEBOUNCE_TIME } from 'src/app/shared/constants';
 import { UpdateFamilyAction } from 'src/app/store/actions/user.actions';
 import { IAppState } from 'src/app/store/reducers';
-import { getFamilyMembers } from 'src/app/store/selectors/user.selectors';
 
 @Component({
   selector: 'app-edit-family',
@@ -19,6 +19,7 @@ import { getFamilyMembers } from 'src/app/store/selectors/user.selectors';
 })
 export class EditFamilyComponent implements OnDestroy {
  productsService = inject(ProductsService);
+ userDataService = inject(UserDataService);
   newMember = '';
 
   products: Product[] = [];
@@ -34,17 +35,8 @@ export class EditFamilyComponent implements OnDestroy {
     return this.sampleRecommendedPortion * (portionPercentage / 100);
   }))
 
-  familyMembers$ = this.store.pipe(select(getFamilyMembers), tap(res => {
-    if (res) {
-      this.familyMembers = _.cloneDeep(res);
-      if (!this.activeMember.length) {
-        this.activeMember = this.familyMembers[0].id;
-        this.portionSizePercentage = this.familyMembers[0].portionSizePercentage ? this.familyMembers[0].portionSizePercentage.toString() : '';
-        this.portionSizePercentage$.next(+this.portionSizePercentage)
+  $userFamily = this.userDataService.userFamily;
 
-      }
-    }
-  }));
 
   familyMembers: FamilyMember[] = [];
 
@@ -54,6 +46,16 @@ export class EditFamilyComponent implements OnDestroy {
 
   constructor(private store: Store<IAppState>, private datamapping: DataMappingService) {
     this.updatePortionSizePercentage();
+
+    effect(() => {
+      const family = this.$userFamily();
+      this.familyMembers = family;
+      if (!this.activeMember.length) {
+        this.activeMember = this.familyMembers[0].id;
+        this.portionSizePercentage = this.familyMembers[0].portionSizePercentage ? this.familyMembers[0].portionSizePercentage.toString() : '';
+        this.portionSizePercentage$.next(+this.portionSizePercentage)
+      }
+    })
   }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -67,15 +69,8 @@ export class EditFamilyComponent implements OnDestroy {
 
   addNewMember() {
     const toAdd = new NewFamilyMember(this.newMember);
-    this.familyMembers$.pipe(take(1)).subscribe(family => {
-      let updated: FamilyMember[] = [];
-      if (family?.length) {
-        updated = _.cloneDeep(family);
-      }
-      updated.push(toAdd);
-      this.store.dispatch(new UpdateFamilyAction(updated));
-    })
-
+    const updatedFamily = this.$userFamily().concat(toAdd);
+    this.userDataService.updateFamily(updatedFamily)
     this.dismissAddModal();
     this.newMember = '';
   }

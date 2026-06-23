@@ -6,6 +6,7 @@ import {
   Recipy,
 } from 'src/app/models/recipies.models';
 import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-info-tab',
@@ -14,10 +15,9 @@ import { RecipiesService } from 'src/app/services/recipies.service';
 })
 export class InfoTabComponent {
   recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
 
   recipy = input.required<Recipy>();
-
-  currentUser = input.required<User | null>();
 
   $tags = computed(() => this.recipy().type.map((tag: DishType) => DishType[tag]))
   $complexity = computed(() => ComplexityDescription[this.recipy().complexity])
@@ -25,8 +25,7 @@ export class InfoTabComponent {
   $passiveTime = computed(() => this.recipy().steps.reduce((acc, step) => acc + Number(step.timePassive ?? 0), 0))
 
 
-  $isUserAdmin = computed(() => !!(this.currentUser()?.role == Role.Admin))
-
+  $isUserAdmin = this.userDataService.isAdmin;
 
   onisCheckedAndApprovedClicked(event: any) {
     let updatedRecipy: Recipy = {

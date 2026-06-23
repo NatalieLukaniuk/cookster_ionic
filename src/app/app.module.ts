@@ -13,9 +13,7 @@ import { environment } from 'src/environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CalendarEffects } from './store/effects/calendar.effects';
 import { RecipiesEffects } from './store/effects/recipies.effects';
-import { UserEffects } from './store/effects/user.effects';
 import { reducers } from './store/reducers';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import { CommentsEffects } from './store/effects/comments.effects';
@@ -28,8 +26,6 @@ import { CommentsEffects } from './store/effects/comments.effects';
         StoreModule.forRoot(reducers),
         EffectsModule.forRoot([
             RecipiesEffects,
-            UserEffects,
-            CalendarEffects,
             CommentsEffects
         ]),
         StoreDevtoolsModule.instrument({

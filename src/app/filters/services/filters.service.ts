@@ -23,6 +23,7 @@ export class FiltersService {
   getCurrentFilters = this.currentFilters.asReadonly();
 
   isShowWidget = computed(() => {
+    console.log(this.currentFilters())
     return !!(this.currentFilters().ingredientsToInclude.length ||
       this.currentFilters().ingredientsToExclude.length ||
       this.currentFilters().tagsToShow.length ||
@@ -44,7 +45,7 @@ export class FiltersService {
   private updateFilters(update: Partial<Filters>) {
     this.currentFilters.update(prev => ({
       ...prev,
-      update
+      ...update
     }))
   }
 
@@ -52,7 +53,7 @@ export class FiltersService {
     const ingredientsToInclude = this.processToggleIngredient(
       this.currentFilters().ingredientsToInclude,
       id
-    );
+    );    
     this.updateFilters({ ingredientsToInclude });
   }
 

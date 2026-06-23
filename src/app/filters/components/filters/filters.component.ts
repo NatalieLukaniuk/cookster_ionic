@@ -1,48 +1,37 @@
 import { ProductsService } from 'src/app/services/products.service';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { DishType, Product } from 'src/app/models/recipies.models';
+import { Product } from 'src/app/models/recipies.models';
 import { FiltersService } from './../../services/filters.service';
-import { Component, computed, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, inject, Input, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
-import { select, Store } from '@ngrx/store';
-import { map, Observable, Subscription, tap } from 'rxjs';
-import { IAppState } from 'src/app/store/reducers';
 import { RecipiesService } from 'src/app/services/recipies.service';
-import { getUserCollections, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.scss'],
 })
-export class FiltersComponent implements OnInit, OnDestroy {
+export class FiltersComponent {
   productsService = inject(ProductsService);
   recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
+  filtersService = inject(FiltersService)
+  
 
-  @Input() isExpensePage = false;
   @Input() pageId: string = '';
-  @Input() isUserLoggedIn = false;
 
   $products = this.productsService.getProducts;
   $sortedProducts = this.productsService.getSortedProducts;
   $filteredRecipiesCount = this.recipiesService.recipiesWithFilterEnabledCount;
   
-  userCollections$ = this.store.pipe(select(getUserCollections)).pipe(map(collections => collections?.length? collections.map(item => item.name) : [])) //TODO needs to be signal from userdata service
-
-  subscription = new Subscription();
+  $userCollections = computed(() => this.userDataService.userRecipeCollections().map(item => item.name));
+  $isUserLoggedIn = this.userDataService.isUserLoggedIn;
 
   constructor(
-    public filtersService: FiltersService,
-    private store: Store<IAppState>,
     private datamapping: DataMappingService
   ) { }
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe()
-  }
 
-  ngOnInit() {
-    this.subscription.add(this.store.pipe(select(getUserPlannedRecipies)).subscribe()) //TODO needs to be signal from userdata service
-  }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
 

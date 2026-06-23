@@ -1,140 +1,108 @@
 import {
   Component,
-  Input,
-  OnInit,
-  OnChanges,
-  SimpleChanges,
-  Output,
-  EventEmitter,
-  OnDestroy,
-  ChangeDetectorRef,
+  inject,
+  input,
+  output,
+  signal,
+  effect,
+  computed,
 } from '@angular/core';
 import { Recipy } from 'src/app/models/recipies.models';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { ItemOption } from '../../ingredient/ingredient.component';
-import { ModalController } from '@ionic/angular';
-import { IAppState } from 'src/app/store/reducers';
-import { Store, select } from '@ngrx/store';
-import { getFamilyMembers, getUserPreferences } from 'src/app/store/selectors/user.selectors';
-import { Subject, takeUntil } from 'rxjs';
 import { AVERAGE_PORTION } from 'src/app/shared/constants';
 import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-ingredients-tab',
   templateUrl: './ingredients-tab.component.html',
   styleUrls: ['./ingredients-tab.component.scss'],
 })
-export class IngredientsTabComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() recipy!: Recipy;
+export class IngredientsTabComponent {
+  userDataService = inject(UserDataService);
 
-  @Input() portions?: number;
-  @Input() amountPerPortion?: number;
-  @Input() ingredStartOptions: ItemOption[] = [];
+  recipy = input.required<Recipy>();
+  portions = input<number>(4);
+  amountPerPortion = input<number>(200);
+  ingredStartOptions = input<ItemOption[]>([]);
 
-
-  @Output() portionsChanged = new EventEmitter<{
+  portionsChanged = output<{
     portions: number;
     amountPerPortion: number;
   }>();
 
-  isEditPortions = false;
+  $isEditPortions = signal(false);
 
-  isSplitToGroups: boolean = false;
-  groups: string[] = [];
+  $isSplitToGroups = signal(false);
+  $groups = computed(() => {
+    if (this.$isSplitToGroups()) {
+      return this.getGroups()
+    } else return []
+  });
 
-  portionsToServe: number = 4;
-  portionSize: number =  AVERAGE_PORTION;
+  $userPreferences = this.userDataService.userPreferences;
+  $userFamily = this.userDataService.userFamily;
 
-  coeficient: number = 1;
+  $portionsToServe = signal<number>(4);
+  $portionSize = signal<number>(AVERAGE_PORTION);
 
-  destroy$ = new Subject<void>();
+  coeficient = computed(() => this.datamapping.getCoeficient(
+    this.recipy().ingrediends,
+    this.$portionsToServe(),
+    this.$portionSize(),
+    isDrinkOrSoup(this.recipy())
+  ));
 
-  constructor(private datamapping: DataMappingService, private store: Store<IAppState>) {
 
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next();
-  }
-
-  ngOnInit() {   
-    if (!this.portions && !this.amountPerPortion) {
-      this.store.pipe(select(getUserPreferences), takeUntil(this.destroy$)).subscribe(preferences => {
-        if (preferences && !preferences.isUsePersonalizedPortionSize && (!preferences.isUseRecommendedPortionSize || !this.recipy.portionSize)) {
-          this.portionSize = preferences.defaultPortionSize;
-          this.getCoeficient()
-        } else if (preferences && preferences.isUseRecommendedPortionSize && this.recipy.portionSize) {
-          this.portionSize = this.recipy.portionSize;
-          this.getCoeficient()
-        } else {
-          this.portionSize = this.recipy?.portionSize ? this.recipy.portionSize : AVERAGE_PORTION;
-          this.getCoeficient()
+  constructor(private datamapping: DataMappingService) {
+    effect(() => {
+      if (!this.portions()) {
+        const recipyRecommendedPortionSize = this.recipy().portionSize;
+        const defaultPortionSizeSetByUser = this.$userPreferences()?.defaultPortionSize;
+        const userPreferences = this.$userPreferences()
+        const portionSizeToSet = !userPreferences ? AVERAGE_PORTION :
+          userPreferences.isUseRecommendedPortionSize && recipyRecommendedPortionSize ? recipyRecommendedPortionSize :
+            !userPreferences.isUsePersonalizedPortionSize && defaultPortionSizeSetByUser ? defaultPortionSizeSetByUser :
+              recipyRecommendedPortionSize !== undefined ? recipyRecommendedPortionSize : AVERAGE_PORTION;
+        this.$portionSize.set(portionSizeToSet)
+      }
+    }, {allowSignalWrites: true})
+    effect(() => {
+      if (!this.amountPerPortion()) {
+        const userFamily = this.$userFamily();
+        if (userFamily?.length) {
+          this.$portionsToServe.set(userFamily.length)
         }
-      })
-      this.store.pipe(select(getFamilyMembers), takeUntil(this.destroy$)).subscribe(members => {
-        if (members && members.length) {
-          this.portionsToServe = members.length
-          this.getCoeficient()
-        }
-      })
-    }
+      }
+    }, { allowSignalWrites: true })
+    effect(() => {
+      this.$portionsToServe.set(this.portions());
+    }, { allowSignalWrites: true })
 
+    effect(() => {
+      this.$portionSize.set(this.amountPerPortion());
+    }, { allowSignalWrites: true })
+
+    effect(() => {
+      this.$isSplitToGroups.set(this.recipy().isSplitIntoGroups);
+    }, { allowSignalWrites: true })
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-
-    if (changes['portions'] && changes['portions'].currentValue !== changes['portions'].previousValue) {
-      this.portionsToServe = changes['portions'].currentValue;
-    }
-
-    if (changes['amountPerPortion'] && changes['amountPerPortion'].currentValue !== changes['amountPerPortion'].previousValue) {
-      this.portionSize = changes['amountPerPortion'].currentValue;
-    }
-
-    this.getCoeficient();
-    this.isSplitToGroups = this.recipy.isSplitIntoGroups;
-    if (this.recipy.isSplitIntoGroups) {
-      this.getIngredientsByGroup();
-    } else {
-      this.groups = []
-    }
-
-  }
-
-  getIngredientsByGroup() {
-    this.groups = [];
-    if (!!this.recipy && this.recipy.isSplitIntoGroups) {
-      this.groups = this.getGroups();
-    }
-  }
 
   getGroups(): string[] {
-    let group: string[] = [];
-    for (let ingr of this.recipy.ingrediends) {
-      if (ingr.group && !group.includes(ingr.group)) {
-        group.push(ingr.group);
-      }
-    }
-    return group;
+    const groups = this.recipy().ingrediends.map(ingr => ingr.group).filter(groupName => groupName !== undefined) as string[];
+    const unique = new Set<string>(groups);
+    return Array.from(unique)
   }
 
-  getCoeficient() {
-    if (this.recipy && this.portionsToServe) {
-      this.coeficient = this.datamapping.getCoeficient(
-        this.recipy.ingrediends,
-        this.portionsToServe,
-        this.portionSize,
-        isDrinkOrSoup(this.recipy)
-      );
-    }
-  }
 
   onPortionsChanged() {
     this.portionsChanged.emit({
-      portions: +this.portionsToServe,
-      amountPerPortion: +this.portionSize,
+      portions: +this.$portionsToServe(),
+      amountPerPortion: +this.$portionSize(),
     });
 
-    this.isEditPortions = false;
+    this.$isEditPortions.set(false);
   }
 }

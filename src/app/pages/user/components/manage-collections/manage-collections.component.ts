@@ -1,9 +1,6 @@
-import { CreateRecipyCollection } from './../../../../store/actions/user.actions';
-import { Component, ViewChild } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { IAppState } from 'src/app/store/reducers';
-import { getUserCollections } from 'src/app/store/selectors/user.selectors';
+import { Component, inject, ViewChild } from '@angular/core';
 import { InputDialogComponent } from 'src/app/shared/components/dialogs/input-dialog/input-dialog.component';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-manage-collections',
@@ -11,15 +8,15 @@ import { InputDialogComponent } from 'src/app/shared/components/dialogs/input-di
   styleUrls: ['./manage-collections.component.scss']
 })
 export class ManageCollectionsComponent {
+  userDataService = inject(UserDataService);
 
-  collections$ = this.store.pipe(select(getUserCollections));
+  $collections = this.userDataService.userRecipeCollections;
 
   @ViewChild(InputDialogComponent) newCollectionDialog: InputDialogComponent | undefined;
 
-  constructor(private store: Store<IAppState>) { }
-
   addCollection(collectionName: string) {
-    this.store.dispatch(new CreateRecipyCollection(collectionName));
+    this.userDataService.createCollection(collectionName)
+    
     if (this.newCollectionDialog) {
       this.newCollectionDialog.clearInput();
     }

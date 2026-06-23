@@ -1,4 +1,3 @@
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { map } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
@@ -9,6 +8,7 @@ import { Role } from 'src/app/models/auth.models';
 import { Ingredient, Recipy } from 'src/app/models/recipies.models';
 import { UiService } from 'src/app/services/ui.service';
 import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-full-recipy-page',
@@ -18,6 +18,12 @@ import { RecipiesService } from 'src/app/services/recipies.service';
 export class FullRecipyPageComponent implements OnDestroy {
   uiService = inject(UiService);
   recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
+
+  $isAdmin = this.userDataService.isAdmin;
+  $userEmail = this.userDataService.userEmail;
+  $isCanEdit = computed(() => this.$userEmail() === this.$recipy()?.author || this.$isAdmin())
+  $isShowApproveBtn = computed(() => this.$isAdmin() && this.$recipy()?.notApproved)
   
   $recipyId = signal<string>('');
 
@@ -33,16 +39,7 @@ export class FullRecipyPageComponent implements OnDestroy {
     return updatedRecipy
   })
 
-
-  user$ = this.store.pipe(select(getCurrentUser));
-  isCanEdit$ = this.user$.pipe( // should eventually be converted to computed signal
-      map((res) => res?.email === this.$recipy()?.author || res?.role === Role.Admin)
-  );
-
-  isShowApproveBtn$ = this.user$.pipe(// should eventually be converted to computed signal
-    map((res) => res?.role === Role.Admin && this.$recipy()?.notApproved)
-  );
-  constructor(private store: Store<IAppState>, private router: Router, private titleService: Title) {
+ constructor(private router: Router, private titleService: Title) {
     const path = window.location.pathname.split('/');
     this.$recipyId.set(path[path.length - 1]);
   }

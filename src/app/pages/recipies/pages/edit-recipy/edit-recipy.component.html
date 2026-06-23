@@ -7,7 +7,7 @@
 
 <ion-content [fullscreen]="true">
   @if($recipy()){
-  <app-recipy-constructor [recipyToPatch]="$recipy()" [currentUser]="user$ | async"></app-recipy-constructor>
+  <app-recipy-constructor [recipyToPatch]="$recipy()"></app-recipy-constructor>
   }
   @else {
   <!-- //TODO add content for cases when no recipy -->

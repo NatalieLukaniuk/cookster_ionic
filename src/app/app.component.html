@@ -1,12 +1,10 @@
 <ion-app class="app-container">
   <ion-split-pane contentId="main-content" when="false">
     <!-- TODO after logout the menu is still visible - check flow -->
-    <ion-menu contentId="main-content" *ngIf="user$ | async">
+    @if($isUserLoggedIn()){
+    <ion-menu contentId="main-content">
       <ion-content>
-
         <ion-list lines="none">
-
-
           <ion-menu-toggle autoHide="false">
             <ion-item routerLink="/tabs/add-recipy" routerLinkActive="active" routerDirection="root" detail="false">
               <ion-icon slot="start" name="add-circle-outline"></ion-icon>
@@ -40,33 +38,34 @@
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ng-container *ngIf="(user$ | async)?.role === Role.Admin">
-            <ion-list-header>
-              Адмін панель
-            </ion-list-header>
-            <ion-menu-toggle *ngFor="let page of adminPages" autoHide="false">
-              <ion-item [routerLink]="'/tabs/admin/' + page.path" routerLinkActive="active" routerDirection="root"
-                detail="false">
-                <ion-label>
-                  {{page.name}}
-                </ion-label>
-              </ion-item>
-            </ion-menu-toggle>
-          </ng-container>
 
+          @if($userRole() === Role.Admin){
+          <ion-list-header>
+            Адмін панель
+          </ion-list-header>
+          <ion-menu-toggle *ngFor="let page of adminPages" autoHide="false">
+            <ion-item [routerLink]="'/tabs/admin/' + page.path" routerLinkActive="active" routerDirection="root"
+              detail="false">
+              <ion-label>
+                {{page.name}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          }
 
         </ion-list>
         <div class="version">Version: {{version}}</div>
       </ion-content>
     </ion-menu>
+    }
+
 
     <ion-router-outlet id="main-content"></ion-router-outlet>
 
   </ion-split-pane>
-  @if($isLoading()
-  || !isAuthCheckComplete || isLoggedIn && !(user$ | async)){
-  <app-loading-overlay [isUserLoaded]="isAuthCheckComplete && ((isLoggedIn && !!(user$ | async)) || !isLoggedIn)"
-    [isRecipiesLoaded]="$isRecipiesLoaded()" [isProductsLoaded]="$isProductsLoaded()"></app-loading-overlay>
+  @if($isLoading() || !isAuthCheckComplete){
+  <app-loading-overlay [isUserLoaded]="isAuthCheckComplete" [isRecipiesLoaded]="$isRecipiesLoaded()"
+    [isProductsLoaded]="$isProductsLoaded()"></app-loading-overlay>
   }
 
 </ion-app>

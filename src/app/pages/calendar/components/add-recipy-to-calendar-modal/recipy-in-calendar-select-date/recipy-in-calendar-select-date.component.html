@@ -14,7 +14,7 @@
       <ion-label>Time shortcuts</ion-label>
     </ion-item>
     <div class="shortcuts" slot="content">
-      <ion-chip *ngFor="let item of (timeShortcuts$ | async)" (click)="changeTime(item)">{{item}}</ion-chip>
+      <ion-chip *ngFor="let item of $timeShortcuts()" (click)="changeTime(item)">{{item}}</ion-chip>
     </div>
   </ion-accordion>
   <ion-accordion value="third">
@@ -22,7 +22,7 @@
       <ion-label>Planned for this date</ion-label>
     </ion-item>
     <div class="ion-padding" slot="content">
-      <div class="recipy" *ngFor="let recipy of (recipiesForSelectedDate$ | async)">
+      <div class="recipy" *ngFor="let recipy of $recipiesForSelectedDate()">
         <div>{{recipy.endTime | date : 'H:mm'}}</div>
           <app-recipy-in-calendar-short-view [recipy]="recipy"
             (recipyClicked)="null"></app-recipy-in-calendar-short-view>

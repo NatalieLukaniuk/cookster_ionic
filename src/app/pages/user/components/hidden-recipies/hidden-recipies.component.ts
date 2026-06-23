@@ -1,13 +1,7 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
-import { select, Store } from '@ngrx/store';
-import { combineLatest, map, Subject, takeUntil, tap } from 'rxjs';
-import { FiltersService } from 'src/app/filters/services/filters.service';
-import { User } from 'src/app/models/auth.models';
-import { Recipy } from 'src/app/models/recipies.models';
 import { RecipiesService } from 'src/app/services/recipies.service';
-import { IAppState } from 'src/app/store/reducers';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-hidden-recipies',
@@ -16,22 +10,19 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 })
 export class HiddenRecipiesComponent {
   recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
 
-  currentUser: User | null | undefined;
-
-  user$ = this.store.pipe(select(getCurrentUser), tap(user => this.currentUser = user));
 
   // $allRecipies = this.recipiesService.getRecipies;
+  $userPreferences = this.userDataService.userPreferences
 
-  noShowIds: string[] = []; // TODO this needs to be taken from userdata service
+
+  $noShowIds = computed(() => this.$userPreferences()?.noShowRecipies);
 
   numberOfRecipiesToDisplay = 10;
 
   $hiddenRecipies = this.recipiesService.hiddenRecipies;
 
-  constructor(
-    private store: Store<IAppState>,
-  ) { }
 
   onIonInfinite(event: any) {
     this.numberOfRecipiesToDisplay += 10;

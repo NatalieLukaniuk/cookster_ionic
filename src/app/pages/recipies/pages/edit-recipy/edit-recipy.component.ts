@@ -5,7 +5,6 @@ import { RecipiesService } from 'src/app/services/recipies.service';
 import { UiService } from 'src/app/services/ui.service';
 
 import { IAppState } from 'src/app/store/reducers';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
   selector: 'app-edit-recipy',
@@ -29,10 +28,7 @@ export class EditRecipyComponent {
     return updatedRecipy
   })
 
-  
-
-  user$ = this.store.pipe(select(getCurrentUser));
-  
+ 
   constructor(private store: Store<IAppState>) {
     const path = window.location.pathname.split('/');
     this.$recipyId.set(path[path.length - 1]);

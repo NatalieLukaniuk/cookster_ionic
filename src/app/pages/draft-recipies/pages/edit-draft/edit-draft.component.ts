@@ -1,45 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { Observable, combineLatest, map, filter } from 'rxjs';
-import { DraftRecipy } from 'src/app/models/recipies.models';
-import { IAppState } from 'src/app/store/reducers';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { map, take } from 'rxjs';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-edit-draft',
   templateUrl: './edit-draft.component.html',
   styleUrls: ['./edit-draft.component.scss'],
 })
-export class EditDraftComponent implements OnInit {
-  recipy$: Observable<DraftRecipy>;
+export class EditDraftComponent {
 
-  draftRecipies$ = this.store.pipe(
-    select(getCurrentUser),
-    map((user) => (user?.draftRecipies ? user.draftRecipies : []))
-  );
+  userDataService = inject(UserDataService);
+  $draftRecipies = this.userDataService.userDraftRecipies;
+
+  $currentDraftOrder = signal(0)
 
   currentDraftOrder$ = this.route.queryParams.pipe(
     map((params) => params['order'])
   );
 
-  currentUser$ = this.store.pipe(
-    select(getCurrentUser),
-    filter((user) => !!user)
-  );
+  $recipy = computed(() => this.$draftRecipies()[this.$currentDraftOrder()])
 
-  constructor(private store: Store<IAppState>, private route: ActivatedRoute) {
-    this.recipy$ = combineLatest([
-      this.draftRecipies$,
-      this.currentDraftOrder$,
-    ]).pipe(
-      filter((res) => !!res[0].length),
-      map((res) => {
-        let [draftRecipies, order] = res;
-        return draftRecipies[order];
-      })
-    );
+
+  constructor(private route: ActivatedRoute) {
+    this.route.queryParams.pipe(take(1)).subscribe((params) => this.$currentDraftOrder.set(params['order']))    
   }
 
-  ngOnInit() {}
 }

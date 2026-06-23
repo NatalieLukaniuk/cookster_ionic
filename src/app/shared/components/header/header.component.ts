@@ -1,25 +1,22 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, inject, Input, OnInit } from '@angular/core';
 import { SIDEBAR_EXPANDED_WIDTH } from '../../constants';
-import { select, Store } from '@ngrx/store';
-import { IAppState } from 'src/app/store/reducers';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { Router } from '@angular/router';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
+  userDataService = inject(UserDataService);
   @Input() isShowDoubleToolbar = true;
 
-  isLoggedIn$ = this.store.pipe(select(getCurrentUser));
+  $isLoggedIn = this.userDataService.isUserLoggedIn;
 
   isDesktop = window.innerWidth >= SIDEBAR_EXPANDED_WIDTH;
   
-  constructor(private store: Store<IAppState>, private router:Router) { }
-
-  ngOnInit() {}
+  constructor(private router:Router) { }
 
   @HostListener('window:resize')
   onResize(){

@@ -3,16 +3,15 @@ import { InfiniteScrollCustomEvent, IonModal, ModalController } from '@ionic/ang
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { combineLatest, take, map, tap, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { FiltersService } from 'src/app/filters/services/filters.service';
 import { Recipy } from 'src/app/models/recipies.models';
-import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { IAppState } from 'src/app/store/reducers';
-import { getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { getLastPreparedDate, newDateIgnoreimezone } from '../../calendar.utils';
 import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 enum AddRecipyToCalView {
   SelectRecipy = 'select-recipy',
@@ -27,10 +26,12 @@ enum AddRecipyToCalView {
 })
 export class AddRecipyToCalendarModalComponent implements OnInit {
   recipiesService = inject(RecipiesService);
-  filtersService = inject(FiltersService)
-
+  filtersService = inject(FiltersService);
+  userDataService = inject(UserDataService);
+  
   $recipies = this.recipiesService.recipiesWithFilterEnabled;
   $isShowWidget = this.filtersService.isShowWidget;
+  $userFamilyMembers = this.userDataService.userFamily;
 
   selectedRecipy: Recipy | null = null;
   selectedTime: Date | null = null;
@@ -55,15 +56,10 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   ngOnInit() {
     if (!this.isEditMode || !this.portions) {
-      this.familyMembersSub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
-        if (res) {
-          this.portions = res.length;
+      const userFamilyCount = this.$userFamilyMembers().length;
+      if (userFamilyCount) {
+          this.portions = userFamilyCount;
         } else { this.portions = 4; }
-        if (this.familyMembersSub) {
-          this.familyMembersSub.unsubscribe()
-        }
-
-      });
     }
 
     this.getCurrentView()

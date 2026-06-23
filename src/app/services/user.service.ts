@@ -8,18 +8,20 @@ import { User } from '../models/auth.models';
 import * as UserActions from '../store/actions/user.actions';
 import { AuthApiService } from './auth-api.service';
 import { UiService } from './ui.service';
+import { UserDataService } from './user-data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   uiService = inject(UiService);
+  userDataService = inject(UserDataService);
 
-  currentUser: User | undefined;
+  // currentUser: User | undefined;
   allUsers: User[] | undefined;
   userAtFirebaseAuth: User | undefined;
 
-  currentUserId = '';
+  $currentUserId = this.userDataService.userId;
 
   allUsersMapping: UserMappingItem[] = [];
 
@@ -42,18 +44,7 @@ export class UserService {
 
   getCurrentUserData(cooksterId: string) {
     this.authApiService.getUser(cooksterId).pipe(take(1)).subscribe(user => {
-      this.currentUser = user;
-      if (!this.currentUser.id) {
-        this.currentUser.id = cooksterId;
-        this.currentUserId = cooksterId;
-      }
-      if (user.id) {
-        this.currentUserId = user.id;
-      }
-      if (!('plannedRecipies' in this.currentUser!)) {
-        this.currentUser!.plannedRecipies = [];
-      }
-      this.store.dispatch(new UserActions.UserLoadedAction(user));
+      this.userDataService.setCurrentUser(user);
     })
   }
 
@@ -83,9 +74,10 @@ export class UserService {
       });
   }
 
-  updateUserDetailsFromMyDatabase(newData: any) {
-    if (this.currentUser?.id) {
-      return this.authApiService.updateUser(this.currentUser.id, newData);
+ private updateUserDetailsFromMyDatabase(newData: any) { // TODO not used anywhere
+    const currentUserId = this.$currentUserId()
+    if (currentUserId) {
+      return this.authApiService.updateUser(currentUserId, newData);
     } else {
       return of(null);
     }

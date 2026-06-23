@@ -25,9 +25,9 @@ import {
 } from '@angular/core';
 import { Observable, map} from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 import { Role } from 'src/app/models/auth.models';
 import { ProductsService } from 'src/app/services/products.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-add-ingredient',
@@ -35,6 +35,7 @@ import { ProductsService } from 'src/app/services/products.service';
   styleUrls: ['./add-ingredient.component.scss'],
 })
 export class AddIngredientComponent implements OnInit {
+  userDataService = inject(UserDataService);
   productsService = inject(ProductsService);
   @Output() addNewIngredient = new EventEmitter<Ingredient>();
   @Output() onAddProduct = new EventEmitter<void>();
@@ -50,7 +51,7 @@ export class AddIngredientComponent implements OnInit {
   unit: MeasuringUnit = MeasuringUnit.gr;
   selectedgroup: string = this._groups[0];
 
-  isAdmin$: Observable<boolean> = this.store.pipe(select(getCurrentUser), map(user => (!!user && user?.role === Role.Admin)));
+  $isAdmin = this.userDataService.isAdmin;
 
   @ViewChild('autocomplete') autocomplete: any;
 

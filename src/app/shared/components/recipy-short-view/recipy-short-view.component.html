@@ -27,14 +27,15 @@
   </ion-item>
   <ion-item-options>
 
-    <div class="actions-pane" *ngIf="!!currentUser">
+    @if($isUserLoggedIn()){
+      <div class="actions-pane">
       <div class="actions-pane-info"><ion-icon name="today-outline"></ion-icon>
         <span *ngIf="recipy.lastPrepared">{{recipy.lastPrepared | lastPreparedDate }}</span>
         <span class="color-warning" *ngIf="!recipy.lastPrepared">не готувався</span>
       </div>
-      <app-add-recipy-to-no-show [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser"
+      <app-add-recipy-to-no-show [isSmall]="false" [recipy]="recipy"
         [buttonColor]="'primary'" (btnClicked)="cancelClickNoTimeout()"></app-add-recipy-to-no-show>
-      <app-collections-action-sheet [currentUser]="currentUser" [recipy]="recipy"
+      <app-collections-action-sheet [recipy]="recipy"
         (dismissed)="cancelClickNoTimeout()"></app-collections-action-sheet>
       <ion-button (click)="onAddRecipyToCalendar()" fill="clear">
 
@@ -46,6 +47,8 @@
       </ion-button>
 
     </div>
+    }
+    
 
   </ion-item-options>
   <ion-item-options side="start">
@@ -72,10 +75,13 @@
   <div class="big-screen-card-background">
     <app-image *ngIf="recipy.photo" [imagePath]="recipy.photo"></app-image>
     <div class="big-screen-card-action-buttons" *ngIf="isShowActionButtons">
-      <app-add-recipy-to-no-show *ngIf="currentUser" [isSmall]="false" [recipy]="recipy" [currentUser]="currentUser"
+      @if($isUserLoggedIn()){
+        <app-add-recipy-to-no-show [isSmall]="false" [recipy]="recipy"
         [buttonColor]="'light'"></app-add-recipy-to-no-show>
-      <app-collections-action-sheet [buttonColor]="'light'" *ngIf="currentUser" [currentUser]="currentUser"
+      <app-collections-action-sheet [buttonColor]="'light'" 
         [recipy]="recipy"></app-collections-action-sheet>
+      }
+      
 
       <ion-button color="primary" (click)="goFullRecipy()">
         Перейти до рецепту
@@ -142,9 +148,9 @@
             <ion-icon name="checkmark-done" *ngIf="recipy.isCheckedAndApproved"></ion-icon>
           </div>
         </div> -->
-        <div class="collection-tags" *ngIf="includedInCollections.length">
+        <div class="collection-tags" *ngIf="$includedInCollections().length">
           <!-- <span>Мої колекції: </span> -->
-          <ion-chip class="collection-chip" *ngFor="let collection of includedInCollections">{{
+          <ion-chip class="collection-chip" *ngFor="let collection of $includedInCollections()">{{
             collection
             }}</ion-chip>
         </div>

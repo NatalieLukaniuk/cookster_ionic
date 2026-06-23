@@ -1,61 +1,47 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { IonModal, ModalController } from '@ionic/angular';
-import { Store, select } from '@ngrx/store';
+
 import { Ingredient } from 'src/app/models/recipies.models';
 import { AddToListModalComponent } from 'src/app/pages/shopping-list/components/add-to-list-modal/add-to-list-modal.component';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { IAppState } from 'src/app/store/reducers';
-import { Subject, takeUntil, Observable } from 'rxjs';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+
 import * as _ from 'lodash';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
-import { ShoppingList, SLItem } from 'src/app/models/shopping-list.models';
+import { SLItem } from 'src/app/models/shopping-list.models';
 import { CalendarReworkedService } from '../../calendar-reworked.service';
 import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-products-per-day',
   templateUrl: './products-per-day.component.html',
   styleUrls: ['./products-per-day.component.scss'],
 })
-export class ProductsPerDayComponent implements OnDestroy, OnInit {
+export class ProductsPerDayComponent implements OnInit {
+  userDataService = inject(UserDataService);
 
-  recipies$: Observable<RecipyForCalendar_Reworked[]> = this.calendarService.getCurrentDayRecipies();
+  $recipies = this.calendarService.getCurrentDayRecipies;
 
   products: Ingredient[] = [];
 
-  activeList: ShoppingList[] | undefined;
+  $activeList = this.userDataService.userShoppingLists;
 
-  destroy$ = new Subject<void>();
   constructor(
     private datamapping: DataMappingService,
     private modalCtrl: ModalController,
-    private store: Store<IAppState>,
     private shoppingListService: ShoppingListService,
     private calendarService: CalendarReworkedService
   ) {
-
-    this.store.pipe(
-      select(getCurrentUser),
-      takeUntil(this.destroy$),
-    ).subscribe((user) => {
-      if (user) {
-        this.activeList = user.shoppingLists;
-      };
-    });
-    this.recipies$.pipe(takeUntil(this.destroy$)).subscribe(recipies => {
-
+    effect(() => {
       this.products = [];
-      recipies.forEach(recipy => this.processRecipy(recipy))
+      this.$recipies().forEach(recipy => this.processRecipy(recipy))
       this.products.sort((a, b) => a.ingredient!.localeCompare(b.ingredient!));
     })
   }
+
   ngOnInit(): void {
     this.shoppingListService.loadTimestamps()
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next()
   }
 
   processRecipy(recipy: RecipyForCalendar_Reworked) {
@@ -92,7 +78,7 @@ export class ProductsPerDayComponent implements OnDestroy, OnInit {
   }
 
   async addToList(ingred: Ingredient) {
-    let cloned = _.cloneDeep(this.activeList);
+    let cloned = _.cloneDeep(this.$activeList());
     const ingredToSlItem: SLItem = {
       total: ingred.amount,
       name: ingred.ingredient ? ingred.ingredient : '',
@@ -100,7 +86,7 @@ export class ProductsPerDayComponent implements OnDestroy, OnInit {
       unit: ingred.defaultUnit,
       items: []
     }
-    const timestamps = this.shoppingListService.getCurrentTimestamps();
+    const timestamps = this.shoppingListService.shoppingListTimestamps();
     const modal = await this.modalCtrl.create({
       component: AddToListModalComponent,
       componentProps: {

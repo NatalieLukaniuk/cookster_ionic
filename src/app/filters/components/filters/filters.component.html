@@ -12,23 +12,28 @@
         <ion-buttons slot="end">
           <ion-button (click)="confirm()">Застосувати</ion-button>
         </ion-buttons>
-        <ion-title><h5 class="found-recipies-count">Знайдено {{ $filteredRecipiesCount() }} рецептів</h5></ion-title>
+        <ion-title>
+          <h5 class="found-recipies-count">Знайдено {{ $filteredRecipiesCount() }} рецептів</h5>
+        </ion-title>
       </ion-toolbar>
       <ion-toolbar *ngIf="isShowWidget"><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding" *ngIf="!isExpensePage; else ExpensesTemplate">      
-      
+    <ion-content class="ion-padding">
+
       <div class="filter-item">
         <span class="filter-item-title">Пошук за назвою:</span>
         <app-search-recipies-filter [isClearOnDestroy]="false"></app-search-recipies-filter>
       </div>
       <div class="filter-item">
-        <app-sorting-filter [isUserLoggedIn]="isUserLoggedIn"></app-sorting-filter>
+        <app-sorting-filter [isUserLoggedIn]="$isUserLoggedIn()"></app-sorting-filter>
       </div>
-      <div class="filter-item" *ngIf="(userCollections$ | async)?.length">
+      @if($userCollections().length){
+      <div class="filter-item">
         <span class="filter-item-title">Показати страви з колекцій:</span>
-        <app-collection-selector [userCollections]="userCollections$ | async"></app-collection-selector>
+        <app-collection-selector [userCollections]="$userCollections()"></app-collection-selector>
       </div>
+      }
+
       <div class="filter-item">
         <span class="filter-item-title">Показати типи страв:</span>
         <app-dish-type-selector></app-dish-type-selector>
@@ -60,36 +65,3 @@
     </ion-content>
   </ng-template>
 </ion-modal>
-
-<ng-template #ExpensesTemplate>
-  <ion-content class="ion-padding">
-    <ion-accordion-group>
-      <ion-accordion value="first">
-        <ion-item slot="header" color="light">
-          <ion-label>Фільтрувати за продуктом:</ion-label>
-        </ion-item>
-        <div class="ion-padding accordion-content" slot="content">
-          <app-product-autocomplete #withAutocomplete [products]="$sortedProducts()"
-            (productSelected)="addToDisplayWith($event)"></app-product-autocomplete>
-        </div>
-      </ion-accordion>
-      <!-- <ion-accordion value="second">
-        <ion-item slot="header" color="light">
-          <ion-label>Не показувати рецепти з інгридієнтами:</ion-label>
-        </ion-item>
-        <div class="ion-padding accordion-content" slot="content">
-
-        </div>
-      </ion-accordion>
-      <ion-accordion value="third">
-        <ion-item slot="header" color="light">
-          <ion-label>Пошук за типом страв</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-
-        </div>
-      </ion-accordion> -->
-    </ion-accordion-group>
-  </ion-content>
-
-</ng-template>

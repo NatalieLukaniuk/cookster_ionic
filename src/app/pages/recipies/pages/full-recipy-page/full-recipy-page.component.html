@@ -4,11 +4,11 @@
   <p title>{{ $recipy()!.name }}</p>
   }
   @if($recipy()){
-  @if(isShowApproveBtn$ | async){
+  @if($isShowApproveBtn()){
   <ion-button right-button size="small" (click)="approveRecipy()"><ion-icon name="thumbs-up-outline"
       slot="icon-only"></ion-icon></ion-button>
   }
-  @if(isCanEdit$ | async){
+  @if($isCanEdit()){
   <ion-button right-button size="small" (click)="goEditRecipy()"><ion-icon name="construct-outline"
       slot="icon-only"></ion-icon></ion-button>
   }
@@ -21,7 +21,7 @@
 
 <ion-content>
   @if($recipy()){
-  <app-recipy-full-view [recipy]="$recipy()" [currentUser]="user$ | async"></app-recipy-full-view>
+  <app-recipy-full-view [recipy]="$recipy()"></app-recipy-full-view>
   <app-comments-block [recipyId]="$recipyId()"></app-comments-block>
   }
   @else {

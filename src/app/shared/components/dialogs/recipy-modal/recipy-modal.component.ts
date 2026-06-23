@@ -1,13 +1,9 @@
 import { Component, computed, inject, Input, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { select, Store } from '@ngrx/store';
-import * as _ from 'lodash';
-import { filter, tap, map } from 'rxjs';
+
 import { ModalType } from 'src/app/services/dialogs.service';
 import { RecipiesService } from 'src/app/services/recipies.service';
 import { UiService } from 'src/app/services/ui.service';
-import { IAppState } from 'src/app/store/reducers';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
 
 @Component({
   selector: 'app-recipy-modal',
@@ -35,9 +31,8 @@ export class RecipyModalComponent {
 
   isView = signal(this.modalType === ModalType.ViewRecipy)
 
-  user$ = this.store.pipe(select(getCurrentUser));
 
-  constructor(private modalCtrl: ModalController, private store: Store<IAppState>) { }
+  constructor(private modalCtrl: ModalController) { }
 
   close() {
     return this.modalCtrl.dismiss(null, 'cancel');

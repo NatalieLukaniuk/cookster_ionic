@@ -11,12 +11,14 @@ import * as UserActions from '../store/actions/user.actions';
 
 import { UserService } from './user.service';
 import { UiService } from './ui.service';
+import { UserDataService } from './user-data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
 uiService = inject(UiService);
+userDataService = inject(UserDataService);
 
   constructor(private userService: UserService, private store: Store) {}
 
@@ -74,7 +76,6 @@ uiService = inject(UiService);
   }
 
   processIsNotLoggedIn() {
-    this.userService.currentUser = undefined;
-    this.store.dispatch(new UserActions.UserLoggedOutAction());
+    this.userDataService.resetCurrentUser()
   }
 }

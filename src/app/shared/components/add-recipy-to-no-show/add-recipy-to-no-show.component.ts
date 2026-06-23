@@ -1,11 +1,8 @@
-import { defaultPrefs } from './../../../models/auth.models';
 import { Recipy } from 'src/app/models/recipies.models';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { User } from 'src/app/models/auth.models';
-import * as _ from 'lodash';
-import { UpdatePreferencesAction } from 'src/app/store/actions/user.actions';
-import { IAppState } from 'src/app/store/reducers';
-import { Store } from '@ngrx/store';
+import { Component, computed, inject, input, output } from '@angular/core';
+
+import { UserDataService } from 'src/app/services/user-data.service';
+import { RecipiesService } from 'src/app/services/recipies.service';
 
 @Component({
   selector: 'app-add-recipy-to-no-show',
@@ -13,42 +10,28 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./add-recipy-to-no-show.component.scss'],
 })
 export class AddRecipyToNoShowComponent {
-  @Input() buttonColor = 'primary';
-  @Input() recipy: Recipy | undefined;
-  @Input() currentUser: User | null = null;
-  @Input() isSmall = true;
+  userDataService = inject(UserDataService);
+  recipiesService = inject(RecipiesService);
 
-  @Output() btnClicked = new EventEmitter<void>()
+  recipy = input.required<Recipy>();
+  buttonColor = input('primary');
+  isSmall = input(true);
+  btnClicked = output<void>()
 
-  constructor(private store: Store<IAppState>) { }
+  $noShowIds = this.recipiesService.$noShowIds;
+  $isHidden = computed(() => this.$noShowIds().includes(this.recipy().id));
+  $isUserLoggedIn = this.userDataService.isUserLoggedIn;
 
-  addToNoShow() {
-    if (this.recipy && this.currentUser) {
-      let cloned_preferences = _.cloneDeep(this.currentUser).preferences;
-      if (!cloned_preferences) {
-        cloned_preferences = {
-          ...defaultPrefs,
-          noShowRecipies: [this.recipy.id]
-        }
-      } else if (cloned_preferences.noShowRecipies) {
-        if (cloned_preferences.noShowRecipies.includes(this.recipy.id)) {
-          cloned_preferences.noShowRecipies = cloned_preferences.noShowRecipies.filter(id => id !== this.recipy!.id)
-        } else {
-          cloned_preferences.noShowRecipies.push(this.recipy.id)
-        }
-      } else {
-        cloned_preferences.noShowRecipies = [this.recipy.id]
-      }
+  
 
-      this.store.dispatch(new UpdatePreferencesAction(cloned_preferences))
+  toggleNoShow() {
+    if (!this.$isHidden()) {
+      const updatedNoShowIds = this.$noShowIds().concat(this.recipy().id);
+      this.userDataService.updateNoShowRecipies(updatedNoShowIds)
+    } else if (this.$isHidden()) {
+      const updatedNoShowIds = this.$noShowIds().filter(id => this.recipy().id !== id);
+      this.userDataService.updateNoShowRecipies(updatedNoShowIds)
     }
     this.btnClicked.emit()
-  }
-
-  isHidden(){
-    if(this.recipy && this.currentUser){
-      return this.currentUser.preferences?.noShowRecipies?.includes(this.recipy.id)
-    }
-    return false
   }
 }

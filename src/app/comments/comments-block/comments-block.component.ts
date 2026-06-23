@@ -1,14 +1,13 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable, Subject, map, takeUntil, tap } from 'rxjs';
-import { User } from 'src/app/models/auth.models';
+import { Observable, Subject, map} from 'rxjs';
 import { IAppState } from 'src/app/store/reducers';
 import { getComments } from 'src/app/store/selectors/comments.selectors';
 import { Comment } from 'src/app/models/comments.models';
 import { CommentsService } from '../comments.service';
 import { AddCommentAction, DeleteCommentAction } from 'src/app/store/actions/comments.actions';
 import { DialogsService } from 'src/app/services/dialogs.service';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-comments-block',
@@ -16,10 +15,13 @@ import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
   styleUrls: ['./comments-block.component.scss']
 })
 export class CommentsBlockComponent implements OnChanges, OnDestroy {
+  userDataService = inject(UserDataService);
   // TODO: functionality when the user is not logged in
   @Input() recipyId: string | undefined;
   @Input() recipyName: string = '';
-  currentUser: User | null | undefined = null;
+
+  $isUserLoggedIn = this.userDataService.isUserLoggedIn;
+  $userEmail = this.userDataService.userEmail;
 
   text = '';
 
@@ -33,14 +35,10 @@ export class CommentsBlockComponent implements OnChanges, OnDestroy {
   totalComments: number = 0;
 
   isModalOpen = false;
-  destroyed$ = new Subject<void>()
-
-  currentUser$ = this.store.pipe(select(getCurrentUser), takeUntil(this.destroyed$))
+  destroyed$ = new Subject<void>()  
 
   constructor(private store: Store<IAppState>, private commentsService: CommentsService, private dialog: DialogsService) {
-    this.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    })
+
   }
   ngOnDestroy(): void {
     this.destroyed$.next();
@@ -63,9 +61,9 @@ export class CommentsBlockComponent implements OnChanges, OnDestroy {
   }
 
   saveComment() {
-    if (this.currentUser && this.recipyId) {
+    if (this.$isUserLoggedIn() && this.recipyId) {
       const commentToSave: Comment = {
-        author: this.currentUser?.email,
+        author: this.$userEmail()!,
         addedOn: new Date(),
         text: this.text,
         recipyId: this.recipyId
@@ -107,7 +105,7 @@ export class CommentsBlockComponent implements OnChanges, OnDestroy {
   }
 
   onLongPress(commentId: string | undefined, author: string | undefined) {
-    if (commentId && !this.replyTo && author && author === this.currentUser?.email) {
+    if (commentId && !this.replyTo && author && author === this.$userEmail()) {
       this.selectedComment = commentId
     }
   }

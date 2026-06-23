@@ -22,7 +22,7 @@
   <ng-container [ngSwitch]="currentTab">
     <ng-container *ngSwitchCase="tabs[0].name">
       <ion-accordion-group>
-        <ng-container *ngFor="let list of (userShoppingLists$ | async)">
+        <ng-container *ngFor="let list of $userShoppingLists()">
           <ion-accordion [value]="list.name" *ngIf="hasNotBought(list)">
             <ion-item slot="header" color="primary">
               <ion-label>{{list.name}}</ion-label>
@@ -63,7 +63,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="tabs[1].name">
       <ion-accordion-group>
-        <ng-container *ngFor="let list of (userShoppingLists$ | async)">
+        <ng-container *ngFor="let list of $userShoppingLists()">
           <ion-accordion [value]="list.name" *ngIf="hasBought(list)">
             <ion-item slot="header" color="primary">
               <ion-label>{{list.name}}</ion-label>

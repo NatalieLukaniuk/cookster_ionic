@@ -1,10 +1,10 @@
 <div *ngFor="let recipy of $hiddenRecipies(); let index = index">
-  <app-recipy-short-view *ngIf="index < numberOfRecipiesToDisplay" [currentUser]="user$ | async"
+  <app-recipy-short-view *ngIf="index < numberOfRecipiesToDisplay"
     [recipy]="recipy"></app-recipy-short-view>
   <app-comments-block *ngIf="index < numberOfRecipiesToDisplay" [recipyId]="recipy.id"
     [recipyName]="recipy.name"></app-comments-block>
 </div>
-<div class="text" *ngIf="!noShowIds.length">
+<div class="text" *ngIf="!$noShowIds()?.length">
   Немає прихованих рецептів
 </div>
 <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= $hiddenRecipies().length" (ionInfinite)="onIonInfinite($event)">

@@ -1,13 +1,11 @@
-import { Observable, combineLatest, map } from 'rxjs';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
-import { select, Store } from '@ngrx/store';
-import { IAppState } from 'src/app/store/reducers';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+
 import { Recipy } from 'src/app/models/recipies.models';
-import { getCurrentDayRecipies, getRecipyPrepStart, getRecipyTimeOfPrepInMinutes, iSameDay, isDateAfter, isDateBefore, sortCommentsByDate, sortRecipiesByDate } from '../../calendar.utils';
+import { getCurrentDayRecipies, getRecipyPrepStart, iSameDay, isDateAfter, isDateBefore, sortCommentsByDate, sortRecipiesByDate } from '../../calendar.utils';
 import { CalendarReworkedService } from '../../calendar-reworked.service';
 import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-calendar-wrapper',
@@ -15,38 +13,25 @@ import { RecipiesService } from 'src/app/services/recipies.service';
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent {
-  recipiesService = inject(RecipiesService)
+  recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
+  calendarService = inject(CalendarReworkedService);
 
   $recipies = this.recipiesService.getRecipies;
+  $currentDay = this.calendarService.getCurrentDay;
+  $plannedRecipies = this.userDataService.userPlannedRecipies;
+  $plannedComments = this.userDataService.userPlannedComments;
 
-  constructor(private store: Store<IAppState>, private calendarService: CalendarReworkedService) { }
-  currentDay$ = this.calendarService.getCurrentDay();
-
-  plannedRecipies$: Observable<CalendarRecipyInDatabase_Reworked[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedRecipies || []));
-
-  plannedComments$: Observable<CalendarComment[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedComments || []));
-
-
-  currentDayComments$ = combineLatest([
-    this.currentDay$,
-    this.plannedComments$
-  ]).pipe(
-    map(res => {
-      const [currentDay, plannedComments] = res;
+  $currentDayComments = computed(() => {
+    const [currentDay, plannedComments] = [this.$currentDay(), this.$plannedComments()];
 
       const selectedDate = currentDay.toDate().toDateString();
       let commentsToDisplay: CalendarComment[] = plannedComments.filter(entry => iSameDay(new Date(entry.date), new Date(selectedDate)));
       return commentsToDisplay.sort((a, b) => sortCommentsByDate(a, b))
-    })
-  )
+  }) 
 
-  currentDateDetails$: Observable<RecipyForCalendar_Reworked[]> = combineLatest([
-    this.currentDay$,
-    this.plannedRecipies$,
-  ]).pipe(
-    map(res => {
-
-      const [currentDay, plannedRecipies] = res;
+  $currentDateDetails = computed(() => {
+    const [currentDay, plannedRecipies] = [this.$currentDay(), this.$plannedRecipies()];
 
       const selectedDate = currentDay.toDate().toDateString();
       let recipiesoDisplay: RecipyForCalendar_Reworked[] = [];
@@ -70,8 +55,7 @@ export class CalendarComponent {
         recipiesoDisplay = recipiesoDisplay.concat(mapped)
       }
       return recipiesoDisplay.sort((a, b) => sortRecipiesByDate(a, b))
-    })
-  )
+  })
 
   getOverflowingRecipies(plannedRecipies: CalendarRecipyInDatabase_Reworked[], selectedDate: string, allRecipies: Recipy[]) {
     if (plannedRecipies.length && allRecipies.length) {

@@ -1,12 +1,12 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
 import { Observable, Subject, debounceTime, map, takeUntil, tap } from 'rxjs';
 import { FamilyMember, Preferences, defaultPrefs } from 'src/app/models/auth.models';
+import { UserDataService } from 'src/app/services/user-data.service';
 import { INPUT_DEBOUNCE_TIME } from 'src/app/shared/constants';
 import { UpdatePreferencesAction } from 'src/app/store/actions/user.actions';
 import { IAppState } from 'src/app/store/reducers';
-import { getFamilyMembers, getUserPreferences } from 'src/app/store/selectors/user.selectors';
 
 @Component({
   selector: 'app-generic-settings',
@@ -14,9 +14,9 @@ import { getFamilyMembers, getUserPreferences } from 'src/app/store/selectors/us
   styleUrls: ['./generic-settings.component.scss']
 })
 export class GenericSettingsComponent implements OnDestroy {
+  userDataService = inject(UserDataService);
 
-
-  preferences!: Preferences;
+  preferences = signal<Preferences>(defaultPrefs);
 
   defaultPortionSize = '';
 
@@ -24,30 +24,28 @@ export class GenericSettingsComponent implements OnDestroy {
 
   destroy$ = new Subject<void>();
 
-  familyMembers: FamilyMember[] = [];
 
-  familyMembers$ = this.store.pipe(select(getFamilyMembers), tap(res => {
-    if (res) {
-      this.familyMembers = _.cloneDeep(res);
-    }
-  }));
+  $userFamily = this.userDataService.userFamily;
+  $savedPreferences = this.userDataService.userPreferences;
 
-  preferences$ = this.store.pipe(select(getUserPreferences), map(prefs => {
-    if (prefs) {
-      this.preferences = _.cloneDeep(prefs);
-      this.defaultPortionSize = prefs.defaultPortionSize.toString();
-    }
+  $isEditDefaultPortionEnabled = computed(() =>
+    !this.$savedPreferences()?.isUseRecommendedPortionSize &&
+    !this.$savedPreferences()?.isUsePersonalizedPortionSize)
 
-    return prefs ? prefs : defaultPrefs
-  }))
+  $isUseIndividualPortionsEnabled = computed(() =>
+    this.$userFamily().every(member => !!member.portionSizePercentage))
 
-  isEditDefaultPortionEnabled$: Observable<boolean> = this.store.pipe(
-    select(getUserPreferences),
-    map(prefs => !prefs?.isUseRecommendedPortionSize && !prefs?.isUsePersonalizedPortionSize))
 
-  isUseIndividualPortionsEnabled$ = this.familyMembers$.pipe(map(familyMembers => familyMembers?.every(member => !!member.portionSizePercentage)));
+
 
   constructor(private store: Store<IAppState>) {
+    effect(() => {
+      const prefs = this.$savedPreferences();
+      if (prefs) {
+        this.preferences.set(prefs);
+        this.defaultPortionSize = prefs.defaultPortionSize.toString();
+      }
+    })
     this.updateDefaultPortionSize();
   }
 
@@ -61,29 +59,41 @@ export class GenericSettingsComponent implements OnDestroy {
 
   updateDefaultPortionSize() {
     this.defaultPortionSize$.pipe(debounceTime(INPUT_DEBOUNCE_TIME), takeUntil(this.destroy$)).subscribe(defaultPortion => {
-      this.preferences = {
-        ...this.preferences,
-        defaultPortionSize: defaultPortion
-      };
+      this.preferences.update(current => {
+        if (!current) return current;
+        return {
+          ...current,
+          defaultPortionSize: defaultPortion
+        }
+      })
+
       this.updatePreferences();
     })
   }
 
   updatePreferences() {
-    this.store.dispatch(new UpdatePreferencesAction(this.preferences))
+    this.userDataService.updatePreferences(this.preferences())
   }
 
   onToggled(key: keyof Preferences, event: any) {
-    this.preferences = {
-      ...this.preferences,
-      [key]: event.detail.checked
+    let valueToSet = event.detail.checked;
+
+    if (key === 'isUsePersonalizedPortionSize' && this.preferences().isUseRecommendedPortionSize) {
+      valueToSet = false;
     }
-    if (key === 'isUsePersonalizedPortionSize' && this.preferences.isUseRecommendedPortionSize) {
-      this.preferences.isUseRecommendedPortionSize = false;
+    if (key === 'isUseRecommendedPortionSize' && this.preferences().isUsePersonalizedPortionSize) {
+      valueToSet = false;
     }
-    if (key === 'isUseRecommendedPortionSize' && this.preferences.isUsePersonalizedPortionSize) {
-      this.preferences.isUsePersonalizedPortionSize = false;
-    }
+
+    this.preferences.update(current => {
+      if (!current) return current;
+      return {
+        ...current,
+        [key]: valueToSet
+      }
+    })
+
+
     this.updatePreferences();
   }
 

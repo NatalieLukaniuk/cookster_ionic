@@ -12,13 +12,12 @@
         <ion-list-header>
             Всі колекції
         </ion-list-header>
-        <ng-container *ngIf="!!(collections$ | async)?.length; else noCollections">
-            <ion-item *ngFor="let collection of collections$ | async">{{collection.name}}</ion-item>
-        </ng-container>
+        @if($collections().length){
+        <ion-item *ngFor="let collection of $collections()">{{collection.name}}</ion-item>
+        }
+        @else {
+        <p class="padding-inline">У вас поки що немає колекцій рецептів</p>
+        }
 
     </ion-list>
 </ion-content>
-
-<ng-template #noCollections>
-    <p class="padding-inline">У вас поки що немає колекцій рецептів</p>
-</ng-template>

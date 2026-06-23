@@ -1,6 +1,5 @@
 import { DialogsService } from './services/dialogs.service';
 import { DataMappingService } from './services/data-mapping.service';
-import { getCurrentUser } from './store/selectors/user.selectors';
 import { AuthService } from './services/auth.service';
 
 import { Store, select } from '@ngrx/store';
@@ -22,6 +21,7 @@ import { environment } from 'src/environments/environment';
 import { UiService } from './services/ui.service';
 import { ProductsService } from './services/products.service';
 import { RecipiesService } from './services/recipies.service';
+import { UserDataService } from './services/user-data.service';
 
 @Component({
   selector: 'app-root',
@@ -42,12 +42,13 @@ export class AppComponent implements OnInit {
   uiService = inject(UiService);
   productsService = inject(ProductsService);
   recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
 
   $isLoading = this.uiService.getIsLoading;
   $isError = this.uiService.getIsError;
   $isSuccessMessage = this.uiService.getIsSuccessMessage;
-
-  user$ = this.store.pipe(select(getCurrentUser));
+  $userRole = this.userDataService.userRole;
+  $isUserLoggedIn = this.userDataService.isUserLoggedIn;
 
   isAuthCheckComplete = false;
   isLoggedIn = false;

@@ -6,6 +6,7 @@ import { UiService } from './ui.service';
 import { DataMappingService } from './data-mapping.service';
 import { FiltersService } from '../filters/services/filters.service';
 import { applyFilters } from './filter-helper.utils';
+import { UserDataService } from './user-data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,9 +16,13 @@ export class RecipiesService {
   uiService = inject(UiService);  
   dataMappingService = inject(DataMappingService);
   filtersService = inject(FiltersService);
+  userDataService = inject(UserDataService);
 
   private recipies = signal<Recipy[]>([]);
   getRecipies = this.recipies.asReadonly();
+
+  $userPreferences = this.userDataService.userPreferences;
+   $noShowIds = computed(() => this.$userPreferences()?.noShowRecipies || []);
 
   recipiesWithFilterEnabled = computed(() => {
     return applyFilters(
@@ -27,12 +32,12 @@ export class RecipiesService {
       '',
       [],
       [],
-      []
+      this.$noShowIds()
     )
     }) // TODO add logic to apply filters
   recipiesWithFilterEnabledCount = computed(() => this.recipiesWithFilterEnabled().length);
 
-  hiddenRecipies = computed(() => this.recipies())
+  hiddenRecipies = computed(() => this.recipies().filter(recipy => this.$noShowIds().includes(recipy.id)))
 
   private isRecipiesLoaded = signal(false);
   getIsRecipiesLoaded = this.isRecipiesLoaded.asReadonly();

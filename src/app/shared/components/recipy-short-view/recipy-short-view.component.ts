@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { DataMappingService } from '../../../services/data-mapping.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, computed, inject, Input, OnInit } from '@angular/core';
 import { Role, User } from 'src/app/models/auth.models';
 import {
   ComplexityDescription,
@@ -19,6 +19,7 @@ import { ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { LayoutService } from 'src/app/services/layout.service';
 import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-recipy-short-view',
@@ -26,10 +27,13 @@ import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
   styleUrls: ['./recipy-short-view.component.scss'],
 })
 export class RecipyShortViewComponent implements OnInit {
+  userDataService = inject(UserDataService);
+
+  $isUserLoggedIn = this.userDataService.isUserLoggedIn;
+
   @Input()
   recipy!: Recipy;
-  @Input()
-  currentUser!: User | null;
+
   @Input() productPreferencesChips: productPreferencesChip[] | null = [];
   @Input() isBigScreen = false;
   @Input() isShowActionButtons = true;
@@ -38,6 +42,10 @@ export class RecipyShortViewComponent implements OnInit {
 
   isRecipyClicked: boolean = false;
   isShowCollections: boolean = false;
+
+  $userCollections = this.userDataService.userRecipeCollections;
+  $includedInCollections = computed(() => this.$userCollections().filter((collection) => collection.recipies?.includes(this.recipy.id)).map((coll) => coll.name))
+  $recipyCollections = computed(() => this.$userCollections().map((collection) => collection.name))
 
   ingredientsToSkip = [
     '-Mu5TNCG6N8Q_nwkPmNb',
@@ -82,19 +90,7 @@ export class RecipyShortViewComponent implements OnInit {
     return ComplexityDescription[this.recipy.complexity];
   }
 
-  get includedInCollections(): string[] {
-    if (this.currentUser?.collections) {
-      return this.currentUser.collections
-        .filter((collection) => collection.recipies?.includes(this.recipy.id))
-        .map((coll) => coll.name);
-    } else return [];
-  }
 
-  get recipyCollections() {
-    if (this.currentUser?.collections) {
-      return this.currentUser.collections.map((collection) => collection.name);
-    } else return [];
-  }
 
   get isMobile() {
     return this.layoutService.getIsMobile()
@@ -216,7 +212,7 @@ export class RecipyShortViewComponent implements OnInit {
   }
 
   ondragged(event: any) {
-    if (!this.currentUser && event.detail.amount > 20) {
+    if (!this.$isUserLoggedIn() && event.detail.amount > 20) {
       this.goFullRecipy()
     }
   }

@@ -19,10 +19,9 @@ import { LayoutService } from 'src/app/services/layout.service';
 })
 export class RecipyFullViewComponent implements OnChanges {
   @Input() recipy: Recipy | undefined | null;
-  @Input() currentUser!: User | null;
 
-  @Input() portions?: number;
-  @Input() amountPerPortion?: number;
+  @Input() portions: number = 4;
+  @Input() amountPerPortion: number = 200;
 
   @Output() portionsChanged = new EventEmitter<{
     portions: number;
