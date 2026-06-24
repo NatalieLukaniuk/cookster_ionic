@@ -13,7 +13,6 @@ import { environment } from 'src/environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { RecipiesEffects } from './store/effects/recipies.effects';
 import { reducers } from './store/reducers';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import { CommentsEffects } from './store/effects/comments.effects';
@@ -25,7 +24,6 @@ import { CommentsEffects } from './store/effects/comments.effects';
         SharedModule,
         StoreModule.forRoot(reducers),
         EffectsModule.forRoot([
-            RecipiesEffects,
             CommentsEffects
         ]),
         StoreDevtoolsModule.instrument({

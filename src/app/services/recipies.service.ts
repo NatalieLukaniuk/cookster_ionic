@@ -13,7 +13,7 @@ import { UserDataService } from './user-data.service';
 })
 export class RecipiesService {
   recipiesApi = inject(RecipiesApiService);
-  uiService = inject(UiService);  
+  uiService = inject(UiService);
   dataMappingService = inject(DataMappingService);
   filtersService = inject(FiltersService);
   userDataService = inject(UserDataService);
@@ -22,7 +22,7 @@ export class RecipiesService {
   getRecipies = this.recipies.asReadonly();
 
   $userPreferences = this.userDataService.userPreferences;
-   $noShowIds = computed(() => this.$userPreferences()?.noShowRecipies || []);
+  $noShowIds = computed(() => this.$userPreferences()?.noShowRecipies || []);
 
   recipiesWithFilterEnabled = computed(() => {
     return applyFilters(
@@ -34,13 +34,16 @@ export class RecipiesService {
       [],
       this.$noShowIds()
     )
-    }) // TODO add logic to apply filters
+  }) // TODO add logic to apply filters
   recipiesWithFilterEnabledCount = computed(() => this.recipiesWithFilterEnabled().length);
 
   hiddenRecipies = computed(() => this.recipies().filter(recipy => this.$noShowIds().includes(recipy.id)))
 
   private isRecipiesLoaded = signal(false);
   getIsRecipiesLoaded = this.isRecipiesLoaded.asReadonly();
+
+  private ingredsToAdd = signal<string[]>([]);
+  missingIngredients = this.ingredsToAdd.asReadonly();
 
   loadRecipies(): Observable<Recipy[]> {
     return this.recipiesApi.getRecipies().pipe(
@@ -139,6 +142,13 @@ export class RecipiesService {
       _array.unshift(newRecipy);
       return _array;
     })
+  }
+
+  loadNewIngredients() {
+    this.recipiesApi.getIngredientsToAdd().pipe(
+      take(1),
+      map((res: any) => Object.values(res) as string[])
+    ).subscribe(ingreds => this.ingredsToAdd.set(ingreds))
   }
 
 }
