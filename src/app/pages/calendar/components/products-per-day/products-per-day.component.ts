@@ -21,7 +21,7 @@ import { UserDataService } from 'src/app/services/user-data.service';
 export class ProductsPerDayComponent implements OnInit {
   userDataService = inject(UserDataService);
 
-  $recipies = this.calendarService.getCurrentDayRecipies;
+  $recipies = this.calendarService.currentDayRecipies;
 
   products: Ingredient[] = [];
 
