@@ -1,10 +1,8 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CalendarService } from '../../calendar.service';
 import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
-import { select, Store } from '@ngrx/store';
-import { IAppState } from 'src/app/store/reducers';
 import { DialogsService } from 'src/app/services/dialogs.service';
-import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-view-recipies',
@@ -13,21 +11,22 @@ import { UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.
 })
 export class ViewRecipiesComponent {
   calendarService = inject(CalendarService);
+  userDataService = inject(UserDataService);
   $openedRecipies = this.calendarService.getOpenedRecipies;
 
   $openedRecipy = computed(() => this.$openedRecipies()[this.displayRecipyIndex()])
 
   displayRecipyIndex = signal(0);
 
-  constructor(private store: Store<IAppState>, private dialog: DialogsService,) {
+  constructor(private dialog: DialogsService,) {
     effect(() => {
       this.displayRecipyIndex.set(this.$openedRecipies().length - 1)
-    })
+    }, { allowSignalWrites: true })
   }
 
 
   onPortionsChanged(event: { portions: number, amountPerPortion: number }, changedRecipy: RecipyForCalendar_Reworked) {
-    this.store.dispatch(new UpdateRecipyInCalendarActionNew(changedRecipy, { ...changedRecipy, ...event }))
+    this.userDataService.updateRecipyInCalendar(changedRecipy, { ...changedRecipy, ...event })
   }
 
   onSelectedRecipyChanged(event: any) {

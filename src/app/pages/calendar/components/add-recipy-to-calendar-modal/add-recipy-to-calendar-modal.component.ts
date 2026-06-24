@@ -1,14 +1,12 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { InfiniteScrollCustomEvent, IonModal, ModalController } from '@ionic/angular';
-import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { FiltersService } from 'src/app/filters/services/filters.service';
 import { Recipy } from 'src/app/models/recipies.models';
-import { IAppState } from 'src/app/store/reducers';
 import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
-import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
+
 import { getLastPreparedDate, newDateIgnoreimezone } from '../../calendar.utils';
 import { RecipiesService } from 'src/app/services/recipies.service';
 import { UserDataService } from 'src/app/services/user-data.service';
@@ -50,7 +48,6 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   familyMembersSub: Subscription | undefined;
 
   constructor(
-    private store: Store<IAppState>,
     private modalCtrl: ModalController
   ) { }
 
@@ -184,7 +181,7 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
         endTime: this.selectedTime,
         entryId: crypto.randomUUID()
       }
-      this.store.dispatch(new AddRecipyToCalendarActionNew(recipyToAdd));
+      this.userDataService.addRecipyToCalendar(recipyToAdd)
       this.modal?.dismiss()
     }
 

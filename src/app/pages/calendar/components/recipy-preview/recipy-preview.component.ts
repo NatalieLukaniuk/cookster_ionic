@@ -1,5 +1,4 @@
-import { RemoveRecipyFromCalendarActionNew } from '../../../../store/actions/calendar.actions';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { DishType } from 'src/app/models/recipies.models';
 import { CalendarService } from 'src/app/pages/calendar/calendar.service';
@@ -7,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { IAppState } from 'src/app/store/reducers';
 import { Store } from '@ngrx/store';
 import { iSameDay } from '../../calendar.utils';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-recipy-preview',
@@ -14,6 +14,8 @@ import { iSameDay } from '../../calendar.utils';
   styleUrls: ['./recipy-preview.component.scss'],
 })
 export class RecipyPreviewComponent implements OnInit {
+  userDataService = inject(UserDataService);
+  
   @Input() recipy!: RecipyForCalendar_Reworked;
   @Output() closePopover = new EventEmitter<void>();
   @Output() editClicked = new EventEmitter<RecipyForCalendar_Reworked>()
@@ -74,7 +76,7 @@ export class RecipyPreviewComponent implements OnInit {
   }
 
   onDelete() {
-    this.store.dispatch(new RemoveRecipyFromCalendarActionNew(this.recipy))
+    this.userDataService.removeRecipyFromCalendar(this.recipy)
   }
 
   getIsOverflowing(): boolean{

@@ -1,11 +1,11 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
+
 import { MeasuringUnit, MeasuringUnitOptions, MeasuringUnitText, ProductTypeOptions, ProductTypeText } from 'src/app/models/recipies.models';
-import { ProductsApiService } from 'src/app/services/products-api.service';
+
+import { ProductsService } from 'src/app/services/products.service';
 import { UiService } from 'src/app/services/ui.service';
-import { AddNewIngredientAction } from 'src/app/store/actions/recipies.actions';
-import { IAppState } from 'src/app/store/reducers';
+
 
 @Component({
   selector: 'app-add-product-form',
@@ -14,12 +14,11 @@ import { IAppState } from 'src/app/store/reducers';
 })
 export class AddProductFormComponent implements OnInit {
   uiService = inject(UiService);
+  productsService = inject(ProductsService)
 
   productForm!: UntypedFormGroup;
 
   @Output() productAdded = new EventEmitter<void>();
-
-  constructor(private productsApi: ProductsApiService, private store: Store<IAppState>) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -47,15 +46,8 @@ export class AddProductFormComponent implements OnInit {
       sizeChangeCoef: +this.productForm.controls['sizeChangeCoef'].value,
       grInOneItem: +this.productForm.controls['grInOneItem'].value
     };
-    this.productsApi.addProduct(productToAdd).subscribe((res: { name: string }) => {
-      this.store.dispatch(
-        new AddNewIngredientAction({
-          ...productToAdd,
-          id: res.name,
-        })
-      );
-      this.uiService.showSuccessMessage(`${productToAdd.name} додано`);
-    });
+
+    this.productsService.addNewProduct(productToAdd);
     this.clearForm();
   }
 

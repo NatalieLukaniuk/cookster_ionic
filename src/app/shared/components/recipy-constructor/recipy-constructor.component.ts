@@ -1,11 +1,7 @@
 import { areObjectsEqual } from 'src/app/services/comparison';
 import { DataMappingService } from './../../../services/data-mapping.service';
 import { MeasuringUnit, NewRecipy } from './../../../models/recipies.models';
-import {
-  UpdateDraftRecipyAction,
-} from './../../../store/actions/recipies.actions';
-import { AddDraftRecipyAction } from '../../../store/actions/recipies.actions';
-import { Store } from '@ngrx/store';
+
 import {
   DishType,
   DraftRecipy,
@@ -99,7 +95,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
 
   editStepIndex: number | null = null;
 
-  constructor(private store: Store, private dataMapping: DataMappingService) { }
+  constructor(private dataMapping: DataMappingService) { }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe()
   }
@@ -180,7 +176,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
 
   saveDraft() {
     let draftRecipy: DraftRecipy = this.collectDataNewRecipyOrDraft();
-    this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
+    this.userDataService.addDraftRecipy(draftRecipy)
   }
 
   saveEditedDraft() {
@@ -188,9 +184,8 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
     draftRecipy.lastEdited = Date.now()
 
     if (this.recipyToPatchOrder) {
-      this.store.dispatch(
-        new UpdateDraftRecipyAction(draftRecipy, this.recipyToPatchOrder)
-      );
+      this.userDataService.updateDraftRecipy(draftRecipy, this.recipyToPatchOrder)
+
     } else {
       const existingDraftIndex = this.$draftRecipies().findIndex(recipy => recipy.name.trim() === this.recipyName.trim());
       if (existingDraftIndex >= 0) {
@@ -198,11 +193,10 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
         if (found) {
           draftRecipy.createdOn = found.createdOn;
         }
-        this.store.dispatch(
-          new UpdateDraftRecipyAction(draftRecipy, existingDraftIndex)
-        );
+        this.userDataService.updateDraftRecipy(draftRecipy, existingDraftIndex)
+
       } else {
-        this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
+        this.userDataService.addDraftRecipy(draftRecipy)
       }
 
     }

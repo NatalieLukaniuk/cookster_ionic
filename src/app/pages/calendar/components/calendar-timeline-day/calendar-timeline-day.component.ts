@@ -1,12 +1,11 @@
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarModalComponent } from '../add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { CalendarComment, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { RemoveCommentFromCalendarActionNew, UpdateRecipyInCalendarActionNew } from 'src/app/store/actions/calendar.actions';
-import { IAppState } from 'src/app/store/reducers';
-import { Store } from '@ngrx/store';
+import { AfterViewInit, Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+
 import { iSameDay, MINUTES_IN_DAY, newDateIgnoreimezone } from '../../calendar.utils';
 import { DialogsService } from 'src/app/services/dialogs.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 
 const MINUTES_IN_PIXEL = 2;
@@ -19,6 +18,8 @@ const HOURS_IN_DAY = 24;
   styleUrls: ['./calendar-timeline-day.component.scss'],
 })
 export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
+  userDataService = inject(UserDataService);
+  
   PIXELS_IN_DAY = (HOURS_IN_DAY * 60) / MINUTES_IN_PIXEL;
   dayStartIndex = 6;
   dayEndIndex = 21;
@@ -33,7 +34,6 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private store: Store<IAppState>,
     private actionSheetCtrl: ActionSheetController,
     private dialog: DialogsService
   ) { }
@@ -172,7 +172,7 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.store.dispatch(new UpdateRecipyInCalendarActionNew(event, data))
+      this.userDataService.updateRecipyInCalendar(event, data)
     }
   }
 
@@ -225,7 +225,7 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
 
   onDeleteComment(comment: CalendarComment) {
     this.dialog.openConfirmationDialog('Видалити коментар?', 'ця дія незворотна').then(res => {
-      this.store.dispatch(new RemoveCommentFromCalendarActionNew(comment))
+      this.userDataService.removeCommentFromCalendar(comment)
     })
   }
 

@@ -51,8 +51,15 @@ export class ProductsService {
     this.isProductsLoaded.set(true)
   }
 
-  addNewProduct() {
-
+  addNewProduct(productToAdd: Partial<Product>) {
+    this.uiService.setIsLoadingTrue()
+    this.productsApi.addProduct(productToAdd).subscribe(
+      (res: { name: string }) => {
+        this.products.update(current => [{ ...productToAdd, id: res.name } as Product, ...current])
+        this.uiService.setIsLoadingFalse()
+        this.uiService.showSuccessMessage(`${productToAdd.name} додано`)
+      }
+    )
   }
 
   updateProduct(product: Product): Observable<Product | null> {

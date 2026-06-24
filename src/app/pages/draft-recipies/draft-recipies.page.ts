@@ -1,9 +1,6 @@
-import { DeleteDraftRecipyAction } from './../../store/actions/recipies.actions';
+
 import { DraftRecipy } from './../../models/recipies.models';
-import { Component, inject, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { map } from 'rxjs';
-import { IAppState } from 'src/app/store/reducers';
+import { Component, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserDataService } from 'src/app/services/user-data.service';
 
@@ -18,7 +15,7 @@ export class DraftRecipiesPage {
 
 
   constructor(
-    private store: Store<IAppState>,
+
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -35,6 +32,6 @@ export class DraftRecipiesPage {
   }
 
   deleteDraft(i: number) {
-    this.store.dispatch(new DeleteDraftRecipyAction(i));
+    this.userDataService.deleteDraftRecipy(i)
   }
 }

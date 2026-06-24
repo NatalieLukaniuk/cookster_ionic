@@ -3,7 +3,6 @@ import { ModalController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { CalendarReworkedService } from 'src/app/pages/calendar/calendar-reworked.service';
-import { AddCommentToCalendarAction, AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { IAppState } from 'src/app/store/reducers';
 import { AddCommentToCalendarModalComponent } from './components/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
 import { SaveCalendarAsPdfPreviewComponent } from './components/save-calendar-as-pdf-preview/save-calendar-as-pdf-preview.component';
@@ -28,7 +27,7 @@ export class CalendarPage {
   $plannedRecipies = this.userDataService.userPlannedRecipies;
   $plannedComments = this.userDataService.userPlannedComments;
 
-  constructor(private modalCtrl: ModalController, private store: Store<IAppState>, private calendarService: CalendarReworkedService) { }
+  constructor(private modalCtrl: ModalController, private calendarService: CalendarReworkedService) { }
 
   public actionSheetButtons = [
     {
@@ -88,13 +87,10 @@ export class CalendarPage {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.store.dispatch(
-        new AddCommentToCalendarAction(
-          data.comment,
-          data.selectedDate,
-          true
-        )
-      );
+      this.userDataService.addCommentToCalendar(data.comment,
+        data.selectedDate,
+        true)
+
     }
   }
 
@@ -112,13 +108,12 @@ export class CalendarPage {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.store.dispatch(
-        new AddCommentToCalendarAction(
-          data.comment,
+      this.userDataService.addCommentToCalendar(
+        data.comment,
           data.selectedDate,
           false
-        )
-      );
+      )
+      
     }
   }
 
@@ -138,7 +133,7 @@ export class CalendarPage {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.store.dispatch(new AddRecipyToCalendarActionNew(data));
+      this.userDataService.addRecipyToCalendar(data)
     }
   }
 

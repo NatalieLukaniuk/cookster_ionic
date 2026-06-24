@@ -109,7 +109,7 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
           } else return list;
         });
       }
-    })
+    }, { allowSignalWrites: true })
   }
 
   setScroll() {

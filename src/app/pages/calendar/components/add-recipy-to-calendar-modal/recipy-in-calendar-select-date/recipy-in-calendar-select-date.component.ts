@@ -49,7 +49,7 @@ export class RecipyInCalendarSelectDateComponent implements OnDestroy {
         this.value = init;
         this.$selectedDate.set(init)
       }
-    })
+    }, { allowSignalWrites: true })
   }
   ngOnDestroy(): void {
     this.destroyed$.next()

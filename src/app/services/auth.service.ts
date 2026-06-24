@@ -7,7 +7,6 @@ import {
   signOut,
 } from 'firebase/auth';
 import { Role, User } from '../models/auth.models';
-import * as UserActions from '../store/actions/user.actions';
 
 import { UserService } from './user.service';
 import { UiService } from './ui.service';

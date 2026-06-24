@@ -1,8 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+
 import { DataMappingService } from '../../../services/data-mapping.service';
 import { Component, computed, inject, Input, OnInit } from '@angular/core';
-import { Role, User } from 'src/app/models/auth.models';
 import {
   ComplexityDescription,
   DishType,
@@ -13,10 +12,8 @@ import {
   productPreferencesChip,
 } from 'src/app/models/recipies.models';
 import * as _ from 'lodash';
-import { IAppState } from 'src/app/store/reducers';
 import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { ModalController } from '@ionic/angular';
-import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
 import { LayoutService } from 'src/app/services/layout.service';
 import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
 import { UserDataService } from 'src/app/services/user-data.service';
@@ -106,7 +103,6 @@ export class RecipyShortViewComponent implements OnInit {
 
   constructor(
     private datamapping: DataMappingService,
-    private store: Store<IAppState>,
     private router: Router,
     private route: ActivatedRoute,
     private modalCtrl: ModalController,
@@ -187,7 +183,7 @@ export class RecipyShortViewComponent implements OnInit {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.store.dispatch(new AddRecipyToCalendarActionNew(data))
+      this.userDataService.addRecipyToCalendar(data)
     }
     this.isRecipyClicked = false;
   }

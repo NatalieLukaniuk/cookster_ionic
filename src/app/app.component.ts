@@ -4,7 +4,6 @@ import { AuthService } from './services/auth.service';
 
 import { Store, select } from '@ngrx/store';
 import { Component, effect, inject, OnInit } from '@angular/core';
-import * as RecipiesActions from './store/actions/recipies.actions';
 
 import { combineLatest, take } from 'rxjs';
 import { IAppState } from './store/reducers';
@@ -89,7 +88,7 @@ export class AppComponent implements OnInit {
         this.dialog.presentInfoToast(error);
         this.uiService.resetError()
       }
-    })
+    }, { allowSignalWrites: true })
 
     effect(() => {
       const successMessage = this.$isSuccessMessage();
@@ -97,7 +96,7 @@ export class AppComponent implements OnInit {
         this.dialog.presentInfoToast(successMessage);
         this.uiService.dismissSuccessMessage()
       }
-    })
+    }, { allowSignalWrites: true })
   }
   ngOnInit(): void {
     this.loadData();

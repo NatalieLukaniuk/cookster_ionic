@@ -5,7 +5,6 @@ import { Observable, Subject, debounceTime, map, takeUntil, tap } from 'rxjs';
 import { FamilyMember, Preferences, defaultPrefs } from 'src/app/models/auth.models';
 import { UserDataService } from 'src/app/services/user-data.service';
 import { INPUT_DEBOUNCE_TIME } from 'src/app/shared/constants';
-import { UpdatePreferencesAction } from 'src/app/store/actions/user.actions';
 import { IAppState } from 'src/app/store/reducers';
 
 @Component({
@@ -45,7 +44,7 @@ export class GenericSettingsComponent implements OnDestroy {
         this.preferences.set(prefs);
         this.defaultPortionSize = prefs.defaultPortionSize.toString();
       }
-    })
+    }, { allowSignalWrites: true })
     this.updateDefaultPortionSize();
   }
 

@@ -9,7 +9,6 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { ProductsService } from 'src/app/services/products.service';
 import { UserDataService } from 'src/app/services/user-data.service';
 import { INPUT_DEBOUNCE_TIME } from 'src/app/shared/constants';
-import { UpdateFamilyAction } from 'src/app/store/actions/user.actions';
 import { IAppState } from 'src/app/store/reducers';
 
 @Component({
@@ -55,7 +54,7 @@ export class EditFamilyComponent implements OnDestroy {
         this.portionSizePercentage = this.familyMembers[0].portionSizePercentage ? this.familyMembers[0].portionSizePercentage.toString() : '';
         this.portionSizePercentage$.next(+this.portionSizePercentage)
       }
-    })
+    }, { allowSignalWrites: true })
   }
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -91,7 +90,7 @@ export class EditFamilyComponent implements OnDestroy {
         (familyMember[key] as string[]) = [product.id];
       }
     }
-    this.store.dispatch(new UpdateFamilyAction(this.familyMembers))
+    this.userDataService.updateFamily(this.familyMembers)
   }
 
   onTabChange(event: any) {
@@ -116,7 +115,7 @@ export class EditFamilyComponent implements OnDestroy {
       const memberToUpdate = this.familyMembers.find(member => member.id === this.activeMember);
       if (memberToUpdate && percentage && memberToUpdate.portionSizePercentage !== +percentage) {
         memberToUpdate.portionSizePercentage = +percentage;
-        this.store.dispatch(new UpdateFamilyAction(this.familyMembers))
+        this.userDataService.updateFamily(this.familyMembers)
       }
 
     })

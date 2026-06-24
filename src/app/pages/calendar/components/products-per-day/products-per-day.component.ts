@@ -37,7 +37,7 @@ export class ProductsPerDayComponent implements OnInit {
       this.products = [];
       this.$recipies().forEach(recipy => this.processRecipy(recipy))
       this.products.sort((a, b) => a.ingredient!.localeCompare(b.ingredient!));
-    })
+    }, { allowSignalWrites: true })
   }
 
   ngOnInit(): void {

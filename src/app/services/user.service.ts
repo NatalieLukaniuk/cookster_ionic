@@ -5,7 +5,6 @@ import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { User } from '../models/auth.models';
 
-import * as UserActions from '../store/actions/user.actions';
 import { AuthApiService } from './auth-api.service';
 import { UiService } from './ui.service';
 import { UserDataService } from './user-data.service';
