@@ -60,7 +60,7 @@
         </div>
 
 
-        <div class="chip-selection-list" *ngIf="member.noLike.length">
+        <div class="chip-selection-list" *ngIf="member.noLike?.length">
           <p>Не любить:</p>
           <ion-chip *ngFor="let item of member.noLike" color="warning">
             <span>{{ getProductText(item) }}</span>
@@ -68,7 +68,7 @@
         </div>
 
 
-        <div class="chip-selection-list" *ngIf="member.noEat.length">
+        <div class="chip-selection-list" *ngIf="member.noEat?.length">
           <p>Не їсть:</p>
           <ion-chip *ngFor="let item of member.noEat" color="danger">
             <span>{{ getProductText(item) }}</span>
