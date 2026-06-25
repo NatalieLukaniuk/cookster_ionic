@@ -16,7 +16,7 @@
           <h5 class="found-recipies-count">Знайдено {{ $filteredRecipiesCount() }} рецептів</h5>
         </ion-title>
       </ion-toolbar>
-      <ion-toolbar *ngIf="isShowWidget"><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
+      <ion-toolbar *ngIf="$isShowWidget()"><app-active-filters-widget></app-active-filters-widget></ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
 

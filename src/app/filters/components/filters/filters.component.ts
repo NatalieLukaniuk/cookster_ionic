@@ -27,6 +27,7 @@ export class FiltersComponent {
   
   $userCollections = computed(() => this.userDataService.userRecipeCollections().map(item => item.name));
   $isUserLoggedIn = this.userDataService.isUserLoggedIn;
+  $isShowWidget = this.filtersService.isShowWidget;
 
   constructor(
     private datamapping: DataMappingService
@@ -59,10 +60,6 @@ export class FiltersComponent {
   addToDisplayWithout(event: Product) {
     this.filtersService.toggleIngredsToNotshow(event.id);
     this.withoutAutocomplete.clearSearch();
-  }
-
-  get isShowWidget(){
-    return this.filtersService.isShowWidget
   }
 
 }
