@@ -28,13 +28,13 @@ export class RecipiesService {
     return applyFilters(
       this.recipies(),
       this.filtersService.getCurrentFilters(),
-      undefined, //TODO need to add real values
-      '',
-      [],
-      [],
+      this.userDataService.userRole(),
+      this.userDataService.userEmail() || '',
+      this.userDataService.userRecipeCollections(),
+      this.userDataService.userPlannedRecipies(),
       this.$noShowIds()
     )
-  }) // TODO add logic to apply filters
+  })
   recipiesWithFilterEnabledCount = computed(() => this.recipiesWithFilterEnabled().length);
 
   hiddenRecipies = computed(() => this.recipies().filter(recipy => this.$noShowIds().includes(recipy.id)))

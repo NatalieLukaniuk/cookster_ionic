@@ -9,7 +9,7 @@ import { getActivePreparationTime, getPreparationTime } from "../pages/recipies/
 export function applyFilters(
     recipies: Recipy[],
     filters: Filters,
-    currentUserRole: Role | undefined,
+    currentUserRole: Role | null,
     currentUserEmail: string,
     userCollections: RecipyCollection[],
     userPlannedRecipies: CalendarRecipyInDatabase_Reworked[],
@@ -50,7 +50,7 @@ export function applyFilters(
     return _recipies;
 }
 
-function isShowRecipy(recipy: Recipy, currentUserRole: Role | undefined, currentUserEmail: string) {
+function isShowRecipy(recipy: Recipy, currentUserRole: Role | null, currentUserEmail: string) {
     return !recipy.notApproved ? true : currentUserRole ? (recipy.author === currentUserEmail || currentUserRole === Role.Admin) : false;
 }
 
