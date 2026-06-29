@@ -6,14 +6,13 @@ import { DishType, Recipy } from 'src/app/models/recipies.models';
   templateUrl: './recipy-in-calendar-short-view.component.html',
   styleUrls: ['./recipy-in-calendar-short-view.component.scss'],
 })
-export class RecipyInCalendarShortViewComponent implements OnInit {
+export class RecipyInCalendarShortViewComponent {
 
   @Input() recipy!: Recipy;
   @Output() recipyClicked = new EventEmitter<Recipy>()
 
   constructor() { }
 
-  ngOnInit() { }
 
   get recipyIngredients(){
     return this.recipy.ingrediends.map(ingred => ingred.ingredient)

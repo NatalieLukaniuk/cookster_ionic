@@ -59,11 +59,12 @@
   <ion-content #scrollingContainer (ionScroll)="onscroll($event)" [scrollEvents]="true">
     <ng-container *ngIf="currentView === AddRecipyToCalView.SelectRecipy">
       <ion-list lines="none">
-        <ng-container *ngFor="let recipy of $recipies(); let index = index">
-          <app-recipy-in-calendar-short-view *ngIf="index < numberOfRecipiesToDisplay" [recipy]="recipy"
-            (recipyClicked)="onRecipyClicked(recipy)"></app-recipy-in-calendar-short-view>
-        </ng-container>
-        <ion-infinite-scroll *ngIf="numberOfRecipiesToDisplay <= $recipies().length" (ionInfinite)="onIonInfinite($event)">
+
+        @for(recipy of $recipiesToDisplay(); track recipy.id){
+        <app-recipy-in-calendar-short-view [recipy]="recipy"
+          (recipyClicked)="onRecipyClicked(recipy)"></app-recipy-in-calendar-short-view>
+        }
+        <ion-infinite-scroll [disabled]="$recipies().length <= numberOfRecipiesToDisplay()" (ionInfinite)="onIonInfinite($event)">
           <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>
       </ion-list>

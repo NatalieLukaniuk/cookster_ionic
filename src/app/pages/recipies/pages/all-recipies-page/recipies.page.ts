@@ -1,10 +1,12 @@
 import { FiltersService } from './../../../../filters/services/filters.service';
-import { Component, computed, inject, ViewChild } from '@angular/core';
+import { Component, computed, inject, signal, ViewChild } from '@angular/core';
 import { productPreferencesChip } from 'src/app/models/recipies.models';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { LayoutService } from 'src/app/services/layout.service';
 import { RecipiesService } from 'src/app/services/recipies.service';
 import { UserDataService } from 'src/app/services/user-data.service';
+
+const RECIPY_CARD_HEIGHT = 750;
 
 @Component({
   selector: 'app-recipies',
@@ -19,8 +21,12 @@ export class RecipiesContainerPage {
 
   $currentFilters = this.filtersService.getCurrentFilters
   $recipies = this.recipiesService.recipiesWithFilterEnabled;
+  $recipiesToDisplay = computed(() => this.$recipies().filter((r, i) => i <= this.numberOfRecipiesToDisplay()))
   $isShowWidget = this.filtersService.isShowWidget;
   $userFamily = this.userDataService.userFamily;
+
+  threshhold = RECIPY_CARD_HEIGHT * 2;
+  numberOfRecipiesToDisaplyAtOnce = 3
 
   showGoTop = false;
 
@@ -53,7 +59,7 @@ export class RecipiesContainerPage {
     } else return []
   })
 
-  numberOfRecipiesToDisplay = 10;
+  numberOfRecipiesToDisplay = signal(this.numberOfRecipiesToDisaplyAtOnce);
 
   isBigScreen = this.layoutService.getIsBigScreen();
 
@@ -68,7 +74,7 @@ export class RecipiesContainerPage {
   }
 
   onIonInfinite(event: any) {
-    this.numberOfRecipiesToDisplay += 10;
+    this.numberOfRecipiesToDisplay.update(current => current + this.numberOfRecipiesToDisaplyAtOnce);
     (event as InfiniteScrollCustomEvent).target.complete();
   }
 }

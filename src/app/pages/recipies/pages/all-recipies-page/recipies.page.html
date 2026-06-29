@@ -10,27 +10,27 @@
   <span id="top-anchor"></span>
 
   <div class="recipies-background">
-    @for(recipy of $recipies(); track recipy.id; let index = $index){
-    @if(index < numberOfRecipiesToDisplay){ <div>
+    @for(recipy of $recipiesToDisplay(); track recipy.id){
+   <div>
       <app-recipy-short-view [recipy]="recipy" [productPreferencesChips]="productChips()"
         [isBigScreen]="isBigScreen"></app-recipy-short-view>
       <app-comments-block [recipyId]="recipy.id" [recipyName]="recipy.name"></app-comments-block>
-  </div>
-  }
-
-  }
-  @if(numberOfRecipiesToDisplay <= $recipies().length){ <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-    }
-
     </div>
-    @if(showGoTop){
-    <ion-fab (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
-      <ion-fab-button>
-        <ion-icon name="chevron-up-circle"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+
+
     }
+    <ion-infinite-scroll [disabled]="$recipies().length <= numberOfRecipiesToDisplay()" (ionInfinite)="onIonInfinite($event)" [threshold]="threshhold + 'px'">
+      <ion-infinite-scroll-content loadingText="Please wait..." loadingSpinner="bubbles"></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+
+  </div>
+  @if(showGoTop){
+  <ion-fab (click)="goTop()" slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  }
 
 </ion-content>

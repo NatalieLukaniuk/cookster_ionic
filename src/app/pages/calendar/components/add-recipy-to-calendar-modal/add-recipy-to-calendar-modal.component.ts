@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { InfiniteScrollCustomEvent, IonModal, ModalController } from '@ionic/angular';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -17,6 +17,8 @@ enum AddRecipyToCalView {
   SetAmount = 'set-amount'
 }
 
+const RECIPY_CARD_HEIGHT = 360;
+
 @Component({
   selector: 'app-add-recipy-to-calendar-modal',
   templateUrl: './add-recipy-to-calendar-modal.component.html',
@@ -26,8 +28,9 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   recipiesService = inject(RecipiesService);
   filtersService = inject(FiltersService);
   userDataService = inject(UserDataService);
-  
+
   $recipies = this.recipiesService.recipiesWithFilterEnabled;
+  $recipiesToDisplay = computed(() => this.$recipies().filter((r, i) => i <= this.numberOfRecipiesToDisplay()))
   $isShowWidget = this.filtersService.isShowWidget;
   $userFamilyMembers = this.userDataService.userFamily;
 
@@ -55,8 +58,8 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     if (!this.isEditMode || !this.portions) {
       const userFamilyCount = this.$userFamilyMembers().length;
       if (userFamilyCount) {
-          this.portions = userFamilyCount;
-        } else { this.portions = 4; }
+        this.portions = userFamilyCount;
+      } else { this.portions = 4; }
     }
 
     this.getCurrentView()
@@ -125,10 +128,12 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   showGoTop = false;
 
-  numberOfRecipiesToDisplay = 10;
+  threshhold = RECIPY_CARD_HEIGHT * 2;
+  numberOfRecipiesToDisaplyAtOnce = 3
+  numberOfRecipiesToDisplay = signal(this.numberOfRecipiesToDisaplyAtOnce);
 
   onIonInfinite(event: any) {
-    this.numberOfRecipiesToDisplay += 10;
+    this.numberOfRecipiesToDisplay.update(current => current + this.numberOfRecipiesToDisaplyAtOnce);
     (event as InfiniteScrollCustomEvent).target.complete();
   }
 
