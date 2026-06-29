@@ -114,8 +114,8 @@ export class CommentsBlockComponent implements OnChanges, OnDestroy {
     this.selectedComment = null;
   }
 
-  click() {
-    this.isModalOpen = true;
+  setOpen(value: boolean) {
+    this.isModalOpen = value;
   }
 
   deleteComment(commentId: string | undefined) {

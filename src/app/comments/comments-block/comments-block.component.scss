@@ -32,13 +32,13 @@
 
 .comments-modal-content-container {
     display: flex;
-    height: 80%;
+    height: 100%;
     flex-direction: column;
 }
 
 .existing-comments {
     flex-grow: 1;
-    max-height: 60%;
+    max-height: 45%;
     overflow-y: auto;
     box-shadow: inset 0px -2px 9px 1px var(--ion-color-light);
     padding: 20px 15px;

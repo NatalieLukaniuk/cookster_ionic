@@ -2,7 +2,7 @@
     <!-- <div *ngIf="(comments$ | async)?.length" class="comments-stats">
         <p>{{totalComments}} коментар</p>
     </div> -->
-    <div class="buttons" [id]="modalId" (click)="click()">
+    <div class="buttons" (click)="setOpen(true)">
         <p class="comments-info">{{totalComments}} {{commentsText}}</p>
         <!-- <ion-button fill="clear">
             <ion-icon name="thumbs-up-outline" slot="start"></ion-icon>
@@ -15,8 +15,7 @@
     </div>
 </div>
 
-<ion-modal [trigger]="modalId" [initialBreakpoint]="0.8" (ionModalDidPresent)="onModalPresented()"
-    [isOpen]="isModalOpen" (ionModalWillDismiss)="isModalOpen = false">
+<ion-modal [isOpen]="isModalOpen" [initialBreakpoint]="0.6" (ionModalDidPresent)="onModalPresented()" (ionModalWillDismiss)="isModalOpen = false">
     <ng-template>
         <ion-header *ngIf="recipyName">
             <ion-toolbar class="comments-modal-header">
