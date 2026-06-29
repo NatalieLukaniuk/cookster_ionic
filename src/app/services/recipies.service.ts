@@ -21,12 +21,14 @@ export class RecipiesService {
   private recipies = signal<Recipy[]>([]);
   getRecipies = this.recipies.asReadonly();
 
+  recipiesInRandomOrder = computed(() => this.recipies().sort(() => Math.random() - 0.5))
+
   $userPreferences = this.userDataService.userPreferences;
   $noShowIds = computed(() => this.$userPreferences()?.noShowRecipies || []);
 
   recipiesWithFilterEnabled = computed(() => {
     return applyFilters(
-      this.recipies(),
+      this.recipiesInRandomOrder(),
       this.filtersService.getCurrentFilters(),
       this.userDataService.userRole(),
       this.userDataService.userEmail() || '',
