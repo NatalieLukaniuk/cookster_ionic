@@ -64,7 +64,7 @@
         <app-recipy-in-calendar-short-view [recipy]="recipy"
           (recipyClicked)="onRecipyClicked(recipy)"></app-recipy-in-calendar-short-view>
         }
-        <ion-infinite-scroll [disabled]="$recipies().length <= numberOfRecipiesToDisplay()" (ionInfinite)="onIonInfinite($event)">
+        <ion-infinite-scroll [threshold]="threshhold + 'px'" [disabled]="$recipies().length <= numberOfRecipiesToDisplay()" (ionInfinite)="onIonInfinite($event)">
           <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>
       </ion-list>
