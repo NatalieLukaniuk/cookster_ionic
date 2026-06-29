@@ -5,7 +5,7 @@
     }
 
   </ion-select>
-  <ion-button (click)="toggleSortingDirection()" size="small" fill="outline">
+  <ion-button (click)="toggleSortingDirection()" size="small" fill="outline" [disabled]="$sorting() === DEFAULT_SORTING">
     @if($sortingDirection() === RecipySortingDirection.SmallToBig){
     <ion-icon name="arrow-up-outline"></ion-icon>
     }

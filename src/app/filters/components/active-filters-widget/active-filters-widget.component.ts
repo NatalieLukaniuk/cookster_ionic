@@ -67,7 +67,7 @@ export class ActiveFiltersWidgetComponent {
 
   getOptionLabel(value: RecipySorting | string): string {
     switch (value) {
-      case RecipySorting.Default: return 'за датою додавання';
+      case RecipySorting.Default: return 'без сортування';
       case RecipySorting.ByActivePreparationTime: return 'за активним часом приготування';
       case RecipySorting.ByLastPrepared: return 'за останнім приготуванням';
       case RecipySorting.ByTotalPreparationTime: return 'за загальним часом приготування';

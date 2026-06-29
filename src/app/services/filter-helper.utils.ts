@@ -14,7 +14,7 @@ export function applyFilters(
     userCollections: RecipyCollection[],
     userPlannedRecipies: CalendarRecipyInDatabase_Reworked[],
     noShowIds?: string[]) {
-    let _recipies = recipies.map((recipy) => recipy);
+    let _recipies = recipies.map(recipy => addLastPrepared(recipy, userPlannedRecipies));
 
     _recipies = _recipies.filter((recipy) => isShowRecipy(recipy, currentUserRole, currentUserEmail));
 
@@ -112,6 +112,7 @@ function filterBySearchWord(recipies: Recipy[], searchWord: string) {
 
 
 function applySorting(recipies: Recipy[], sorting: RecipySorting, sortingDirection: RecipySortingDirection, userPlannedRecipies: CalendarRecipyInDatabase_Reworked[]) {
+
     switch (sorting) {
         case RecipySorting.Default: return;
         case RecipySorting.ByLastPrepared: sortByLastPrepared(recipies, userPlannedRecipies);
@@ -134,14 +135,10 @@ function sortByActivePreparationTime(recipies: Recipy[]) {
 }
 
 function sortByLastPrepared(recipies: Recipy[], userPlannedRecipies: CalendarRecipyInDatabase_Reworked[]) {
-    const mapped = recipies.map(recipy => addLastPrepared(recipy, userPlannedRecipies));
-    const sorted = getSortedByLastPrepared(mapped as Recipy[]);
+    
+    const sorted =  recipies.sort((a, b) => _sortByLastPrepared(a, b));
     return sorted
 
-}
-
-function getSortedByLastPrepared(recipies: Recipy[]) {
-    recipies.sort((a, b) => _sortByLastPrepared(a, b));
 }
 
 function _sortByLastPrepared(a: Recipy, b: Recipy) {
@@ -161,10 +158,10 @@ function _sortByLastPrepared(a: Recipy, b: Recipy) {
     }
 }
 
-function addLastPrepared(recipy: Recipy, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[] | undefined) {
+function addLastPrepared(recipy: Recipy, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[] | undefined): Recipy {
     let updated = {
         ...recipy,
         lastPrepared: allPlannedRecipies ? getLastPreparedDate(recipy.id, allPlannedRecipies) : 'N/A'
     }
-    return updated
+    return updated as Recipy
 }

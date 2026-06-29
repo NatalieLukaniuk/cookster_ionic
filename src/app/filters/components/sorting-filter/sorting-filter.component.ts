@@ -25,7 +25,7 @@ export class SortingFilterComponent {
 
   getOptionLabel(value: RecipySorting | string): string {
     switch (value) {
-      case RecipySorting.Default: return 'датою додавання';
+      case RecipySorting.Default: return 'без сортування';
       case RecipySorting.ByActivePreparationTime: return 'активним часом приготування';
       case RecipySorting.ByLastPrepared: return 'останнім приготуванням';
       case RecipySorting.ByTotalPreparationTime: return 'загальним часом приготування';
@@ -36,6 +36,7 @@ export class SortingFilterComponent {
   RecipySortingDirection = RecipySortingDirection;
 
   sortingValue: RecipySorting = DEFAULT_SORTING;
+  DEFAULT_SORTING = DEFAULT_SORTING;
 
   onSortingChange(event: any) {
     this.filtersService.toggleSorting(event.detail.value)
