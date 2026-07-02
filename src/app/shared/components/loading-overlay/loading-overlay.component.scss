@@ -12,6 +12,10 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  @media(prefers-color-scheme: dark){
+    background: variables.$rust;
+  }
 }
 
 .humster {
