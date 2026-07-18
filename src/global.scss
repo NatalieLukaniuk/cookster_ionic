@@ -113,17 +113,19 @@ ion-item-sliding ion-item-option div {
 
   ion-icon {
     font-size: 26px;
+
     &.small-icon {
       font-size: 20px;
     }
   }
+
   p {
     font-size: 10px;
     text-transform: lowercase;
   }
 }
 
-.timed-out{
+.timed-out {
   color: var(--ion-color-warning);
 }
 
@@ -136,4 +138,36 @@ ion-item-sliding ion-item-option div {
 
 .color-warning {
   color: var(--ion-color-warning);
+}
+
+.recipies-background {
+  background: var(--ion-color-light);
+  width: 100%;
+}
+
+.card-wrapper {
+  width: 100vw;
+  height: 300px;
+  margin: 0;
+}
+
+.card-container {
+  width: 100%;
+}
+
+
+
+@media (min-width: 600px) {
+
+  .card-wrapper {
+    width: 100%;
+    height: 300px;
+    margin: 0;
+  }
+
+  .recipies-background {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    grid-gap: 15px;
+  }
 }

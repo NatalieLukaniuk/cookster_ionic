@@ -24,9 +24,9 @@ export class RecipiesContainerPage {
   $recipiesToDisplay = computed(() => this.$recipies().filter((r, i) => i <= this.numberOfRecipiesToDisplay()))
   $isShowWidget = this.filtersService.isShowWidget;
   $userFamily = this.userDataService.userFamily;
-
+  isBigScreen = this.layoutService.getIsBigScreen();
   threshhold = RECIPY_CARD_HEIGHT * 2;
-  numberOfRecipiesToDisaplyAtOnce = 3
+  numberOfRecipiesToDisaplyAtOnce = this.isBigScreen ? 20 : 3;
 
   showGoTop = false;
 
@@ -61,7 +61,7 @@ export class RecipiesContainerPage {
 
   numberOfRecipiesToDisplay = signal(this.numberOfRecipiesToDisaplyAtOnce);
 
-  isBigScreen = this.layoutService.getIsBigScreen();
+
 
   onscroll(event: any) {
     this.showGoTop = event.detail.scrollTop > 500;

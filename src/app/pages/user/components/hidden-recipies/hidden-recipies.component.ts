@@ -9,11 +9,11 @@ import { UserDataService } from 'src/app/services/user-data.service';
   styleUrls: ['./hidden-recipies.component.scss'],
 })
 export class HiddenRecipiesComponent {
+
+  //TODO this components takes very long to load and display - maybe because of tabs
   recipiesService = inject(RecipiesService);
   userDataService = inject(UserDataService);
 
-
-  // $allRecipies = this.recipiesService.getRecipies;
   $userPreferences = this.userDataService.userPreferences
 
 

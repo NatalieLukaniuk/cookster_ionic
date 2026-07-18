@@ -14,6 +14,7 @@ import { EditFamilyComponent } from './components/edit-family/edit-family.compon
 import { ManageCollectionsComponent } from './components/manage-collections/manage-collections.component';
 import { HiddenRecipiesComponent } from './components/hidden-recipies/hidden-recipies.component';
 import { CommentsModule } from 'src/app/comments/comments.module';
+import { RecipeCardComponent } from "src/app/shared/components/recipe-card/recipe-card.component";
 
 @NgModule({
   imports: [
@@ -22,8 +23,9 @@ import { CommentsModule } from 'src/app/comments/comments.module';
     IonicModule,
     UserPageRoutingModule,
     SharedModule,
-    CommentsModule
-  ],
+    CommentsModule,
+    RecipeCardComponent
+],
   declarations: [UserPage, ClearOldDataComponent, GenericSettingsComponent, EditFamilyComponent, ManageCollectionsComponent, HiddenRecipiesComponent]
 })
 export class UserPageModule { }

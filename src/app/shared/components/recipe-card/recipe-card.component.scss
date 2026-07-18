@@ -1,0 +1,196 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-family: sans-serif;
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.card .image,
+.card .card-body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.bottom-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    align-items: stretch;
+    padding: 0 1rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.card .image .card-body {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: .5s;
+    position: relative;
+}
+
+.card-bg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.glass-bg {
+    color: #ffffff;
+    background: rgba(13, 51, 0, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.top-row {
+    z-index: 50;
+    position: relative;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+/* Shift image on first and second click */
+.card[data-state="1"] .image .card-body,
+.card[data-state="2"] .image .card-body {
+    opacity: .4;
+    transform: translateX(30%);
+}
+
+.card {
+    .details {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 70%;
+        height: 100%;
+        transition: .5s;
+        transform-origin: left;
+        transform: perspective(2000px) rotateY(-90deg);
+        backdrop-filter: blur(20px);
+
+        &.first {
+            z-index: 2;
+        }
+
+        &.second {
+
+            z-index: 3;
+        }
+    }
+
+    .center {
+        padding: 0.5rem;
+        background: var(--background);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        cursor: default;
+        height: calc(100% - 1rem);
+        margin-block: 0.5rem;
+        overflow-y: auto;
+        font-size: 0.7rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    h6 {
+        font-size: 0.9rem;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .general-info {
+        color: var(--ion-text-color);
+        display: flex;
+        align-items: stretch;
+        gap: 0.3rem;
+        max-width: 100%;
+        flex-wrap: wrap;
+
+        p {
+            margin: 0;
+            font-size: 1rem;
+            display: flex;
+            gap: 0.2rem;
+            align-items: center;
+
+            span {
+                font-size: 0.6rem;
+                white-space: break-spaces;
+            }
+        }
+    }
+
+}
+
+
+.card[data-state="1"] .details.first {
+    transform: perspective(2000px) rotateY(0deg);
+}
+
+.card[data-state="2"] .details.second {
+    transform: perspective(2000px) rotateY(0deg);
+}
+
+
+.photo-placeholder {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding-inline: 30px;
+    background: var(--ion-background-color);
+
+    &-text {
+        text-align: center
+    }
+}
+
+.humster {
+    opacity: 0.3;
+    height: 45vh;
+}
+
+:host {
+    ::ng-deep .chip-selection-list {
+        padding: 0;
+        align-items: center;
+
+        ion-chip {
+            font-size: 0.5rem;
+            height: 10px;
+            padding-inline: 5px;
+            border-radius: 3px;
+            margin: 0;
+            min-height: auto;
+        }
+
+
+
+    }
+}

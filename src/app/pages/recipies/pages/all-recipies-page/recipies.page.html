@@ -11,15 +11,15 @@
 
   <div class="recipies-background">
     @for(recipy of $recipiesToDisplay(); track recipy.id){
-   <div>
-      <app-recipy-short-view [recipy]="recipy" [productPreferencesChips]="productChips()"
-        [isBigScreen]="isBigScreen"></app-recipy-short-view>
+    <div class="card-container">
+      <div class="card-wrapper">
+        <app-recipe-card [recipy]="recipy" [productPreferencesChips]="productChips()"></app-recipe-card>
+      </div>
       <app-comments-block [recipyId]="recipy.id" [recipyName]="recipy.name"></app-comments-block>
     </div>
-
-
     }
-    <ion-infinite-scroll [disabled]="$recipies().length <= numberOfRecipiesToDisplay()" (ionInfinite)="onIonInfinite($event)" [threshold]="threshhold + 'px'">
+    <ion-infinite-scroll [disabled]="$recipies().length <= numberOfRecipiesToDisplay()"
+      (ionInfinite)="onIonInfinite($event)" [threshold]="threshhold + 'px'">
       <ion-infinite-scroll-content loadingText="Please wait..." loadingSpinner="bubbles"></ion-infinite-scroll-content>
     </ion-infinite-scroll>
 

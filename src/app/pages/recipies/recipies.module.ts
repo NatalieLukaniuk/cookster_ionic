@@ -10,6 +10,7 @@ import { RecipiesPageRoutingModule } from './recipies-routing.module';
 import { FullRecipyPageComponent } from './pages/full-recipy-page/full-recipy-page.component';
 import { RecipiesContainerPage } from './pages/all-recipies-page/recipies.page';
 import { CommentsModule } from 'src/app/comments/comments.module';
+import { RecipeCardComponent } from "src/app/shared/components/recipe-card/recipe-card.component";
 
 @NgModule({
   imports: [
@@ -19,8 +20,9 @@ import { CommentsModule } from 'src/app/comments/comments.module';
     RecipiesPageRoutingModule,
     SharedModule,
     FiltersModule,
-    CommentsModule
-  ],
+    CommentsModule,
+    RecipeCardComponent
+],
   declarations: [
     RecipiesContainerPage,
     FullRecipyPageComponent,
