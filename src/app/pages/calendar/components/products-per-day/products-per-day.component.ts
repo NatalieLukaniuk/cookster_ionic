@@ -5,7 +5,7 @@ import { Ingredient } from 'src/app/models/recipies.models';
 import { AddToListModalComponent } from 'src/app/pages/shopping-list/components/add-to-list-modal/add-to-list-modal.component';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 
-import * as _ from 'lodash';
+
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 import { RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { SLItem } from 'src/app/models/shopping-list.models';
@@ -78,7 +78,7 @@ export class ProductsPerDayComponent implements OnInit {
   }
 
   async addToList(ingred: Ingredient) {
-    let cloned = _.cloneDeep(this.$activeList());
+    let cloned = this.$activeList();
     const ingredToSlItem: SLItem = {
       total: ingred.amount,
       name: ingred.ingredient ? ingred.ingredient : '',

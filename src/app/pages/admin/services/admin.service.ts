@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Ingredient, MeasuringUnit, Product, Recipy } from 'src/app/models/recipies.models';
 import { convertAmountToSelectedUnitRawData, transformToGrRawData } from '../../recipies/utils/recipy.utils';
-import * as _ from 'lodash';
+
 import { RecipiesService } from 'src/app/services/recipies.service';
 
 const DENSITY_DEPENDENT_UNITS: MeasuringUnit[] = [
@@ -47,7 +47,7 @@ recipiesService = inject(RecipiesService);
   }
 
   updateRecipy(recipy: Recipy, productBeforeChange: Product, newDensity: number) {
-    const updated = _.cloneDeep(recipy)
+    const updated = structuredClone(recipy)
     updated.ingrediends.forEach((ingr: Ingredient) => {
       if (ingr.product === productBeforeChange.id && this.getShouldUpdateOnDensityChange(ingr)) {
         const initialAmountInDefaultUnit = convertAmountToSelectedUnitRawData(ingr.amount, ingr.defaultUnit, productBeforeChange.density);

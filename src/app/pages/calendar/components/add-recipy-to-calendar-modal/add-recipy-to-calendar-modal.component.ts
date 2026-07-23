@@ -1,6 +1,5 @@
 import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { InfiniteScrollCustomEvent, IonModal, ModalController } from '@ionic/angular';
-import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { FiltersService } from 'src/app/filters/services/filters.service';
@@ -93,37 +92,6 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   changeCurrentView(view: AddRecipyToCalView) {
     this.currentView = view;
-  }
-
-  getSortedByLastPrepared(recipies: Recipy[]) {
-    const cloned = _.cloneDeep(recipies);
-    cloned.sort((a, b) => this.sortByLastPrepared(a, b));
-    return cloned
-  }
-
-  sortByLastPrepared(a: Recipy, b: Recipy) {
-    if (!a.lastPrepared && !b.lastPrepared) {
-      return 0
-    }
-    if (!a.lastPrepared) {
-      return -1
-    }
-    if (!b.lastPrepared) {
-      return 1
-    }
-    if (moment(a.lastPrepared, 'DDMMYYYY').clone().isAfter(moment(b.lastPrepared, 'DDMMYYYY').clone())) {
-      return 1
-    } else {
-      return -1
-    }
-  }
-
-  addLastPrepared(recipy: Recipy, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[] | undefined) {
-    let updated = {
-      ...recipy,
-      lastPrepared: allPlannedRecipies ? getLastPreparedDate(recipy.id, allPlannedRecipies) : 'N/A'
-    }
-    return updated
   }
 
   showGoTop = false;

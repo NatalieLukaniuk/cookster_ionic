@@ -1,5 +1,4 @@
 import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
-import * as _ from 'lodash';
 import { Subject, debounceTime, takeUntil} from 'rxjs';
 import { Preferences, defaultPrefs } from 'src/app/models/auth.models';
 import { UserDataService } from 'src/app/services/user-data.service';

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { ActionSheetButton } from '@ionic/angular';
-import * as _ from 'lodash';
+
 
 import { Recipy } from 'src/app/models/recipies.models';
 import { UserDataService } from 'src/app/services/user-data.service';

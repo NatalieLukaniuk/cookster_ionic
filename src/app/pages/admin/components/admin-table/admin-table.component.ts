@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { cloneDeep, isNaN, isNumber } from 'lodash';
+import { Component, input, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { isValidNumber } from 'src/app/services/utils';
+
 
 export interface TableData {
   rows: [];
@@ -20,7 +21,7 @@ enum sortDirection {
   styleUrls: ['./admin-table.component.scss'],
 })
 export class AdminTableComponent implements OnChanges {
-  @Input() data!: any[][];
+  data = input.required<any[][]>();
 
   dataToDisplay: any[][] = [];
 
@@ -37,8 +38,8 @@ export class AdminTableComponent implements OnChanges {
 
   getLegendItems() {
     this.legendItems = [];
-    if (this.data[0]?.length) {
-      for (let item of this.data[0]) {
+    if (this.data()[0]?.length) {
+      for (let item of this.data()[0]) {
         let legend: LegendItem = {
           name: item,
           active: true,
@@ -59,7 +60,7 @@ export class AdminTableComponent implements OnChanges {
     } else {
       this.sorting = {
         ...this.sorting,
-        direction: this.sorting.direction === sortDirection.Down? sortDirection.Up : sortDirection.Down
+        direction: this.sorting.direction === sortDirection.Down ? sortDirection.Up : sortDirection.Down
       }
     }
 
@@ -67,7 +68,7 @@ export class AdminTableComponent implements OnChanges {
   }
 
   getDataToDisplay(): any[][] {
-    this.dataToDisplay = cloneDeep(this.data);
+    this.dataToDisplay = this.data();
     const propertyIndex = this.sorting.sortByIndex;
     if (propertyIndex === null) {
       return this.dataToDisplay
@@ -81,32 +82,32 @@ export class AdminTableComponent implements OnChanges {
 
   sortDescending = (a: any[], b: any[], propertyIndex: number) => {
 
-    if (a[0] === this.data[0]) {
+    if (a[0] === this.data()[0]) {
       return 0
-    } else if (b[0] === this.data[0][0]) {
+    } else if (b[0] === this.data()[0][0]) {
       return 1
     };
 
-    if(a[propertyIndex] === undefined || isNaN(a[propertyIndex])){
+    if (a[propertyIndex] === undefined || isNaN(a[propertyIndex])) {
       return 1
     }
-    if(b[propertyIndex] === undefined || isNaN(b[propertyIndex])){
+    if (b[propertyIndex] === undefined || isNaN(b[propertyIndex])) {
       return -1
     }
 
-    if (isNumber(a[propertyIndex]) && isNumber(b[propertyIndex])) {
+    if (isValidNumber(a[propertyIndex]) && isValidNumber(b[propertyIndex])) {
       if (a[propertyIndex] > b[propertyIndex]) {
         return -1
       } else return 1
     }
 
-    if (isNumber(a[propertyIndex])) {
+    if (isValidNumber(a[propertyIndex])) {
       return -1
     }
-    if (isNumber(b[propertyIndex])) {
+    if (isValidNumber(b[propertyIndex])) {
       return 1
     }
-    
+
     // works for strings, but not for numbers
     if (JSON.stringify(a[propertyIndex]).toLocaleLowerCase() > JSON.stringify(b[propertyIndex]).toLocaleLowerCase()) {
       return -1
@@ -115,33 +116,33 @@ export class AdminTableComponent implements OnChanges {
 
   sortAscending = (a: any[], b: any[], propertyIndex: number) => {
 
-    if (a[0] === this.data[0]) {
+    if (a[0] === this.data()[0]) {
       return 0
-    } else if (b[0] === this.data[0][0]) {
+    } else if (b[0] === this.data()[0][0]) {
       return 1
     };
 
-    if(a[propertyIndex] === undefined || isNaN(a[propertyIndex])){
+    if (a[propertyIndex] === undefined || isNaN(a[propertyIndex])) {
       return -1
     }
-    if(b[propertyIndex] === undefined || isNaN(b[propertyIndex])){
+    if (b[propertyIndex] === undefined || isNaN(b[propertyIndex])) {
       return 1
     }
-    
-    if (isNumber(a[propertyIndex]) && isNumber(b[propertyIndex])) {
+
+    if (isValidNumber(a[propertyIndex]) && isValidNumber(b[propertyIndex])) {
       if (a[propertyIndex] > b[propertyIndex]) {
         return 1
       } else return -1
     }
 
-    if (isNumber(a[propertyIndex])) {
+    if (isValidNumber(a[propertyIndex])) {
       return 1
     }
-    if (isNumber(b[propertyIndex])) {
+    if (isValidNumber(b[propertyIndex])) {
       return -1
     }
 
-   
+
     if (JSON.stringify(a[propertyIndex]).toLocaleLowerCase() > JSON.stringify(b[propertyIndex]).toLocaleLowerCase()) {
       return 1
     } else return -1

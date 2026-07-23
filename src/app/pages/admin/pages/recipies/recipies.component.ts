@@ -10,7 +10,7 @@ import {
   convertAmountToSelectedUnit,
   getDensity,
 } from 'src/app/pages/recipies/utils/recipy.utils';
-import * as _ from 'lodash';
+
 import { RecipiesService } from 'src/app/services/recipies.service';
 import { ProductsService } from 'src/app/services/products.service';
 
@@ -53,10 +53,10 @@ export class RecipiesComponent {
   }
 
   updateScript(recipy: Recipy): Recipy {
-    let _recipy = _.cloneDeep(recipy);
+    let _recipy = structuredClone(recipy);
     _recipy.ingrediends = recipy.ingrediends.map((ingred) => {
       if (this.unitsToFix.includes(ingred.defaultUnit)) {
-        let _ingred = _.cloneDeep(ingred);
+        let _ingred = structuredClone(ingred);
         _ingred.amount = this.getFixedValue(_ingred);
         return _ingred;
       } else return ingred;

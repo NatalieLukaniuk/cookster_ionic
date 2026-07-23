@@ -1,7 +1,6 @@
 import { Component, effect, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonContent, ModalController } from '@ionic/angular';
 
-import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Subject, takeUntil } from 'rxjs';
 import { Ingredient } from 'src/app/models/recipies.models';
@@ -99,7 +98,7 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
       }
 
       if (shoppingList) {
-        this.myLists = _.cloneDeep(shoppingList);
+        this.myLists = shoppingList;
         this.myLists = this.myLists.map((list) => {
           if (!list.items) {
             return {

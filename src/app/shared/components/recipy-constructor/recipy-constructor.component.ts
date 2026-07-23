@@ -17,8 +17,9 @@ import {
   SimpleChanges,
   OnDestroy,
   inject,
+  input,
 } from '@angular/core';
-import * as _ from 'lodash';
+
 import {
   Complexity,
   ComplexityDescription,
@@ -40,7 +41,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
   recipiesService = inject(RecipiesService);
   userDataService = inject(UserDataService);
 
-  @Input() recipyToPatch: DraftRecipy | Recipy | undefined | null;
+  recipyToPatch = input<DraftRecipy | Recipy | undefined | null>(null);
   @Input() recipyToPatchOrder: number | undefined;
 
   $draftRecipies = this.userDataService.userDraftRecipies;
@@ -62,7 +63,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
   }
 
   get isSavedDraft(): boolean {
-    return !!(this.recipyToPatch && this.recipyToPatchOrder);
+    return !!(this.recipyToPatch() && this.recipyToPatchOrder);
   }
 
   recipyName = '';
@@ -125,28 +126,29 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
   }
 
   patchExistingRecipy() {
-    if (this.recipyToPatch) {
-      this.recipyName = this.recipyToPatch.name;
-      this.isBaseRecipy = this.recipyToPatch.isBaseRecipy;
-      this.complexity = this.recipyToPatch.complexity;
-      this.isSplitIntoGroups = this.recipyToPatch.isSplitIntoGroups;
-      if (this.recipyToPatch.source) {
-        this.recipySource = this.recipyToPatch.source;
+    const recipyToPatch = this.recipyToPatch()
+    if (recipyToPatch) {
+      this.recipyName = recipyToPatch.name;
+      this.isBaseRecipy = recipyToPatch.isBaseRecipy;
+      this.complexity = recipyToPatch.complexity;
+      this.isSplitIntoGroups = recipyToPatch.isSplitIntoGroups;
+      if (recipyToPatch.source) {
+        this.recipySource = recipyToPatch.source;
       }
-      if (this.recipyToPatch.ingrediends?.length) {
-        this.ingredients = _.cloneDeep(this.recipyToPatch.ingrediends);
+      if (recipyToPatch.ingrediends?.length) {
+        this.ingredients = recipyToPatch.ingrediends;
       }
-      if (this.recipyToPatch.steps?.length) {
-        this.steps = _.cloneDeep(this.recipyToPatch.steps);
+      if (recipyToPatch.steps?.length) {
+        this.steps = recipyToPatch.steps;
       }
-      if (this.recipyToPatch.type?.length) {
-        this.selectedTags = _.cloneDeep(this.recipyToPatch.type);
+      if (recipyToPatch.type?.length) {
+        this.selectedTags = recipyToPatch.type;
       }
-      if (this.recipyToPatch.photo) {
-        this.photo = this.recipyToPatch.photo;
+      if (recipyToPatch.photo) {
+        this.photo = recipyToPatch.photo;
       }
-      if (this.recipyToPatch.portionSize) {
-        this.portionSize = this.recipyToPatch.portionSize.toString();
+      if (recipyToPatch.portionSize) {
+        this.portionSize = recipyToPatch.portionSize.toString();
       }
     }
   }
@@ -210,7 +212,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
       steps: this.steps,
       type: this.selectedTags,
       author: this.$userEmail() || '',
-      createdOn: this.recipyToPatch ? this.recipyToPatch.createdOn : Date.now(),
+      createdOn: this.recipyToPatch() ? this.recipyToPatch()!.createdOn : Date.now(),
       isSplitIntoGroups: this.isSplitIntoGroups,
       isBaseRecipy: this.isBaseRecipy,
       source: this.recipySource,
@@ -220,9 +222,9 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
     };
   }
   collectDataExistingRecipy(): Recipy | null {
-    if (this.recipyToPatch && 'id' in this.recipyToPatch) {
+    if (this.recipyToPatch() && 'id' in this.recipyToPatch()!) {
       return {
-        ...this.recipyToPatch,
+        ...(this.recipyToPatch()! as Recipy),
         name: this.recipyName,
         ingrediends: this.ingredients,
         complexity: this.complexity,

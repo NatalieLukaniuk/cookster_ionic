@@ -1,6 +1,5 @@
 import { Component, effect, inject, OnDestroy, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
-import * as _ from 'lodash';
 import { BehaviorSubject, Subject, debounceTime, map, take, takeUntil, tap } from 'rxjs';
 import { FamilyMember, NewFamilyMember } from 'src/app/models/auth.models';
 import { Product } from 'src/app/models/recipies.models';

@@ -10,7 +10,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { Role } from './models/auth.models';
 import { NavigationEnd, Router } from '@angular/router';
-import * as _ from 'lodash';
+
 import { LayoutService } from './services/layout.service';
 import { environment } from 'src/environments/environment';
 import { UiService } from './services/ui.service';
