@@ -163,12 +163,12 @@
   </ion-accordion>
 </ion-accordion-group>
 
-<ion-button expand="full" (click)="recipyToPatch && isSavedDraft ? saveEditedDraft() : saveDraft()">{{
-  recipyToPatch && isSavedDraft ? "Оновити чернетку" : "Зберегти в чернетки"
+<ion-button expand="full" (click)="recipyToPatch() && isSavedDraft ? saveEditedDraft() : saveDraft()">{{
+  recipyToPatch() && isSavedDraft ? "Оновити чернетку" : "Зберегти в чернетки"
   }}</ion-button>
 <ion-button *ngIf="isReadyToPublish" expand="full"
-  (click)="recipyToPatch && isPublished ? updateRecipy() : saveNewRecipy()">{{
-  recipyToPatch && isPublished ? "Оновити рецепт" : "Опублікувати"
+  (click)="recipyToPatch() && isPublished ? updateRecipy() : saveNewRecipy()">{{
+  recipyToPatch() && isPublished ? "Оновити рецепт" : "Опублікувати"
   }}</ion-button>
 
 
