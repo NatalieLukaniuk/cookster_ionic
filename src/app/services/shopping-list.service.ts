@@ -1,5 +1,4 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Store, select } from '@ngrx/store';
 
 import { ShoppingList } from '../models/shopping-list.models';
 import { getIsNewer } from '../pages/calendar/calendar.utils';

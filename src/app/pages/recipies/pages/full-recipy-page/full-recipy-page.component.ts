@@ -1,10 +1,7 @@
-import { map } from 'rxjs/operators';
-import { Store, select } from '@ngrx/store';
+
 import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
-import { IAppState } from 'src/app/store/reducers';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { Role } from 'src/app/models/auth.models';
 import { Ingredient, Recipy } from 'src/app/models/recipies.models';
 import { UiService } from 'src/app/services/ui.service';
 import { RecipiesService } from 'src/app/services/recipies.service';

@@ -1,6 +1,6 @@
-import { Role, UserMappingItem } from './../models/auth.models';
+import { UserMappingItem } from './../models/auth.models';
 import { inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { User } from '../models/auth.models';
@@ -24,7 +24,7 @@ export class UserService {
 
   allUsersMapping: UserMappingItem[] = [];
 
-  constructor(private authApiService: AuthApiService, private store: Store) { }
+  constructor(private authApiService: AuthApiService) { }
 
   getUserData(user: User) {
     this.authApiService

@@ -1,6 +1,3 @@
-
-import { IAppState } from './../store/reducers/index';
-import { Store, select } from '@ngrx/store';
 import { Component, inject } from '@angular/core';
 import { UserDataService } from '../services/user-data.service';
 
@@ -15,8 +12,6 @@ export class TabsPage {
 
   isProfileMenuOpen = false;
 
-  constructor(
-    private store: Store<IAppState>,
-  ) {}
+
 
 }

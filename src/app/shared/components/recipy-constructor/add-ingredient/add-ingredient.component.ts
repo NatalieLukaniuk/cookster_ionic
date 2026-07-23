@@ -23,9 +23,7 @@ import {
   Input,
   inject,
 } from '@angular/core';
-import { Observable, map} from 'rxjs';
-import { Store, select } from '@ngrx/store';
-import { Role } from 'src/app/models/auth.models';
+
 import { ProductsService } from 'src/app/services/products.service';
 import { UserDataService } from 'src/app/services/user-data.service';
 
@@ -55,7 +53,7 @@ export class AddIngredientComponent implements OnInit {
 
   @ViewChild('autocomplete') autocomplete: any;
 
-  constructor(private store: Store, private dataMapping: DataMappingService) {
+  constructor(private dataMapping: DataMappingService) {
 
   }
 

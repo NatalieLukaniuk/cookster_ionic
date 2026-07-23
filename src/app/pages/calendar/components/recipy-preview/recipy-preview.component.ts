@@ -3,8 +3,6 @@ import { RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
 import { DishType } from 'src/app/models/recipies.models';
 import { CalendarService } from 'src/app/pages/calendar/calendar.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IAppState } from 'src/app/store/reducers';
-import { Store } from '@ngrx/store';
 import { iSameDay } from '../../calendar.utils';
 import { UserDataService } from 'src/app/services/user-data.service';
 
@@ -27,8 +25,7 @@ export class RecipyPreviewComponent implements OnInit {
   constructor(
     private calendarService: CalendarService,
     private router: Router,
-    private route: ActivatedRoute,
-    private store: Store<IAppState>
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {

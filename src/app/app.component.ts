@@ -1,26 +1,23 @@
 import { DialogsService } from './services/dialogs.service';
-import { DataMappingService } from './services/data-mapping.service';
+
 import { AuthService } from './services/auth.service';
 
-import { Store, select } from '@ngrx/store';
+
 import { Component, effect, inject, OnInit } from '@angular/core';
 
-import { combineLatest, take } from 'rxjs';
-import { IAppState } from './store/reducers';
+import { combineLatest } from 'rxjs';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { Role } from './models/auth.models';
 import { NavigationEnd, Router } from '@angular/router';
-import { AngularDeviceInformationService } from 'angular-device-information';
-import { ModalController } from '@ionic/angular';
 import * as _ from 'lodash';
-import { LoadCommentsAction } from './store/actions/comments.actions';
 import { LayoutService } from './services/layout.service';
 import { environment } from 'src/environments/environment';
 import { UiService } from './services/ui.service';
 import { ProductsService } from './services/products.service';
 import { RecipiesService } from './services/recipies.service';
 import { UserDataService } from './services/user-data.service';
+import { CommentsService } from './comments/comments.service';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +39,7 @@ export class AppComponent implements OnInit {
   productsService = inject(ProductsService);
   recipiesService = inject(RecipiesService);
   userDataService = inject(UserDataService);
+  commentsService = inject(CommentsService);
 
   $isLoading = this.uiService.getIsLoading;
   $isError = this.uiService.getIsError;
@@ -72,13 +70,9 @@ export class AppComponent implements OnInit {
   ];
 
   constructor(
-    private store: Store<IAppState>,
     private authService: AuthService,
-    private dataMappingService: DataMappingService,
     private dialog: DialogsService,
     private router: Router,
-    private deviceInformationService: AngularDeviceInformationService,
-    private modalCtrl: ModalController,
     private layoutService: LayoutService,
 
   ) {
@@ -118,7 +112,7 @@ export class AppComponent implements OnInit {
 
   loadData() {
     this.uiService.setIsLoadingTrue();
-    this.store.dispatch(new LoadCommentsAction())
+    this.commentsService.loadComments();
 
     combineLatest([
       this.productsService.loadProducts(),

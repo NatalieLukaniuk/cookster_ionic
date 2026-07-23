@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -19,7 +19,7 @@ export class AuthService {
 uiService = inject(UiService);
 userDataService = inject(UserDataService);
 
-  constructor(private userService: UserService, private store: Store) {}
+  constructor(private userService: UserService) {}
 
   registerUser(email: string, password: string) {
     const auth = getAuth();

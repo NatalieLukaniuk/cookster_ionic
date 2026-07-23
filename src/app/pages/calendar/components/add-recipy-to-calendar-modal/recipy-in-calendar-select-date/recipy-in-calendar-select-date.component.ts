@@ -1,7 +1,6 @@
 import { Component, computed, effect, EventEmitter, inject, input, Input, OnChanges, OnDestroy, Output, signal } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, map, Subject, takeUntil } from 'rxjs';
-import { IAppState } from 'src/app/store/reducers';
+import { Subject } from 'rxjs';
+
 import { getCurrentDayRecipies, isLessThanCertainDays, sortRecipiesByDate } from '../../../calendar.utils';
 import { RecipiesService } from 'src/app/services/recipies.service';
 import { UserDataService } from 'src/app/services/user-data.service';
@@ -41,7 +40,6 @@ export class RecipyInCalendarSelectDateComponent implements OnDestroy {
   )
 
   constructor(
-    private store: Store<IAppState>,
   ) {
     effect(() => {
       const init = this.initialValue();

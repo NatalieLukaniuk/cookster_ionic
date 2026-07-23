@@ -1,11 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, map, Observable, take } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { MeasuringUnitText, Product, ProductTypeText } from 'src/app/models/recipies.models';
-import { IAppState } from 'src/app/store/reducers';
+
 import { AdminService } from '../../services/admin.service';
-import { ProductsApiService } from 'src/app/services/products-api.service';
 import { ProductsService } from 'src/app/services/products.service';
 
 @Component({
@@ -28,7 +26,7 @@ productsService = inject(ProductsService);
 
   isShowDensityCalculator = false;
 
-  constructor(private store: Store<IAppState>, private adminService: AdminService) { }
+  constructor(private adminService: AdminService) { }
 
   onProductSelected(selected: Product) {
     this.selectedProduct = selected;

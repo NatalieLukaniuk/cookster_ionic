@@ -1,10 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { select, Store } from '@ngrx/store';
 import { Recipy, Ingredient } from 'src/app/models/recipies.models';
 import { RecipiesService } from 'src/app/services/recipies.service';
 import { UiService } from 'src/app/services/ui.service';
 
-import { IAppState } from 'src/app/store/reducers';
 
 @Component({
   selector: 'app-edit-recipy',
@@ -29,7 +27,7 @@ export class EditRecipyComponent {
   })
 
  
-  constructor(private store: Store<IAppState>) {
+  constructor() {
     const path = window.location.pathname.split('/');
     this.$recipyId.set(path[path.length - 1]);
   }

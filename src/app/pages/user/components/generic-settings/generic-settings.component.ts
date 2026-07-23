@@ -1,11 +1,10 @@
 import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
-import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
-import { Observable, Subject, debounceTime, map, takeUntil, tap } from 'rxjs';
-import { FamilyMember, Preferences, defaultPrefs } from 'src/app/models/auth.models';
+import { Subject, debounceTime, takeUntil} from 'rxjs';
+import { Preferences, defaultPrefs } from 'src/app/models/auth.models';
 import { UserDataService } from 'src/app/services/user-data.service';
 import { INPUT_DEBOUNCE_TIME } from 'src/app/shared/constants';
-import { IAppState } from 'src/app/store/reducers';
+
 
 @Component({
   selector: 'app-generic-settings',
@@ -37,7 +36,7 @@ export class GenericSettingsComponent implements OnDestroy {
 
 
 
-  constructor(private store: Store<IAppState>) {
+  constructor() {
     effect(() => {
       const prefs = this.$savedPreferences();
       if (prefs) {

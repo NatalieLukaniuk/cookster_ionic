@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Store } from '@ngrx/store';
+
 import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { CalendarReworkedService } from 'src/app/pages/calendar/calendar-reworked.service';
-import { IAppState } from 'src/app/store/reducers';
+
 import { AddCommentToCalendarModalComponent } from './components/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
 import { SaveCalendarAsPdfPreviewComponent } from './components/save-calendar-as-pdf-preview/save-calendar-as-pdf-preview.component';
 import { CalendarComment, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';

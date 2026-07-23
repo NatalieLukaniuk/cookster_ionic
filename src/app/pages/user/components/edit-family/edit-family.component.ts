@@ -1,6 +1,5 @@
 import { Component, effect, inject, OnDestroy, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
-import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
 import { BehaviorSubject, Subject, debounceTime, map, take, takeUntil, tap } from 'rxjs';
 import { FamilyMember, NewFamilyMember } from 'src/app/models/auth.models';
@@ -9,7 +8,7 @@ import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { ProductsService } from 'src/app/services/products.service';
 import { UserDataService } from 'src/app/services/user-data.service';
 import { INPUT_DEBOUNCE_TIME } from 'src/app/shared/constants';
-import { IAppState } from 'src/app/store/reducers';
+
 
 @Component({
   selector: 'app-edit-family',
@@ -43,7 +42,7 @@ export class EditFamilyComponent implements OnDestroy {
 
   $products = this.productsService.getProducts;
 
-  constructor(private store: Store<IAppState>, private datamapping: DataMappingService) {
+  constructor(private datamapping: DataMappingService) {
     this.updatePortionSizePercentage();
 
     effect(() => {
