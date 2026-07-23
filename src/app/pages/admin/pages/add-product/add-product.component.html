@@ -10,8 +10,7 @@
     <h4 class="padding-inline">Перевірити чи продукт вже доданий:</h4>
     <app-product-autocomplete
               #withAutocomplete
-              *ngIf="products$ | async"
-              [products]="products"
+              [products]="$products()"
             ></app-product-autocomplete>
   </div>
 </ion-content>

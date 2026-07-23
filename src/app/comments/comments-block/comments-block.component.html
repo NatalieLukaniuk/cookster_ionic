@@ -1,9 +1,9 @@
-<div class="comments-block" *ngIf="(comments$ | async)">
+<div class="comments-block">
     <!-- <div *ngIf="(comments$ | async)?.length" class="comments-stats">
         <p>{{totalComments}} коментар</p>
     </div> -->
-    <div class="buttons" [id]="modalId" (click)="click()">
-        <p class="comments-info">{{totalComments}} {{commentsText}}</p>
+    <div class="buttons" (click)="setOpen(true)">
+        <p class="comments-info">{{$totalComments()}} {{commentsText}}</p>
         <!-- <ion-button fill="clear">
             <ion-icon name="thumbs-up-outline" slot="start"></ion-icon>
             Подобається
@@ -15,8 +15,7 @@
     </div>
 </div>
 
-<ion-modal [trigger]="modalId" [initialBreakpoint]="0.8" (ionModalDidPresent)="onModalPresented()"
-    [isOpen]="isModalOpen" (ionModalWillDismiss)="isModalOpen = false">
+<ion-modal [isOpen]="isModalOpen" [initialBreakpoint]="0.6" (ionModalDidPresent)="onModalPresented()" (ionModalWillDismiss)="isModalOpen = false">
     <ng-template>
         <ion-header *ngIf="recipyName">
             <ion-toolbar class="comments-modal-header">
@@ -26,8 +25,8 @@
         <ion-content>
             <div class="comments-modal-content-container">
                 <div class="existing-comments">
-                    <ng-container *ngIf="(comments$ | async)?.length; else noComments">
-                        <ng-container *ngFor="let comment of (comments$ | async)">
+                    <ng-container *ngIf="$commentsTree().length; else noComments">
+                        <ng-container *ngFor="let comment of $commentsTree()">
                             <div class="comment-wrapper" [class.selected]="isSelected(comment.id)">
                                 <div class="actions" *ngIf="isSelected(comment.id)">
                                     <ion-button fill="clear" (click)="deleteComment(comment.id)">

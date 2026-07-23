@@ -28,7 +28,7 @@ export class SearchRecipiesFilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.value = this.filtersService.getCurrentFiltersValue().search;
+    this.value = this.filtersService.getCurrentFilters().search;
     this.sub.add(this.searchInput$.pipe(
       debounceTime(100)
     ).subscribe(searchKey => {

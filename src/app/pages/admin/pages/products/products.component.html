@@ -6,7 +6,6 @@
 <ion-content [fullscreen]="true">
   <!-- <ion-button (click)="runUpdate()">Update</ion-button> -->
   <app-admin-table
-    *ngIf="!!(products$ | async)"
-    [data]="productsTableData"
+    [data]="productsTableData()"
   ></app-admin-table>
 </ion-content>

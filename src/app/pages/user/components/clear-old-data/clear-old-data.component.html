@@ -1,4 +1,4 @@
-<div *ngIf="isOlDataAvailable">
+<div *ngIf="isOlDataAvailable()">
 <p>You have data older than three months available which slows down the app</p>
 <ion-item>
     <ion-label position="floating">Data added before {{oldDate}} will be deleted:</ion-label>

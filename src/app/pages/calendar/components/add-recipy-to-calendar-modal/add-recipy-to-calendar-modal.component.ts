@@ -1,18 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { InfiniteScrollCustomEvent, IonModal, ModalController } from '@ionic/angular';
-import { Store, select } from '@ngrx/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { combineLatest, take, map, tap, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { FiltersService } from 'src/app/filters/services/filters.service';
 import { Recipy } from 'src/app/models/recipies.models';
-import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { IAppState } from 'src/app/store/reducers';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
 import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
-import { AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
+
 import { getLastPreparedDate, newDateIgnoreimezone } from '../../calendar.utils';
+import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 enum AddRecipyToCalView {
   SelectRecipy = 'select-recipy',
@@ -20,12 +17,22 @@ enum AddRecipyToCalView {
   SetAmount = 'set-amount'
 }
 
+const RECIPY_CARD_HEIGHT = 360;
+
 @Component({
   selector: 'app-add-recipy-to-calendar-modal',
   templateUrl: './add-recipy-to-calendar-modal.component.html',
   styleUrls: ['./add-recipy-to-calendar-modal.component.scss'],
 })
 export class AddRecipyToCalendarModalComponent implements OnInit {
+  recipiesService = inject(RecipiesService);
+  filtersService = inject(FiltersService);
+  userDataService = inject(UserDataService);
+
+  $recipies = this.recipiesService.recipiesWithFilterEnabled;
+  $recipiesToDisplay = computed(() => this.$recipies().filter((r, i) => i <= this.numberOfRecipiesToDisplay()))
+  $isShowWidget = this.filtersService.isShowWidget;
+  $userFamilyMembers = this.userDataService.userFamily;
 
   selectedRecipy: Recipy | null = null;
   selectedTime: Date | null = null;
@@ -44,23 +51,15 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   familyMembersSub: Subscription | undefined;
 
   constructor(
-    private store: Store<IAppState>,
-    private datamapping: DataMappingService,
-    private filtersService: FiltersService,
     private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
     if (!this.isEditMode || !this.portions) {
-      this.familyMembersSub = this.store.pipe(select(getFamilyMembers)).subscribe(res => {
-        if (res) {
-          this.portions = res.length;
-        } else { this.portions = 4; }
-        if (this.familyMembersSub) {
-          this.familyMembersSub.unsubscribe()
-        }
-
-      });
+      const userFamilyCount = this.$userFamilyMembers().length;
+      if (userFamilyCount) {
+        this.portions = userFamilyCount;
+      } else { this.portions = 4; }
     }
 
     this.getCurrentView()
@@ -96,26 +95,6 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     this.currentView = view;
   }
 
-  filters$ = this.filtersService.getFilters;
-
-  recipies: Recipy[] = [];
-
-  recipies$ = combineLatest([
-    this.store.pipe(select(getAllRecipies), take(1)),
-    this.filters$,
-    this.store.pipe(select(getUserPlannedRecipies)),
-    this.filtersService.noShowRecipies$
-  ]).pipe(
-    map((res) => {
-      let [recipies, filters, plannedRecipies, noShowIds] = res;
-      const clonedRecipies = _.cloneDeep(recipies);
-      const mapped = clonedRecipies.map(recipy => this.addLastPrepared(recipy, plannedRecipies));
-      const filtered = this.filtersService.applyFilters(mapped as Recipy[], filters, noShowIds);
-      return filtered
-    }),
-    tap(recipies => this.recipies = recipies)
-  );
-
   getSortedByLastPrepared(recipies: Recipy[]) {
     const cloned = _.cloneDeep(recipies);
     cloned.sort((a, b) => this.sortByLastPrepared(a, b));
@@ -149,10 +128,12 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   showGoTop = false;
 
-  numberOfRecipiesToDisplay = 10;
+  threshhold = RECIPY_CARD_HEIGHT * 2;
+  numberOfRecipiesToDisaplyAtOnce = 3
+  numberOfRecipiesToDisplay = signal(this.numberOfRecipiesToDisaplyAtOnce);
 
   onIonInfinite(event: any) {
-    this.numberOfRecipiesToDisplay += 10;
+    this.numberOfRecipiesToDisplay.update(current => current + this.numberOfRecipiesToDisaplyAtOnce);
     (event as InfiniteScrollCustomEvent).target.complete();
   }
 
@@ -205,7 +186,7 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
         endTime: this.selectedTime,
         entryId: crypto.randomUUID()
       }
-      this.store.dispatch(new AddRecipyToCalendarActionNew(recipyToAdd));
+      this.userDataService.addRecipyToCalendar(recipyToAdd)
       this.modal?.dismiss()
     }
 
@@ -226,12 +207,6 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
     }
 
 
-  }
-
-
-
-  get isShowWidget() {
-    return this.filtersService.isShowWidget
   }
 
 }

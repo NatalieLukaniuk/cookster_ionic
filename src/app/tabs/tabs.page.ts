@@ -1,7 +1,5 @@
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { IAppState } from './../store/reducers/index';
-import { Store, select } from '@ngrx/store';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { UserDataService } from '../services/user-data.service';
 
 @Component({
   selector: 'app-tabs',
@@ -9,12 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss'],
 })
 export class TabsPage {
-  isLoggedIn$ = this.store.pipe(select(getCurrentUser));
+  userDataService = inject(UserDataService);
+  $isLoggedIn = this.userDataService.isUserLoggedIn;
 
   isProfileMenuOpen = false;
 
-  constructor(
-    private store: Store<IAppState>,
-  ) {}
+
 
 }

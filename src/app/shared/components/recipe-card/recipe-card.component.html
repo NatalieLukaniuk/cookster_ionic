@@ -1,0 +1,146 @@
+<!-- Click advances through steps 0, 1, and 2 -->
+<div class="card" [attr.data-state]="clickState" (click)="cycleStates()">
+  <div class="image">
+    <div class="card-body">
+      @if(recipy().photo){
+      <app-image class="card-bg" [imagePath]="recipy().photo!"></app-image>
+      }
+      @else {
+      <div class="photo-placeholder card-bg">
+        <ion-img class="humster" src="../../../../assets/images/humster_sm.png"></ion-img>
+        <div class="photo-placeholder-text">Хом'ячок вже планує фотосесію для цього рецепту</div>
+      </div>
+      }
+      <div class="top-row glass-bg">{{recipy().name}}</div>
+      <div class="bottom-row glass-bg">
+        @if($isUserLoggedIn()){
+        <app-add-recipy-to-no-show [isSmall]="false" [recipy]="recipy()"
+          [buttonColor]="'secondary'"></app-add-recipy-to-no-show>
+        <app-collections-action-sheet [buttonColor]="'secondary'" [recipy]="recipy()"></app-collections-action-sheet>
+        <ion-button color="secondary" (click)="$event.stopPropagation(); onAddRecipyToCalendar()" fill="clear">
+
+          <ion-icon name="calendar-outline"></ion-icon>
+        </ion-button>
+        }
+
+        <ion-button color="secondary" (click)="$event.stopPropagation(); goFullRecipy()" fill="clear">
+
+          <ion-icon src="assets/icon/open-recipe.svg"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <!-- First details panel -->
+  <div class="details first">
+    <div class="center" (click)="$event.stopPropagation()">
+      <div class="general-info">
+        @if($isUserLoggedIn()){
+        <p>
+          <ion-icon src="assets/icon/last-prepared.svg"></ion-icon>
+          @if(recipy().lastPrepared){
+          <span>{{recipy().lastPrepared! | lastPreparedDate }}</span>
+          } @else {
+          <span>не готувався</span>
+          }
+        </p>
+        }
+        @if(recipy().calorificValue){
+        <p>
+          <ion-icon src="assets/icon/calorific-value.svg"></ion-icon>
+          <span>{{ Math.round(recipy().calorificValue!) }} ккал/100гр.</span>
+        </p>
+        }
+        <p>
+          <ion-icon src="assets/icon/active-prep-time.svg"></ion-icon>
+          <span>{{ activePreparationTime() | normalizeTime }}</span>
+        </p>
+        <p>
+          <ion-icon src="assets/icon/passive-prep-time.svg"></ion-icon>
+          <span>{{ passivePreparationTime() | normalizeTime }}</span>
+        </p>
+        @if(isNeedsAdvancePreparation()){
+        <p><ion-icon name="alarm-outline"></ion-icon>
+          <span>потребує попереднього приготування</span>
+        </p>
+
+        }
+        @if(recipy().isCheckedAndApproved){
+        <p><ion-icon name="checkmark-done"></ion-icon><span>випробувано на приктиці</span></p>
+        }
+        @if(recipy().notApproved){
+        <p><ion-icon color="danger" name="hand-right"></ion-icon><span>бачить тільки адмін</span></p>
+        }
+
+
+
+      </div>@if($includedInCollections().length){
+      <div class="collection-tags">
+        <ion-icon src="assets/icon/user-collections.svg" style="font-size: 1rem;"></ion-icon>
+        @for(collection of $includedInCollections(); track collection){
+        <ion-chip class="collection-chip">{{
+          collection
+          }}</ion-chip>
+        }
+
+      </div>
+      }
+      <div class="collection-tags">
+        <ion-icon src="assets/icon/dish-type.svg" style="font-size: 1rem;"></ion-icon>
+        @for(tag of recipy().type; track tag){
+        <ion-chip class="collection-chip">{{
+          DishType[tag]
+          }}</ion-chip>
+        }
+
+      </div>
+      @if(isShowProductsWarning()){
+      <div class="chip-selection-list">
+        <ion-icon name="alert-circle-outline" style="font-size: 1rem;"></ion-icon>
+        @for(item of productPreferencesToShow(); track item){
+        <ion-chip class="collection-chip" [color]="item.color">
+          {{item.name}}: {{getProductText(item.productId)}}
+        </ion-chip>
+        }
+      </div>
+      }
+      <div>
+        <h6>Інгридієнти на 1 порцію, {{recipy().portionSize}}гр.</h6>
+        @for(ingredient of recipy().ingrediends; track ingredient){
+        <div>
+          <span>
+            {{getIngredientText(ingredient).toLowerCase()}} -
+          </span>
+          @if(ingredient.defaultUnit !== MeasuringUnit.none){
+          <span [innerHTML]="ingredient.amount * coefficient
+      | convertToSelectedUnit : ingredient.product : ingredient.defaultUnit
+      | normalizeDisplayedAmount : ingredient.defaultUnit">
+
+          </span>
+          }
+
+          <span>
+            {{getUnitText(ingredient.defaultUnit)}}
+          </span>
+        </div>
+        }
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- second details panel -->
+  <div class="details second">
+    <div class="center" (click)="$event.stopPropagation()">
+      <h6>Приготування:</h6>
+      @for(step of recipy().steps; track step){
+      <div>{{step.description}}</div>
+      }
+
+    </div>
+  </div>
+</div>

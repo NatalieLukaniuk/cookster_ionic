@@ -1,75 +1,59 @@
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { SetIsLoadingFalseAction } from './../../../../store/actions/ui.actions';
-import { filter, map, tap } from 'rxjs/operators';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { Store, select } from '@ngrx/store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IAppState } from 'src/app/store/reducers';
-import { SetIsLoadingAction } from 'src/app/store/actions/ui.actions';
-import * as _ from 'lodash';
+
+import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
 import { Title } from '@angular/platform-browser';
-import { Role } from 'src/app/models/auth.models';
-import { Recipy } from 'src/app/models/recipies.models';
-import { UpdateRecipyAction } from 'src/app/store/actions/recipies.actions';
+import { Ingredient, Recipy } from 'src/app/models/recipies.models';
+import { UiService } from 'src/app/services/ui.service';
+import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-full-recipy-page',
   templateUrl: './full-recipy-page.component.html',
   styleUrls: ['./full-recipy-page.component.scss'],
 })
-export class FullRecipyPageComponent implements OnInit, OnDestroy {
-  recipyId: string;
+export class FullRecipyPageComponent implements OnDestroy {
+  uiService = inject(UiService);
+  recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
 
-  currentRecipy: Recipy | undefined;
+  $isAdmin = this.userDataService.isAdmin;
+  $userEmail = this.userDataService.userEmail;
+  $isCanEdit = computed(() => this.$userEmail() === this.$recipy()?.author || this.$isAdmin())
+  $isShowApproveBtn = computed(() => this.$isAdmin() && this.$recipy()?.notApproved)
+  
+  $recipyId = signal<string>('');
 
-  recipy$ = this.store.pipe(
-    select(getAllRecipies),
-    filter((res) => !!res.length),
-    tap(() => this.store.dispatch(new SetIsLoadingAction())),
-    map((res) => res.find((recipy) => recipy.id === this.recipyId)),
-    map((recipy) => {
-      if (recipy && recipy.ingrediends) {
-        let updatedRecipy = _.cloneDeep(recipy);
-        updatedRecipy.ingrediends.sort((a, b) => b.amount - a.amount);
-        this.store.dispatch(new SetIsLoadingFalseAction());
-        this.titleService.setTitle(recipy.name)
-        console.log('updated')
-        return updatedRecipy;
-      } else return recipy;
-    }),
-    tap(recipy => this.currentRecipy = recipy)
-  );
+  $recipy = computed(() => {
+    const found = this.recipiesService.getRecipies().find((recipy) => recipy.id === this.$recipyId());
+    if(!found) return null;
 
-  user$ = this.store.pipe(select(getCurrentUser));
-  isCanEdit$ = combineLatest([this.user$, this.recipy$]).pipe(
-    filter((res) => !!res[0] && !!res[1]),
-    map((res) => res[0]?.email === res[1]?.author || res[0]?.role === Role.Admin)
-  );
+    const updatedRecipy: Recipy = {
+      ...found
+    }
+    updatedRecipy.ingrediends.sort((a: Ingredient, b: Ingredient) => b.amount - a.amount);
+    this.titleService.setTitle(updatedRecipy.name);
+    return updatedRecipy
+  })
 
-  isShowApproveBtn$ = combineLatest([this.user$, this.recipy$]).pipe(
-    filter((res) => !!res[0] && !!res[1]),
-    map((res) => res[0]?.role === Role.Admin && res[1]?.notApproved)
-  );
-  constructor(private store: Store<IAppState>, private router: Router, private titleService: Title) {
+ constructor(private router: Router, private titleService: Title) {
     const path = window.location.pathname.split('/');
-    this.recipyId = path[path.length - 1];
+    this.$recipyId.set(path[path.length - 1]);
   }
   ngOnDestroy(): void {
     this.titleService.setTitle('Cookster')
   }
 
-  ngOnInit() {}
 
   goEditRecipy() {
-    this.router.navigate(['tabs', 'recipies', 'edit-recipy', this.recipyId]);
+    this.router.navigate(['tabs', 'recipies', 'edit-recipy', this.$recipyId()]);
   }
 
   approveRecipy(){
-    if(this.currentRecipy){
-      const updated = {...this.currentRecipy, notApproved: false};
-      this.store.dispatch(new UpdateRecipyAction(updated))
+    const currentRecipy = this.$recipy()
+    if(currentRecipy){
+      const updated = {...currentRecipy, notApproved: false};
+      this.recipiesService.updateRecipy(updated);
     }
   }
   

@@ -1,38 +1,34 @@
-import { Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import * as moment from 'moment';
-import { BehaviorSubject } from 'rxjs';
 import { RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
+import { UserDataService } from 'src/app/services/user-data.service';
+import { getCurrentDayRecipies } from './calendar.utils';
+import { RecipiesService } from 'src/app/services/recipies.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarReworkedService {
-  private currentDay$: BehaviorSubject<moment.Moment> = new BehaviorSubject(moment().clone());
-  private currentDayRecipies$: BehaviorSubject<RecipyForCalendar_Reworked[]> = new BehaviorSubject([] as RecipyForCalendar_Reworked[])
+  userDataService = inject(UserDataService);
+  recipiesService = inject(RecipiesService)
+  private currentDay = signal<moment.Moment>(moment().clone())
 
-  getCurrentDay(){
-    return this.currentDay$.asObservable()
+  $plannedRecipies = this.userDataService.userPlannedRecipies;
+  $allRecipies = this.recipiesService.getRecipies;
+
+  currentDayRecipies = computed(() => {
+    const [currentDay, plannedRecipies] = [this.currentDay(), this.$plannedRecipies()];
+
+    const selectedDate = currentDay.toDate().toDateString();
+    const currentDayRecipies: RecipyForCalendar_Reworked[] = getCurrentDayRecipies(plannedRecipies, selectedDate, this.$allRecipies());
+    return currentDayRecipies || []
+  })
+
+  getCurrentDay = this.currentDay.asReadonly()
+
+  setCurrentDay(newValue: moment.Moment) {
+    this.currentDay.set(newValue.clone())
   }
 
-  getCurrentDayValue(){
-    return this.currentDay$.getValue()
-  }
 
-  setCurrentDay(newValue: moment.Moment){
-    this.currentDay$.next(newValue)
-  }
-
-  getCurrentDayRecipies(){
-    return this.currentDayRecipies$.asObservable()
-  }
-
-  getCurrentDayRecipiesValue(){
-    return this.currentDayRecipies$.getValue()
-  }
-
-  setCurrentDayRecipies(newValue: RecipyForCalendar_Reworked[]){
-    this.currentDayRecipies$.next(newValue)
-  }
-
-  constructor() { }
 }

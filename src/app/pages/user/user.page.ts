@@ -1,12 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal } from '@ionic/angular';
-import { Store, select } from '@ngrx/store';
-import { Observable, tap } from 'rxjs';
-import { FamilyMember, User } from 'src/app/models/auth.models';
+
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { IAppState } from 'src/app/store/reducers';
-import { getCurrentUser, getFamilyMembers } from 'src/app/store/selectors/user.selectors';
+import { UserDataService } from 'src/app/services/user-data.service';
+
 
 enum ProfileTabs {
   FamilyMembers,
@@ -17,7 +15,8 @@ enum ProfileTabs {
   templateUrl: './user.page.html',
   styleUrls: ['./user.page.scss'],
 })
-export class UserPage implements OnInit {
+export class UserPage {
+  userDataService = inject(UserDataService);
 
   settingOptions = [
     {
@@ -38,21 +37,16 @@ export class UserPage implements OnInit {
     },
   ]
 
-  currentUser: User | null = null;
-
-  user$ = this.store.pipe(select(getCurrentUser), tap(user => this.currentUser = user));
-
-  familyMembers$: Observable<FamilyMember[] | undefined> = this.store.pipe(select(getFamilyMembers));
+  $isLoggedIn = this.userDataService.isUserLoggedIn;
+  $familyMembers = this.userDataService.userFamily;
+  $userEmail = this.userDataService.userEmail;
 
   sampleRecommendedPortion = 250;
 
   currentPage: ProfileTabs = ProfileTabs.FamilyMembers;
   ProfileTabs = ProfileTabs
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: Store<IAppState>, private datamapping: DataMappingService) { }
-
-  ngOnInit() {
-  }
+  constructor(private router: Router, private route: ActivatedRoute, private datamapping: DataMappingService) { }
 
   @ViewChild(IonModal) settingsModal: IonModal | undefined;
 

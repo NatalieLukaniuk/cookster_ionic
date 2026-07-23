@@ -1,29 +1,30 @@
-import { ExpensesApiService } from 'src/app/services/expenses-api.service';
-import { Role, UserMappingItem } from './../models/auth.models';
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { UserMappingItem } from './../models/auth.models';
+import { inject, Injectable } from '@angular/core';
+
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { User } from '../models/auth.models';
 
-import * as UserActions from '../store/actions/user.actions';
-import * as UIActions from '../store/actions/ui.actions';
 import { AuthApiService } from './auth-api.service';
-import { ExpensesLoadedAction } from '../store/actions/expenses.actions';
+import { UiService } from './ui.service';
+import { UserDataService } from './user-data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  currentUser: User | undefined;
+  uiService = inject(UiService);
+  userDataService = inject(UserDataService);
+
+  // currentUser: User | undefined;
   allUsers: User[] | undefined;
   userAtFirebaseAuth: User | undefined;
 
-  currentUserId = '';
+  $currentUserId = this.userDataService.userId;
 
   allUsersMapping: UserMappingItem[] = [];
 
-  constructor(private authApiService: AuthApiService, private store: Store, private expApi: ExpensesApiService) { }
+  constructor(private authApiService: AuthApiService) { }
 
   getUserData(user: User) {
     this.authApiService
@@ -33,31 +34,16 @@ export class UserService {
         this.allUsersMapping = userMappingData;
         const found = userMappingData.find(fbUser => fbUser.firebaseId === user.uid);
         if (found) {
-          this.getCurrentUserData(found.cooksterId);
-          this.expApi.userCooksterId = found.cooksterId;
-          this.expApi.getExpenses().pipe(take(1)).subscribe(res => {
-            this.store.dispatch(new ExpensesLoadedAction(res?.expenses || []))
-          })
+          this.getCurrentUserData(found.cooksterId);         
         } else {
-          this.store.dispatch(new UIActions.ErrorAction('no such user found'));
+          this.uiService.setError('no such user found');
         }
       })
   }
 
   getCurrentUserData(cooksterId: string) {
     this.authApiService.getUser(cooksterId).pipe(take(1)).subscribe(user => {
-      this.currentUser = user;
-      if(!this.currentUser.id){
-        this.currentUser.id = cooksterId;
-        this.currentUserId = cooksterId;
-      }
-      if (user.id) {
-        this.currentUserId = user.id;
-      }
-      if (!('plannedRecipies' in this.currentUser!)) {
-        this.currentUser!.plannedRecipies = [];
-      }
-      this.store.dispatch(new UserActions.UserLoadedAction(user));
+      this.userDataService.setCurrentUser(user);
     })
   }
 
@@ -78,19 +64,19 @@ export class UserService {
         }
         let updatedUsers: UserMappingItem[] = this.allUsersMapping.concat(userToAdd)
         this.authApiService.addNewUser(updatedUsers).pipe(take(1)).subscribe(() => {
-          this.store.dispatch(
-            new UIActions.ShowSuccessMessageAction(
-              'Your registration was successful'
-            )
+          this.uiService.showSuccessMessage(
+            'Your registration was successful'
           );
+
           this.getCurrentUserData(res.name);
         })
       });
   }
 
-  updateUserDetailsFromMyDatabase(newData: any) {
-    if (this.currentUser?.id) {
-      return this.authApiService.updateUser(this.currentUser.id, newData);
+ private updateUserDetailsFromMyDatabase(newData: any) { // TODO not used anywhere
+    const currentUserId = this.$currentUserId()
+    if (currentUserId) {
+      return this.authApiService.updateUser(currentUserId, newData);
     } else {
       return of(null);
     }

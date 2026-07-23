@@ -1,11 +1,12 @@
 <div class="wrapper">
-    <h2 *ngIf="recipy$ | async">{{(recipy$ | async)?.name}}</h2>
-    <ng-container *ngIf="!isView()">
-        <app-recipy-constructor *ngIf="recipy$ | async" [recipyToPatch]="recipy$ | async"
-            [currentUser]="user$ | async"></app-recipy-constructor>
-    </ng-container>
-
-    <ng-container *ngIf="isView()">
-        <app-recipy-full-view [recipy]="recipy$ | async" [currentUser]="user$ | async"></app-recipy-full-view>
-    </ng-container>
+    @if($recipy()){
+    <h2>{{$recipy()!.name}}</h2>
+    @if(!isView()){
+    <app-recipy-constructor [recipyToPatch]="$recipy()"></app-recipy-constructor>
+    }
+    @else {
+    <app-recipy-full-view [recipy]="$recipy()"></app-recipy-full-view>
+    }
+    }
+    <!-- TODO add view when no recipy is found in db -->
 </div>

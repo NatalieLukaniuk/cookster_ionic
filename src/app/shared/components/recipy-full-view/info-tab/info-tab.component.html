@@ -1,30 +1,30 @@
 <div class="tags margin-block padding-inline">
-  <ion-chip [outline]="true" *ngFor="let tag of tags">{{ tag }}</ion-chip>
+  <ion-chip [outline]="true" *ngFor="let tag of $tags()">{{ tag }}</ion-chip>
 </div>
 <div class="recipy-complexity margin-block padding-inline">
-  <span>Складність: </span> <b>{{ complexity }}</b>
+  <span>Складність: </span> <b>{{ $complexity() }}</b>
 </div>
 <div class="recipy-time padding-inline">
   <div>
     <p>
       Загальний час приготування:
-      <b>{{ activeTime + passiveTime | normalizeTime }}</b>
+      <b>{{ $activeTime() + $passiveTime() | normalizeTime }}</b>
     </p>
-    <p>Активний: {{ activeTime | normalizeTime }}</p>
-    <p>Пасивний: {{ passiveTime | normalizeTime }}</p>
+    <p>Активний: {{ $activeTime() | normalizeTime }}</p>
+    <p>Пасивний: {{ $passiveTime() | normalizeTime }}</p>
   </div>
 </div>
-<div *ngIf="!!recipy.source" class="padding-inline">
+<div *ngIf="!!recipy().source" class="padding-inline">
   Джерело рецепту:
-  <a [href]="recipy.source" target="_blank">{{ recipy.source }}</a>
+  <a [href]="recipy().source" target="_blank">{{ recipy().source }}</a>
 </div>
-<div class="photo-container margin-block" *ngIf="recipy.photo">
-  <app-image [imagePath]="recipy.photo"></app-image>
+<div class="photo-container margin-block" *ngIf="recipy().photo">
+  <app-image [imagePath]="recipy().photo!"></app-image>
 </div>
-<div *ngIf="isUserAdmin">
+<div *ngIf="$isUserAdmin()">
   <ion-item>
     <ion-checkbox
-      [checked]="recipy.isCheckedAndApproved"
+      [checked]="recipy().isCheckedAndApproved"
       slot="start"
       (ionChange)="onisCheckedAndApprovedClicked($event)"
     ></ion-checkbox>

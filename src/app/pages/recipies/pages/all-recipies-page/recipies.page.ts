@@ -1,109 +1,67 @@
 import { FiltersService } from './../../../../filters/services/filters.service';
-import { getCurrentUser, getFamilyMembers, getUserPlannedRecipies } from 'src/app/store/selectors/user.selectors';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { IAppState } from 'src/app/store/reducers';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
-import { Recipy, productPreferencesChip } from 'src/app/models/recipies.models';
+import { Component, computed, inject, signal, ViewChild } from '@angular/core';
+import { productPreferencesChip } from 'src/app/models/recipies.models';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
-import * as _ from 'lodash';
-import { User } from 'src/app/models/auth.models';
 import { LayoutService } from 'src/app/services/layout.service';
-import { CalendarRecipyInDatabase_Reworked } from 'src/app/models/calendar.models';
-import { getLastPreparedDate } from 'src/app/pages/calendar/calendar.utils';
+import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
+
+const RECIPY_CARD_HEIGHT = 750;
 
 @Component({
   selector: 'app-recipies',
   templateUrl: 'recipies.page.html',
   styleUrls: ['recipies.page.scss'],
 })
-export class RecipiesContainer implements OnDestroy {
-  filters$ = this.filtersService.getFilters;
-  recipies: Recipy[] = []
+export class RecipiesContainerPage {
+  filtersService = inject(FiltersService);
+  recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
+  layoutService = inject(LayoutService)
+
+  $currentFilters = this.filtersService.getCurrentFilters
+  $recipies = this.recipiesService.recipiesWithFilterEnabled;
+  $recipiesToDisplay = computed(() => this.$recipies().filter((r, i) => i <= this.numberOfRecipiesToDisplay()))
+  $isShowWidget = this.filtersService.isShowWidget;
+  $userFamily = this.userDataService.userFamily;
+  isBigScreen = this.layoutService.getIsBigScreen();
+  threshhold = RECIPY_CARD_HEIGHT * 2;
+  numberOfRecipiesToDisaplyAtOnce = this.isBigScreen ? 20 : 3;
 
   showGoTop = false;
 
-  user$ = this.store.pipe(select(getCurrentUser), tap(user => this.currentUser = user));
-  productChips: productPreferencesChip[] = [];
-
-  destroy$ = new Subject<void>();
-
-  numberOfRecipiesToDisplay = 10;
-
-  currentUser: User | null | undefined;
-
-  isBigScreen = this.layoutService.getIsBigScreen();
-
-  constructor(
-    private store: Store<IAppState>,
-    private filtersService: FiltersService,
-    private layoutService: LayoutService,
-  ) {
-    this.subscribeForProductChips();
-    this.subscribeForRecipies()
-  }
-  ngOnDestroy(): void {
-    this.destroy$.next()
-  }
-
-  subscribeForProductChips() {
-    this.store.pipe(select(getFamilyMembers), takeUntil(this.destroy$), map(familyMembers => {
-      if (familyMembers && familyMembers.length) {
-        let likeChips = familyMembers.map(member => {
-          if (member.like) {
-            return member.like.map(item => ({ name: member.name, productId: item, color: 'success' }))
-          } else return []
-        }
-        ).flat().filter(i => !!i.productId);
-
-        let noLikeChips = familyMembers.map(member => {
-          if (member.noLike) {
-            return member.noLike.map(item => ({ name: member.name, productId: item, color: 'warning' }))
-          } else return []
-        }
-        ).flat().filter(i => !!i.productId);
-
-        let noEatChips = familyMembers.map(member => {
-          if (member.noEat) {
-            return member.noEat.map(item => ({ name: member.name, productId: item, color: 'danger' }))
-          } else return []
-        }
-        ).flat().filter(i => !!i.productId);
-
-        const concatenated = likeChips.concat(noLikeChips).concat(noEatChips);
-        this.productChips = concatenated
+  productChips = computed<productPreferencesChip[]>(() => {
+    const familyMembers = this.$userFamily();
+    if (familyMembers && familyMembers.length) {
+      let likeChips = familyMembers.map(member => {
+        if (member.like) {
+          return member.like.map(item => ({ name: member.name, productId: item, color: 'success' }))
+        } else return []
       }
-    })).subscribe()
-  }
+      ).flat().filter(i => !!i.productId);
 
-  subscribeForRecipies() {
-    combineLatest([
-      this.store.pipe(select(getAllRecipies)),
-      this.filters$,
-      this.filtersService.noShowRecipies$,
-      this.store.pipe(select(getUserPlannedRecipies)),
-    ]).pipe(
-      takeUntil(this.destroy$),
-      map(res => _.cloneDeep(res)),
-      map(res => {
-        if(res[3]){
-          res[0] = res[0].map(recipy => this.addLastPrepared(recipy, res[3]))          
-        }
-        return res
-      }), 
-      map((res) => this.filtersService.applyFilters(res[0], res[1], res[2])),           
-      tap(recipies => this.recipies = recipies)
-    ).subscribe()
-  }
+      let noLikeChips = familyMembers.map(member => {
+        if (member.noLike) {
+          return member.noLike.map(item => ({ name: member.name, productId: item, color: 'warning' }))
+        } else return []
+      }
+      ).flat().filter(i => !!i.productId);
 
-  addLastPrepared(recipy: Recipy, allPlannedRecipies: CalendarRecipyInDatabase_Reworked[] | undefined): Recipy {
-    let updated = {
-      ...recipy,
-      lastPrepared: allPlannedRecipies ? getLastPreparedDate(recipy.id, allPlannedRecipies) : null
-    }
-    return updated
-  }
+      let noEatChips = familyMembers.map(member => {
+        if (member.noEat) {
+          return member.noEat.map(item => ({ name: member.name, productId: item, color: 'danger' }))
+        } else return []
+      }
+      ).flat().filter(i => !!i.productId);
+
+      const concatenated = likeChips.concat(noLikeChips).concat(noEatChips);
+      return concatenated
+    } else return []
+  })
+
+  numberOfRecipiesToDisplay = signal(this.numberOfRecipiesToDisaplyAtOnce);
+
+
 
   onscroll(event: any) {
     this.showGoTop = event.detail.scrollTop > 500;
@@ -115,12 +73,8 @@ export class RecipiesContainer implements OnDestroy {
     this.scrollingContainer.scrollToTop()
   }
 
-  onIonInfinite(event: any){
-    this.numberOfRecipiesToDisplay += 10;
+  onIonInfinite(event: any) {
+    this.numberOfRecipiesToDisplay.update(current => current + this.numberOfRecipiesToDisaplyAtOnce);
     (event as InfiniteScrollCustomEvent).target.complete();
-  }
-
-  get isShowWidget(){
-    return this.filtersService.isShowWidget
   }
 }

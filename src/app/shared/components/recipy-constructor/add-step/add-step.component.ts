@@ -6,14 +6,11 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   templateUrl: './add-step.component.html',
   styleUrls: ['./add-step.component.scss'],
 })
-export class AddStepComponent implements OnInit {
+export class AddStepComponent {
   @Output() addNewStep = new EventEmitter<PreparationStep>();
   description = '';
   activeTime = '';
   passivetime = '';
-  constructor() {}
-
-  ngOnInit() {}
 
   addStep() {
     let step: PreparationStep = {

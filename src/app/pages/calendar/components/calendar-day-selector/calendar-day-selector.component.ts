@@ -10,14 +10,14 @@ export class CalendarDaySelectorComponent {
   
   constructor(private calendarService: CalendarReworkedService) { }
 
-  currentDay$ = this.calendarService.getCurrentDay();
+  $currentDay = this.calendarService.getCurrentDay;
   goPreviousDay() {
-    const current = this.calendarService.getCurrentDayValue();
+    const current = this.$currentDay();
     const updated = current.subtract(1, 'day');
     this.calendarService.setCurrentDay(updated);
   }
   goNextDay() {
-    const current = this.calendarService.getCurrentDayValue();
+    const current = this.$currentDay();
     const updated = current.add(1, 'day');
     this.calendarService.setCurrentDay(updated);
   }

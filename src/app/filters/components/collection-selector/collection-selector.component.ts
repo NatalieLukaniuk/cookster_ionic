@@ -1,6 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, Input } from '@angular/core';
 import { FiltersService } from '../../services/filters.service';
-import { map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-collection-selector',
@@ -11,12 +10,7 @@ export class CollectionSelectorComponent {
   @Input() userCollections: string[] | null = [];
   constructor(public filtersService: FiltersService,) { }
 
-  checkedCollections: string[] = [];
-
-  checkedCollections$ = this.filtersService.getFilters.pipe(
-    map((res) => res.collectionsToInclude),
-    tap((res) => (this.checkedCollections = res))
-  );
+  $checkedCollections = computed(() => this.filtersService.getCurrentFilters().collectionsToInclude) 
 
   onCollectionCheck(collectionName: string) {
     this.filtersService.toggleCollectionToShow(collectionName)

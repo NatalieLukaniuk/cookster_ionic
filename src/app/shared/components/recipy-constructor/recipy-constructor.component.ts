@@ -1,13 +1,7 @@
 import { areObjectsEqual } from 'src/app/services/comparison';
 import { DataMappingService } from './../../../services/data-mapping.service';
 import { MeasuringUnit, NewRecipy } from './../../../models/recipies.models';
-import {
-  UpdateDraftRecipyAction,
-  AddNewRecipyAction,
-  UpdateRecipyAction,
-} from './../../../store/actions/recipies.actions';
-import { AddDraftRecipyAction } from '../../../store/actions/recipies.actions';
-import { select, Store } from '@ngrx/store';
+
 import {
   DishType,
   DraftRecipy,
@@ -22,17 +16,18 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
+  inject,
 } from '@angular/core';
 import * as _ from 'lodash';
-import { Role, User } from 'src/app/models/auth.models';
 import {
   Complexity,
   ComplexityDescription,
 } from 'src/app/models/recipies.models';
 import { getUnitText } from 'src/app/pages/recipies/utils/recipy.utils';
 import { ItemReorderEventDetail } from '@ionic/angular';
-import { debounceTime, Subject, Subscription, take } from 'rxjs';
-import { getUserDraftRecipies } from 'src/app/store/selectors/user.selectors';
+import { debounceTime, Subject, Subscription } from 'rxjs';
+import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 const SAVE_CHANGES_AFTER = 5400;
 
@@ -42,9 +37,15 @@ const SAVE_CHANGES_AFTER = 5400;
   styleUrls: ['./recipy-constructor.component.scss'],
 })
 export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy {
+  recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
+
   @Input() recipyToPatch: DraftRecipy | Recipy | undefined | null;
   @Input() recipyToPatchOrder: number | undefined;
-  @Input() currentUser!: User | null;
+
+  $draftRecipies = this.userDataService.userDraftRecipies;
+  $userEmail = this.userDataService.userEmail;
+  $isAdmin = this.userDataService.isAdmin;
 
   tabs = [
     { value: 'info', icon: '', name: 'Інформація' },
@@ -94,7 +95,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
 
   editStepIndex: number | null = null;
 
-  constructor(private store: Store, private dataMapping: DataMappingService) { }
+  constructor(private dataMapping: DataMappingService) { }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe()
   }
@@ -175,7 +176,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
 
   saveDraft() {
     let draftRecipy: DraftRecipy = this.collectDataNewRecipyOrDraft();
-    this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
+    this.userDataService.addDraftRecipy(draftRecipy)
   }
 
   saveEditedDraft() {
@@ -183,28 +184,20 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
     draftRecipy.lastEdited = Date.now()
 
     if (this.recipyToPatchOrder) {
-      this.store.dispatch(
-        new UpdateDraftRecipyAction(draftRecipy, this.recipyToPatchOrder)
-      );
+      this.userDataService.updateDraftRecipy(draftRecipy, this.recipyToPatchOrder)
+
     } else {
-      this.store.pipe(select(getUserDraftRecipies), take(1)).subscribe(res => {
-        if (res) {
-          const existingDraftIndex = res.findIndex(recipy => recipy.name.trim() === this.recipyName.trim());
-          if (existingDraftIndex >= 0) {
-            const found = res.find(recipy => recipy.name.trim() === this.recipyName.trim())
-            if(found){
-              draftRecipy.createdOn = found.createdOn;
-            }
-            this.store.dispatch(
-              new UpdateDraftRecipyAction(draftRecipy, existingDraftIndex)
-            );
-          } else {
-            this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
-          }
-        } else {
-          this.store.dispatch(new AddDraftRecipyAction(draftRecipy));
+      const existingDraftIndex = this.$draftRecipies().findIndex(recipy => recipy.name.trim() === this.recipyName.trim());
+      if (existingDraftIndex >= 0) {
+        const found = this.$draftRecipies().find(recipy => recipy.name.trim() === this.recipyName.trim())
+        if (found) {
+          draftRecipy.createdOn = found.createdOn;
         }
-      })
+        this.userDataService.updateDraftRecipy(draftRecipy, existingDraftIndex)
+
+      } else {
+        this.userDataService.addDraftRecipy(draftRecipy)
+      }
 
     }
   }
@@ -216,14 +209,14 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
       complexity: this.complexity,
       steps: this.steps,
       type: this.selectedTags,
-      author: this.currentUser!.email,
+      author: this.$userEmail() || '',
       createdOn: this.recipyToPatch ? this.recipyToPatch.createdOn : Date.now(),
       isSplitIntoGroups: this.isSplitIntoGroups,
       isBaseRecipy: this.isBaseRecipy,
       source: this.recipySource,
       photo: this.photo,
       portionSize: +this.portionSize,
-      notApproved: !this.isAddAsApproved()
+      notApproved: !this.$isAdmin()
     };
   }
   collectDataExistingRecipy(): Recipy | null {
@@ -238,7 +231,7 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
         isSplitIntoGroups: this.isSplitIntoGroups,
         isBaseRecipy: this.isBaseRecipy,
         source: this.recipySource,
-        editedBy: this.currentUser!.email,
+        editedBy: this.$userEmail() || '',
         photo: this.photo,
         lastEdited: Date.now(),
         portionSize: +this.portionSize
@@ -248,19 +241,19 @@ export class RecipyConstructorComponent implements OnChanges, OnInit, OnDestroy 
 
   saveNewRecipy() {
     let recipy: NewRecipy = this.collectDataNewRecipyOrDraft();
-    this.store.dispatch(new AddNewRecipyAction(recipy));
-    this.reset()
+    this.recipiesService.addNewRecipy(recipy).subscribe(() => {
+      this.reset()
+    })
+
   }
 
-  isAddAsApproved() {
-    return this.currentUser?.role === Role.Admin
-  }
+
 
   updateRecipy() {
     let updated: Recipy | null = this.collectDataExistingRecipy();
     console.log(updated);
     if (updated) {
-      this.store.dispatch(new UpdateRecipyAction(updated));
+      this.recipiesService.updateRecipy(updated).subscribe()
     }
   }
 

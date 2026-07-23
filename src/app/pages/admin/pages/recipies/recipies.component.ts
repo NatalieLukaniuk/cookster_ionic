@@ -1,4 +1,3 @@
-import { DataMappingService } from 'src/app/services/data-mapping.service';
 import {
   Ingredient,
   MeasuringUnit,
@@ -6,54 +5,37 @@ import {
   Recipy,
 } from './../../../../models/recipies.models';
 import { TableService } from './../../services/table.service';
-import { Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { combineLatest, take, tap } from 'rxjs';
-import { IAppState } from 'src/app/store/reducers';
-import {
-  getAllRecipies,
-  getAllProducts,
-} from 'src/app/store/selectors/recipies.selectors';
+import { Component, computed, inject } from '@angular/core';
 import {
   convertAmountToSelectedUnit,
   getDensity,
 } from 'src/app/pages/recipies/utils/recipy.utils';
 import * as _ from 'lodash';
-import { ExpencesService } from 'src/app/expenses/expences.service';
+import { RecipiesService } from 'src/app/services/recipies.service';
+import { ProductsService } from 'src/app/services/products.service';
 
 @Component({
   selector: 'app-recipies',
   templateUrl: './recipies.component.html',
   styleUrls: ['./recipies.component.scss'],
 })
-export class RecipiesComponent implements OnInit {
+export class RecipiesComponent {
+  recipiesService = inject(RecipiesService);
+  productsService = inject(ProductsService);
   Object = Object;
-  recipiesTableData: string[][] = [];
-  recipies$ = combineLatest([
-    this.store.pipe(select(getAllRecipies)),
-    this.expencesService.getExpenses()
-  ]).pipe(
-    tap(res => {
-      if (res[0].length && res[1].length){
-        this.recipiesTableData = this.tableService.buildRecipyTable(res[0], res[1]);
-      }
-    })
-  )
+  recipiesTableData = computed(() => this.tableService.buildRecipyTable(this.$recipies()));
 
-  products$ = this.store.pipe(select(getAllProducts));
+  $recipies = this.recipiesService.getRecipies;
+  $products = this.productsService.getProducts;
+
   constructor(
-    private store: Store<IAppState>,
-    private tableService: TableService,
-    private dataMapping: DataMappingService,
-    private expencesService: ExpencesService
-  ) {}
+    private tableService: TableService
+  ) {
+  }
 
-  ngOnInit() {}
 
   runUpdate() {
-    this.recipies$.pipe(take(1)).subscribe((res) => {
-      this.recursiveUpdate(0, res[0]);
-    });
+    this.recursiveUpdate(0, this.$recipies());
   }
 
   recursiveUpdate(i: number, recipies: Recipy[]) {
@@ -62,7 +44,7 @@ export class RecipiesComponent implements OnInit {
         let update = this.updateScript(recipies[i]);
         console.log(update);
 
-        // this.store.dispatch(new UpdateRecipyAction(update));
+        // update function here
         console.log(i + ' of ' + recipies.length);
         i++;
         this.recursiveUpdate(i, recipies);
@@ -95,13 +77,13 @@ export class RecipiesComponent implements OnInit {
       ingr.amount,
       ingr.defaultUnit,
       ingr.product,
-      this.dataMapping.products$.value
+      this.$products()
     );
     return this.transfToGr(
       ingr.product,
       inSelectedUnit,
       ingr.defaultUnit,
-      this.dataMapping.products$.value
+      this.$products()
     );
   }
 

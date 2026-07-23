@@ -1,12 +1,8 @@
-import { Injectable } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable, take } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
 import { Ingredient, MeasuringUnit, Product, Recipy } from 'src/app/models/recipies.models';
-import { IAppState } from 'src/app/store/reducers';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
 import { convertAmountToSelectedUnitRawData, transformToGrRawData } from '../../recipies/utils/recipy.utils';
 import * as _ from 'lodash';
-import { UpdateRecipyAction } from 'src/app/store/actions/recipies.actions';
+import { RecipiesService } from 'src/app/services/recipies.service';
 
 const DENSITY_DEPENDENT_UNITS: MeasuringUnit[] = [
   MeasuringUnit.coffeeSpoon,
@@ -24,23 +20,21 @@ const DENSITY_DEPENDENT_UNITS: MeasuringUnit[] = [
   providedIn: 'root'
 })
 export class AdminService {
+recipiesService = inject(RecipiesService);
 
-  constructor(private store: Store<IAppState>) { }
+  $recipies = this.recipiesService.getRecipies;
 
-  getAllRecipies(): Observable<Recipy[]> {
-    return this.store.pipe(select(getAllRecipies))
-  }
 
   updateRecipiesOnDensityChange(productBeforeChange: Product, newDensity: number) {
-    this.getAllRecipies().pipe(take(1)).subscribe(recipies => {
-      const recipiesToUpdate = this.getRecipiesWithProductToUpdate(recipies, productBeforeChange);
+
+      const recipiesToUpdate = this.getRecipiesWithProductToUpdate(this.$recipies(), productBeforeChange);
       const interval = 4000; // Delay in milliseconds
       recipiesToUpdate.forEach((recipy, index) => {
         setTimeout(() => {
           this.updateRecipy(recipy, productBeforeChange, newDensity)
         }, index * interval);
       })
-    })
+
 
   }
 
@@ -61,6 +55,6 @@ export class AdminService {
         ingr.amount = correctedGr;
       }
     })
-    this.store.dispatch(new UpdateRecipyAction(updated))
+    this.recipiesService.updateRecipy(updated).subscribe()
   }
 }

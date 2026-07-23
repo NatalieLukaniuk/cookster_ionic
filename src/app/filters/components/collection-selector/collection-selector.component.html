@@ -1,7 +1,7 @@
 <div class="dish-selector-wrapper">
-  <div class="chip-selector-list" slot="content" *ngIf="checkedCollections$ | async">
+  <div class="chip-selector-list" slot="content">
     <ion-chip *ngFor="let tag of userCollections" (click)="onCollectionCheck(tag)"
-      [color]="checkedCollections.includes(tag)? 'primary' : 'secondary'">
+      [color]="$checkedCollections().includes(tag)? 'primary' : 'secondary'">
       <span>{{ tag }}</span>
     </ion-chip>
   </div>

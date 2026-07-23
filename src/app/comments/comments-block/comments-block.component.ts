@@ -1,31 +1,42 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { Observable, Subject, map, takeUntil, tap } from 'rxjs';
-import { User } from 'src/app/models/auth.models';
-import { IAppState } from 'src/app/store/reducers';
-import { getComments } from 'src/app/store/selectors/comments.selectors';
+import { Component, computed, inject, input, Input, OnDestroy,  ViewChild } from '@angular/core';
+
+import { Subject } from 'rxjs';
 import { Comment } from 'src/app/models/comments.models';
 import { CommentsService } from '../comments.service';
-import { AddCommentAction, DeleteCommentAction } from 'src/app/store/actions/comments.actions';
 import { DialogsService } from 'src/app/services/dialogs.service';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-comments-block',
   templateUrl: './comments-block.component.html',
   styleUrls: ['./comments-block.component.scss']
 })
-export class CommentsBlockComponent implements OnChanges, OnDestroy {
+export class CommentsBlockComponent implements OnDestroy {
+  userDataService = inject(UserDataService);
   // TODO: functionality when the user is not logged in
-  @Input() recipyId: string | undefined;
+  recipyId = input.required<string>();
   @Input() recipyName: string = '';
-  currentUser: User | null | undefined = null;
+
+  $isUserLoggedIn = this.userDataService.isUserLoggedIn;
+  $userEmail = this.userDataService.userEmail;
 
   text = '';
 
-  comments$!: Observable<Comment[]>;
+  $allComments = this.commentsService.getComments;
 
-  modalId = '';
+  $commentsForRecipy = computed(() => {
+    const allComments = this.$allComments()
+    if (allComments) {
+      return this.commentsService.getCommentsByRecipyId(this.recipyId(), allComments)
+    } else return []
+  })
+
+  $totalComments = computed(() => this.$commentsForRecipy().length)
+  $commentsTree = computed(() => {
+    return this.commentsService.buildCommentsTree(this.$commentsForRecipy())
+  })
+
+  modalId = computed(() => 'comments' + '-' + this.recipyId());
 
   replyTo: string | null = null;
   selectedComment: string | null = null;
@@ -35,45 +46,28 @@ export class CommentsBlockComponent implements OnChanges, OnDestroy {
   isModalOpen = false;
   destroyed$ = new Subject<void>()
 
-  currentUser$ = this.store.pipe(select(getCurrentUser), takeUntil(this.destroyed$))
+  constructor(private commentsService: CommentsService, private dialog: DialogsService) {
 
-  constructor(private store: Store<IAppState>, private commentsService: CommentsService, private dialog: DialogsService) {
-    this.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    })
   }
   ngOnDestroy(): void {
     this.destroyed$.next();
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['recipyId'] && !!this.recipyId) {
-      this.modalId = 'comments' + '-' + this.recipyId;
-      this.comments$ = this.store.pipe(select(getComments), map(comments => {
-        if (comments) {
-          const filtered = this.commentsService.getCommentsByRecipyId(this.recipyId!, comments);
-          this.totalComments = filtered.length;
-          const tree = this.commentsService.buildCommentsTree(filtered)
-          return tree
-        }
-        else {
-          return []
-        }
-      }));
-    }
-  }
+
 
   saveComment() {
-    if (this.currentUser && this.recipyId) {
+    if (this.$isUserLoggedIn() && this.recipyId) {
       const commentToSave: Comment = {
-        author: this.currentUser?.email,
+        author: this.$userEmail()!,
         addedOn: new Date(),
         text: this.text,
-        recipyId: this.recipyId
+        recipyId: this.recipyId()
       }
       if (this.replyTo) {
         commentToSave.parentCommentId = this.replyTo;
       }
-      this.store.dispatch(new AddCommentAction(commentToSave));
+      this.commentsService.addComment(commentToSave).subscribe(
+        //TODO
+      )
       this.replyTo = null;
       this.text = '';
     }
@@ -107,7 +101,7 @@ export class CommentsBlockComponent implements OnChanges, OnDestroy {
   }
 
   onLongPress(commentId: string | undefined, author: string | undefined) {
-    if (commentId && !this.replyTo && author && author === this.currentUser?.email) {
+    if (commentId && !this.replyTo && author && author === this.$userEmail()) {
       this.selectedComment = commentId
     }
   }
@@ -116,8 +110,8 @@ export class CommentsBlockComponent implements OnChanges, OnDestroy {
     this.selectedComment = null;
   }
 
-  click() {
-    this.isModalOpen = true;
+  setOpen(value: boolean) {
+    this.isModalOpen = value;
   }
 
   deleteComment(commentId: string | undefined) {
@@ -129,8 +123,9 @@ export class CommentsBlockComponent implements OnChanges, OnDestroy {
         )
         .then((res) => {
           if (res.role === 'confirm') {
-
-            this.store.dispatch(new DeleteCommentAction(commentId));
+            this.commentsService.deleteComment(commentId).subscribe(
+              //TODO
+            )
           } else {
             this.selectedComment = null;
           }

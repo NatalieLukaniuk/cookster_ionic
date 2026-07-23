@@ -1,52 +1,38 @@
+import { ProductsService } from 'src/app/services/products.service';
 import { DataMappingService } from 'src/app/services/data-mapping.service';
-import { DishType, Product } from 'src/app/models/recipies.models';
+import { Product } from 'src/app/models/recipies.models';
 import { FiltersService } from './../../services/filters.service';
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, inject, Input, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
-import { select, Store } from '@ngrx/store';
-import { map, Observable, Subscription, tap } from 'rxjs';
-import { IAppState } from 'src/app/store/reducers';
-import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
+import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.scss'],
 })
-export class FiltersComponent implements OnInit, OnDestroy {
-  @Input() isExpensePage = false;
+export class FiltersComponent {
+  productsService = inject(ProductsService);
+  recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
+  filtersService = inject(FiltersService)
+  
+
   @Input() pageId: string = '';
-  @Input() isUserLoggedIn = false;
 
-  products: Product[] = [];
-  products$: Observable<Product[]> = this.store.pipe(
-    select(getAllProducts),
-    map((res) => {
-      if (res) {
-        let products = res.map((i) => i);
-        products.sort((a, b) => a.name.localeCompare(b.name));
-        this.products = products;
-        return products;
-      } else return [];
-    })
-  );
-
-  userCollections$ = this.filtersService.userCollections$.pipe(map(collections => collections?.length? collections.map(item => item.name) : []))
-
-  subscription = new Subscription();
+  $products = this.productsService.getProducts;
+  $sortedProducts = this.productsService.getSortedProducts;
+  $filteredRecipiesCount = this.recipiesService.recipiesWithFilterEnabledCount;
+  
+  $userCollections = computed(() => this.userDataService.userRecipeCollections().map(item => item.name));
+  $isUserLoggedIn = this.userDataService.isUserLoggedIn;
+  $isShowWidget = this.filtersService.isShowWidget;
 
   constructor(
-    public filtersService: FiltersService,
-    private store: Store<IAppState>,
     private datamapping: DataMappingService
   ) { }
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe()
-  }
 
-  ngOnInit() {
-    this.subscription.add(this.filtersService.userPlannedRecipies$.subscribe())
-  }
 
   @ViewChild(IonModal) modal: IonModal | undefined;
 
@@ -74,10 +60,6 @@ export class FiltersComponent implements OnInit, OnDestroy {
   addToDisplayWithout(event: Product) {
     this.filtersService.toggleIngredsToNotshow(event.id);
     this.withoutAutocomplete.clearSearch();
-  }
-
-  get isShowWidget(){
-    return this.filtersService.isShowWidget
   }
 
 }

@@ -1,17 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { select, Store } from '@ngrx/store';
+
 import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { CalendarReworkedService } from 'src/app/pages/calendar/calendar-reworked.service';
-import { AddCommentToCalendarAction, AddRecipyToCalendarActionNew } from 'src/app/store/actions/calendar.actions';
-import { IAppState } from 'src/app/store/reducers';
+
 import { AddCommentToCalendarModalComponent } from './components/add-comment-to-calendar-modal/add-comment-to-calendar-modal.component';
 import { SaveCalendarAsPdfPreviewComponent } from './components/save-calendar-as-pdf-preview/save-calendar-as-pdf-preview.component';
-import { CalendarComment, CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
-import { combineLatest, map, Observable, take } from 'rxjs';
-import { getCurrentUser } from 'src/app/store/selectors/user.selectors';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
+import { CalendarComment, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { getCurrentDayRecipies, newDateIgnoreimezone } from './calendar.utils';
+import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 
 
@@ -21,8 +19,15 @@ import { getCurrentDayRecipies, newDateIgnoreimezone } from './calendar.utils';
   styleUrls: ['./calendar.page.scss'],
 })
 export class CalendarPage {
+  recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
 
-  constructor(private modalCtrl: ModalController, private store: Store<IAppState>, private calendarService: CalendarReworkedService) { }
+
+  $recipies = this.recipiesService.getRecipies;
+  $plannedRecipies = this.userDataService.userPlannedRecipies;
+  $plannedComments = this.userDataService.userPlannedComments;
+
+  constructor(private modalCtrl: ModalController, private calendarService: CalendarReworkedService) { }
 
   public actionSheetButtons = [
     {
@@ -69,7 +74,7 @@ export class CalendarPage {
   }
 
   async addReminder() {
-    const currentDay = this.calendarService.getCurrentDayValue()
+    const currentDay = this.calendarService.getCurrentDay()
     const modal = await this.modalCtrl.create({
       component: AddCommentToCalendarModalComponent,
       componentProps: {
@@ -82,18 +87,15 @@ export class CalendarPage {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.store.dispatch(
-        new AddCommentToCalendarAction(
-          data.comment,
-          data.selectedDate,
-          true
-        )
-      );
+      this.userDataService.addCommentToCalendar(data.comment,
+        data.selectedDate,
+        true)
+
     }
   }
 
   async addComment() {
-    const currentDay = this.calendarService.getCurrentDayValue()
+    const currentDay = this.calendarService.getCurrentDay()
     const modal = await this.modalCtrl.create({
       component: AddCommentToCalendarModalComponent,
       componentProps: {
@@ -106,19 +108,18 @@ export class CalendarPage {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.store.dispatch(
-        new AddCommentToCalendarAction(
-          data.comment,
+      this.userDataService.addCommentToCalendar(
+        data.comment,
           data.selectedDate,
           false
-        )
-      );
+      )
+      
     }
   }
 
 
   async addRecipy() {
-    const currentDay = this.calendarService.getCurrentDayValue()
+    const currentDay = this.calendarService.getCurrentDay()
     const modal = await this.modalCtrl.create({
       component: AddRecipyToCalendarModalComponent,
       componentProps: {
@@ -132,44 +133,29 @@ export class CalendarPage {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.store.dispatch(new AddRecipyToCalendarActionNew(data));
+      this.userDataService.addRecipyToCalendar(data)
     }
   }
 
-  plannedRecipies$: Observable<CalendarRecipyInDatabase_Reworked[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedRecipies || []));
-  allRecipies$ = this.store.pipe(select(getAllRecipies));
-  plannedComments$: Observable<CalendarComment[]> = this.store.pipe(select(getCurrentUser), map(res => res?.plannedComments || []))
+  async exportToPDF(dates: string[]) {
 
-  exportToPDF(dates: string[]) {
-
-    combineLatest([
-      this.plannedRecipies$,
-      this.allRecipies$,
-      this.plannedComments$
-    ]).pipe(
-      take(1)
-    ).subscribe(async res => {
-      const [plannedRecipies, allRecipies, plannedComments] = res;
-      let recipiesToPreview: RecipyForCalendar_Reworked[] = [];
-      let commentsToPreviw: CalendarComment[] = [];
-      dates.forEach(day => {
-        const selectedDate = new Date(day).toDateString();
-        const currentDayRecipies: RecipyForCalendar_Reworked[] = getCurrentDayRecipies(plannedRecipies, selectedDate, allRecipies);
-        recipiesToPreview = recipiesToPreview.concat(currentDayRecipies);
-        const currentDayComments = plannedComments.filter(comment => new Date(comment.date).toDateString() === selectedDate && !comment.isReminder);
-        commentsToPreviw = commentsToPreviw.concat(currentDayComments)        
-      })
-      const modal = await this.modalCtrl.create({
-        component: SaveCalendarAsPdfPreviewComponent,
-        componentProps: {
-          recipies: recipiesToPreview,
-          comments: commentsToPreviw
-        }
-      });
-      modal.present();
+    const [plannedRecipies, plannedComments] = [this.$plannedRecipies(), this.$plannedComments()];
+    let recipiesToPreview: RecipyForCalendar_Reworked[] = [];
+    let commentsToPreviw: CalendarComment[] = [];
+    dates.forEach(day => {
+      const selectedDate = new Date(day).toDateString();
+      const currentDayRecipies: RecipyForCalendar_Reworked[] = getCurrentDayRecipies(plannedRecipies, selectedDate, this.$recipies());
+      recipiesToPreview = recipiesToPreview.concat(currentDayRecipies);
+      const currentDayComments = plannedComments.filter(comment => new Date(comment.date).toDateString() === selectedDate && !comment.isReminder);
+      commentsToPreviw = commentsToPreviw.concat(currentDayComments)
     })
-
-
-
+    const modal = await this.modalCtrl.create({
+      component: SaveCalendarAsPdfPreviewComponent,
+      componentProps: {
+        recipies: recipiesToPreview,
+        comments: commentsToPreviw
+      }
+    });
+    modal.present();
   }
 }

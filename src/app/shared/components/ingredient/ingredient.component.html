@@ -1,22 +1,38 @@
 <ion-item-sliding>
-  <ion-item-options side="start" *ngIf="startOptions.length">
-    <ion-item-option *ngFor="let option of startOptions" [color]="option.color" (click)="onOptionClicked(option.action)">{{option.name}}</ion-item-option>
+  @if(startOptions().length){
+
+  }
+  <ion-item-options side="start">
+    @for(option of startOptions(); track option.action){
+    <ion-item-option [color]="option.color" (click)="onOptionClicked(option.action)">{{option.name}}</ion-item-option>
+    }
+
   </ion-item-options>
 
   <ion-item>
-    <ion-label>{{ getIngredientText(ingredient) }}</ion-label>
+    <ion-label>{{ getIngredientText(ingredient()) }}</ion-label>
 
-    <ion-text *ngIf="measuringUnit !== MeasuringUnit.none" [innerHTML]="ingredient.amount * coefficient
-      | convertToSelectedUnit : ingredient.product : measuringUnit
+    @if(measuringUnit !== MeasuringUnit.none){
+    <ion-text [innerHTML]="ingredient().amount * coefficient()
+      | convertToSelectedUnit : ingredient().product : measuringUnit
       | normalizeDisplayedAmount : measuringUnit"></ion-text>
+    }
+
     <div>
-      <ion-select *ngIf="measuringUnit !== MeasuringUnit.none" interface="action-sheet" [value]="measuringUnit"
-        (ionChange)="unitChanged($event)">
-        <ion-select-option *ngFor="let unit of measurementUnits" [value]="unit">{{
+      @if(measuringUnit !== MeasuringUnit.none){
+      <ion-select interface="action-sheet" [value]="measuringUnit" (ionChange)="unitChanged($event)">
+        @for(unit of $measurementUnits(); track unit){
+        <ion-select-option [value]="unit">{{
           getUnitText(unit)
           }}</ion-select-option>
+        }
+
       </ion-select>
-      <ion-text *ngIf="measuringUnit === MeasuringUnit.none">за смаком</ion-text>
+      }
+      @else {
+      <ion-text>за смаком</ion-text>
+      }
+
     </div>
 
     <div>
@@ -25,11 +41,12 @@
   </ion-item>
 
 
+  @if(endOptions().length){
+  <ion-item-options side="end">
+    @for(option of endOptions(); track option.name){
+    <ion-item-option [color]="option.color">{{option.name}}</ion-item-option>
+    }
 
-  <ion-item-options side="end" *ngIf="endOptions.length">
-    <ion-item-option *ngFor="let option of endOptions" [color]="option.color">{{option.name}}</ion-item-option>
   </ion-item-options>
-
-
-
+  }
 </ion-item-sliding>

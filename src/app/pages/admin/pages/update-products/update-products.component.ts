@@ -1,37 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { select, Store } from '@ngrx/store';
-import { BehaviorSubject, map, Observable, take } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { MeasuringUnitText, Product, ProductTypeText } from 'src/app/models/recipies.models';
-import { IAppState } from 'src/app/store/reducers';
-import { getAllProducts } from 'src/app/store/selectors/recipies.selectors';
+
 import { AdminService } from '../../services/admin.service';
-import { ProductsApiService } from 'src/app/services/products-api.service';
-import { ProductsLoadedAction } from 'src/app/store/actions/recipies.actions';
+import { ProductsService } from 'src/app/services/products.service';
 
 @Component({
   selector: 'app-update-products',
   templateUrl: './update-products.component.html',
   styleUrls: ['./update-products.component.scss']
 })
-export class UpdateProductsComponent implements OnInit {
-
+export class UpdateProductsComponent {
+  //TODO what does this component do??
+productsService = inject(ProductsService);
   selectedProduct: Product | null = null;
 
   productForm!: UntypedFormGroup;
 
-  products: Product[] = [];
-  products$: Observable<Product[]> = this.store.pipe(
-    select(getAllProducts),
-    map((res) => {
-      if (res) {
-        let products = res.map((i) => i);
-        products.sort((a, b) => a.name.localeCompare(b.name));
-        this.products = products;
-        return products;
-      } else return [];
-    })
-  );
+ $products = this.productsService.getSortedProducts;
 
   nochanges$ = new BehaviorSubject<boolean>(true);
 
@@ -39,15 +26,12 @@ export class UpdateProductsComponent implements OnInit {
 
   isShowDensityCalculator = false;
 
-  constructor(private store: Store<IAppState>, private adminService: AdminService, private productsService: ProductsApiService) { }
+  constructor(private adminService: AdminService) { }
 
   onProductSelected(selected: Product) {
     this.selectedProduct = selected;
     console.log(this.selectedProduct)
     this.initForm(this.selectedProduct)
-  }
-
-  ngOnInit() {
   }
 
   initForm(product: Product) {
@@ -93,16 +77,7 @@ export class UpdateProductsComponent implements OnInit {
       }
     }).forEach(entry => mappedValues[entry[0]] = entry[1])
     mappedValues['id'] = this.selectedProduct?.id;
-    this.productsService.updateProduct(this.selectedProduct!.id, mappedValues as Product).pipe(take(1)).subscribe(res => {
-      this.store.pipe(select(getAllProducts), take(1)).subscribe(allProducts => {
-        const updated = allProducts.map(prod => {
-          if (prod.id === this.selectedProduct!.id) {
-            return res
-          } else return prod
-        })
-        this.store.dispatch(new ProductsLoadedAction(updated))
-      })
-    })
+    this.productsService.updateProduct({id: this.selectedProduct!.id, ...mappedValues} as Product).pipe(take(1)).subscribe()
   }
 
   trackFormChanges() {

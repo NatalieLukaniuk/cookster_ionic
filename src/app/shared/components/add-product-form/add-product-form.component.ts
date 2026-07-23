@@ -1,11 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
+
 import { MeasuringUnit, MeasuringUnitOptions, MeasuringUnitText, ProductTypeOptions, ProductTypeText } from 'src/app/models/recipies.models';
-import { ProductsApiService } from 'src/app/services/products-api.service';
-import { AddNewIngredientAction } from 'src/app/store/actions/recipies.actions';
-import { ShowSuccessMessageAction } from 'src/app/store/actions/ui.actions';
-import { IAppState } from 'src/app/store/reducers';
+
+import { ProductsService } from 'src/app/services/products.service';
+import { UiService } from 'src/app/services/ui.service';
+
 
 @Component({
   selector: 'app-add-product-form',
@@ -13,12 +13,13 @@ import { IAppState } from 'src/app/store/reducers';
   styleUrls: ['./add-product-form.component.scss']
 })
 export class AddProductFormComponent implements OnInit {
+  uiService = inject(UiService);
+  productsService = inject(ProductsService)
+
   productForm!: UntypedFormGroup;
 
   @Output() productAdded = new EventEmitter<void>();
 
-  constructor(private productsApi: ProductsApiService, private store: Store<IAppState>){}
-  
   ngOnInit(): void {
     this.initForm();
   }
@@ -45,17 +46,8 @@ export class AddProductFormComponent implements OnInit {
       sizeChangeCoef: +this.productForm.controls['sizeChangeCoef'].value,
       grInOneItem: +this.productForm.controls['grInOneItem'].value
     };
-    this.productsApi.addProduct(productToAdd).subscribe((res: { name: string }) => {
-      this.store.dispatch(
-        new AddNewIngredientAction({
-          ...productToAdd,
-          id: res.name,
-        })
-      );
-      this.store.dispatch(
-        new ShowSuccessMessageAction(`${productToAdd.name} додано`)
-      );
-    });
+
+    this.productsService.addNewProduct(productToAdd);
     this.clearForm();
   }
 

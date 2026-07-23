@@ -7,7 +7,7 @@
     <ion-item
       swipeLeftDelete
       button
-      *ngFor="let draft of (draftRecipies$ | async); let index = index"
+      *ngFor="let draft of $draftRecipies(); let index = index"
       (click)="editDraft(draft, index)"
       (deleteItem)="deleteDraft(index)"
     >

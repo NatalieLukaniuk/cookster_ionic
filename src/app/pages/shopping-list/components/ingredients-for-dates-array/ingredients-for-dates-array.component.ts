@@ -1,22 +1,22 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonContent, ModalController } from '@ionic/angular';
-import { select, Store } from '@ngrx/store';
+
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { Subject, Subscription, combineLatest, filter, map, take, takeUntil, tap } from 'rxjs';
-import { DishType, Ingredient, Recipy } from 'src/app/models/recipies.models';
+import { Subject, takeUntil } from 'rxjs';
+import { Ingredient } from 'src/app/models/recipies.models';
 import { NormalizeDisplayedAmountGetNumber, convertAmountToSelectedUnit, getRecipyNameById, getUnitText, isDrinkOrSoup, transformToGr } from 'src/app/pages/recipies/utils/recipy.utils';
 
 import { DataMappingService } from 'src/app/services/data-mapping.service';
 import { DialogsService } from 'src/app/services/dialogs.service';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
-import { IAppState } from 'src/app/store/reducers';
-import { getAllRecipies } from 'src/app/store/selectors/recipies.selectors';
-import { getUserPlannedRecipies, getUserShoppingList } from 'src/app/store/selectors/user.selectors';
 import { AddToListModalComponent } from '../add-to-list-modal/add-to-list-modal.component';
 import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from 'src/app/models/calendar.models';
 import { iSameDay } from 'src/app/pages/calendar/calendar.utils';
 import { ShoppingListItem, SLItem, ShoppingList } from 'src/app/models/shopping-list.models';
+import { ProductsService } from 'src/app/services/products.service';
+import { RecipiesService } from 'src/app/services/recipies.service';
+import { UserDataService } from 'src/app/services/user-data.service';
 
 @Component({
   selector: 'app-ingredients-for-dates-array',
@@ -24,23 +24,24 @@ import { ShoppingListItem, SLItem, ShoppingList } from 'src/app/models/shopping-
   styleUrls: ['./ingredients-for-dates-array.component.scss']
 })
 export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
+  productsService = inject(ProductsService);
+  recipiesService = inject(RecipiesService);
+  userDataService = inject(UserDataService);
 
   datesArray: string[];
 
-  allRecipies: Recipy[] = [];
+  $allRecipies = this.recipiesService.getRecipies;
 
-  allRecipies$ = this.store
-    .pipe(select(getAllRecipies))
 
   fullIngredsList$ = new Subject<ShoppingListItem[]>();
 
-  plannedRecipies$ = this.store.pipe(select(getUserPlannedRecipies))
+  $userPlannedRecipies = this.userDataService.userPlannedRecipies;
+  $shoppingList = this.userDataService.userShoppingLists;
 
   itemsTree: SLItem[] | undefined;
 
   myLists: ShoppingList[] = [];
 
-  shoppingList$ = this.store.pipe(select(getUserShoppingList))
 
   destroyed$ = new Subject<void>();
 
@@ -54,7 +55,6 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
 
   constructor(
     private dataMapping: DataMappingService,
-    private store: Store<IAppState>,
     private dialog: DialogsService,
     private shoppingListService: ShoppingListService,
     private modalCtrl: ModalController
@@ -63,13 +63,53 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
     const datesString = path[path.length - 1];
     this.datesArray = datesString.split('&');
 
-    this.store
-      .pipe(select(getAllRecipies), takeUntil(this.destroyed$))
-      .subscribe((res) => {
-        if (res) {
-          this.allRecipies = res;
-        }
-      });
+    effect(() => {
+      //TODO needs revision and rework
+      const plannedRecipies = this.$userPlannedRecipies();
+      const shoppingList = this.$shoppingList();
+      if (plannedRecipies) {
+        const dayItemsToAdd = plannedRecipies.filter(
+          (detail: CalendarRecipyInDatabase_Reworked) =>
+            !!this.datesArray.find(date => iSameDay(new Date(detail.endTime), new Date(date)))
+        );
+        let list: any[] = [];
+        dayItemsToAdd.forEach((plannedRecipy: CalendarRecipyInDatabase_Reworked) => {
+          const foundRecipy = this.$allRecipies().find(recipy => recipy.id === plannedRecipy.recipyId);
+          if (foundRecipy) {
+            const coeficient = this.dataMapping.getCoeficient(
+              foundRecipy.ingrediends,
+              plannedRecipy.portions,
+              plannedRecipy.amountPerPortion,
+              isDrinkOrSoup(foundRecipy)
+            );
+            foundRecipy.ingrediends.forEach((ingr: Ingredient) => {
+              let itemToPush = {
+                product: ingr.product,
+                amount: (ingr.amount * coeficient).toString(),
+                defaultUnit: ingr.defaultUnit,
+                recipyId: [foundRecipy.id],
+                date: plannedRecipy.endTime
+              };
+              list.push(itemToPush);
+            });
+          }
+
+        });
+        this.fullIngredsList$.next(list);
+      }
+
+      if (shoppingList) {
+        this.myLists = _.cloneDeep(shoppingList);
+        this.myLists = this.myLists.map((list) => {
+          if (!list.items) {
+            return {
+              ...list,
+              items: [],
+            };
+          } else return list;
+        });
+      }
+    }, { allowSignalWrites: true })
   }
 
   setScroll() {
@@ -88,54 +128,6 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
         console.log(this.itemsTree);
       }
     });
-
-    combineLatest([this.plannedRecipies$, this.shoppingList$, this.allRecipies$]).pipe(
-      takeUntil(this.destroyed$),
-      filter(res => res[0] !== null),
-      map(res => ({ plannedRecipies: res[0], shoppingList: res[1], allRecipies: res[2] }))).subscribe(res => {
-        if (res.plannedRecipies) {
-          const dayItemsToAdd = res.plannedRecipies.filter(
-            (detail: CalendarRecipyInDatabase_Reworked) =>
-              !!this.datesArray.find(date => iSameDay(new Date(detail.endTime), new Date(date)))
-          );
-          let list: any[] = [];
-          dayItemsToAdd.forEach((plannedRecipy: CalendarRecipyInDatabase_Reworked) => {
-            const foundRecipy = res.allRecipies.find(recipy => recipy.id === plannedRecipy.recipyId);
-            if(foundRecipy){
-              const coeficient = this.dataMapping.getCoeficient(
-                foundRecipy.ingrediends,
-                plannedRecipy.portions,
-                plannedRecipy.amountPerPortion,
-                isDrinkOrSoup(foundRecipy)
-              );
-              foundRecipy.ingrediends.forEach((ingr: Ingredient) => {
-              let itemToPush = {
-                product: ingr.product,
-                amount: (ingr.amount * coeficient).toString(),
-                defaultUnit: ingr.defaultUnit,
-                recipyId: [foundRecipy.id],
-                date: plannedRecipy.endTime
-              };
-              list.push(itemToPush);
-            });
-            }
-            
-          });
-          this.fullIngredsList$.next(list);
-        }
-
-        if (res.shoppingList) {
-          this.myLists = _.cloneDeep(res.shoppingList);
-          this.myLists = this.myLists.map((list) => {
-            if (!list.items) {
-              return {
-                ...list,
-                items: [],
-              };
-            } else return list;
-          });
-        }
-      })
   }
 
   getCoef(recipy: RecipyForCalendar_Reworked): number {
@@ -162,9 +154,9 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
       ) {
         this.itemsTree = this.itemsTree!.map((it) => {
           if (it.id == item.product) {
-            const convertedToselectedUnit = convertAmountToSelectedUnit(item.amount, item.defaultUnit, item.product, this.dataMapping.products$.value);
+            const convertedToselectedUnit = convertAmountToSelectedUnit(item.amount, item.defaultUnit, item.product, this.productsService.getProducts());
             const normalized = NormalizeDisplayedAmountGetNumber(convertedToselectedUnit, item.defaultUnit)
-            const correctAmmount = transformToGr(item.product, normalized, item.defaultUnit, this.dataMapping.products$.value)
+            const correctAmmount = transformToGr(item.product, normalized, item.defaultUnit, this.productsService.getProducts())
             let updated = { ...it };
             updated.total = +it.total + correctAmmount;
             updated.items.push(item);
@@ -172,9 +164,9 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
           } else return it;
         });
       } else if (this.itemsTree) {
-        const convertedToselectedUnit = convertAmountToSelectedUnit(item.amount, item.defaultUnit, item.product, this.dataMapping.products$.value);
+        const convertedToselectedUnit = convertAmountToSelectedUnit(item.amount, item.defaultUnit, item.product, this.productsService.getProducts());
         const normalized = NormalizeDisplayedAmountGetNumber(convertedToselectedUnit, item.defaultUnit)
-        const correctAmmount = transformToGr(item.product, normalized, item.defaultUnit, this.dataMapping.products$.value)
+        const correctAmmount = transformToGr(item.product, normalized, item.defaultUnit, this.productsService.getProducts())
         this.itemsTree.push({
           id: item.product,
           total: correctAmmount,
@@ -235,13 +227,13 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
 
   async addToList(ingred: SLItem) {
     this.resetScrollPoint = false;
-    const timestamps = this.shoppingListService.getCurrentTimestamps()
+    const timestamps = this.shoppingListService.shoppingListTimestamps()
     const modal = await this.modalCtrl.create({
       component: AddToListModalComponent,
       componentProps: {
         ingredient: ingred,
-        lists: this.shoppingListService.sortListByTimestamps(this.myLists, timestamps) ,
-        allRecipies: this.allRecipies,
+        lists: this.shoppingListService.sortListByTimestamps(this.myLists, timestamps),
+        allRecipies: this.$allRecipies(),
         isPlannedIngredient: true,
       },
     });
@@ -255,9 +247,7 @@ export class IngredientsForDatesArrayComponent implements OnDestroy, OnInit {
   }
 
   getrecipyName(id: string) {
-    if (this.allRecipies) {
-      return getRecipyNameById(this.allRecipies, id);
-    } else return '';
+    return getRecipyNameById(this.$allRecipies(), id);
   }
 
   getDatesForHeader() {

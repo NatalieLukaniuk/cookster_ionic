@@ -1,15 +1,17 @@
 <div class="sorting-filter-wrapper">
-  <ion-select label="Сортування за:" [value]="(sorting$ |async)" (ionChange)="onSortingChange($event)">
-    <ion-select-option [value]="option"
-      *ngFor="let option of sortingOptions">{{getOptionLabel(option)}}</ion-select-option>
+  <ion-select label="Сортування за:" [value]="$sorting()" (ionChange)="onSortingChange($event)">
+    @for(option of sortingOptions(); track option){
+    <ion-select-option [value]="option">{{getOptionLabel(option)}}</ion-select-option>
+    }
+
   </ion-select>
-  <ion-button (click)="toggleSortingDirection()" size="small" fill="outline">
-    <ion-icon name="arrow-up-outline"
-      *ngIf="(sortingDirection$ | async) === RecipySortingDirection.SmallToBig; else bigToSmall"></ion-icon>
+  <ion-button (click)="toggleSortingDirection()" size="small" fill="outline" [disabled]="$sorting() === DEFAULT_SORTING">
+    @if($sortingDirection() === RecipySortingDirection.SmallToBig){
+    <ion-icon name="arrow-up-outline"></ion-icon>
+    }
+    @else {
+    <ion-icon name="arrow-down-outline"></ion-icon>
+    }
+
   </ion-button>
 </div>
-
-
-<ng-template #bigToSmall>
-  <ion-icon name="arrow-down-outline"></ion-icon>
-</ng-template>

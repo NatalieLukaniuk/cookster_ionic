@@ -27,11 +27,9 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { PrepsComponent } from './components/recipy-constructor/preps/preps.component';
 import { ControllerInputDialogComponent } from './components/dialogs/controller-input-dialog/controller-input-dialog.component';
 import { RecipyModalComponent } from './components/dialogs/recipy-modal/recipy-modal.component';
-import { RecipyShortViewComponent } from './components/recipy-short-view/recipy-short-view.component';
 import { ControllerListSelectDialogComponent } from './components/dialogs/controller-list-select-dialog/controller-list-select-dialog.component';
 import { AddProductFormComponent } from './components/add-product-form/add-product-form.component';
 import { InputWithAutocompleteComponent } from './components/input-with-autocomplete/input-with-autocomplete.component';
-import { CostOfRecipyComponent } from './components/cost-of-recipy/cost-of-recipy.component';
 import { LastPreparedDatePipe } from './pipes/last-prepared-date.pipe';
 import { CollectionsActionSheetComponent } from './components/collections-action-sheet/collections-action-sheet.component';
 import { AddRecipyToNoShowComponent } from './components/add-recipy-to-no-show/add-recipy-to-no-show.component';
@@ -62,11 +60,9 @@ import { MultipleDatesPickerModalComponent } from './components/multiple-dates-p
     PrepsComponent,
     ControllerInputDialogComponent,
     RecipyModalComponent,
-    RecipyShortViewComponent,
     ControllerListSelectDialogComponent,
     AddProductFormComponent,
     InputWithAutocompleteComponent,
-    CostOfRecipyComponent,
     LastPreparedDatePipe,
     CollectionsActionSheetComponent,
     AddRecipyToNoShowComponent,
@@ -91,10 +87,8 @@ import { MultipleDatesPickerModalComponent } from './components/multiple-dates-p
     ProductAutocompleteComponent,
     LongPressDirective,
     IngredientComponent,
-    RecipyShortViewComponent,
     AddProductFormComponent,
     InputWithAutocompleteComponent,
-    CostOfRecipyComponent,
     LastPreparedDatePipe,
     CollectionsActionSheetComponent,
     AddRecipyToNoShowComponent,

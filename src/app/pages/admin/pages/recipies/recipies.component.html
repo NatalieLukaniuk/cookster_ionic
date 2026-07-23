@@ -6,7 +6,6 @@
 <ion-content [fullscreen]="true">
   <!-- <ion-button (click)="runUpdate()">Update</ion-button> -->
   <app-admin-table
-    *ngIf="!!(recipies$ | async)"
-    [data]="recipiesTableData"
+    [data]="recipiesTableData()"
   ></app-admin-table>
 </ion-content>

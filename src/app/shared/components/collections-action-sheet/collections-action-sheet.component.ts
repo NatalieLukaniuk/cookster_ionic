@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { ActionSheetButton } from '@ionic/angular';
-import { Store } from '@ngrx/store';
 import * as _ from 'lodash';
-import { User } from 'src/app/models/auth.models';
+
 import { Recipy } from 'src/app/models/recipies.models';
-import { UpdateUserAction } from 'src/app/store/actions/user.actions';
-import { IAppState } from 'src/app/store/reducers';
+import { UserDataService } from 'src/app/services/user-data.service';
+
 
 @Component({
   selector: 'app-collections-action-sheet',
@@ -13,14 +12,16 @@ import { IAppState } from 'src/app/store/reducers';
   styleUrls: ['./collections-action-sheet.component.scss'],
 })
 export class CollectionsActionSheetComponent implements OnInit {
+  userDataService = inject(UserDataService);
+
+  $userCollections = this.userDataService.userRecipeCollections;
+
   ngOnInit(): void {
     this.actionSheetItems = this.getItems();
   }
 
   actionSheetItems: any[] = [];
 
-  @Input()
-  currentUser!: User | null;
 
   @Input() recipy!: Recipy;
 
@@ -30,63 +31,50 @@ export class CollectionsActionSheetComponent implements OnInit {
 
   @Output() dismissed = new EventEmitter<void>()
 
-constructor(private store: Store<IAppState>,){}
-
   getItems(): ActionSheetButton[] {
-    if (this.currentUser?.collections) {
-      return this.currentUser.collections.map((collection) => ({
-        text: collection.name,
-        role: 'selected',
-        data: {
-          collection: collection.name
-        },
-        icon: this.getIsInCollection(collection.name) ? "checkmark-outline" : "" 
-      }));
-    } else return [];
+
+    return this.$userCollections().map((collection) => ({
+      text: collection.name,
+      role: 'selected',
+      data: {
+        collection: collection.name
+      },
+      icon: this.getIsInCollection(collection.name) ? "checkmark-outline" : ""
+    }));
+
   }
 
-  onDismissed(event: any) {    
+  onDismissed(event: any) {
     const selected = event.detail.data?.collection;
-    if(selected){
+    if (selected) {
       this.onCollectionSelected(selected)
     }
     this.dismissed.emit()
-    
+
   }
 
   getIsInCollection(collection: string) {
-    if (this.currentUser?.collections) {
-      return this.currentUser.collections
-        .find((coll) => coll.name == collection)
-        ?.recipies?.find((recipy) => recipy == this.recipy.id);
-    } else return false;
+    return this.$userCollections()
+      .find((coll) => coll.name == collection)
+      ?.recipies?.find((recipy) => recipy == this.recipy.id);
   }
 
   onCollectionSelected(collection: string) {
-    if (this.currentUser) {
-      let updated = _.cloneDeep(this.currentUser);
-      updated.collections = updated.collections!.map((coll) => {
-        if (coll.name === collection) {
-          if (coll.recipies && coll.recipies.includes(this.recipy.id)) {
-            coll.recipies = coll.recipies.filter((id) => id !== this.recipy.id);
-          } else if (coll.recipies && !coll.recipies.includes(this.recipy.id)) {
-            coll.recipies.push(this.recipy.id);
-          } else {
-            coll.recipies = [this.recipy.id];
-          }
-          return coll;
-        } else return coll;
-      });
-      this.store.dispatch(
-        new UpdateUserAction(
-          updated,
-          `${this.recipy.id} додано до колекції ${collection}`
-        )
-      );
-    }
-    
+    const updatedCollections = this.$userCollections().map((coll) => {
+      if (coll.name === collection) {
+        if (coll.recipies && coll.recipies.includes(this.recipy.id)) {
+          coll.recipies = coll.recipies.filter((id) => id !== this.recipy.id);
+        } else if (coll.recipies && !coll.recipies.includes(this.recipy.id)) {
+          coll.recipies.push(this.recipy.id);
+        } else {
+          coll.recipies = [this.recipy.id];
+        }
+        return coll;
+      } else return coll;
+    });
+    this.userDataService.updateCollections(updatedCollections)
   }
-  updateItems(){
+  updateItems() {
     this.actionSheetItems = this.getItems()
   }
 }
