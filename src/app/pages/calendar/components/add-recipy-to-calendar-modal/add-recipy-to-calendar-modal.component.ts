@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { InfiniteScrollCustomEvent, IonModal, ModalController } from '@ionic/angular';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,9 @@ import { CalendarRecipyInDatabase_Reworked, RecipyForCalendar_Reworked } from '.
 import { getLastPreparedDate, newDateIgnoreimezone } from '../../calendar.utils';
 import { RecipiesService } from 'src/app/services/recipies.service';
 import { UserDataService } from 'src/app/services/user-data.service';
+import { DataMappingService } from 'src/app/services/data-mapping.service';
+import { isDrinkOrSoup } from 'src/app/pages/recipies/utils/recipy.utils';
+import { formatDate } from '@angular/common';
 
 enum AddRecipyToCalView {
   SelectRecipy = 'select-recipy',
@@ -27,17 +30,46 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   recipiesService = inject(RecipiesService);
   filtersService = inject(FiltersService);
   userDataService = inject(UserDataService);
+  datamapping = inject(DataMappingService)
 
   $recipies = this.recipiesService.recipiesWithFilterEnabled;
   $recipiesToDisplay = computed(() => this.$recipies().filter((r, i) => i <= this.numberOfRecipiesToDisplay()))
   $isShowWidget = this.filtersService.isShowWidget;
   $userFamilyMembers = this.userDataService.userFamily;
 
-  selectedRecipy: Recipy | null = null;
-  selectedTime: Date | null = null;
-  portions: number | null = null;
-  portionSize: number | null = null;
+  selectedRecipy = signal<Recipy | null>(null);
+  selectedTime = signal<Date>(new Date());
+  portions = signal<number | null>(null);
+  portionSize = signal<number | null>(null);
   entryId: string = ''
+
+  selectedTimeToDisplay = computed(() =>{ 
+    const selected = this.selectedTime();
+    if(selected){
+      return formatDate(selected, 'EEE, dd MMM yyyy, HH:mm', 'en-US')
+    } else {
+      return '-'
+    }
+    
+  })
+
+  coeficient = computed(() => {
+    const portions = this.portions();
+    const portionSize = this.portionSize();
+    const selectedRecipy = this.selectedRecipy()
+
+    if (selectedRecipy && portions && portionSize) {
+      return this.datamapping.getCoeficient(
+        selectedRecipy.ingrediends,
+        portions,
+        portionSize,
+        isDrinkOrSoup(selectedRecipy)
+      )
+    } else {
+      return 1
+    }
+
+  });
 
   currentView = AddRecipyToCalView.SelectRecipy;
 
@@ -45,7 +77,7 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
 
   isEditMode = false;
 
-  initialSelectDate = this.selectedTime?.toISOString();
+  initialSelectDate = computed(() => newDateIgnoreimezone(this.selectedTime().toString()).toISOString());
 
   familyMembersSub: Subscription | undefined;
 
@@ -54,11 +86,11 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (!this.isEditMode || !this.portions) {
+    if (!this.isEditMode || !this.portions()) {
       const userFamilyCount = this.$userFamilyMembers().length;
       if (userFamilyCount) {
-        this.portions = userFamilyCount;
-      } else { this.portions = 4; }
+        this.portions.set(userFamilyCount);
+      } else { this.portions.set(4); }
     }
 
     this.getCurrentView()
@@ -66,9 +98,9 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   }
 
   getCurrentView() {
-    if (!this.selectedRecipy) {
+    if (!this.selectedRecipy()) {
       this.currentView = AddRecipyToCalView.SelectRecipy;
-    } else if (!this.selectedTime) {
+    } else if (!this.selectedTime()) {
       this.currentView = AddRecipyToCalView.SelectDate;
     } else {
       this.currentView = AddRecipyToCalView.SetAmount;
@@ -84,10 +116,6 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
       this.modalCtrl.dismiss(null, 'cancel')
     }
 
-  }
-
-  get isValid() {
-    return !!this.selectedRecipy && !!this.selectedTime && !!this.portions && !!this.portionSize
   }
 
   changeCurrentView(view: AddRecipyToCalView) {
@@ -116,42 +144,45 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   }
 
   onRecipyClicked(recipy: Recipy) {
-    this.selectedRecipy = recipy;
-    this.portionSize = recipy.portionSize || 300;
+    this.selectedRecipy.set(recipy);
+    this.portionSize.set(recipy.portionSize || 300);
   }
 
   onDateChanged(newDate: string) {
-    this.selectedTime = new Date(newDate);
-    this.initialSelectDate = newDateIgnoreimezone(newDate).toISOString()
+    this.selectedTime.set(new Date(newDate));
   }
 
   onAmountSelected(event: number) {
-    this.portionSize = event;
+    this.portionSize.set(event);
   }
 
   onPortionsSelected(event: number) {
-    this.portions = event;
+    this.portions.set(event);
   }
 
-  get isAddDisabled() {
-    return !(!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime)
-  }
+ isAddDisabled = computed(() => {
+    return !(!!this.portions() && !!this.portionSize() && !!this.selectedRecipy() && !!this.selectedTime())
+  })
 
-  get saveButtonText() {
-    return !this.selectedRecipy ? 'Виберіть рецепт' :
-      !this.selectedTime ? 'Вкажіть час' :
-        !this.portions ? 'Вкажіть кількість порцій' :
-          !this.portionSize ? 'Вкажіть розмір порції' :
+  saveButtonText = computed(() => {
+    return !this.selectedRecipy() ? 'Виберіть рецепт' :
+      !this.selectedTime() ? 'Вкажіть час' :
+        !this.portions() ? 'Вкажіть кількість порцій' :
+          !this.portionSize() ? 'Вкажіть розмір порції' :
             this.isEditMode ? 'Зберегти' : 'Додати'
-  }
+  })
 
   addRecipyToCalendar() {
-    if (!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime) {
+    const portions = this.portions();
+    const portionSize = this.portionSize();
+    const endTime = this.selectedTime();
+    const selectedRecipy = this.selectedRecipy()
+    if (!!portions && !!portionSize && !!selectedRecipy && !!endTime) {
       let recipyToAdd: RecipyForCalendar_Reworked = {
-        ...this.selectedRecipy,
-        portions: this.portions,
-        amountPerPortion: this.portionSize,
-        endTime: this.selectedTime,
+        ...selectedRecipy,
+        portions,
+        amountPerPortion: portionSize,
+        endTime,
         entryId: crypto.randomUUID()
       }
       this.userDataService.addRecipyToCalendar(recipyToAdd)
@@ -161,12 +192,16 @@ export class AddRecipyToCalendarModalComponent implements OnInit {
   }
 
   saveUpdatedRecipyToCalendar() {
-    if (!!this.portions && !!this.portionSize && !!this.selectedRecipy && !!this.selectedTime) {
+    const portions = this.portions();
+    const portionSize = this.portionSize();
+    const endTime = this.selectedTime();
+    const selectedRecipy = this.selectedRecipy()
+    if (!!portions && !!portionSize && !!selectedRecipy && !!endTime) {
       let updatedRecipy: RecipyForCalendar_Reworked = {
-        ...this.selectedRecipy,
-        portions: this.portions,
-        amountPerPortion: this.portionSize,
-        endTime: this.selectedTime,
+        ...selectedRecipy,
+        portions,
+        amountPerPortion: portionSize,
+        endTime,
         entryId: this.entryId
       }
       return this.modalCtrl.dismiss(updatedRecipy, 'confirm');

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DishType, Ingredient, MeasuringUnit, MeasuringUnitText, productPreferencesChip, Recipy } from 'src/app/models/recipies.models';
 import { UserDataService } from 'src/app/services/user-data.service';
@@ -97,9 +97,9 @@ export class RecipeCardComponent {
     const modal = await this.modalCtrl.create({
       component: AddRecipyToCalendarModalComponent,
       componentProps: {
-        selectedRecipy: this.recipy(),
+        selectedRecipy: signal(this.recipy()),
         isEditMode: true,
-        portionSize: this.recipy().portionSize
+        portionSize: signal(this.recipy().portionSize)
       }
     });
     modal.present();

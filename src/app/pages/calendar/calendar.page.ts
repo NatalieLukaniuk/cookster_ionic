@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 import { AddRecipyToCalendarModalComponent } from 'src/app/pages/calendar/components/add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
@@ -124,8 +124,7 @@ export class CalendarPage {
       component: AddRecipyToCalendarModalComponent,
       componentProps: {
         isEditMode: true,
-        selectedTime: currentDay,
-        initialSelectDate: newDateIgnoreimezone(currentDay.toString()).toISOString(),
+        selectedTime: signal(currentDay.toDate()),
       }
     });
     modal.present();

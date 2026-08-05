@@ -1,7 +1,7 @@
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { AddRecipyToCalendarModalComponent } from '../add-recipy-to-calendar-modal/add-recipy-to-calendar-modal.component';
 import { CalendarComment, RecipyForCalendar_Reworked } from '../../../../models/calendar.models';
-import { AfterViewInit, Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, inject, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 
 import { iSameDay, MINUTES_IN_DAY, newDateIgnoreimezone } from '../../calendar.utils';
 import { DialogsService } from 'src/app/services/dialogs.service';
@@ -159,11 +159,10 @@ export class CalendarTimelineDayComponent implements OnChanges, AfterViewInit {
     const modal = await this.modalCtrl.create({
       component: AddRecipyToCalendarModalComponent,
       componentProps: {
-        selectedRecipy: event,
-        selectedTime: new Date(event.endTime),
-        initialSelectDate: newDateIgnoreimezone(event.endTime as unknown as string).toISOString(),
-        portions: event.portions,
-        portionSize: event.amountPerPortion,
+        selectedRecipy: signal(event),
+        selectedTime: signal(new Date(event.endTime)),
+        portions: signal(event.portions),
+        portionSize: signal(event.amountPerPortion),
         isEditMode: true
       }
     });
