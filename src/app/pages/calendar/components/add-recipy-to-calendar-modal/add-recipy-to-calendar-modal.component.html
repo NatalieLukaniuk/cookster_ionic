@@ -86,10 +86,14 @@
         (portionsValueChanged)="onPortionsSelected($event)" [initialPortionsValue]="portions()"
         [initialAmountValue]="portionSize()"></app-recipy-in-calendar-select-portions-and-amount>
       @if(selectedRecipy()){
-      @for(ingredient of selectedRecipy()!.ingrediends; track ingredient){
-      <app-ingredient [ingredient]="ingredient" [coefficient]="coeficient()">
-      </app-ingredient>
-      }
+      <div class="ingredients-wrapper">
+       
+        @for(ingredient of selectedRecipy()!.ingrediends; track ingredient){
+        <app-ingredient [ingredient]="ingredient" [coefficient]="coeficient()">
+        </app-ingredient>
+        }
+      </div>
+
       }
 
     </ng-container>
