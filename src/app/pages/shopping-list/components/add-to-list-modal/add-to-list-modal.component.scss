@@ -1,6 +1,14 @@
 .used-in {
-    max-height: 25vh;
+    max-height: 50vh;
     overflow-y: auto;
+}
+
+.used-details{
+    font-size: 0.8rem;
+    p{
+        
+        margin: 0;
+    }
 }
 
 .add-new-list {
@@ -9,6 +17,7 @@
 
 .lists-container {
     max-height: 50vh;
+    padding-block: 1rem;
     overflow-y: auto;
 }
 
@@ -16,12 +25,39 @@ ion-item ion-label {
     white-space: break-spaces;
 }
 
-.price-info {    
+.price-info {
     p {
         margin-block: 0;
         font-size: 12px;
-        &:not(:last-child){
+
+        &:not(:last-child) {
             margin-bottom: 10px;
         }
     }
+}
+
+ion-radio {
+    --border-radius: 4px;
+    --inner-border-radius: 4px;
+
+    --color: #ddd;
+    --color-checked: #6815ec;
+}
+
+ion-radio.ios::part(container) {
+    width: 20px;
+    height: 20px;
+
+    border: 2px solid #ddd;
+    border-radius: 4px;
+}
+
+.radio-checked.ios::part(container) {
+    border-color: #6815ec;
+}
+
+ion-radio-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    grid-gap: 0.8rem;
 }
